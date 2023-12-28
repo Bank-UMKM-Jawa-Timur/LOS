@@ -335,7 +335,7 @@
                                                             </li>
                                                         </a>
                                                     @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
-                                                        <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}" class="w-full cursor-pointer">
+                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer">
                                                             <li class="item-tb-dropdown">
                                                                 Cetak PK
                                                             </li>

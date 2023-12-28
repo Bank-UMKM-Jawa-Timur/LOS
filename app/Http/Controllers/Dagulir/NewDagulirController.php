@@ -2194,18 +2194,29 @@ class NewDagulirController extends Controller
             ]);
         }
 
-        $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan.*')
-        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
-        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
-        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
-        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
-        ->where('pengajuan.id', $id)
-        ->first();
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        ->find($id);
+
+        if ($param['dataUmum']->skema_kredit == 'Dagulir') {
+            $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan.*')
+                        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+                        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+                        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+                        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+                        ->where('pengajuan.id', $id)
+                        ->first();
+        }else{
+            $dataNasabah = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+                        ->join('desa','desa.id','calon_nasabah.id_desa')
+                        ->where('calon_nasabah.id_pengajuan',$id)
+                        ->first();
+
+        }
 
         $param['dataNasabah'] = $dataNasabah;
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
-        ->find($id);
 
         $param['dataCabang'] = DB::table('cabang')
             ->where('id', $param['dataUmum']->id_cabang)
@@ -2255,29 +2266,41 @@ class NewDagulirController extends Controller
                 ]);
         }
 
-        $dataNasabah = DB::table('pengajuan_dagulir')->select('kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan_dagulir.*', 'pengajuan.*')
-        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
-        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
-        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
-        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
-        ->where('pengajuan.id', $id)
-        ->first();
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')->find($id);
+
+        if ($param['dataUmum']->skema_kredit == 'Dagulir') {
+            $dataUmum = DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+                        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+                        ->where('pengajuan.id', $id)
+                        ->first();
+            $dataNasabah = DB::table('pengajuan_dagulir')->select('kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan_dagulir.*', 'pengajuan.*')
+                        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+                        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+                        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+                        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+                        ->where('pengajuan.id', $id)
+                        ->first();
+        }else{
+            $dataUmum = PengajuanModel::find($id);
+
+            $dataNasabah = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+                        ->join('desa','desa.id','calon_nasabah.id_desa')
+                        ->where('calon_nasabah.id_pengajuan',$id)
+                        ->first();
+
+        }
+
         // return $dataNasabah;
         $param['dataNasabah'] = $dataNasabah;
-
-
-        $dataUmum =
-        DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
-        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
-        ->where('pengajuan.id', $id)
-        ->first();
         // return $dataUmum;
         $param['dataUmum'] = $dataUmum;
 
 
         $param['dataCabang'] = DB::table('cabang')
-                ->where('id', $dataUmum->id_cabang)
-                ->first();
+        ->where('id', $dataUmum->id_cabang)
+        ->first();
 
         $tglCetak = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
@@ -2288,8 +2311,9 @@ class NewDagulirController extends Controller
         $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
 
 
-        $kodePincab = $dataNasabah->id_pincab;
-        $kodePenyelia = $dataNasabah->id_penyelia;
+        $kodePincab = $param['dataUmum']->skema_kredit == 'Dagulir' ? $dataNasabah->id_pincab : $dataUmum->id_pincab;
+        $kodePenyelia =$param['dataUmum']->skema_kredit == 'Dagulir' ?  $dataNasabah->id_penyelia : $dataUmum->id_pincab;
+
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
 
@@ -2298,8 +2322,8 @@ class NewDagulirController extends Controller
 
         $param['installment'] = DB::table('jawaban_text')
         ->where('id_pengajuan', $id)
-            ->where('id_jawaban', 140)
-            ->first() ?? '0';
+        ->where('id_jawaban', 140)
+        ->first() ?? '0';
 
         $pdf = PDF::loadView('dagulir.cetak.cetak-sppk', $param);
 
@@ -2411,6 +2435,12 @@ class NewDagulirController extends Controller
                     ->update([
                         'pk' => $filenamePK,
                     ]);
+                    $cek_skema = PengajuanModel::find($id);
+                    if ($cek_skema->skema_kredit != 'Dagulir') {
+                        DB::commit();
+                        Alert::success('success', $message);
+                        return redirect()->route('pengajuan-kredit.index');
+                    }
                     $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
                     $pengajuan = PengajuanModel::with('dagulir')->find($id);
                     $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
