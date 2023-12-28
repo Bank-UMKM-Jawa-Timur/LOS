@@ -865,6 +865,9 @@ $dataIndex = match ($skema) {
     @endif
     let nullValue = [];
     $(document).ready(function() {
+        countFormPercentage()
+    });
+    $(document).ready(function() {
         let valSkema = $("#skema_kredit").val();
         if (valSkema == null || valSkema == '') {
             $('#exampleModal').removeClass('hidden');
@@ -877,7 +880,6 @@ $dataIndex = match ($skema) {
 
             $("#skema_kredit").val(valSkema);
         });
-        countFormPercentage()
     });
 
     @if (!\Request::has('dagulir'))
@@ -1458,7 +1460,7 @@ $dataIndex = match ($skema) {
         var totalReadHidden = (totalInputHidden + totalInputReadOnly);
         var total = totalInput + totalInputChecked;
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100;
-        return parseInt(percent)
+        return parseInt(percent) > 100 ? 100 : parseInt(percent)
     }
 
     $(".toggle-side").click(function(e) {
