@@ -26,20 +26,12 @@
                         <label for="id_kabupaten">Pilih Kabupaten</label>
                         <select name="id_kabupaten" class="form-select" id="kabupaten_select">
                             <option value="">-- Pilih Kabupaten --</option>
-                            @foreach ($kabupaten as $key => $item)
-                                <option value="{{ $item->id }}" data-key="{{ $key }}">
-                                    {{ $item->kabupaten }}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="input-box">
                         <label for="id_kecamatan">Pilih Kecamatan</label>
                         <select name="id_kecamatan" class="form-select" id="kecamatan_select">
                             <option value="">-- Pilih kecamatan --</option>
-                            @foreach ($kecamatan as $key => $item)
-                                <option value="{{ $item->id }}" data-key="{{ $key }}">
-                                    {{ $item->kecamatan }}</option>
-                            @endforeach
                         </select>
                     </div>
                 </div>

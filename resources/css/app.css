@@ -86,6 +86,9 @@
     .modal-layout {
         @apply w-full h-screen bg-black/50 fixed top-0 left-0 z-[99999] lg:p-5 p-2 overflow-y-auto;
     }
+    .modal-layout-no-backdrop {
+        @apply w-full h-screen bg-black/50 fixed top-0 left-0 z-[99999] lg:p-5 p-2 overflow-y-auto;
+    }
     .modal-lg {
         @apply lg:max-w-[80%] max-w-full;
     }
@@ -159,7 +162,7 @@
         @apply absolute left-[%] z-40 right-[%] top-44 text-8xl font-bold;
     }
     select {
-        @apply focus:ring ring-blue-300;
+        @apply focus:ring ring-blue-300 accent-theme-primary;
     }
     /* input {
         @apply focus:ring ring-blue-300;
@@ -328,6 +331,21 @@
     }
     .table-wrapper-tab .tab-content.active {
         @apply block;
+    }
+    .btn-detail {
+        @apply absolute right-0 rounded-tl-md flex gap-2 px-5 py-1 text-gray-500 bg-gray-50 transition-all text-sm font-semibold border-t border-l hover:bg-theme-primary hover:text-white bottom-0;
+    }
+    .btn-detail iconify-icon {
+        @apply text-sm mt-[2px];
+    }
+    .btn-detail-graph {
+        @apply absolute right-0 rounded-bl-md flex gap-2 px-5 py-1 text-gray-500 bg-gray-50 transition-all text-sm font-semibold border-b border-l hover:bg-theme-primary hover:text-white top-0;
+    }
+    .btn-detail-graph iconify-icon {
+        @apply text-sm mt-[2px];
+    }
+    .title-table {
+        @apply text-left font-bold border-r text-gray-600 bg-gray-50;
     }
 }
 

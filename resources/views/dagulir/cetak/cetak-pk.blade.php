@@ -893,6 +893,8 @@
             </tr>
         </table>
 
+        <br><br><br><br><br>
+
         <table class="table-pasal-12">
             <tr>
                 <td style="text-align: center;"><b>Pasal 12</b></td>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use \App\Http\Requests\KecamatanRequest;
+use App\Models\Desa;
 use \App\Models\Kecamatan;
 use \App\Models\Kabupaten;
 use Exception;
@@ -190,7 +191,12 @@ class NewKecamatanController extends Controller
     public function destroy($id)
     {
         try {
+            $desa = Desa::where('id_kabupaten', $id)->count();
             $kecamatan = Kecamatan::findOrFail($id);
+            if ($desa > 0) {
+                alert()->error('error', 'Data tidak bisa dihapus, karena kecamatan terdapat di desa.');
+                return back();
+            }
             $kecamatan->delete();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
@@ -212,5 +218,9 @@ class NewKecamatanController extends Controller
     function kabupaten() {
         $kabupaten = Kabupaten::get();
         return $kabupaten;
+    }
+    function kecamatan() {
+        $kecamatan = Kecamatan::get();
+        return $kecamatan;
     }
 }

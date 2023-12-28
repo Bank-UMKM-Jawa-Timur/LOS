@@ -24,6 +24,7 @@ use App\Http\Controllers\Dagulir\master\NewMerkController;
 use App\Http\Controllers\Dagulir\master\NewTipeController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
+use App\Http\Controllers\DashboardDetailController;
 use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
 use App\Http\Controllers\NotificationController;
@@ -57,6 +58,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
     });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/detail', [DashboardDetailController::class, 'index'])->name('dashboard-detail');
+    Route::get('/dashboard/detail/skema', [DashboardDetailController::class, 'index'])->name('dashboard-detail-skema');
+    // Route::get('/dashboard/detail', function() {
+    //     return view('dashboard.detail.dashboard-detail');
+    // });
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
@@ -83,6 +89,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('review-jawaban-new', function() {
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
         });
+
+
 
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
@@ -118,7 +126,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
             Route::resource('kabupaten', NewKabupatenController::class);
-            Route::get('kecamatan/data',[NewKecamatanController::class,'kabupaten'])->name('get.kabupaten');
+            Route::get('get-kabupaten',[NewKecamatanController::class,'kabupaten'])->name('get.kabupaten');
+            Route::get('get-kecamatan',[NewKecamatanController::class,'kecamatan'])->name('get.kecamatan');
             Route::resource('kecamatan', NewKecamatanController::class);
             Route::resource('desa', NewDesaController::class);
             Route::resource('cabang', NewCabangController::class);
@@ -132,7 +141,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('data-item-tiga', [NewItemController::class, 'dataItemtiga'])->name('getItemTiga');
             Route::get('data-item-empat', [NewItemController::class, 'dataItemEmpat'])->name('getItemEmpat');
 
-            Route::get('/kecamatan-by-kabupaten/{id}', [NewDesaController::class, 'kecamatanByKabupaten'])->name('kecamatan-by-kabupaten');
 
             Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
             Route::post('/reset-session-post', [NewUserController::class, 'resetSession'])->name('reset-session');
@@ -188,9 +196,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // check Pincab
-    Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
+    Route::post('pengajuan-kredit/pincabStatusDetailPost/{id}', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
     Route::get('pengajuan-kredit/pincabStatusDetail/{id}', [PengajuanKreditController::class, "checkPincabStatusDetail"])->name('pengajuan.check.pincab.status.detail');
-    Route::get('pengajuan-kredit/pincabStatusChangeTolak/{id}', [PengajuanKreditController::class, "checkPincabStatusChangeTolak"])->name('pengajuan.change.pincab.status.tolak');
+    Route::post('pengajuan-kredit/pincabStatusChangeTolak/{id}', [PengajuanKreditController::class, "checkPincabStatusChangeTolak"])->name('pengajuan.change.pincab.status.tolak');
     Route::get('pengajuan-kredit/pincabStatusChange/{id}', [PengajuanKreditController::class, "checkPincabStatusChange"])->name('pengajuan.change.pincab.status');
     Route::get('pengajuan-kredit/pincabStatus', [PengajuanKreditController::class, "checkPincabStatus"])->name('pengajuan.check.pincab.status');
     Route::get('pengajuan-kredit/pincab/{id}', [PengajuanKreditController::class, "checkPincab"])->name('pengajuan.check.pincab');
