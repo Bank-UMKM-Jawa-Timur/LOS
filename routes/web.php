@@ -24,6 +24,7 @@ use App\Http\Controllers\Dagulir\master\NewMerkController;
 use App\Http\Controllers\Dagulir\master\NewTipeController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
+use App\Http\Controllers\DashboardDetailController;
 use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
 use App\Http\Controllers\NotificationController;
@@ -57,6 +58,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
     });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/detail', [DashboardDetailController::class, 'index'])->name('dashboard-detail');
+    Route::get('/dashboard/detail/skema', [DashboardDetailController::class, 'index'])->name('dashboard-detail-skema');
+    // Route::get('/dashboard/detail', function() {
+    //     return view('dashboard.detail.dashboard-detail');
+    // });
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
@@ -83,6 +89,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('review-jawaban-new', function() {
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
         });
+
+       
 
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');

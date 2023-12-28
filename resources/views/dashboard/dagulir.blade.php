@@ -33,11 +33,82 @@
             </div>
         </div>
     </div>
+    <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 w-full mt-4">
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
+            <div class="flex gap-5">
+                <div>
+                    <button class="w-20 h-20 p-5 rounded-full bg-[#9334EA]/20">
+                        <iconify-icon icon="pajamas:chart" class="text-3xl mt-1 text-[#9334EA]"></iconify-icon>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                        {{ $dataCard['total'] }}
+                    </h2>
+                    <p class="text-gray-500 text-sm tracking-tighter">
+                        Total Pengajuan
+                    </p>
+                </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            </div>
+        </div>
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
+            <div class="flex gap-5">
+                <div>
+                    <button class="w-20 h-20 p-5 rounded-full bg-[#39B568]/20">
+                        <iconify-icon icon="icon-park-outline:check-one" class="text-3xl mt-1 text-[#39B568]">
+                        </iconify-icon>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                        {{ $dataCard['selesai'] }}
+                    </h2>
+                    <p class="text-gray-500 text-sm tracking-tighter">
+                        Disetujui
+                    </p>
+                </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            </div>
+        </div>
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
+            <div class="flex gap-5">
+                <div>
+                    <button class="w-20 h-20 p-5 rounded-full bg-[#DC3545]/20">
+                        <iconify-icon icon="uil:file-times-alt" class="text-3xl mt-1 text-[#DC3545]"></iconify-icon>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                        {{ $dataCard['ditolak'] }}
+                    </h2>
+                    <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
+                </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            </div>
+        </div>
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
+            <div class="flex gap-5">
+                <div>
+                    <button class="w-20 h-20 p-5 rounded-full bg-[#E8A525]/20">
+                        <iconify-icon icon="ps:clock" class="text-3xl mt-1 text-[#E8A525]"></iconify-icon>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                        {{ $dataCard['proses'] }}
+                    </h2>
+                    <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
+                </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            </div>
+        </div>
+    </div>
     <div class="lg:flex relative gap-2 mt-3">
-        <div class="card bg-white p-0 lg:w-2/4 w-full rounded-md box-border border">
+        <div class="card bg-white p-0  w-full rounded-md box-border border">
             <div class="p-3 pl-5 pt-5">
                 <h2 class="font-poppins font-semibold tracking-tighter text-lg text-theme-text">
-                    Data Pengajuan
+                    Data Pengajuan - {{ Date('Y') }}
                 </h2>
             </div>
             <div id="chart-total-pengajuan" class="w-full"></div>
@@ -119,8 +190,8 @@
                 </div>
             </div>
         </div> --}}
-        <div class="grid lg:grid-cols-2 grid-cols-1 gap-2 w-[50%]">
-            <div class="card p-5 w-full border bg-white h-[127px]">
+        <div class="grid p-3 bg-white grid-cols-1 gap-4 w-full lg:gap-2 justify-center border">
+            <div class="card p-5 w-full border bg-white h-[127px] relative">
                 <div class="flex gap-5">
                     <div>
                         <button class="w-20 h-20 p-5 rounded-full bg-[#9334EA]/20">
@@ -129,48 +200,16 @@
                     </div>
                     <div class="mt-3">
                         <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                            {{ $dataCard['total'] }}
+                            {{ $dataCard['belum_ditindak_lanjuti'] }}
                         </h2>
                         <p class="text-gray-500 text-sm tracking-tighter">
-                            Total Pengajuan
+                           Belum ditindak lanjuti
                         </p>
                     </div>
+                    <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
                 </div>
             </div>
-            <div class="card p-5 w-full border bg-white h-[127px]">
-                <div class="flex gap-5">
-                    <div>
-                        <button class="w-20 h-20 p-5 rounded-full bg-[#39B568]/20">
-                            <iconify-icon icon="icon-park-outline:check-one" class="text-3xl mt-1 text-[#39B568]">
-                            </iconify-icon>
-                        </button>
-                    </div>
-                    <div class="mt-3">
-                        <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                            {{ $dataCard['selesai'] }}
-                        </h2>
-                        <p class="text-gray-500 text-sm tracking-tighter">
-                            Disetujui
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="card p-5 w-full border bg-white h-[127px]">
-                <div class="flex gap-5">
-                    <div>
-                        <button class="w-20 h-20 p-5 rounded-full bg-[#DC3545]/20">
-                            <iconify-icon icon="uil:file-times-alt" class="text-3xl mt-1 text-[#DC3545]"></iconify-icon>
-                        </button>
-                    </div>
-                    <div class="mt-3">
-                        <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                            {{ $dataCard['ditolak'] }}
-                        </h2>
-                        <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card p-5 w-full border bg-white h-[127px]">
+            <div class="card p-5 w-full border bg-white h-[127px] relative">
                 <div class="flex gap-5">
                     <div>
                         <button class="w-20 h-20 p-5 rounded-full bg-[#E8A525]/20">
@@ -179,50 +218,19 @@
                     </div>
                     <div class="mt-3">
                         <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                            {{ $dataCard['proses'] }}
+                            {{ $dataCard['sudah_ditindak_lanjuti'] }}
                         </h2>
-                        <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
+                        <p class="text-gray-500 text-sm tracking-tighter"> Sudah ditindak lanjuti</p>
                     </div>
+                    <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 w-full lg:gap-2 justify-center mt-2">
-        <div class="card p-5 w-full border bg-white h-[127px]">
-            <div class="flex gap-5">
-                <div>
-                    <button class="w-20 h-20 p-5 rounded-full bg-[#9334EA]/20">
-                        <iconify-icon icon="pajamas:chart" class="text-3xl mt-1 text-[#9334EA]"></iconify-icon>
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        {{ $dataCard['total'] }}
-                    </h2>
-                    <p class="text-gray-500 text-sm tracking-tighter">
-                        Total Pengajuan
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="card p-5 w-full border bg-white h-[127px]">
-            <div class="flex gap-5">
-                <div>
-                    <button class="w-20 h-20 p-5 rounded-full bg-[#E8A525]/20">
-                        <iconify-icon icon="ps:clock" class="text-3xl mt-1 text-[#E8A525]"></iconify-icon>
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        {{ $dataCard['proses'] }}
-                    </h2>
-                    <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-2 gap-4 justify-center mt-3">
-        <div class="card p-5 w-full border bg-white">
+        <div class="card p-5 w-full border bg-white relative">
+            
             <div class="head">
                 <h2 class="text-lg text-theme-text font-semibold tracking-tighter">
                     Posisi Pengajuan
@@ -231,8 +239,9 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="posisi-pengajuan"></div>
             </div>
+            <a href="{{ route('dashboard-detail') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
-        <div class="card p-5 w-full border bg-white">
+        <div class="card p-5 w-full border bg-white relative">
             <div class="head">
                 <h2 class="text-lg text-theme-text font-semibold tracking-tighter">
                     Skema Kredit
@@ -241,6 +250,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="skema-kredit"></div>
             </div>
+            <a href="{{ route('dashboard-detail-skema') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
     </div>
 </section>
