@@ -13,6 +13,7 @@
         }
         .heading {
             text-align: center;
+            width: 80%
         }
 
         .no-surat {
@@ -22,7 +23,7 @@
         .table-perjanjian,
         .table-perjanjian-2,
         .table-perjanjian-3 {
-            width: 100%;
+            width: 80%;
         }
 
         .table-pasal-1,
@@ -38,11 +39,11 @@
         .table-pasal-11,
         .table-pasal-12,
         .table-pasal-13 {
-            width: 100%;
+            width: 80%;
         }
 
         .table-ttd {
-            width: 100%;
+            width: 80%;
             padding-top: 5%;
         }
     </style>
@@ -111,48 +112,44 @@
 
         <table class="table-perjanjian">
             <tr>
-                <td style="vertical-align: top; width: 3%">1. </td>
-                <td>Nama</td>
-                <td>:</td>
-                <td style="text-align: justify">
-                    {{-- {{$dataPincab->name}} --}}
+                <td style="width: 3%">1. </td>
+                <td style="width: 20%">Nama</td>
+                <td style="width: 1%">:</td>
+                <td>
+                    {{-- {{ $dataNasabah->nama }} --}}
                 </td>
             </tr>
             <tr>
+                <td style="width: 3%"></td>
+                <td style="width: 20%">Jabatan</td>
+                <td style="width: 1%">:</td>
+                <td>Pemimpin Cabang</td>
+            </tr>
+            <tr>
                 <td></td>
-                <td>Jabatan</td>
-                <td>:</td>
-                <td style="text-align: justify">
-                    Pemimpin Cabang
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="width: 3%">2. </td>
+                <td style="width: 20%">Nama</td>
+                <td style="width: 1%">:</td>
+                <td>
+                    {{-- {{ $dataNasabah->nama }} --}}
                 </td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; width: 3%">2. </td>
-                <td>Nama</td>
-                <td>:</td>
-                <td style="text-align: justify">
-                    {{-- {{$dataPenyelia->name}} --}}
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>Jabatan</td>
-                <td>:</td>
-                <td style="text-align: justify">
-                    Penyelia Kredit Wilayah
-                </td>
+                <td style="width: 3%"></td>
+                <td style="width: 20%">Jabatan</td>
+                <td style="width: 1%">:</td>
+                <td>Penyelia Kredit Wilayah</td>
             </tr>
             <tr>
                 <td></td>
@@ -171,7 +168,7 @@
         <table class="table-perjanjian">
             <tr>
                 <td style="vertical-align: top; width: 3%"></td>
-                <td style="text-align: justify">
+                <td>
                     Dalam hal ini masing-masing dan secara berturut-turut bertindak dalam jabatannya seperti tersebut berdasarkan Surat Keputusan Nomor : . . . . . . . . . . . . . . . . . . . . . tanggal . . . . . . . . . . . . .dan Nomor : . . . . . . . . . . . . . . . .  . . . . tanggal . . . . . . . . . . . . . . .  serta Akta Surat Kuasa Nomor :  . . . . . . . . . . . . . . . . . . . . tanggal . . . . . . . . . . . . . . . yang dibuat dihadapan Rosida Sarjana Hukum. Notaris di Surabaya sebagai demikian sah mewakili dari dan oleh karena itu bertindak untuk dan atas nama PT. Bank Perkreditan Rakyat Jawa Timur berkedudukan di <b>Surabaya</b> selanjutnya disebut <b>“BANK”</b>.
                 </td>
             </tr>
@@ -209,7 +206,7 @@
         <table class="table-perjanjian-3">
             <tr>
                 <td style="width: 3%"></td>
-                <td style="text-align: justify">
+                <td>
                     Bertindak untuk dan atas nama diri sendiri/perusahaan bersama-sama secara tanggung renteng melakukan tidakan hukum yang selanjutnya disebut <b>“Peminjam”</b>.
                     Bank dan “Peminjam” telah saling setuju dan sepakat membuat perjanjian kredit ini, dengan syarat-syarat dan ketentuan sebagai berikut :
                 </td>
@@ -220,14 +217,18 @@
             </tr> --}}
         </table>
 
-        {{-- <p style="text-align: justify">BANK dan DEBITUR telah saling setuju dan sepakat untuk membuat perjanjian ini, dengan syarat-syarat dan ketentuan-ketentuan sebagai berikut :</p> --}}
+        {{-- <p>BANK dan DEBITUR telah saling setuju dan sepakat untuk membuat perjanjian ini, dengan syarat-syarat dan ketentuan-ketentuan sebagai berikut :</p> --}}
 
         <table class="table-pasal-1">
-            <p style="text-align: center"><b>Pasal 1</b></p>
-            <p style="text-align: center"><b>KETENTUAN KREDIT DAN JANGKA WAKTU</b></p>
+            <tr>
+                <td colspan="2" style="text-align: center"><b>Pasal 1</b></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center"><b>KETENTUAN KREDIT DAN JANGKA WAKTU</b></td>
+            </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">1. </td>
-                <td style="text-align: justify">
+                <td>
                     Bank memberikan kepada “Peminjam” fasilitas kredit sejumlah Rp. {{ rupiah($dataNasabah->nominal) }} ({{ penyebut($dataNasabah->nominal)}}), yang dipergunakan untuk Modal Kerja
                     <b><i>{{$dataNasabah->tujuan_penggunaan}}</i></b> dengan jangka waktu {{ intval($dataNasabah->jangka_waktu) }} bulan terhitung sejak tanggal ....................
                     sampai dengan tanggal .................
@@ -235,7 +236,7 @@
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">2. </td>
-                <td style="text-align: justify">
+                <td>
                     Bank berhak untuk mengadakan peninjauan kembali secara berkala, menarik kembali/mengurangi jumlah fasilitas kredit yang telah disetujui sebagaimana tersebut dalam Pasal 1 Ayat 1 di atas apabila menurut pertimbangan Bank terdapat alasan-alasan yang penting untuk itu dan hal-hal diatas “Peminjam” tidak berhak untuk mengajukan klaim/gugatan/tuntutan apapun kepada Bank.
                 </td>
             </tr>
@@ -247,23 +248,29 @@
 
         {{-- pasal 2 --}}
         <table class="table-pasal-2">
-            <p style="text-align: center"><b>Pasal 2</b></p>
-            <p style="text-align: center"><b>PENGAKUAN HUTANG</b></p>
             <tr>
-                <td style="vertical-align: top; width: 3%;">1.</td>
-                <td style="text-align: justify">
+                <td colspan="2" style="text-align: center"><b>Pasal 2</b></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center"><b>PENGAKUAN HUTANG</b></td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; width: 3%;">1. </td>
+                <td>
                     “Peminjam” dengan ini mengaku telah menerima dengan cukup fasilitas kredit tersebut dari Bank dan karenanya “Peminjam” mengaku telah berhutang dengan Bank sejumlah uang sebagaimana disebut dalam Pasal 1 Ayat 1 diatas belum termasuk bunga, provisi dan biaya-biaya, karena pemberian kredit tersebut serta denda yang mungkin timbul dikemudian hari. Selain perjanjian kredit ini maka sebagai  tanda penerima uang tersebut “Peminjam” akan menerbitkan tanda bukti penerimaan uang yang ditentukan oleh Bank.
                 </td>
             </tr>
             <tr>
+            </tr>
+            <tr>
                 <td style="vertical-align: top; width: 3%;">2.</td>
-                <td style="text-align: justify">
+                <td>
                     Mengenai jumlah hutang “Peminjam” berdasarkan perjanjian ini oleh Bank dibuat catatan/administrasi dan catatan/administrasi tersebut merupakan bukti yang sah dan mengikat terhadap “Peminjam” mengenai jumlah uang yang terhutang dan wajib dibayar oleh “Peminjam” kepada Bank, baik berupa pokok, bunga, denda, maupun biaya-biaya lain yang mungkin timbul karena hutang tersebut demikian dengan tidak mengurangi hak peminjam untuk menerima kembali kelebihan pembayaran peminjam (jika ada) dan untuk kelebihan pembayaran tersebut Bank tidak diwajibkan membayar bunga/kerugian sesuatu apapun kepada peminjam.
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">3. </td>
-                <td style="text-align: justify">
+                <td>
                     “Peminjam” wajib membayar kembali hutangnya kepada Bank berdasarkan perjanjian ini sesuai jadwal angsuran terlampir atau perubahan-perubahannya yang merupakan satu-kesatuan serta bagian yang tidak terpisahkan dari penjajian ini, tanpa “Peminjam” berhak mempertimbangkan dengan tagihan “Peminjam” kepada Bank.
                 </td>
             </tr>
@@ -275,17 +282,21 @@
 
         {{-- pasal 3 --}}
         <table class="table-pasal-3">
-            <p style="text-align: center"><b>Pasal 3</b></p>
-            <p style="text-align: center"><b>KEWAJIBAN DAN SANKSI</b></p>
             <tr>
-                <td style="vertical-align: top; width: 3%;">1.</td>
-                <td style="text-align: justify">
+                <td colspan="2" style="text-align: center"><b>Pasal 3</b></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center"><b>KEWAJIBAN DAN SANKSI</b></td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; width: 3%;">1. </td>
+                <td>
                     “Peminjam” membayar kepada Bank :
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;"></td>
-                <td style="text-align: justify">
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">a. </td>
@@ -314,19 +325,19 @@
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">2. </td>
-                <td style="text-align: justify">
+                <td>
                     Sistem angsuran kredit (bunga dan pokok) dibayar setiap bulan sampai dengan lunas.
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">3.</td>
-                <td style="text-align: justify">
+                <td>
                     Jika angsuran tidak dibayar pada waktu yang telah ditetapkan “Peminjam” wajib membayar denda dengan ketentuan-ketentuan sebagai berikut :
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;"></td>
-                <td style="text-align: justify">
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">a. </td>
@@ -361,13 +372,13 @@
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">4. </td>
-                <td style="text-align: justify">
+                <td>
                     Apabila peminjam melunasi kredit sebelum jatuh tempo dan tidak mengambil kredit lagi, maka peminjam wajib membayar sisa pokok pinjaman dan dikenakan penalti dengan ketentuan sebagai berikut :
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;"></td>
-                <td style="text-align: justify">
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">a. </td>
@@ -390,13 +401,13 @@
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">5. </td>
-                <td style="text-align: justify">
+                <td>
                     Apabila peminjam melunasi kredit sebelum jatuh tempo dan mengambil kredit lagi, maka peminjam wajib membayar bunga sesuai jadwal angsuran pada saat pelunasan, sedangkan pokok dapat dikompensasi dengan pinjaman baru.
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">6. </td>
-                <td style="text-align: justify">
+                <td>
                     Bank berhak mengubah tingkat suku bunga kredit/denda yang terlebih dahulu melakukan pemberitahuan kepada peminjam 30 hari sebelumnya.
                 </td>
             </tr>
@@ -404,10 +415,14 @@
 
         {{-- pasal 4 --}}
         <table class="table-pasal-4">
-            <p style="text-align: center"><b>Pasal 4</b></p>
-            <p style="text-align: center"><b>SANKSI ATAS PERISTIWA DILUAR PENGETAHUAN BANK</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td colspan="2" style="text-align: center"><b>Pasal 4</b></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center"><b>SANKSI ATAS PERISTIWA DILUAR PENGETAHUAN BANK</b></td>
+            </tr>
+            <tr>
+                <td>
                     Dalam hal timbul/atau terjadi salah satu peristiwa yang disebut dibawah ini, yaitu :
                 </td>
             </tr>
@@ -416,55 +431,55 @@
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">1. </td>
-                            <td style="text-align: justify">
+                            <td>
                                “Peminjam” lalai memenuhi kewajibannya kepada Bank berdasarkan perjanjian kredit ini.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">2. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 “Peminjam” atau pihak yang memberikan jaminan ditaruh dibawah perwalian atau pengampunan atau karena sebab-sebab apapun juga tidak berhak lagi mengurus, mengelola atau menguasai harta bendanya.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">3. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 “Peminjam” meninggal dunia, meninggalkan tempat tinggalnya/pergi ketempat yang tidak diketahui untuk waktu lama dan tidak tertentu, melakukan atau terlibat dalam suatu perbuatan/peristiwa yang menurut pertimbangan Bank dapat membahayakan pemberian kredit terdebut, ditangkap pihak berwajib atau dijatuhi hukuman penjara.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">4. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 Atas harta benda peminjam memberikan keterangan baik sebagian maupun seluruh yang dijaminkan atau yang tidak dijaminkan kepada Bank, diletakan sita jaminan (conservatoir beslag) atau sita eksekusi (executorial) oleh pihak ketiga.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">5. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 Nilai jaminan berkurang sedemikian rupa sehingga tidak lagi merupakan jaminan yang cukup atas seluruh dari hutang satu dan lain menurut pertimbangan dan penetapan Bank.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">6. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 Kepada “Peminjam” memberi keterangan baik lisan atau tertulis yang tidak mempunyai kebenaran dalam arti materiil tentang keadaan kekayaan, penghasilan, barang jaminan dan segala keterangan dokumen yang diberikan kepada Bank sehubungan dengan hutang peminjam kepada Bank atau jika “Peminjam” menyerahkan tanda bukti penerimaan uang dan/atau surat pemindah bukuan yang ditandatangani oleh pihak-pihak yang tidak berwenang untuk menandatanganinya sehingga tanda bukti penerimaan uang atau surat pemindahbukuan tersebut tidak sah.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">7. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 “Peminjam” baik sebelum maupun sesudah kredit diberikan oleh Bank juga mempunyai hutang kepada pihak ketiga dan hal yang demikian tidak diberitahukan kepada Bank.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">8. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 Kredit dipergunakan untuk tujuan lain dari maksud yang sebenarnya dari kredit yang diberikan.
                             </td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top; width: 3%;">9. </td>
-                            <td style="text-align: justify">
+                            <td>
                                 “Peminjam” lalai, melanggar atau tidak dapat/tidak memenuhi suatu ketentuan dalam perjanjian pemberian jaminan atau dokumen-dokumen lain sehubungan dengannya.
                             </td>
                         </tr>
@@ -472,7 +487,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: justify">
+                <td>
                     Atau jika terjadi peristiwa apapun yang menurut pendapat Bank akan dapat mengakibatkan “Peminjam” tidak dapat memenuhi kewajiban-kewajiban kepada Bank, maka dengan mengesampingkan ketentuan dalam pasal 1267. Kitab Undang-Undang Hukum Perdata. Bank berhak untuk :
                 </td>
             </tr>
@@ -510,122 +525,167 @@
 
         {{-- pasal 5 --}}
         <table class="table-pasal-5">
-            <p style="text-align: center"><b>Pasal 5</b></p>
-            <p style="text-align: center"><b>JAMINAN KREDIT</b></p>
+            <tr>
+                <td colspan="3" style="text-align: center"><b>Pasal 5</b></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center"><b>JAMINAN KREDIT</b></td>
+            </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">1. </td>
-                <td style="text-align: justify">
+                <td colspan="2">
                     Untuk lebih menjamin pembayaran kembali dengan tertib dan sebagaimana mestinya hutang “Peminjam” kepada Bank  berdasarkan perjanjian ini, “Peminjam” dengan ini menyatakan telah memberikan dan menyerahkan hak milik secara kepercayaan (Fiduciare Eigendom Overdract)/ SKMHT/APHT yang dianggap cukup dan dapat diterima kepada Bank berupa :
                 </td>
             </tr>
             <tr>
-                <td style="vertical-align: top; width: 3%;">a. </td>
+                <td style="vertical-align: top; width: 3%;"></td>
                 <td>
-                    Jenis Kendaraan roda 2 / roda 4 :
+                    <table style="width: 100%; text-align: justify;">
+                        <tr>
+                            <td style="vertical-align: top; width: 3%;">a. </td>
+                            <td>
+                                Jenis Kendaraan roda 2 / roda 4 :
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr>
-                <table style="width: 100%; text-align: justify;">
-
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <table style="width: 100%; text-align: justify;">
-                            <tr>
-                                <td>Merek/Type</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                                <td>Tahun</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                            </tr>
-                            <tr>
-                                <td>No. BPKB</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                                <td>Atas Nama</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                            </tr>
-                            <tr>
-                                <td>No. Rangka</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                                <td>Alamat</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                            </tr>
-                            <tr>
-                                <td>No. Mesin</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                            </tr>
-                            <tr>
-                                <td>No. Polis</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                            </tr>
-                            <tr>
-                                <td>Warna</td>
-                                <td>:</td>
-                                <td>..........................</td>
-                            </tr>
-                        </table>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td style="vertical-align: top; width: 3%;">b. </td>
-                        <td>
-                            Kuasa mendebet rekening tabungan/deposito nomor . . . . . . . .
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td style="vertical-align: top; width: 3%;">c. </td>
-                        <td>
-                            Sebidang tanah dan bangunan/pekarangan/sawah SHM/SHGB nomor . . . . . . . . . Nama Pemilik . . . . . . . . . . Luas tanah . . . . . . . . . . Alamat Pemilik . . . . . . . . . . Alamat Jaminan . . . . . . . . . . Terletak di Desa/Kelurahan . . . . . . . . . . Kecamatan . . . . . . . . . . Kabupaten/Kota . . . . . . . . . . Propinsi . . . . . . . . . . Dengan batas-batas:
-                        </td>
-                    </tr>
-                    <tr>
-                        <table style="width: 100%; text-align: justify;">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>-</td>
-                                <td>Utara</td>
-                                <td>:</td>
-                                <td>. . . . . . . . .</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>-</td>
-                                <td>Timur</td>
-                                <td>:</td>
-                                <td>. . . . . . . . .</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>-</td>
-                                <td>Selatan</td>
-                                <td>:</td>
-                                <td>. . . . . . . . .</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>-</td>
-                                <td>Barat</td>
-                                <td>:</td>
-                                <td>. . . . . . . . .</td>
-                            </tr>
-                        </table>
-                    </tr>
-                    <tr>
-                        Dengan kewajiban bahwa “Peminjam” harus menyerahkan asli surat bukti kepemilikan yang sah kepada Bank.
-                    </tr>
-                </table>
+                <td style="vertical-align: top; width: 3%;"></td>
+                <td>
+                    <table style="width: 100%; text-align: justify;">
+                        <tr>
+                            <td style="vertical-align: top; width: 3%;"></td>
+                            <td>
+                                <table style="width: 100%; text-align: justify;">
+                                    <tr>
+                                        <td>Merek/Type</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                        <td>Tahun</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No. BPKB</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                        <td>Atas Nama</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No. Rangka</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                        <td>Alamat</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No. Mesin</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No. Polis</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Warna</td>
+                                        <td>:</td>
+                                        <td>..........................</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; width: 3%;"></td>
+                <td>
+                    <table style="width: 100%; text-align: justify;">
+                        <tr>
+                            <td style="vertical-align: top; width: 3%;"></td>
+                            <td>
+                                Dengan kewajiban bahwa “Peminjam” harus menyerahkan asli surat bukti kepemilikan yang sah kepada Bank.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; width: 3%;"></td>
+                <td>
+                    <table style="width: 100%; text-align: justify;">
+                        <tr>
+                            <td style="vertical-align: top; width: 3%;">b. </td>
+                            <td>
+                                Kuasa mendebet rekening tabungan/deposito nomor . . . . . . . .
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; width: 3%;"></td>
+                <td>
+                    <table style="width: 100%; text-align: justify;">
+                        <tr>
+                            <td style="vertical-align: top; width: 3%;">c. </td>
+                            <td>
+                                Sebidang tanah dan bangunan/pekarangan/sawah SHM/SHGB nomor . . . . . . . . . Nama Pemilik . . . . . . . . . . Luas tanah . . . . . . . . . . Alamat Pemilik . . . . . . . . . . Alamat Jaminan . . . . . . . . . . Terletak di Desa/Kelurahan . . . . . . . . . . Kecamatan . . . . . . . . . . Kabupaten/Kota . . . . . . . . . . Propinsi . . . . . . . . . . Dengan batas-batas:
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; width: 3%;"></td>
+                <td>
+                    <table style="width: 100%; text-align: justify;">
+                        <tr>
+                            <td>
+                                <table style="width: 100%; text-align: justify;">
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>-</td>
+                                        <td>Utara</td>
+                                        <td>:</td>
+                                        <td>. . . . . . . . .</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>-</td>
+                                        <td>Timur</td>
+                                        <td>:</td>
+                                        <td>. . . . . . . . .</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>-</td>
+                                        <td>Selatan</td>
+                                        <td>:</td>
+                                        <td>. . . . . . . . .</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>-</td>
+                                        <td>Barat</td>
+                                        <td>:</td>
+                                        <td>. . . . . . . . .</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">2. </td>
@@ -638,44 +698,40 @@
         </table>
 
         <table class="table-pasal-6">
-            <p style="text-align: center"><b>Pasal 6</b></p>
-            <p style="text-align: center"><b>WANPRESTASI & PENYELESAIAN KREDIT</b></p>
             <tr>
-                <td style="text-align: justify">
-                    Apabila “Peminjam” melanggar dan/atau lalai dalam melaksanakan kewajibannya berdasarkan Perjanjian Kredit dan Pengakuan Hutang ini, maka berlaku ketentuan sebagai berikut :
+                <td colspan="3" style="text-align: center"><b>Pasal 6</b></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center"><b>WANPRESTASI & PENYELESAIAN KREDIT</b></td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top; width: 3%;">1. </td>
+                <td>
+                    Bank berhak dengan seketika menagih pinjaman-nya dan “Peminjam” diwajibkan tanpa menunda-menunda lagi membayar seluruh pinjaman-nya berupa pokok, bunga, denda, biaya-biaya dan kewajiban lainnya yang mungkin timbul dengan seketika dan sekaligus lunas.
                 </td>
             </tr>
             <tr>
-                <td style="text-align: justify">
-                  <table style="width: 100%; text-align: justify;">
-                        <tr>
-                            <td style="vertical-align: top; width: 3%;">1.</td>
-                            <td>
-                                Bank berhak dengan seketika menagih pinjaman-nya dan “Peminjam” diwajibkan tanpa menunda-menunda lagi membayar seluruh pinjaman-nya berupa pokok, bunga, denda, biaya-biaya dan kewajiban lainnya yang mungkin timbul dengan seketika dan sekaligus lunas.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align: top; width: 3%;">2.</td>
-                            <td>
-                                Bank akan melakukan penyelesaian pinjaman termasuk namun tidak terbatas pada upaya penjualan agunan baik secara di bawah tangan maupun melalui pelelangan umum, sell down, maupun melalui saluran hukum.
-                            </td>
-                        </tr>
-                  </table>
+                <td style="vertical-align: top; width: 3%;">2. </td>
+                <td>
+                    Bank akan melakukan penyelesaian pinjaman termasuk namun tidak terbatas pada upaya penjualan agunan baik secara di bawah tangan maupun melalui pelelangan umum, sell down, maupun melalui saluran hukum.
                 </td>
             </tr>
         </table>
 
-        <br><br>
         <table class="table-pasal-7">
-            <p style="text-align: center"><b>Pasal 7</b></p>
-            <p style="text-align: center"><b>SELL DOWN</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td colspan="3" style="text-align: center"><b>Pasal 7</b></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center"><b>SELL DOWN</b></td>
+            </tr>
+            <tr>
+                <td>
                     Bank berhak dengan ketentuan dan syarat yang dianggap baik oleh Bank untuk :
                 </td>
             </tr>
             <tr>
-                <td style="text-align: justify">
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">a. </td>
@@ -695,15 +751,19 @@
         </table>
 
         <table class="table-pasal-8">
-            <p style="text-align: center"><b>Pasal 8</b></p>
-            <p style="text-align: center"><b>DATA/INFORMASI PEMINJAM</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td colspan="3" style="text-align: center"><b>Pasal 8</b></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center"><b>DATA/INFORMASI PEMINJAM</b></td>
+            </tr>
+            <tr>
+                <td>
                     “Peminjam” dengan Perjanjian Kredit dan Pengakuan Hutang ini memberikan Kuasa dan/atau Persetujuan kepada Bank untuk memberikan/melaporkan data dan/atau informasi “Peminjam”, termasuk tetapi tidak terbatas pada data/informasi tentang pinjaman dan simpanannya (deposito dan/atau tabungan) pada Bank kepada :
                 </td>
             </tr>
             <tr>
-                <td style="text-align: justify">
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">1. </td>
@@ -735,10 +795,14 @@
         </table>
 
         <table class="table-pasal-9">
-            <p style="text-align: center"><b>Pasal 9</b></p>
-            <p style="text-align: center"><b>ASURANSI</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td style="text-align: center"><b>Pasal 9</b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center"><b>ASURANSI</b></td>
+            </tr>
+            <tr>
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">1. </td>
@@ -764,20 +828,28 @@
         </table>
 
         <table class="table-pasal-10">
-            <p style="text-align: center"><b>Pasal 10</b></p>
-            <p style="text-align: center"><b>LAPORAN DAN PEMERIKSAAN</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td style="text-align: center;"><b>Pasal 10</b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><b>LAPORAN DAN PEMERIKSAAN</b></td>
+            </tr>
+            <tr>
+                <td>
                     Bank berhak untuk meminta laporan dan/atau melakukan pemeriksaan setiap waktu kepada “Peminjam” baik dilakukan oleh Bank maupun kuasanya yang ditunjuk oleh Bank terhadap pembukuan keuangan “Peminjam”/perusahaannya.
                 </td>
             </tr>
         </table>
 
         <table class="table-pasal-11">
-            <p style="text-align: center"><b>Pasal 11</b></p>
-            <p style="text-align: center"><b>PEMBERIAN KUASA</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td style="text-align: center;"><b>Pasal 11</b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><b>PEMBERIAN KUASA</b></td>
+            </tr>
+            <tr>
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">1.</td>
@@ -821,13 +893,15 @@
             </tr>
         </table>
 
-        <br><br><br><br><br>
-
         <table class="table-pasal-12">
-            <p style="text-align: center"><b>Pasal 12</b></p>
-            <p style="text-align: center"><b>KETENTUAN-KETENTUAN LAIN</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td style="text-align: center;"><b>Pasal 12</b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><b>KETENTUAN-KETENTUAN LAIN</b></td>
+            </tr>
+            <tr>
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">1. </td>
@@ -871,11 +945,15 @@
         </table>
 
         <table class="table-pasal-13">
-            <p style="text-align: center"><b>Pasal 13</b></p>
-            <p style="text-align: center"><b>ATURAN HUKUM</b></p>
             <tr>
-                <td style="text-align: justify">
-                  <table style="width: 100%; text-align: justify;">
+                <td style="text-align: center;"><b>Pasal 13</b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><b>ATURAN HUKUM</b></td>
+            </tr>
+            <tr>
+                <td>
+                  <table style="width:100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">1. </td>
                             <td>
@@ -895,10 +973,14 @@
 
 
         <table class="table-pasal-13">
-            <p style="text-align: center"><b>Pasal 14</b></p>
-            <p style="text-align: center"><b>KEDUDUKAN HUKUM</b></p>
             <tr>
-                <td style="text-align: justify">
+                <td style="text-align: center;"><b>Pasal 14</b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><b>KEDUDUKAN HUKUM</b></td>
+            </tr>
+            <tr>
+                <td>
                   <table style="width: 100%; text-align: justify;">
                         <tr>
                             <td style="vertical-align: top; width: 3%;">1. </td>
@@ -919,7 +1001,7 @@
 
         <table class="table-pasal-13">
             <tr>
-                <td style="text-align: justify">
+                <td>
                     Demikian perjanjian kredit dan pengakuan hutang ini dibuat untuk para pihak dalam rangkap 2 (dua) masing-masing sama bunyinya diatas kertas bermaterai cukup, serta mempunyai kekuatan hukum yang sama pada hari dan tanggal sebagaimana tersebut pada awal perjanjian ini dan berlaku sejak tanggal ditandatangani.
                 </td>
             </tr>
@@ -936,7 +1018,7 @@
             </tr>
             <tr>
                 <td style="text-align: center">
-                    <table style="width: 100%; text-align: center;">
+                    <table style="width: 80%; text-align: center;">
                         <tr>
                             <td>(.....................................)</td>
                             <td>(.....................................)</td>
@@ -955,6 +1037,9 @@
                     <table style="width: 100%; text-align: center;">
                         <tr>
                             <td>(.....................................)</td>
+                        </tr>
+                        <tr>
+                            <td>Debitur</td>
                         </tr>
                     </table>
                 </td>

@@ -2153,10 +2153,9 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
-        $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
-
-        return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
         // return view('dagulir.cetak.cetak-pk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
+        return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
     }
     public function cetakSPPk($id)
     {
