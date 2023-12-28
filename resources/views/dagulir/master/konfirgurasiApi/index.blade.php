@@ -14,50 +14,45 @@
         </div>
         <div class="body-pages">
             <div class="border bg-white mt-8">
+                <div class="pb-4 space-y-3 p-5">
+                    <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">{{ $data ? 'Ubah Konfigurasi' : 'Tambah Konfigurasi' }}</h2>
+                </div>
                 <form action="{{ route('dagulir.master.konfigurasi-api.store') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="id" value="{{ $data ? $data->id : null }}">
-                    <div class="table-responsive">
-                        <table class="tables">
-                            <thead>
-                                <tr>
-                                    <th>HCS Host</th>
-                                    <th>DWH Host</th>
-                                    <th>DWH Store Kredit API URL</th>
-                                    <th>DWH Token</th>
-                                    <th>SIPDE HOST</th>
-                                    <th>SIPDE Username</th>
-                                    <th>SIPDE Password</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <textarea name="hcs_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->hcs_host : '' }}</textarea>
-                                    </td>
-                                    <td>
-                                        <textarea name="dwh_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->dwh_host : '' }}</textarea>
-                                    </td>
-                                    <td>
-                                        <textarea name="dwh_store_kredit_api_url" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->dwh_store_kredit_api_url : '' }}</textarea>
-                                    </td>
-                                    <td>
-                                        <textarea name="dwh_token" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->dwh_token : '' }}</textarea>
-                                    </td>
-                                    <td>
-                                        <textarea name="sipde_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_host : '' }}</textarea>
-                                    </td>
-                                    <td>
-                                        <textarea name="sipde_username" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_username : '' }}</textarea>
-                                    </td>
-                                    <td>
-                                        <textarea name="sipde_password" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_password : '' }}</textarea>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="p-5 space-y-5">
+                        <div class="form-group-4">
+                            <div class="input-box">
+                                <label for="">HCS Host</label>
+                                <textarea name="hcs_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->hcs_host : '' }}</textarea>
+                            </div>
+                            <div class="input-box">
+                                <label for="">DWH Host</label>
+                                <textarea name="dwh_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->dwh_host : '' }}</textarea>
+                            </div>
+                            <div class="input-box">
+                                <label for="">DWH Store Kredit API URL</label>
+                                <textarea name="dwh_store_kredit_api_url" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->dwh_store_kredit_api_url : '' }}</textarea>
+                            </div>
+                            <div class="input-box">
+                                <label for="">DWH Token</label>
+                                <textarea name="dwh_token" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->dwh_token : '' }}</textarea>
+                            </div>
+                            <div class="input-box">
+                                <label for="">SIPDE Host</label>
+                                <textarea name="sipde_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_host : '' }}</textarea>
+                            </div>
+                            <div class="input-box">
+                                <label for="">SIPDE Username</label>
+                                <textarea name="sipde_username" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_username : '' }}</textarea>
+                            </div>
+                            <div class="input-box">
+                                <label for="">SIPDE Password</label>
+                                <textarea name="sipde_password" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_password : '' }}</textarea>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex justify-end items-end">
+                    <input type="hidden" name="id" value="{{ $data ? $data->id : null }}">
+                    <div class="flex justify-end items-end m-2">
                         <button type="submit"
                             class="px-7 py-2 rounded font-semibold bg-theme-primary border text-white mt-2">
                             <span class="mt-1 mr-3">
