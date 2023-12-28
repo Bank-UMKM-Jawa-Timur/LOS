@@ -99,7 +99,7 @@ class MasterDanaRepository
 
                 if ($value->loan) {
                     $loan = $value->loan;
-
+                    $loan->user = 'pincab';
                     foreach ($loan as $l) {
                         $angsuran = MasterDDAngsuran::where('id_dd_loan', $l->id)->sum('pokok_angsuran');
                         $total_angsuran += $angsuran;
