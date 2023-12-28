@@ -40,7 +40,7 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
   </button>
   <div class="notification-list hidden border lg:w-96 w-80 bg-white absolute top-14 lg:right-32 right-0">
       <div class="head border-b w-full text-center p-3">
-          Notifikasi SIPDe
+          <b>Notifikasi SIPDe</b>
           <span class="ml-3 py-1.5 px-3 text-white rounded-full bg-theme-primary">
             {{count($notification)}}
           </span>

@@ -24,7 +24,7 @@
     });
 
     function sendFile(dataIndex){
-        
+
     }
 
     function saveTempFile(inputFile){
@@ -52,7 +52,7 @@
                 fillTempFile(inputFile + `input[data-id="${res.data.file_id}"]`);
             }
         });
-    } 
+    }
 
     function saveDataUmum(){
         let id_dagulir_temp = null
@@ -61,8 +61,15 @@
         } else {
             id_dagulir_temp = null
         }
+        let skema_kredit = null
+        if ($("#skema_kredit").val() != null || $('#skema_kredit').val() != "") {
+            skema_kredit = $('#skema_kredit').val();
+        } else {
+            skema_kredit = null;
+        }
         const data = {
             id_dagulir_temp: id_dagulir_temp,
+            skema_kredit: skema_kredit,
         };
         $('#dagulir-tab input, #dagulir-tab select, #dagulir-tab textarea').each(function() {
             const input = $(this);

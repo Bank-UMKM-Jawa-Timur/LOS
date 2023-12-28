@@ -24,8 +24,10 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
 use App\Models\MerkModel;
+use App\Models\PlafonUsulan;
 use App\Models\TipeModel;
 use App\Models\User;
+use App\Repository\PengajuanDagulirRepository;
 use App\Services\TemporaryService;
 use DateTime;
 use Exception;
@@ -45,6 +47,7 @@ class PengajuanKreditController extends Controller
 {
     private $isMultipleFiles = [];
     private $logPengajuan;
+    private $repo;
 
     public function __construct()
     {
@@ -52,6 +55,7 @@ class PengajuanKreditController extends Controller
         $this->isMultipleFiles = [
             'Foto Usaha'
         ];
+        $this->repo = new PengajuanDagulirRepository;
     }
 
     public function fixScore()
@@ -1240,7 +1244,7 @@ class PengajuanKreditController extends Controller
             $addData->no_ktp = $request->no_ktp;
             $addData->telp = $request->get('no_telp');
             $addData->tempat_lahir = $request->tempat_lahir;
-            $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
+            $addData->tanggal_lahir = $request->tanggal_lahir;
             $addData->status = $request->status;
             $addData->sektor_kredit = $request->sektor_kredit;
             $addData->jenis_usaha = $request->jenis_usaha;
@@ -1598,7 +1602,7 @@ class PengajuanKreditController extends Controller
             'calon_nasabah.alamat_rumah',
             'calon_nasabah.alamat_usaha',
             'calon_nasabah.no_ktp',
-            'calon_nasabah.no_telp',
+            'calon_nasabah.telp',
             'calon_nasabah.tempat_lahir',
             'calon_nasabah.tanggal_lahir',
             'calon_nasabah.status',
@@ -1617,6 +1621,11 @@ class PengajuanKreditController extends Controller
         )
             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
             ->find($id);
+        $param['pengajuan'] = PengajuanModel::find($id);
+        $param['dataKabupaten'] = Kabupaten::all();
+        $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kecamatan)->get();
+        $param['dataDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
+        $param['duTemp'] = $param['dataUmum'];
         if ($param['dataUmum']) {
             $param['dataUmum']->tanggal_lahir = $this->formatDate($param['dataUmum']->tanggal_lahir);
         }
@@ -1629,42 +1638,20 @@ class PengajuanKreditController extends Controller
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
                 ->first();
-            // $param['dataPOMerk'] = DB::table('mst_tipe')
-            //     ->where('id', $param['dataPO']->id_type)
-            //     ->first();
         }
         $param['skema'] = $param['dataUmum']->skema_kredit;
 
-        // return JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
-        //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-        //                                 ->where('id_pengajuan', $id)
-        //                                 ->get();
-
-        // $dataSlik = JawabanPengajuanModel::where('id_pengajuan', 14)
-        //                                 ->join('option', 'option.id', 'jawaban.id_jawaban')
-        //                                 ->whereIn('option.id', [71, 72, 73, 74])
-        //                                 ->first();
-
-        // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
-
-        // return $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
-        //                             ->join('option','option.id','jawaban.id_jawaban')
-        //                             ->join('item','item.id','option.id_item')
-        //                             ->where('jawaban.id_pengajuan',$id)
-        //                             ->get();
-
-        // dd($dataSlik);
-        // dump($param['itemSlik']);
-        // // dd($dataDetailJawabanText->get());
-        // $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', 1)
-        //                                 ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-        //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-        //                                 ->where('id_parent', 114)
-        //                                 ->orderBy('id', 'DESC');
-
-        //                                 return $dataDetailJawabanText->get();
-
-        return view('pengajuan-kredit.edit-pengajuan-kredit', $param);
+        $param['jawabanSlik'] = JawabanModel::select('id', 'id_jawaban', 'skor')
+                ->where('id_pengajuan', $id)
+                ->whereIn('id_jawaban', [71,72,73,74])
+                ->first();
+        $param['jawabanLaporanSlik'] = \App\Models\JawabanTextModel::where('id_pengajuan', $id)
+                ->where('id_jawaban', 146)
+                ->first();
+        $param['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+        // return view('pengajuan-kredit.edit-pengajuan-kredit', $param);
+        return view('new-pengajuan.edit-pengajuan', $param);
     }
 
     /**
@@ -1698,9 +1685,6 @@ class PengajuanKreditController extends Controller
             'jaminan' => 'required',
             'hubungan_bank' => 'required',
             'hasil_verifikasi' => 'required',
-            // 'dataLevelDua.*' => $checkLevelDua,
-            // 'dataLevelTiga.*' => $checkLevelTiga,
-            // 'dataLevelEmpat.*' => $checkLevelEmpat,
         ], [
             'required' => 'data harus terisi.',
             'not_in' => 'kolom harus dipilih.',
@@ -2317,6 +2301,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.alamat_rumah',
                 'calon_nasabah.alamat_usaha',
                 'calon_nasabah.no_ktp',
+                'calon_nasabah.telp',
                 'calon_nasabah.tempat_lahir',
                 'calon_nasabah.tanggal_lahir',
                 'calon_nasabah.status',
@@ -2351,6 +2336,9 @@ class PengajuanKreditController extends Controller
                     ->where('id_pengajuan', $id)
                     ->first();
             }
+            $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->id_kecamatan)->kecamatan;
+            $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->id_kabupaten)->kabupaten;
+            $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->id_desa)->desa;
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
             $dokumenUsaha = DB::table('item')
                 ->where('nama', 'LIKE', '%NIB%')
@@ -2371,7 +2359,7 @@ class PengajuanKreditController extends Controller
                 ->select('users.nip', 'alasan_pengembalian_data.*')
                 ->get();
 
-            return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
+            return view('new-pengajuan.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
@@ -2820,6 +2808,7 @@ class PengajuanKreditController extends Controller
             }
             DB::commit();
 
+            alert()->success('Berhasil','Berhasil mengganti posisi.');
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -2870,11 +2859,15 @@ class PengajuanKreditController extends Controller
         $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
 
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
-            ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')
-            ->join('kecamatan', 'kecamatan.id', 'calon_nasabah.id_kecamatan')
-            ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
-            ->where('calon_nasabah.id_pengajuan', $id)
-            ->first();
+                ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')
+                ->join('kecamatan', 'kecamatan.id', 'calon_nasabah.id_kecamatan')
+                ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
+                ->where('calon_nasabah.id_pengajuan', $id)
+                ->first();
+        $param['dataKecamatan'] = Kecamatan::find($param['dataNasabah']->id_kecamatan);
+        $param['dataKabupaten'] = Kabupaten::find($param['dataNasabah']->id_kabupaten);
+        $param['dataDesa'] = Desa::find($param['dataNasabah']->id_desa);
+
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
@@ -2885,6 +2878,20 @@ class PengajuanKreditController extends Controller
                                                             ->get();
 
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
+
+        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
+        $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->select(
+            'plafon_usulan_penyelia',
+            'jangka_waktu_usulan_penyelia',
+            'plafon_usulan_pbo',
+            'jangka_waktu_usulan_pbo',
+            'plafon_usulan_pbp',
+            'jangka_waktu_usulan_pbp',
+            'plafon_usulan_pincab',
+            'jangka_waktu_usulan_pincab'
+            )->first();
+        $param['pendapatDanUsulanStaf'] = KomentarModel::select('komentar_staff')->where('id_pengajuan', $id)->first();
+        $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
         if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
@@ -2927,89 +2934,116 @@ class PengajuanKreditController extends Controller
         }
         // dd($log[0]['tgl']);
         $param['logPengajuan'] = $log;
+        $param['rolesPemroses'] = $this->repo->getDataPemroses($param['dataNasabah']);
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }
-    public function checkPincabStatusDetailPost(Request $request)
+    public function checkPincabStatusDetailPost($id, Request $request)
     {
-        try {
-            $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
+        if (auth()->user()->role == 'Pincab') {
+            try {
+                $idKomentar = KomentarModel::where('id_pengajuan', $id)->first();
+                KomentarModel::where('id', $idKomentar->id)->update(
+                    [
+                        'komentar_pincab' => $request->pendapat,
+                        'id_pincab' => Auth::user()->id,
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]
+                );
+
+                // Log Pengajuan review
+                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+                $nasabah->nominal_realisasi = $request->get('nominal_realisasi');
+                $nasabah->jangka_waktu_realisasi = $request->get('jangka_waktu_disetujui');
+                $nasabah->update();
+
+                $namaNasabah = 'undifined';
+
+                $pengajuan = PengajuanModel::find($id);
+                $pengajuan->id_pincab = auth()->user()->id;
+                $pengajuan->tanggal_review_pincab = date('Y-m-d');
+                $pengajuan->posisi = "Selesai";
+                $pengajuan->tanggal_review_pincab = date(now());
+                $pengajuan->update();
+
+                if ($nasabah)
+                    $namaNasabah = $nasabah->nama;
+
+                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $id, Auth::user()->id, Auth::user()->nip);
+                alert()->success('Berhasil','Berhasil menyetujui pengajuan.');
+                return redirect('/pengajuan-kredit')->withStatus('Berhasil menambahkan komentar');
+            } catch (Exception $e) {
+                return $e;
+                return redirect()->back()->withError('Terjadi kesalahan.');
+            } catch (QueryException $e) {
+                return $e;
+                return redirect()->back()->withError('Terjadi kesalahan');
+            }
+        } else {
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
+
+    }
+    public function checkPincabStatusChange($id,$request)
+    {
+        $statusPincab = PengajuanModel::find($id);
+        if (auth()->user()->role == 'Pincab') {
+            $idKomentar = KomentarModel::where('id_pengajuan', $id)->first();
             KomentarModel::where('id', $idKomentar->id)->update(
                 [
-                    'komentar_pincab' => $request->komentar_pincab,
+                    'komentar_pincab' => $request->pendapat,
+                    'id_pincab' => Auth::user()->id,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]
+            );
+            $statusPincab->posisi = "Selesai";
+            $statusPincab->tanggal_review_pincab = date(now());
+            $statusPincab->update();
+
+            $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+            $namaNasabah = 'undifined';
+            if ($nasabah)
+                $namaNasabah = $nasabah->nama;
+
+            $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+
+            event(new EventMonitoring('menyetujui pengajuan'));
+
+            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+
+        } else {
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
+    }
+    public function checkPincabStatusChangeTolak($id, Request $request)
+    {
+        $statusPincab = PengajuanModel::find($id);
+        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
+        if (auth()->user()->role == 'Pincab') {
+            $statusPincab->posisi = "Ditolak";
+            $statusPincab->tanggal_review_pincab = date(now());
+            $statusPincab->update();
+
+            $idKomentar = KomentarModel::where('id_pengajuan', $id)->first();
+            KomentarModel::where('id', $idKomentar->id)->update(
+                [
+                    'komentar_pincab' => $request->pendapat,
                     'id_pincab' => Auth::user()->id,
                     'updated_at' => date('Y-m-d H:i:s')
                 ]
             );
 
-            // Log Pengajuan review
-            $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $request->id_pengajuan)->first();
-            $nasabah->nominal_realisasi = $request->get('nominal_realisasi');
-            $nasabah->update();
-
+            $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
             $namaNasabah = 'undifined';
-
             if ($nasabah)
                 $namaNasabah = $nasabah->nama;
 
-            $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $request->id_pengajuan, Auth::user()->id, Auth::user()->nip);
-
+            $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+            event(new EventMonitoring('tolak pengajuan'));
+            alert()->success('Berhasil','Berhasil menolak pengajuan.');
             return redirect('/pengajuan-kredit')->withStatus('Berhasil menambahkan komentar');
-        } catch (Exception $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
-        } catch (QueryException $e) {
-            return redirect()->back()->withError('Terjadi kesalahan');
-        }
-    }
-    public function checkPincabStatusChange($id)
-    {
-        $statusPincab = PengajuanModel::find($id);
-        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
-        if (auth()->user()->role == 'Pincab') {
-            if ($komentarPincab->komentar_pincab != null) {
-                $statusPincab->posisi = "Selesai";
-                $statusPincab->tanggal_review_pincab = date(now());
-                $statusPincab->update();
-
-                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
-                $namaNasabah = 'undifined';
-                if ($nasabah)
-                    $namaNasabah = $nasabah->nama;
-
-                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
-
-                event(new EventMonitoring('menyetujui pengajuan'));
-
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-            } else {
-                return redirect()->back()->withError('Belum di review Pincab.');
-            }
         } else {
-            return redirect()->back()->withError('Tidak memiliki hak akses.');
-        }
-    }
-    public function checkPincabStatusChangeTolak($id)
-    {
-        $statusPincab = PengajuanModel::find($id);
-        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
-        if (auth()->user()->role == 'Pincab') {
-            if ($komentarPincab->komentar_pincab != null) {
-                $statusPincab->posisi = "Ditolak";
-                $statusPincab->tanggal_review_pincab = date(now());
-                $statusPincab->update();
-
-                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
-                $namaNasabah = 'undifined';
-                if ($nasabah)
-                    $namaNasabah = $nasabah->nama;
-
-                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
-                event(new EventMonitoring('tolak pengajuan'));
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-            } else {
-                return redirect()->back()->withError('Belum di review Pincab.');
-            }
-        } else {
+            return 'qwtqt';
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }

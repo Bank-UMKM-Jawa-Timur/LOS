@@ -51,6 +51,7 @@ $dataIndex = match ($skema) {
                     <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
                 @endif
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp">
+                <input type="hidden" name="skema_kredit" id="skema_kredit" value="Dagulir">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         @if (\Request::has('dagulir'))

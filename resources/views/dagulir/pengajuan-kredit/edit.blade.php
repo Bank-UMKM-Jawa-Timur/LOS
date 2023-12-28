@@ -35,6 +35,11 @@ $dataIndex = match ($skema) {
             <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
                 <span class="percentage">0%</span> Data Umum
             </button>
+            @if ($pengajuan->skema_kredit == 'KKB')
+            <button data-toggle="tab" data-tab="data-po" class="btn btn-tab font-semibold">
+                <span class="percentage">0%</span> Data PO
+            </button>
+            @endif
             @foreach ($dataAspek as $item)
                 @php
                     $title = str_replace('&', 'dan', strtolower($item->nama));
@@ -53,8 +58,15 @@ $dataIndex = match ($skema) {
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp" value="{{ $pengajuan?->id }}">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.edit-dagulir')
+                        @if ($pengajuan->skema_kredit != 'Dagulir')
+                            @include('dagulir.pengajuan.edit-dagulir-analisis')
+                        @else
+                            @include('dagulir.pengajuan.edit-dagulir')
+                        @endif
                     </div>
+                    @if ($pengajuan->skema_kredit == 'KKB')
+                        @include('dagulir.pengajuan.edit-data-po')
+                    @endif
                     @foreach ($dataAspek as $key => $value)
                         @php
                             $title_id = str_replace('&', 'dan', strtolower($value->nama));
@@ -88,7 +100,6 @@ $dataIndex = match ($skema) {
                                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
                                         @endphp
                                         {{-- item ijin usaha --}}
-
                                         @if ($item->nama == 'Ijin Usaha')
                                             <div class="form-group">
                                                 <div class="input-box">
@@ -124,7 +135,6 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            
                                             <div class="form-group" id="space_nib"></div>
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">

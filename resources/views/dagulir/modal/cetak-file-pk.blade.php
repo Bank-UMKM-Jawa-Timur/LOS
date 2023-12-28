@@ -29,13 +29,7 @@
                             <span class="text-red-500 m-0 mt-2 hidden">Harus diisi.</span>
                         </div>
                     </div>
-                    <div class="form-group-1">
-                        <div class="input-box">
-                            <label for="no_loan">No Loan</label>
-                            <input type="Text" name="no_loan" id="no_loan" class="form-input" required>
-                            <span class="text-red-500 m-0 mt-2 hidden">Harus diisi.</span>
-                        </div>
-                    </div>
+
                     <div class="form-group-1">
                         <div class="input-box">
                             <label for="pk">File PK</label>
