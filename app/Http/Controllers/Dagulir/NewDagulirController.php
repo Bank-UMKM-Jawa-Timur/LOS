@@ -201,7 +201,6 @@ class NewDagulirController extends Controller
     }
 
     public function create(Request $request) {
-        return $request;
         $role = auth()->user()->role;
         if ($role == 'Staf Analis Kredit') {
             $param['pageTitle'] = "Dashboard";
@@ -3177,29 +3176,43 @@ class NewDagulirController extends Controller
     }
 
     public function tempDagulir(Request $request){
-        if(isset($request->id_dagulir_temp)){
-            $dagulir = TemporaryService::saveDagulir(
-                $request->id_dagulir_temp,
-                TemporaryService::convertDagulirReq($request)
-            );
-        } else{
-            $dagulir = TemporaryService::saveDagulir(
-                null,
-                TemporaryService::convertDagulirReq($request)
-            );
+        if ($request->skema_kredit != null) {
+            if (isset($request->id_dagulir_temp)) {
+                $nasabah = TemporaryService::saveNasabah(
+                    $request->id_dagulir_temp,
+                    TemporaryService::convertNasabahReq($request)
+                );
+            } else {
+                $nasabah = TemporaryService::saveNasabah(
+                    null,
+                    TemporaryService::convertNasabahReq($request)
+                );
+            }
+        } else {
+            if(isset($request->id_dagulir_temp)){
+                $dagulir = TemporaryService::saveDagulir(
+                    $request->id_dagulir_temp,
+                    TemporaryService::convertDagulirReq($request)
+                );
+            } else{
+                $dagulir = TemporaryService::saveDagulir(
+                    null,
+                    TemporaryService::convertDagulirReq($request)
+                );
+            }
         }
 
-        try {
+        if ($request->skema_kredit != null) {
             foreach ($request->dataLevelDua as $key => $value) {
-                $dataSlik = getDataLevel($value);
+                $dataSlik = $this->getDataLevel($value);
                 $cek = DB::table('jawaban_temp')
-                    ->where('temporary_dagulir_id', $request->id_dagulir_temp ?? $dagulir->id)
+                    ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
                     ->where('id_jawaban', $dataSlik[1])
                     ->count('id');
                 if ($cek < 1) {
                     DB::table('jawaban_temp')
                         ->insert([
-                            'temporary_dagulir_id' => $request->id_dagulir_temp ?? $dagulir->id,
+                            'id_temporary_calon_nasabah' => $request->id_nasabah ?? $nasabah->id,
                             'id_jawaban' => $dataSlik[1],
                             'skor' => $dataSlik[0],
                             'id_option' => $key,
@@ -3207,7 +3220,7 @@ class NewDagulirController extends Controller
                         ]);
                 } else {
                     DB::table('jawaban_temp')
-                        ->where('temporary_dagulir_id', $request->id_dagulir_temp ?? $dagulir->id)
+                        ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
                         ->where('id_option', $key)
                         ->update([
                             'id_jawaban' => $dataSlik[1],
@@ -3216,8 +3229,38 @@ class NewDagulirController extends Controller
                         ]);
                 }
             }
-        } catch (\Exception $e) {
+        } else {
+            try {
+                foreach ($request->dataLevelDua as $key => $value) {
+                    $dataSlik = getDataLevel($value);
+                    $cek = DB::table('jawaban_temp')
+                        ->where('temporary_dagulir_id', $request->id_dagulir_temp ?? $dagulir->id)
+                        ->where('id_jawaban', $dataSlik[1])
+                        ->count('id');
+                    if ($cek < 1) {
+                        DB::table('jawaban_temp')
+                            ->insert([
+                                'temporary_dagulir_id' => $request->id_dagulir_temp ?? $dagulir->id,
+                                'id_jawaban' => $dataSlik[1],
+                                'skor' => $dataSlik[0],
+                                'id_option' => $key,
+                                'created_at' => now()
+                            ]);
+                    } else {
+                        DB::table('jawaban_temp')
+                            ->where('temporary_dagulir_id', $request->id_dagulir_temp ?? $dagulir->id)
+                            ->where('id_option', $key)
+                            ->update([
+                                'id_jawaban' => $dataSlik[1],
+                                'skor' => $dataSlik[0],
+                                'updated_at' => now()
+                            ]);
+                    }
+                }
+            } catch (\Exception $e) {
+            }
         }
+
 
         return response()->json([
             'status' => 'ok',
