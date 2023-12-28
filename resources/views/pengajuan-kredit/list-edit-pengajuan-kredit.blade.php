@@ -140,113 +140,48 @@
                         </thead>
                         <tbody>
                             @forelse ($data_pengajuan as $item)
+                            @php
+                                $nama_pemroses = 'undifined';
+                                $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                if ($item->posisi == 'Proses Input Data') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                } else if ($item->posisi == 'Review Penyelia') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
+                                } else if ($item->posisi == 'PBO') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
+                                } else if ($item->posisi == 'PBP') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
+                                } else if ($item->posisi == 'Pincab' || $item->posisi == 'Selesai' || $item->posisi == 'Ditolak') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
+                                }
+
+                                if ($user)
+                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                else {
+                                    $check_log = \DB::table('log_pengajuan')
+                                        ->select('nip')
+                                        ->where('id_pengajuan', $item->id)
+                                        ->where('activity', 'LIKE', 'Staf%')
+                                        ->orderBy('id', 'DESC')
+                                        ->first();
+                                    if ($check_log)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                }
+                                $item->nama_pemroses = $nama_pemroses;
+
+                            @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td class="text-center text-sm">
-                                    @if ($item->posisi == 'Proses Input Data')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'Staf%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>Staff</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'Review Penyelia')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'Penyelia%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>Penyelia</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'PBO')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'PBO%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>PBO</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'PBP')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'PBP%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>PBP</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'Pincab')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'Pincab%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>Pincab</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @if ($item->pk && $item->posisi == 'Selesai')
+                                        {{$item->posisi}}
                                     @else
-                                        <span>Selesai</span>
+                                        {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
+                                    @endif
+                                    @if ($item->posisi != 'Selesai' && $item->posisi != 'Ditolak')
+                                        <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                                     @endif
                                 </td>
                                 <td>
@@ -275,64 +210,65 @@
                                 </td>
                                 <td>
                                     @php
-                                        $avgResult = $item->average_by_sistem;
-                                        if ($item->posisi == 'Review Penyelia')
-                                            $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
-                                        else if ($item->posisi == 'PBO')
-                                            $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
-                                        else if ($item->posisi == 'PBP')
-                                            $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
-                                        else if ($item->posisi == 'Pincab') {
-                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbp;
-                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbo;
-                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_penyelia;
-                                        }
-                                        else if ($item->posisi == 'Ditolak') {
-                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbp;
-                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbo;
-                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_penyelia;
-                                        }
-                                        else if ($item->posisi == 'Selesai') {
-                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbp;
-                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbo;
-                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_penyelia;
-                                        }
-                                        if ($avgResult > 0 && $avgResult <= 2) {
-                                            $status = "merah";
-                                        } elseif ($avgResult > 2 && $avgResult <= 3) {
-                                            $status = "kuning";
-                                        } elseif ($avgResult > 3) {
-                                            $status = "hijau";
-                                        } else {
-                                            $status = "merah";
-                                        }
-                                    @endphp
-                                    @if ($status == 'hijau')
-                                        <font class="text-green-500">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @elseif ($status == 'kuning')
-                                        <font class="text-yellow-500">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @elseif ($status == 'merah')
-                                        <font class="text-red-500">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @else
-                                        <font class="text-neutral-800">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @endif
+                                    $avgResult = $item->average_by_sistem;
+                                    if ($item->posisi == 'Review Penyelia')
+                                        $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
+                                    else if ($item->posisi == 'PBO')
+                                        $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
+                                    else if ($item->posisi == 'PBP')
+                                        $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+                                    else if ($item->posisi == 'Pincab') {
+                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbp;
+                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbo;
+                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_penyelia;
+                                    }
+                                    else if ($item->posisi == 'Ditolak') {
+                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbp;
+                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbo;
+                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_penyelia;
+                                    }
+                                    else if ($item->posisi == 'Selesai') {
+                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbp;
+                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbo;
+                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_penyelia;
+                                    }
+                                    $status_skor = "";
+                                    if ($avgResult > 0 && $avgResult <= 2) {
+                                        $status_skor = "merah";
+                                    } elseif ($avgResult > 2 && $avgResult <= 3) {
+                                        $status_skor = "kuning";
+                                    } elseif ($avgResult > 3) {
+                                        $status_skor = "hijau";
+                                    } else {
+                                        $status_skor = "merah";
+                                    }
+                                @endphp
+                                @if ($status_skor == 'hijau')
+                                    <font class="text-green-500">
+                                        {{ $avgResult }}
+                                    </font>
+                                @elseif ($status_skor == 'kuning')
+                                    <font class="text-yellow-500">
+                                        {{ $avgResult }}
+                                    </font>
+                                @elseif ($status_skor == 'merah')
+                                    <font class="text-red-500">
+                                        {{ $avgResult }}
+                                    </font>
+                                @else
+                                    <font class="text-neutral-800">
+                                        {{ $avgResult }}
+                                    </font>
+                                @endif
                                 </td>
                                 <td>
                                     @if ($item->posisi == 'Selesai')
