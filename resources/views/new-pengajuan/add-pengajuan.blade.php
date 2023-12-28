@@ -880,6 +880,7 @@ $dataIndex = match ($skema) {
 
             $("#skema_kredit").val(valSkema);
         });
+        countFormPercentage()
     });
 
     @if (!\Request::has('dagulir'))

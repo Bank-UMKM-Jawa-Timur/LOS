@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 lg:gap-2 justify-center mt-5">
-        <div class="card p-5 w-full border bg-white h-[127px]">
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
             <div class="flex gap-5">
                 <div>
                     <button class="w-20 h-20 p-5 rounded-full bg-[#9334EA]/20">
@@ -49,9 +49,10 @@
                         Total Pengajuan
                     </p>
                 </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
-        <div class="card p-5 w-full border bg-white h-[127px]">
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
             <div class="flex gap-5">
                 <div>
                     <button class="w-20 h-20 p-5 rounded-full bg-[#39B568]/20">
@@ -67,9 +68,10 @@
                         Disetujui
                     </p>
                 </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
-        <div class="card p-5 w-full border bg-white h-[127px]">
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
             <div class="flex gap-5">
                 <div>
                     <button class="w-20 h-20 p-5 rounded-full bg-[#DC3545]/20">
@@ -82,9 +84,10 @@
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
                 </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
-        <div class="card p-5 w-full border bg-white h-[127px]">
+        <div class="card p-5 w-full border bg-white h-[127px] relative">
             <div class="flex gap-5">
                 <div>
                     <button class="w-20 h-20 p-5 rounded-full bg-[#E8A525]/20">
@@ -97,6 +100,7 @@
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
                 </div>
+                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
     </div>
@@ -104,7 +108,7 @@
         <div class="card bg-white p-0 lg:w-2/4 w-full rounded-md box-border border">
             <div class="p-3 pl-5 pt-5">
                 <h2 class="font-poppins font-semibold tracking-tighter text-lg text-theme-text">
-                    Data Pengajuan
+                    Data Pengajuan - {{ Date('Y') }}
                 </h2>
             </div>
             <div id="chart-total-pengajuan" class="w-full"></div>
@@ -188,7 +192,7 @@
         </div>
     </div>
     <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-2 gap-4 justify-center mt-3">
-        <div class="card p-5 w-full border bg-white">
+        <div class="card p-5 w-full border bg-white relative">
             <div class="head">
                 <h2 class="text-lg text-theme-text font-semibold tracking-tighter">
                     Posisi Pengajuan
@@ -197,8 +201,9 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="posisi-pengajuan"></div>
             </div>
+            <a href="{{ route('dashboard-detail') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
-        <div class="card p-5 w-full border bg-white">
+        <div class="card p-5 w-full border bg-white relative">
             <div class="head">
                 <h2 class="text-lg text-theme-text font-semibold tracking-tighter">
                     Skema Kredit
@@ -207,6 +212,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="skema-kredit"></div>
             </div>
+            <a href="{{ route('dashboard-detail-skema') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
     </div>
 </section>
