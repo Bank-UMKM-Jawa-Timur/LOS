@@ -53,10 +53,10 @@ $dataIndex = match ($skema) {
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp" value="{{ $pengajuan?->id }}">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @if ($pengajuan->skema == 'dagulir')
-                            @include('dagulir.pengajuan.edit-dagulir')
-                        @else
+                        @if ($pengajuan->skema_kredit != 'Dagulir')
                             @include('dagulir.pengajuan.edit-dagulir-analisis')
+                        @else
+                            @include('dagulir.pengajuan.edit-dagulir')
                         @endif
                     </div>
                     @foreach ($dataAspek as $key => $value)
