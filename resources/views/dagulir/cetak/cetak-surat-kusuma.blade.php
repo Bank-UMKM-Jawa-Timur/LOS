@@ -897,53 +897,13 @@
         </tr>
     </table>
     <br>
-    <table style="border-spacing:10px;">
+    <br>
+    <table>
         <tr>
-            <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PENYELIA KREDIT</span></u></b>
+            <td style="width: 100%;" ><span>III</span><b><u><span style="margin-left:6px">KEPUTUSAN KREDIT</span></u></b>
             </td>
         </tr>
-        <tr>
-            <td>{{$komentar->komentar_penyelia}}</td>
-        </tr>
     </table>
-    @php
-        $userPBO = \App\Models\User::select('id')
-                                    ->where('id_cabang', $dataUmum->id_cabang)
-                                    ->where('role', 'PBO')
-                                    ->first();
-
-        $userPBP = \App\Models\User::select('id')
-                                    ->where('id_cabang', $dataUmum->id_cabang)
-                                    ->where('role', 'PBP')
-                                    ->whereNotNull('nip')
-                                    ->first();
-    @endphp
-    @if ($userPBO)
-        <table style="border-spacing:10px;">
-            <tr>
-                <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PBO</span></u></b>
-                </td>
-            </tr>
-            <tr>
-                <td>{{$komentar->komentar_pbo}}</td>
-            </tr>
-        </table>
-    @endif
-    @if (Auth::user()->id_cabang == '1')
-        @if ($userPBP)
-            <table style="border-spacing:10px;">
-                <tr>
-                    <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PBP</span></u></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>{{$komentar->komentar_pbp}}</td>
-                </tr>
-            </table>
-        @endif
-        <br>
-    @endif
-    <br>
     <table style="border-spacing:10px;">
         <tr>
             <td style="width: 100%;" ><b><u><span>PENDAPAT PEMIMPIN CABANG</span></u></b>
@@ -951,6 +911,14 @@
         </tr>
         <tr>
             <td>{{$komentar->komentar_pincab}}</td>
+        </tr>
+    </table>
+    <br>
+    <table style="border-spacing:10px;">
+        <tr>
+            <td>
+                Berdasarkan analisa aspek II 1), 2), 3), 4), 5), 6) selanjutnya agar segera dilakukan pembahasan dalam komite kredi
+            </td>
         </tr>
     </table>
 </body>
