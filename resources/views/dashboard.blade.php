@@ -3,15 +3,16 @@
 @section('modal')
 @endsection
 @section('content')
-    @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
-        @include('dashboard.admin')
-    @else
-        @include('dashboard.dagulir')
-    @endif
+@if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Umum' || auth()->user()->role ==
+'Direksi')
+@include('dashboard.admin')
+@else
+@include('dashboard.dagulir')
+@endif
 @endsection
 
 @push('script-inject')
-    <script>
+<script>
     var options = {
         series: [
             {
@@ -214,7 +215,6 @@ let dataSKemaKredit = {
     dagulir: parseInt("{{ $dataSkema->Dagulir }}"),
 
 }
-
 totalSkemaKredit = dataSKemaKredit.pkpj + dataSKemaKredit.kkb + dataSKemaKredit.talangan + dataSKemaKredit.prokesra + dataSKemaKredit.kusuma + dataSKemaKredit.dagulir;
 
 let positionYSkema = totalSkemaKredit > 100 ? 40 : 55;
@@ -228,7 +228,7 @@ Highcharts.chart("skema-kredit", {
     align: "center",
     y: positionYSkema,
       text: `<span class="font-bold font-poppins text-5xl flex">
-                <p class="mt-[80%]">${totalSkemaKredit}</p>
+                <p class="mt-[80%]">${isNaN(totalSkemaKredit) ? 0 : totalSkemaKredit}</p>
           </span>`,
   },
   tooltip: {
@@ -313,7 +313,6 @@ Highcharts.chart("skema-kredit", {
         ditolak: parseInt("{{ $dataPosisi->ditolak }}"),
     };
 
-
     let totalPosisi = dataPosisi.pincab + dataPosisi.pbp + dataPosisi.pbo + dataPosisi.penyelia + dataPosisi.staf + dataPosisi.disetujui + dataPosisi.ditolak
     
     let positionY = totalPosisi > 100 ? 30 : totalPosisi < 10 ? 55 : 60;
@@ -327,7 +326,7 @@ Highcharts.chart("posisi-pengajuan", {
             align: "center",
             y: positionY,
               text: `<span class="font-bold font-poppins text-5xl flex">
-                        <p class="mt-[80%]">${totalPosisi}</p>
+                        <p class="mt-[80%]">${isNaN(totalPosisi) ? 0 : totalPosisi}</p>
                   </span>`,
           },
           tooltip: {
@@ -403,5 +402,5 @@ Highcharts.chart("posisi-pengajuan", {
               },
           ],
         });
-    </script>
+</script>
 @endpush
