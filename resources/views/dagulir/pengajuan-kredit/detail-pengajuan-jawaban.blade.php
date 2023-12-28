@@ -766,11 +766,11 @@
                                                         <div class="row
                                                                 {{ $itemTextDua->opsi_text === 'nib' ? 'hidden' : '' }}
                                                                 {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : '' }}
-                                                                
+
                                                                 {{ $item->nama == "NPWP" ||  $item->nama == "Ijin Usaha" ? 'col-span-1 order-2' : '' }}
                                                                 {{ $item->nama === "Kebutuhan Kredit" ||
                                                                     $item->nama === "Persentase Net Income" ||
-                                                                    $item->nama === "Installment" || $item->nama === "Repayment Capacity" ? 
+                                                                    $item->nama === "Installment" || $item->nama === "Repayment Capacity" ?
                                                                     'col-span-1 order-3' : ''  }}
                                                                     {{ $item->nama === 'Perhitungan Installment' ?  'col-span-2 order-2' : '' }}
                                                                 {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
@@ -1057,10 +1057,10 @@
                                                         @endphp
                                                         @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                             @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                                <div class="{{ $itemTiga->opsi_jawaban !== 'file' || str_contains($itemTextTiga->nama, 'Foto Usaha') ? 'col-span-1 p-2 order' : 'col-span-1 p-2 order-3' }} 
-                                                                            {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-1' : '' }} 
+                                                                <div class="{{ $itemTiga->opsi_jawaban !== 'file' || str_contains($itemTextTiga->nama, 'Foto Usaha') ? 'col-span-1 p-2 order' : 'col-span-1 p-2 order-3' }}
+                                                                            {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-1' : '' }}
                                                                             {{-- {{ str_contains($itemTextTiga->nama, 'Dokumen NPWP') ? 'col-span-1 p-2 order' : '' }} --}}
-                                                                            {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
+                                                                            {{ $itemTextTiga->nama === "Modal (awal) Sendiri" ||
                                                                             $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
                                                                             ">
                                                                     <div class="space-y-5">
@@ -1409,23 +1409,16 @@
                                                                                             <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
                                                                                             <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                                            <div class="input-k-bottom">
-                                                                                                <input type="hidden" name="id_item[]"
-                                                                                                    value="{{ $item->id }}">
-                                                                                                <input type="text"
-                                                                                                    class="form-input komentar"
-                                                                                                    name="komentar_penyelia[]"
-                                                                                                    placeholder="Masukkan Komentar">
-                                                                                            </div>
-                                                                                        @endif
                                                                                     @endif
                                                                                 @else
-                                                                                    <div class="field-review">
-                                                                                        <div class="field-name">
-                                                                                            <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                                                    @php
+                                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                                    @endphp
+                                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                                        <div class="pl-2">
+                                                                                            <iframe
+                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                width="100%" height="500px"></iframe>
                                                                                         </div>
                                                                                         <div class="field-answer">
                                                                                             <p>

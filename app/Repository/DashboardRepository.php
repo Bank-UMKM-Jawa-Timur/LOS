@@ -23,7 +23,7 @@ class DashboardRepository
             'id_pincab',
             'posisi'
         );
-        
+
         if($role == 'Staf Analis Kredit'){
             $data->where('id_staf', $idUser);
         } else if($role == 'Penyelia Kredit'){
@@ -103,7 +103,7 @@ class DashboardRepository
             'posisi',
             'skema_kredit'
         );
-        
+
         if($role == 'Staf Analis Kredit'){
             $data->where('id_staf', $idUser);
         } else if($role == 'Penyelia Kredit'){
@@ -213,7 +213,7 @@ class DashboardRepository
         $total_keseluruhan = 0;
         $total_belum_ditindak_lanjuti = 0;
         $total_sudah_ditindak_lanjuti = 0;
-        
+
         foreach($data->get() as $item){
             if($role == 'Staf Analis Kredit'){
                 if($item->posisi == 'Proses Input Data'){
@@ -454,7 +454,6 @@ class DashboardRepository
                         ->where('pengajuan.posisi', '<>', 'Ditolak');
                     }
                 });
-
         if($role == 'Staf Analis Kredit'){
             $data->where('id_staf', $idUser);
         } else if($role == 'Penyelia Kredit'){
@@ -477,7 +476,6 @@ class DashboardRepository
         $tanggalAwal = $request->tAwal;
         $tanggalAkhir = $request->tAkhir;
         $cabang = $request->cbg;
-
         $data = DB::table('pengajuan')
             ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma, sum(skema_kredit='Dagulir') as Dagulir")
             ->when($cabang, function ($query, $cabang) {

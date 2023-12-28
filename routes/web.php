@@ -90,7 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
         });
 
-       
+
 
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');

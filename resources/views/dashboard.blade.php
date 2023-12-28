@@ -29,7 +29,7 @@
             },
         ],
     colors: ["#00FF61", "#DC3545", "#F7C35C"],
-    chart: {    
+    chart: {
         width: "100%",
         height: "80%",
         type: "area",
@@ -314,7 +314,7 @@ Highcharts.chart("skema-kredit", {
     };
 
     let totalPosisi = dataPosisi.pincab + dataPosisi.pbp + dataPosisi.pbo + dataPosisi.penyelia + dataPosisi.staf + dataPosisi.disetujui + dataPosisi.ditolak
-    
+
     let positionY = totalPosisi > 100 ? 30 : totalPosisi < 10 ? 55 : 60;
 
 Highcharts.chart("posisi-pengajuan", {
@@ -353,7 +353,7 @@ Highcharts.chart("posisi-pengajuan", {
                   },
                 }
               },
-              
+
           series: [
               {
                   minPointSize: 50,

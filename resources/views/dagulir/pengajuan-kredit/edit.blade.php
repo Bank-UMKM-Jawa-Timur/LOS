@@ -135,7 +135,6 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="form-group" id="space_nib"></div>
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
