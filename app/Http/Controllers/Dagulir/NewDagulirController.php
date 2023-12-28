@@ -493,7 +493,7 @@ class NewDagulirController extends Controller
                 $addData->no_ktp = $request->no_ktp;
                 $addData->telp = $request->get('no_telp');
                 $addData->tempat_lahir = $request->tempat_lahir;
-                $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
+                $addData->tanggal_lahir = $request->tanggal_lahir;
                 $addData->status = $request->status;
                 $addData->sektor_kredit = $request->sektor_kredit;
                 $addData->jenis_usaha = $request->jenis_usaha;
@@ -511,6 +511,21 @@ class NewDagulirController extends Controller
                 $addData->save();
             }
             // OPSI ASPEK JAWABAN
+             // Data KKB Handler
+             if ($request->skema_kredit == 'KKB') {
+                DB::table('data_po')
+                    ->insert([
+                        'id_pengajuan' => $id_pengajuan,
+                        'tahun_kendaraan' => $request->tahun,
+                        // 'id_type' => $request->id_tipe,
+                        'merk' => $request->merk,
+                        'tipe' => $request->tipe_kendaraan,
+                        'warna' => $request->warna,
+                        'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                        'jumlah' => $request->sejumlah,
+                        'harga' => str_replace($find, '', $request->harga)
+                    ]);
+            }
 
             // jawaban ijin usaha
             JawabanTextModel::create([
@@ -2641,6 +2656,12 @@ class NewDagulirController extends Controller
 
         }
         $param['pengajuan'] = $pengajuan;
+        if ($pengajuan->skema_kredit == 'KKB') {
+            $param['dataMerk'] = MerkModel::all();
+            $param['dataPO'] = DB::table('data_po')
+                ->where('id_pengajuan', $id)
+                ->first();
+        }
         // return $param['pengajuan'];
         $param['jawabanSlik'] = JawabanModel::select('id', 'id_jawaban', 'skor')
                                             ->where('id_pengajuan', $id)
@@ -2817,7 +2838,7 @@ class NewDagulirController extends Controller
                 $updateData->no_ktp = $request->no_ktp;
                 $updateData->telp = $request->no_telp;
                 $updateData->tempat_lahir = $request->tempat_lahir;
-                $updateData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
+                $updateData->tanggal_lahir = $request->tanggal_lahir;
                 $updateData->status = $request->status;
                 $updateData->sektor_kredit = $request->sektor_kredit;
                 $updateData->jenis_usaha = $request->jenis_usaha;

@@ -35,6 +35,11 @@ $dataIndex = match ($skema) {
             <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
                 <span class="percentage">0%</span> Data Umum
             </button>
+            @if ($pengajuan->skema_kredit == 'KKB')
+            <button data-toggle="tab" data-tab="data-po" class="btn btn-tab font-semibold">
+                <span class="percentage">0%</span> Data PO
+            </button>
+            @endif
             @foreach ($dataAspek as $item)
                 @php
                     $title = str_replace('&', 'dan', strtolower($item->nama));
@@ -59,6 +64,9 @@ $dataIndex = match ($skema) {
                             @include('dagulir.pengajuan.edit-dagulir')
                         @endif
                     </div>
+                    @if ($pengajuan->skema_kredit == 'KKB')
+                        @include('dagulir.pengajuan.edit-data-po')
+                    @endif
                     @foreach ($dataAspek as $key => $value)
                         @php
                             $title_id = str_replace('&', 'dan', strtolower($value->nama));
