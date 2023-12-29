@@ -80,7 +80,7 @@
             method: 'POST',
             data: data,
             success(res) {
-                // console.log(res);
+                console.log(res);
                 $("#id_dagulir_temp").val(res.data.id);
                 $("#dagulir-tab input[type=file]").each(function() {
                     const inputFile = $(this);
@@ -121,6 +121,10 @@
             success(res) {
                 console.log('------temp jawaban------')
                 console.log(res);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
             }
         });
         $(`#${id} input[type=file]`).each(function(){
