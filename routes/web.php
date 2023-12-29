@@ -92,7 +92,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
 
-
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
         // Review Pincab

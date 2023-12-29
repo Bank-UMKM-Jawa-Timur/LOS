@@ -230,7 +230,6 @@
 
     <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-2 gap-4 justify-center mt-3">
         <div class="card p-5 w-full border bg-white relative">
-
             <div class="head">
                 <h2 class="text-lg text-theme-text font-semibold tracking-tighter">
                     Posisi Pengajuan

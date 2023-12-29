@@ -363,7 +363,7 @@
                                                 @endif
                                                 @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                                     @if ($item->posisi == 'Review Penyelia')
-                                                        <a href="{{ route('dagulir.detailjawaban', $item->id) }}" class="w-full cursor-pointer">
+                                                        <a href="{{ route('dagulir.detailjawaban', $item->id) }}" class="w-full cursor-pointer review-pincab">
                                                             <li class="item-tb-dropdown">
                                                                 Review
                                                             </li>
@@ -423,7 +423,7 @@
                                                 @elseif ((Auth()->user()->role == 'PBP'))
                                                     @if ($item->posisi == 'PBP' && $item->tanggal_review_pbp
                                                         && $item->id_pbp)
-                                                        <a href="{{ route('dagulir.detailjawaban', $item->id) }}" class="w-full cursor-pointer">
+                                                        <a href="{{ route('dagulir.detailjawaban', $item->id) }}" class="w-full cursor-pointer review-pincab">
                                                             <li class="item-tb-dropdown">
                                                                 Review
                                                             </li>
@@ -447,7 +447,7 @@
                                                     @if ($item->posisi == 'Pincab')
                                                         @if ($item->id_pincab)
                                                         <a href="{{ route('dagulir.detailjawaban_pincab', $item->id) }}"
-                                                            class="w-full cursor-pointer">
+                                                            class="w-full cursor-pointer review-pincab">
                                                             <li class="item-tb-dropdown">
                                                                     Review
                                                             </li>

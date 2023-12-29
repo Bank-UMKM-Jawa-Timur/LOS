@@ -321,11 +321,31 @@ class NewDagulirController extends Controller
                     'hasil_verifikasi' => 'required',
                 ]);
             }
+        }else{
+            $request->validate([
+                'name' => 'required',
+                'alamat_rumah' => 'required',
+                'alamat_usaha' => 'required',
+                'no_ktp' => 'required',
+                'kabupaten' => 'required|not_in:0',
+                'kec' => 'required|not_in:0',
+                'desa' => 'required|not_in:0',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'status' => 'required',
+                'sektor_kredit' => 'required',
+                'jenis_usaha' => 'required',
+                'jumlah_kredit' => 'required',
+                'tenor_yang_diminta' => 'required',
+                'tujuan_kredit' => 'required',
+                'jaminan' => 'required',
+                'hubungan_bank' => 'required',
+                'hasil_verifikasi' => 'required',
+            ]);
         }
 
         $statusSlik = false;
         $find = array('Rp ', '.', ',');
-
         DB::beginTransaction();
         try {
             $find = array('Rp.', '.', ',');
@@ -446,30 +466,6 @@ class NewDagulirController extends Controller
                 $dataNasabah = $tempNasabah->toArray();
                 $dataNasabah['id_pengajuan'] = $id_pengajuan;
             }else{
-                $request->validate([
-                    'name' => 'required',
-                    'no_telp' => 'required',
-                    'alamat_rumah' => 'required',
-                    'alamat_usaha' => 'required',
-                    'no_ktp' => 'required',
-                    'kabupaten' => 'required|not_in:0',
-                    'kec' => 'required|not_in:0',
-                    'desa' => 'required|not_in:0',
-                    'tempat_lahir' => 'required',
-                    'tanggal_lahir' => 'required',
-                    'status' => 'required',
-                    'sektor_kredit' => 'required',
-                    'jenis_usaha' => 'required',
-                    'jumlah_kredit' => 'required',
-                    'tenor_yang_diminta' => 'required',
-                    'tujuan_kredit' => 'required',
-                    'jaminan' => 'required',
-                    'hubungan_bank' => 'required',
-                    'hasil_verifikasi' => 'required',
-                ], [
-                    'required' => 'Data :attribute harus terisi.',
-                    'not_in' => 'kolom harus dipilih.',
-                ]);
                 $addPengajuan = new PengajuanModel;
                 $addPengajuan->id_staf = auth()->user()->id;
                 $addPengajuan->tanggal = date(now());
@@ -2209,8 +2205,9 @@ class NewDagulirController extends Controller
             ]);
         }
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
         ->find($id);
+        $param['dataUmum'] = $dataUmum;
 
         if ($param['dataUmum']->skema_kredit == 'Dagulir') {
             $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan.*')
@@ -2220,6 +2217,8 @@ class NewDagulirController extends Controller
                         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
                         ->where('pengajuan.id', $id)
                         ->first();
+            $param['bulan'] = date('m', strtotime($dataNasabah->tanggal));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
         }else{
             $dataNasabah = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
                         ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
@@ -2227,8 +2226,10 @@ class NewDagulirController extends Controller
                         ->join('desa','desa.id','calon_nasabah.id_desa')
                         ->where('calon_nasabah.id_pengajuan',$id)
                         ->first();
-
+            $param['bulan'] = date('m', strtotime($dataNasabah->tanggal_lahir));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal_lahir));
         }
+
 
         $param['dataNasabah'] = $dataNasabah;
 
@@ -2237,8 +2238,6 @@ class NewDagulirController extends Controller
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
 
-        $param['bulan'] = date('m', strtotime($dataNasabah->tanggal));
-        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
 
         $param['tglCetak'] = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
@@ -2258,10 +2257,10 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
+        // return $dataNasabah;
+        // return view('dagulir.cetak.cetak-pk-kusuma-badan-usaha', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
-
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
-        // return view('dagulir.cetak.cetak-pk', $param);
     }
     public function cetakSPPk($id)
     {
@@ -2536,7 +2535,7 @@ class NewDagulirController extends Controller
 
     public function cetakDagulir($id)
     {
-        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
         $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
                         ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
                         ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
@@ -2545,8 +2544,9 @@ class NewDagulirController extends Controller
                         ->where('pengajuan.id', $id)
                         ->first();
         $param['dataNasabah'] = $dataNasabah;
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
-                            ->find($id);
+        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+        ->find($id);
+        $param['dataUmum'] = $dataUmum;
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
@@ -2559,10 +2559,15 @@ class NewDagulirController extends Controller
         }
         $pdf->save($filePath.'/'.$fileName);
 
-        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
+        // return $param['dataUmum'];
+        if ($dataUmum->skema_kredit == "Kusuma") {
+            return view('dagulir.cetak.cetak-surat-kusuma', $param);
+        } else {
+            return view('dagulir.cetak.cetak-surat', $param);
+        }
 
+        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
         return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
-        // return view('dagulir.cetak.cetak-surat', $param);
     }
 
     public function cetakLampiranAnalisa($id_pengajuan) {
@@ -3469,13 +3474,19 @@ class NewDagulirController extends Controller
         return view('dagulir.pengajuan-kredit.index-draft', compact('data'));
     }
 
-    public function continueDraft($id)
+    public function continueDraft($id,Request $request)
     {
-        $nasabah = PengajuanDagulirTemp::find($id);
+        if ($request->has('skema_kredit')) {
+            $skema_kredit = $request->skema_kredit;
+            $nasabah = CalonNasabahTemp::findOrFail($id);
+        }else{
+            $skema_kredit = null;
+            $nasabah = PengajuanDagulirTemp::find($id);
+        }
         $createRoute = route('dagulir.temp.continue-draft');
         // dd($createRoute);
 
-        return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true");
+        return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true&skema_kredit={$request->skema_kredit}");
     }
 
     public function showContinueDraft(Request $request)
@@ -3501,18 +3512,24 @@ class NewDagulirController extends Controller
         $param['dataMerk'] = MerkModel::all();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
-        $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+        if ($request->skema_kredit == null) {
+            $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+        }else{
+            // $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+            $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
+            $param['dataPO'] = DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->tempId)->first();
+        }
         $param['jawabanLaporanSlik'] =JawabanTemp::where('temporary_dagulir_id', $request->tempId)
                                             ->where('id_jawaban', 146)
                                             ->first();
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
-// return $param['jawabanLaporanSlik'];
+        $param['skema'] = $request->skema_kredit ?? $param['duTemp']?->skema_kredit;
         return view('dagulir.pengajuan-kredit.continue-draft', $param);
     }
 
     public function tempDagulir(Request $request){
-        if ($request->skema_kredit != null || $request->has('skema_kredit')) {
+        if ($request->skema_kredit != 'Dagulir' || $request->has('skema_kredit')) {
             if (isset($request->id_dagulir_temp)) {
                 $nasabah = TemporaryService::saveNasabah(
                     $request->id_dagulir_temp,
@@ -3523,6 +3540,7 @@ class NewDagulirController extends Controller
                     null,
                     TemporaryService::convertNasabahReq($request)
                 );
+
             }
         } else {
             if(isset($request->id_dagulir_temp)){
@@ -3538,17 +3556,17 @@ class NewDagulirController extends Controller
             }
         }
 
-        if ($request->skema_kredit != null) {
+        if ($request->skema_kredit != 'Dagulir') {
             foreach ($request->dataLevelDua as $key => $value) {
                 $dataSlik = $this->getDataLevel($value);
                 $cek = DB::table('jawaban_temp')
-                    ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
+                    ->where('id_temporary_calon_nasabah', $request->id_dagulir_temp ?? $nasabah->id)
                     ->where('id_jawaban', $dataSlik[1])
                     ->count('id');
                 if ($cek < 1) {
                     DB::table('jawaban_temp')
                         ->insert([
-                            'id_temporary_calon_nasabah' => $request->id_nasabah ?? $nasabah->id,
+                            'id_temporary_calon_nasabah' => $request->id_dagulir_temp ?? $nasabah->id,
                             'id_jawaban' => $dataSlik[1],
                             'skor' => $dataSlik[0],
                             'id_option' => $key,
@@ -3556,7 +3574,7 @@ class NewDagulirController extends Controller
                         ]);
                 } else {
                     DB::table('jawaban_temp')
-                        ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
+                        ->where('id_temporary_calon_nasabah', $request->id_dagulir_temp ?? $nasabah->id)
                         ->where('id_option', $key)
                         ->update([
                             'id_jawaban' => $dataSlik[1],
@@ -3594,15 +3612,25 @@ class NewDagulirController extends Controller
                     }
                 }
             } catch (\Exception $e) {
+                return $e;
             }
         }
 
 
-        return response()->json([
-            'status' => 'ok',
-            'code' => 200,
-            'data' => $dagulir,
-        ]);
+        if ($request->skema_kredit != 'Dagulir' || $request->has('skema_kredit')) {
+            return response()->json([
+                'status' => 'ok',
+                'code' => 200,
+                'data' => $nasabah,
+            ]);
+
+        }else{
+            return response()->json([
+                'status' => 'ok',
+                'code' => 200,
+                'data' => $dagulir,
+            ]);
+        }
     }
 
     public function tempJawaban(Request $request)
@@ -3936,11 +3964,18 @@ class NewDagulirController extends Controller
         return view('dagulir.pengajuan-kredit.index-draft');
     }
 
-    public function deleteDraft($id){
+    public function deleteDraft($id, Request $request){
         DB::beginTransaction();
         try{
-            $pengajuanTemp = PengajuanDagulirTemp::find($id);
-            $pengajuanTemp->delete();
+            if ($request->has('skema_kredit')) {
+                DB::table('jawaban_temp')->where('id_temporary_calon_nasabah', $id)->delete();
+                DB::table('temporary_jawaban_text')->where('id_temporary_calon_nasabah', $id)->delete();
+                DB::table('temporary_usulan_dan_pendapat')->where('id_temp', $id)->delete();
+                DB::table('temporary_calon_nasabah')->where('id', $id)->delete();
+            }else{
+                $pengajuanTemp = PengajuanDagulirTemp::find($id);
+                $pengajuanTemp->delete();
+            }
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menghapus data draft');

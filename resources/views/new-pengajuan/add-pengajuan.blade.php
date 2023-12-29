@@ -845,6 +845,7 @@ $dataIndex = match ($skema) {
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
     // Start Validation
     @if (count($errors->all()))
         Swal.fire({
@@ -1123,12 +1124,12 @@ $dataIndex = match ($skema) {
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
         const dataTab = tabId.replaceAll('-tab', '')
-        // if(tabId == 'dagulir-tab'){
-        //     if($("input[name=nama_lengkap]").val().length > 0)
-        //         saveDataUmum()
-        // } else{
-        //     saveDataTemporary(tabId)
-        // }
+        if(tabId == 'dagulir-tab'){
+            if($("input[name=nama_lengkap]").val().length > 0)
+                saveDataUmum()
+        } else{
+            saveDataTemporary(tabId)
+        }
     })
 
     $(".next-tab").on("click", function(e) {
@@ -1136,11 +1137,11 @@ $dataIndex = match ($skema) {
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
         const dataTab = tabId.replaceAll('-tab', '')
-        // if(tabId == 'dagulir-tab'){
-        //     saveDataUmum()
-        // } else{
-        //     saveDataTemporary(tabId)
-        // }
+        if(tabId == 'dagulir-tab'){
+            saveDataUmum()
+        } else{
+            saveDataTemporary(tabId)
+        }
         // Set percentage
         var percentage = formPercentage(tabId)
         $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
@@ -2667,6 +2668,6 @@ $dataIndex = match ($skema) {
 
 </script>
 
-{{-- <script src="{{ asset('') }}js/custom.js"></script> --}}
-{{-- @include('dagulir.partials.create-save-temp') --}}
+<script src="{{ asset('') }}js/custom.js"></script>
+@include('dagulir.partials.create-save-temp')
 @endpush

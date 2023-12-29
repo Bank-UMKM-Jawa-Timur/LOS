@@ -313,6 +313,7 @@ Highcharts.chart("skema-kredit", {
         ditolak: parseInt("{{ $dataPosisi->ditolak }}"),
     };
 
+
     let totalPosisi = dataPosisi.pincab + dataPosisi.pbp + dataPosisi.pbo + dataPosisi.penyelia + dataPosisi.staf + dataPosisi.disetujui + dataPosisi.ditolak
 
     let positionY = totalPosisi > 100 ? 30 : totalPosisi < 10 ? 55 : 60;
@@ -402,5 +403,5 @@ Highcharts.chart("posisi-pengajuan", {
               },
           ],
         });
-</script>
+    </script>
 @endpush
