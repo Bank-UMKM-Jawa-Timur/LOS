@@ -280,6 +280,19 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @php
+                                        $userPBO = \App\Models\User::select('id')
+                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('role', 'PBO')
+                                            ->whereNotNull('nip')
+                                            ->first();
+
+                                        $userPBP = \App\Models\User::select('id')
+                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('role', 'PBP')
+                                            ->whereNotNull('nip')
+                                            ->first();
+                                    @endphp
                                     <div class="flex">
                                         <div class="dropdown-tb">
                                             <button
@@ -360,14 +373,31 @@
                                                                 Kembalikan ke Staff
                                                             </li>
                                                         </a>
+                                                        @if ($userPBO)
+                                                             <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                                                <li class="item-tb-dropdown">
+                                                                    Lanjutkan ke PBO
+                                                                </li>
+                                                            </a>
+                                                        @else
+                                                            @if ($userPBP)
+                                                                 <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbb">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Lanjutkan ke PBP
+                                                                    </li>
+                                                                </a>
+                                                            @else
+                                                                @if ($item->posisi == 'Review Penyelia' && $item->tanggal_review_penyelia)
+                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                                        <li class="item-tb-dropdown">
+                                                                            Lanjutkan Ke Pincab
+                                                                        </li>
+                                                                    </a>
+                                                                @endif
+                                                            @endif
+                                                        @endif
                                                     @endif
-                                                    @if ($item->posisi == 'Review Penyelia' && $item->tanggal_review_penyelia)
-                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
-                                                            <li class="item-tb-dropdown">
-                                                                Lanjutkan Ke Pincab
-                                                            </li>
-                                                        </a>
-                                                    @endif
+
                                                 @elseif ((Auth()->user()->role == 'PBO'))
                                                     @if ($item->posisi == 'PBO' && $item->tanggal_review_penyelia
                                                         && $item->id_pbo)

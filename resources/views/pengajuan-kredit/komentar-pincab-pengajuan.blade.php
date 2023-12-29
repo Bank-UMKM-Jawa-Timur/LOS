@@ -1,4 +1,4 @@
-@extends('layouts.tailwind-template')
+    @extends('layouts.tailwind-template')
 
 @section('modal')
     @include('dagulir.modal.filter')

@@ -85,30 +85,80 @@
                     </div>
                     <hr>
 
-                    <div class="w-full" id="opsi">
-                        <table class="table opsi-jawaban">
-                            <thead>
-                                <tr>
-                                    <th>Opsi</th>
-                                    <th>Skor</th>
-                                    {{-- <th>Kolom Turunan</th> --}}
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="id_opsi">
-                                @if (old('opsi') != '')
-                                    @foreach (old('opsi') as $key => $value)
-                                        <div class="countVar" data-count="{{ count(old('opsi')) }}"></div>
-                                        <tr data-id={{ $key == 0 ? $key + 1 : $key }}>
+                    <div class="form-group-2">
+                        <div class="w-full" id="opsi">
+                            <table class="table opsi-jawaban w-full">
+                                <thead>
+                                    <tr>
+                                        <th>Opsi</th>
+                                        <th>Skor</th>
+                                        {{-- <th>Kolom Turunan</th> --}}
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="id_opsi">
+                                    @if (old('opsi') != '')
+                                        @foreach (old('opsi') as $key => $value)
+                                            <div class="countVar" data-count="{{ count(old('opsi')) }}"></div>
+                                            <tr data-id={{ $key == 0 ? $key + 1 : $key }}>
+                                                <td>
+                                                    <div class="form-input">
+                                                        {{-- <label>Opsi</label> --}}
+                                                        <input type="text" id="opsi_name"
+                                                            name="opsi[{{ $key }}][opsi_name]"
+                                                            class="form-input @error('opsi.' . $key . '.opsi_name') is-invalid @enderror"
+                                                            placeholder="Nama Opsi"
+                                                            value="{{ old('opsi.' . $key . '.opsi_name') }}">
+                                                        @error('opsi.' . $key . '.opsi_name')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-input">
+                                                        {{-- <label>Skor</label> --}}
+                                                        <input type="number" id="skor" name="opsi[{{ $key }}][skor]"
+                                                            class="form-input @error('opsi.' . $key . '.skor') is-invalid @enderror"
+                                                            placeholder="Skor" value="{{ old('opsi.$key.skor') }}">
+                                                        @error('opsi.' . $key . '.skor')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @if ($key == 0)
+                                                        <div class="flex gap-2">
+                                                            <button class="btn-add mt-10 plus" type="button">
+                                                                <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
+                                                            </button>
+                                                            {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
+                                                        </div>
+                                                    @else
+                                                        <div class="flex gap-2">
+                                                            <button class="btn-add mt-10 plus">
+                                                                <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
+                                                            </button>
+                                                            <button class="btn-minus mt-10 minus">
+                                                                <iconify-icon icon="tabler:minus" class="mt-3"></iconify-icon>
+                                                            </button>
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <div id="countVar" data-count="0"></div>
+                                        <tr data-id="1">
                                             <td>
-                                                <div class="form-input">
+                                                <div class="">
                                                     {{-- <label>Opsi</label> --}}
-                                                    <input type="text" id="opsi_name"
-                                                        name="opsi[{{ $key }}][opsi_name]"
-                                                        class="form-input @error('opsi.' . $key . '.opsi_name') is-invalid @enderror"
-                                                        placeholder="Nama Opsi"
-                                                        value="{{ old('opsi.' . $key . '.opsi_name') }}">
-                                                    @error('opsi.' . $key . '.opsi_name')
+                                                    <input type="text" id="opsi_name" name="opsi[1][opsi_name]"
+                                                        class="form-input " placeholder="Nama Opsi">
+                                                    @error('opsi.1.opsi_name')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
                                                         </div>
@@ -116,88 +166,40 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="form-input">
+                                                <div class="">
                                                     {{-- <label>Skor</label> --}}
-                                                    <input type="number" id="skor" name="opsi[{{ $key }}][skor]"
-                                                        class="form-input @error('opsi.' . $key . '.skor') is-invalid @enderror"
-                                                        placeholder="Skor" value="{{ old('opsi.$key.skor') }}">
-                                                    @error('opsi.' . $key . '.skor')
+                                                    <input type="number" id="skor" name="opsi[1][skor]"
+                                                        class="form-input skor_option" placeholder="Skor">
+                                                    @error('opsi.1.skor')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
                                                         </div>
                                                     @enderror
                                                 </div>
                                             </td>
+                                            {{-- <td>
+                                                <div class="">
+                                                    <label>Skor</label>
+                                                    <input type="text" id="sub_column" name="opsi[1][sub_column]" class="form-input"
+                                                        placeholder="Nama Kolom Turunan">
+                                                    <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom turunan</span>
+                                                    @error('opsi.1.sub_column')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                            </td> --}}
                                             <td>
-                                                @if ($key == 0)
-                                                    <div class="flex gap-2">
-                                                        <button class="btn-add mt-10 plus" type="button">
-                                                            <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
-                                                        </button>
-                                                        {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
-                                                    </div>
-                                                @else
-                                                    <div class="flex gap-2">
-                                                        <button class="btn-add mt-10 plus">
-                                                            <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
-                                                        </button>
-                                                        <button class="btn-minus mt-10 minus">
-                                                            <iconify-icon icon="tabler:minus" class="mt-3"></iconify-icon>
-                                                        </button>
-                                                    </div>
-                                                @endif
+                                                <button class="btn-add plus" type="button">
+                                                    <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
+                                                </button>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                @else
-                                    <div id="countVar" data-count="0"></div>
-                                    <tr data-id="1">
-                                        <td>
-                                            <div class="">
-                                                {{-- <label>Opsi</label> --}}
-                                                <input type="text" id="opsi_name" name="opsi[1][opsi_name]"
-                                                    class="form-input " placeholder="Nama Opsi">
-                                                @error('opsi.1.opsi_name')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="">
-                                                {{-- <label>Skor</label> --}}
-                                                <input type="number" id="skor" name="opsi[1][skor]"
-                                                    class="form-input skor_option" placeholder="Skor">
-                                                @error('opsi.1.skor')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </td>
-                                        {{-- <td>
-                                            <div class="">
-                                                <label>Skor</label>
-                                                <input type="text" id="sub_column" name="opsi[1][sub_column]" class="form-input"
-                                                    placeholder="Nama Kolom Turunan">
-                                                <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom turunan</span>
-                                                @error('opsi.1.sub_column')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </td> --}}
-                                        <td>
-                                            <button class="btn-add plus" type="button">
-                                                <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="mt-5">
                         <div class="flex gap-5">
@@ -393,7 +395,7 @@
                 i = i + 1;
                 $('#id_opsi').append('<tr data-id="' + i + '">\
                             <td>\
-                                    <input type="text" id="id_opsi" name="opsi[' + i + '][opsi_name]" class="form-input" placeholder="Nama Opsi">\
+                                <input type="text" id="id_opsi" name="opsi[' + i + '][opsi_name]" class="form-input" placeholder="Nama Opsi">\
                             </td>\
                             <td>\
                                 <input type="number" id="skor" name="opsi[' + i + '][skor]" class="form-input skor_option" placeholder="Skor" >\
