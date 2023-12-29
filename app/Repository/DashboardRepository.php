@@ -103,7 +103,6 @@ class DashboardRepository
             'posisi',
             'skema_kredit'
         );
-
         if($role == 'Staf Analis Kredit'){
             $data->where('id_staf', $idUser);
         } else if($role == 'Penyelia Kredit'){
@@ -213,7 +212,6 @@ class DashboardRepository
         $total_keseluruhan = 0;
         $total_belum_ditindak_lanjuti = 0;
         $total_sudah_ditindak_lanjuti = 0;
-
         foreach($data->get() as $item){
             if($role == 'Staf Analis Kredit'){
                 if($item->posisi == 'Proses Input Data'){
