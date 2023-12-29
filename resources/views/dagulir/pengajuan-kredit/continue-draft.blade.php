@@ -60,7 +60,7 @@ $dataIndex = match ($skema) {
                 <input type="hidden" name="isDraft" value="1">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @if ($skema == null)
+                        @if ($skema == 'Dagulir')
                             @include('dagulir.pengajuan.create-dagulir-draft')
                         @else
                             @include('dagulir.pengajuan.create-pengajuan-draft')
@@ -155,7 +155,6 @@ $dataIndex = match ($skema) {
                                                     @php
                                                         $docNIB = $skema != 'Dagulir' ?  temporary($duTemp->id, $itemNIB->id)?->id : temporary_dagulir($duTemp->id, $itemNIB->id)
                                                     @endphp
-                                                    {{ temporary($duTemp->id, $itemNIB->id)?->id }}
                                                     @if ($docNIB)
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                             data-title="{{ $itemNIB->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemNIB->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text)[1] }}">Preview</a>
@@ -182,16 +181,19 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="opsi_jawaban[78]" value="input text"
                                                         id="surat_keterangan_usaha_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
-                                                        placeholder="Masukkan informasi" class="form-input" value="{{ temporary_dagulir($duTemp->id, 78)?->opsi_text }}">
+                                                        placeholder="Masukkan informasi" class="form-input" value="{{ $skema != 'Dagulir' ? temporary($duTemp->id, 78)?->opsi_text : temporary_dagulir($duTemp->id, 78)?->opsi_text }}">
                                                 </div>
                                             </div>
 
                                             <div class="form-group" id="docSKU">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemSKU->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
-                                                    @if (temporary_dagulir($duTemp->id, $itemSKU->id))
+                                                    @php
+                                                        $sku_file = $skema != 'Dagulir' ?  temporary($duTemp->id, $itemSKU->id)?->id : temporary_dagulir($duTemp->id, $itemSKU->id)
+                                                    @endphp
+                                                    @if ($sku_file)
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                                            data-title="{{ $itemSKU->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemSKU->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text)[1] }}">Preview</a>
+                                                            data-title="{{ $itemSKU->nama }}" data-filepath="{{asset('../upload/temp')}}/{{$skema != 'Dagulir' ? temporary($duTemp->id, $itemSKU->id)?->id_jawaban : temporary_dagulir($duTemp->id, $itemSKU->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text)[1] }}">Preview</a>
                                                     @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
                                                         id="docSKU_id">

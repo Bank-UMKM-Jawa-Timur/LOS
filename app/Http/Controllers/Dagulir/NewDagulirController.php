@@ -3500,6 +3500,7 @@ class NewDagulirController extends Controller
         $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
         $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
+
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
 
@@ -3512,7 +3513,6 @@ class NewDagulirController extends Controller
         }else{
             // $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
             $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
-            return $param['duTemp'];
             $param['dataPO'] = DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->tempId)->first();
         }
         $param['jawabanLaporanSlik'] =JawabanTemp::where('temporary_dagulir_id', $request->tempId)
