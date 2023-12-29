@@ -70,13 +70,10 @@
                         </div>
                         <div class="form-group-2">
                             <div class="input-box">
-                                <label for="">DWH Store Kredit API URL</label>
+                                <label for="">SIPDE Store Kredit API URL</label>
                                 <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_store_kredit_api_url : '' }}">
                             </div>
-                            <div class="input-box">
-                                <label for="">DWH Token</label>
-                                <input type="text"name="dwh_token" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_token : '' }}">
-                            </div>
+
                         </div>
                         <div class="form-group-1 col-span-2 pl-0">
                             <div>
