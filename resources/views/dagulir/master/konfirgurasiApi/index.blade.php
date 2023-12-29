@@ -70,6 +70,25 @@
                         </div>
                         <div class="form-group-2">
                             <div class="input-box">
+                                <label for="">DWH Store Kredit API URL</label>
+                                <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_store_kredit_api_url : '' }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="">DWH Token</label>
+                                <input type="text"name="dwh_token" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_token : '' }}">
+                            </div>
+                        </div>
+                        <div class="form-group-1 col-span-2 pl-0">
+                            <div>
+                                <div class="w-full p-2 border-l-8 border-theme-primary bg-gray-100">
+                                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                                        SIPDE :
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="input-box">
                                 <label for="">SIPDE Username</label>
                                 <input type="text"name="sipde_username" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_username : 'bankpusat_bpr' }}">
                             </div>
