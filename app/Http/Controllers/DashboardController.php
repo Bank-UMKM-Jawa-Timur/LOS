@@ -90,13 +90,14 @@ class DashboardController extends Controller
         $param['dataPosisi'] = $this->repo->getDataPosisi($request);
         $param['dataSkema'] = $this->repo->getDataSkema($request);
         $param['dataRangking'] = $this->repo->getRangking($request);
-        
+
         return view('dashboard', $param);
     }
 
     public static function getDataKaryawan()
     {
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . auth()->user()->nip,
@@ -136,7 +137,8 @@ class DashboardController extends Controller
 
     public static function getKaryawan()
     {
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . auth()->user()->nip,

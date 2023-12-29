@@ -16,7 +16,8 @@
 
 @php
     function getKaryawan($nip){
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -75,12 +76,12 @@
                             <tbody>
                                 @forelse ($alasanPengembalian as $key => $itemPengembalian)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td> 
-                                        <td>{{ $itemPengembalian->alasan }}</td> 
-                                        <td>{{ $itemPengembalian->dari }}</td> 
-                                        <td>{{ $itemPengembalian->ke }}</td> 
-                                        <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
-                                        <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $itemPengembalian->alasan }}</td>
+                                        <td>{{ $itemPengembalian->dari }}</td>
+                                        <td>{{ $itemPengembalian->ke }}</td>
+                                        <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td>
+                                        <td>{{ getKaryawan($itemPengembalian->nip) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
