@@ -1,5 +1,7 @@
 @extends('layouts.tailwind-template')
-
+@section('modal')
+    @include('dagulir.modal.delete-draft-pengajuan')
+@endsection
 @section('content')
 <section class="p-5 overflow-y-auto mt-5">
     <div class="head space-y-5 w-full font-poppins">
@@ -60,7 +62,7 @@
                         @endphp
                         @forelse ($data_pengajuan as $key => $item)
                             <tr>
-                                <    <td class="text-center">{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td>
@@ -71,7 +73,7 @@
                                                 </iconify-icon>
                                             </button>
                                             <ul class="dropdown-tb-menu hidden">
-                                                <a href="{{ route('dagulir.temp.continue', $item->id) }}"
+                                                <a href="{{ route('dagulir.temp.continue', ['id' => $item->id, 'skema_kredit' => $item->skema_kredit]) }}"
                                                     class="dropdown-item cursor-pointer w-full">
                                                     <li class="item-tb-dropdown">
                                                         Lanjutkan
@@ -107,3 +109,23 @@
     </div>
 </section>
 @endsection
+@push('script-inject')
+    <script>
+        $(".modalConfirmDelete").on("click", function(){
+            var idModal = $(this).data('modal-id');
+            var nama = $(this).data('nama');
+            var modal = `#confirmationModal${idModal}`;
+            $(`${modal} #nama_pengajuan`).html(nama);
+            $(modal).removeClass('hidden');
+            $(modal).addClass('h-full');
+        })
+        $(".cancelModal", on("click", function(){
+            console.log('test');
+            var idModal = $(this).data('modal-id');
+            var modal = `#confirmationModal${idModal}`;
+            console.log(`Modal ${modal}`);
+            $(modal).addClass('hidden');
+            $(modal).removeClass('h-full');
+        }))
+    </script>
+@endpush

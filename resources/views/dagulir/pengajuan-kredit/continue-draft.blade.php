@@ -17,7 +17,7 @@ $hasil_rupiah = number_format($angka, 0, ',', '.');
 return $hasil_rupiah;
 }
 }
-$skema = 'Dagulir';
+$skema = $skema != null ? $skema : 'Dagulir';
 $dataIndex = match ($skema) {
     'PKPJ' => 1,
     'KKB' => 2,
@@ -37,6 +37,11 @@ $dataIndex = match ($skema) {
             <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
                 <span class="percentage">0%</span> Data Umum
             </button>
+            @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')
+            <button data-toggle="tab" data-tab="data-po" class="btn btn-tab font-semibold">
+                <span class="percentage">0%</span> Data PO
+            </button>
+            @endif
             @foreach ($dataAspek as $item)
                 @php
                     $title = str_replace('&', 'dan', strtolower($item->nama));
@@ -55,8 +60,15 @@ $dataIndex = match ($skema) {
                 <input type="hidden" name="isDraft" value="1">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.create-dagulir-draft')
+                        @if ($skema == null)
+                            @include('dagulir.pengajuan.create-dagulir-draft')
+                        @else
+                            @include('dagulir.pengajuan.create-pengajuan-draft')
+                        @endif
                     </div>
+                    @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')
+                        @include('dagulir.pengajuan.draft-data-po')
+                    @endif
                     @foreach ($dataAspek as $key => $value)
                         @php
                             $title_id = str_replace('&', 'dan', strtolower($value->nama));
@@ -71,9 +83,9 @@ $dataIndex = match ($skema) {
                             $dataLevelEmpat = \App\Models\ItemModel::where('level', 4)
                             ->where('id_parent', $value->id)
                             ->get();
-                            $nib = temporary_dagulir($duTemp->id, 77)?->opsi_text;
-                            $sku = temporary_dagulir($duTemp->id, 78)?->opsi_text;
-                            $npwp = temporary_dagulir($duTemp->id, 79)?->opsi_text;
+                            $nib = $skema != null ? temporary($duTemp->id, 77)?->opsi_text : temporary_dagulir($duTemp->id, 77)?->opsi_text;
+                            $sku = $skema != null ? temporary($duTemp->id, 78)?->opsi_text : temporary_dagulir($duTemp->id, 78)?->opsi_text;
+                            $npwp = $skema != null ? temporary($duTemp->id, 79)?->opsi_text : temporary_dagulir($duTemp->id, 79)?->opsi_text;
                         @endphp
 
                         <div id="{{ $title_tab }}" class="is-tab-content">
@@ -95,7 +107,7 @@ $dataIndex = match ($skema) {
                                             <div class="form-group">
                                                 <div class="input-box">
                                                     <label for="">{{ $item->nama }}</label>
-                                                    <select name="ijin_usaha" id="ijin_usaha" class="form-input" required>
+                                                    <select name="ijin_usaha" id="ijin_usaha" class="form-input">
                                                         <option value="">-- Pilih Ijin Usaha --</option>
                                                         <option value="nib" {{ $nib !='' ? 'selected' : '' }}>NIB</option>
                                                         <option value="surat_keterangan_usaha" {{ $sku !='' ? 'selected' : '' }}>Surat Keterangan Usaha</option>
@@ -134,22 +146,25 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
-                                                        placeholder="Masukkan informasi" class="form-input"value="{{ temporary_dagulir($duTemp->id, 77)?->opsi_text }}">
+                                                        placeholder="Masukkan informasi" class="form-input"value="{{ $skema != null ? temporary($duTemp->id, 77)?->opsi_text : temporary_dagulir($duTemp->id, 77)?->opsi_text }}">
 
                                                 </div>
                                             </div>
                                             <div class="form-group" id="docNIB">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemNIB->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
-                                                    @if (temporary_dagulir($duTemp->id, $itemNIB->id))
+                                                    @php
+                                                        $docNIB = $skema != null ?  temporary($duTemp->id, $itemNIB->id)?->id : temporary_dagulir($duTemp->id, $itemNIB->id)
+                                                    @endphp
+                                                    @if ($docNIB)
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                             data-title="{{ $itemNIB->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemNIB->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text)[1] }}">Preview</a>
                                                     @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
-                                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary_dagulir($duTemp->id, $itemNIB->id)?->id }}"
+                                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ $skema != null ? temporary($duTemp->id, $itemNIB->id)?->id : temporary_dagulir($duTemp->id, $itemNIB->id)?->id }}"
                                                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
-                                                        id="file_nib" value="{{temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text}}">
+                                                        id="file_nib" value="{{ $skema != null ? temporary($duTemp->id, $itemNIB->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -182,7 +197,7 @@ $dataIndex = match ($skema) {
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="{{ temporary_dagulir($duTemp->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text}}">
+                                                        class="form-input limit-size" value="{{ $skema != null ? temporary($duTemp->id, $itemSKU->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -200,7 +215,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                                     <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
-                                                        placeholder="Masukkan informasi" class="form-input" value="{{ temporary_dagulir($duTemp->id, 79)?->opsi_text }}">
+                                                        placeholder="Masukkan informasi" class="form-input" value="{{ $skema != null ? temporary($duTemp->id, 79)?->opsi_text : temporary_dagulir($duTemp->id, 79)?->opsi_text }}">
                                                 </div>
                                             </div>
                                             <div class="form-group" id="docNPWP">
@@ -213,7 +228,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id="{{ temporary_dagulir($duTemp->id, $itemNPWP->id)?->id }}"
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $itemNPWP->id)?->opsi_text}}">
+                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size" value="{{  $skema != null ? temporary($duTemp->id, $itemNPWP->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemNPWP->id)?->opsi_text}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -236,7 +251,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
                                                                         id="">
                                                                     <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
-                                                                        id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}" value="{{ temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}"
+                                                                        id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}" value="{{ $skema != null ? temporary($duTemp->id, $item->id)?->opsi_text : temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}"
                                                                         class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}" >
                                                                 </div>
                                                                 @if ($item->suffix)
@@ -258,7 +273,7 @@ $dataIndex = match ($skema) {
                                                                     id="">
                                                                 <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
                                                                     id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                    class="form-input" value="{{ temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}">
+                                                                    class="form-input" value="{{ $skema != null ? temporary($duTemp->id, $item->id)?->opsi_text : temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}">
                                                             </div>
                                                         </div>
                                                     @else
@@ -273,7 +288,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="text" maxlength="255" step="any"
                                                                         name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-input rupiah"
-                                                                        value="{{ temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}">
+                                                                        value="{{ $skema != null ?  temporary($duTemp->id, $item->id)?->opsi_text : temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}">
                                                                 </div>
                                                             </div>
                                                         @else
@@ -287,7 +302,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="text" maxlength="255" step="any"
                                                                         name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-input rupiah"
-                                                                        value="{{ temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}">
+                                                                        value="{{ $skema != null ? temporary($duTemp->id, $item->id)?->opsi_text : temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}">
                                                                 </div>
                                                             </div>
                                                         @endif
@@ -305,7 +320,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="number" step="any" name="informasi[{{ $item->id }}]"
                                                                         id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
                                                                         class="form-input" aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                                                        value="{{ temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}" onkeydown="return event.keyCode !== 69">
+                                                                        value="{{ $skema != null ? temporary($duTemp->id, $item->id)?->opsi_text : temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}" onkeydown="return event.keyCode !== 69">
                                                                 </div>
                                                                 @if ($item->suffix)
                                                                     <div class="flex-shrink-0  mt-2.5rem">
@@ -329,7 +344,7 @@ $dataIndex = match ($skema) {
                                                                 id="">
                                                             <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                 data-id="{{ temporary_dagulir($duTemp->id, $item->id)?->id }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $item->id)?->opsi_text}}">
+                                                                class="form-input limit-size" value="{{ $skema != null ? temporary($duTemp->id, $item->id)?->opsi_text : temporary_dagulir($duTemp->id, $item->id)?->opsi_text}}">
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
                                                         </div>
@@ -343,7 +358,7 @@ $dataIndex = match ($skema) {
                                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
                                                                 id="">
                                                             <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255"
-                                                                class="form-input" placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}</textarea>
+                                                                class="form-input" placeholder="Masukkan informasi {{ $item->nama }}">{{ $skema != null ? temporary($duTemp->id, $item->id)?->opsi_text : temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}</textarea>
                                                         </div>
                                                     </div>
                                                 @endif
@@ -386,7 +401,13 @@ $dataIndex = match ($skema) {
                                                             <option value=""> --Pilih Opsi-- </option>
                                                             @foreach ($dataJawaban as $key => $itemJawaban)
                                                                 <option id="{{ $idLevelDua . '_' . $key }}"
-                                                                    value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ temporary_select_dagulir($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
+                                                                    value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}"
+                                                                    @if ($skema != null)
+                                                                        {{ temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}
+                                                                    @else
+                                                                        {{ temporary_select_dagulir($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}
+                                                                    @endif
+                                                                    >
                                                                     {{ $itemJawaban->option }}</option>
                                                             @endforeach
                                                         </select>
@@ -400,15 +421,14 @@ $dataIndex = match ($skema) {
                                                 @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                                                     @php
                                                         $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
-                                                        $jaminanTambahan = temporary_dagulir($duTemp?->id, 76)?->opsi_text;
+                                                        $jaminanTambahan = $skema != null ? $duTemp?->jaminan_tambahan : temporary_dagulir($duTemp?->id, 76)?->opsi_text;
                                                     @endphp
                                                     @if ($itemTiga->nama == 'Kategori Jaminan Utama')
                                                     @elseif ($itemTiga->nama == 'Kategori Jaminan Tambahan')
                                                         <div class="form-group ">
                                                             <div class="input-box">
                                                                 <label for="">{{ $itemTiga->nama }}</label>
-                                                                <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input"
-                                                                    required>
+                                                                <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input">
                                                                     <option value="" selected>-- Pilih Kategori Jaminan Tambahan --</option>
                                                                     <option value="Tidak Memiliki Jaminan Tambahan" {{ $jaminanTambahan == 'Tidak Memiliki Jaminan Tambahan' ? 'selected' : '' }}>Tidak Memiliki Jaminan Tambahan
                                                                     </option>
@@ -447,7 +467,7 @@ $dataIndex = match ($skema) {
                                                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                             <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
                                                                                 placeholder="Masukkan informasi" id="{{ $idLevelTiga }}"
-                                                                                value="{{ temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}">
+                                                                                value="{{ $skema != null ? temporary($duTemp->id, $itemTiga->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}">
                                                                         </div>
                                                                         @if ($itemTiga->suffix)
                                                                             <div class="flex-shrink-0 mt-2.5rem">
@@ -470,7 +490,7 @@ $dataIndex = match ($skema) {
                                                                                 id="">
                                                                             <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
                                                                                 id="{{ $idLevelTiga }}" placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                                class="form-input rupiah" value="{{ temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}">
+                                                                                class="form-input rupiah" value="{{ $skema != null ? temporary($duTemp->id, $itemTiga->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                                                         </div>
                                                                         @if ($itemTiga->suffix)
                                                                             <div class="flex-shrink-0 mt-2.5rem">
@@ -496,7 +516,7 @@ $dataIndex = match ($skema) {
                                                                                         id="{{ $idLevelTiga }}"
                                                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                                                         class="form-input {{$itemTiga->readonly ? 'bg-gray-100' : ''}}"
-                                                                                        value="{{ temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}">
+                                                                                        value="{{ $skema != null ? temporary($duTemp->id, $itemTiga->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                                                             </div>
                                                                             @if ($itemTiga->suffix)
                                                                                 <div class="flex-shrink-0 mt-2.5rem">
@@ -522,7 +542,7 @@ $dataIndex = match ($skema) {
                                                                             <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
                                                                                 id="{{ $idLevelTiga }}" data-id="{{ temporary_dagulir($duTemp->id, $itemTiga->id)?->id }}"
                                                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                                class="form-input limit-size file-usaha" accept="image/*" value="{{temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text}}">
+                                                                                class="form-input limit-size file-usaha" accept="image/*" value="{{ $skema != null ? temporary($duTemp->id, $itemTiga->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text}}">
                                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload
                                                                                 file size is 15 MB</span>
                                                                             @if ($itemTiga->is_multiple)
@@ -548,7 +568,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
                                                                         value="{{ $itemTiga->id }}" id="">
                                                                     <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" maxlength="255"
-                                                                        class="form-input" placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}</textarea>
+                                                                        class="form-input" placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ $skema != null ? temporary($duTemp->id, $itemTiga->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}</textarea>
                                                                 </div>
                                                             </div>
                                                         @endif
@@ -602,7 +622,14 @@ $dataIndex = match ($skema) {
                                                                             <option value=""> --Pilih Opsi-- </option>
                                                                             @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                                                 <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                                                    value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ temporary_select_dagulir($itemTiga->id, $duTemp->id)?->id_jawaban == $itemJawabanTiga->id ? 'selected' : '' }}>
+                                                                                    value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}"
+                                                                                    @if ($skema != null)
+                                                                                    {{ temporary_select($itemTiga->id, $duTemp->id)?->id_jawaban == $itemJawabanTiga->id ?
+                                                                                        'selected' : '' }}
+                                                                                    @else
+                                                                                    {{ temporary_select_dagulir($itemTiga->id, $duTemp->id)?->id_jawaban == $itemJawabanTiga->id ? 'selected' : '' }}
+                                                                                    @endif
+                                                                                        >
                                                                                     {{ $itemJawabanTiga->option }}</option>
                                                                             @endforeach
                                                                         </select>
@@ -634,7 +661,7 @@ $dataIndex = match ($skema) {
                                                                                     id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi"
                                                                                     class="form-input only-number"
-                                                                                    value="{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                                                    value="{{ $skema != null ? temporary($duTemp->id, $itemEmpat->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                                                                 <div class="input-group-append">
                                                                                     <div class="input-group-text" id="addon_tenor_yang_diminta">
                                                                                         Bulan</div>
@@ -643,7 +670,7 @@ $dataIndex = match ($skema) {
                                                                         @else
                                                                             <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]"
                                                                                 id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
-                                                                                placeholder="Masukkan informasi" value="{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}"
+                                                                                placeholder="Masukkan informasi" value="{{ $skema != null ? temporary($duTemp->id, $itemEmpat->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}"
                                                                                 class="form-input  {{$itemEmpat->is_rupiah ? 'rupiah' : ''}}">
                                                                         @endif
                                                                     </div>
@@ -661,7 +688,7 @@ $dataIndex = match ($skema) {
                                                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                                                     id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                                    class="form-input only-number" value="{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                                                    class="form-input only-number" value="{{ $skema != null ? temporary($duTemp->id, $itemEmpat->id)?->opsi_text :temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                                                             </div>
                                                                             @if ($itemEmpat->suffix)
                                                                                 <div class="flex-shrink-0 mt-2.5rem">
@@ -685,7 +712,7 @@ $dataIndex = match ($skema) {
                                                                                     id="{{ $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-input"
                                                                                     aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                                                                    value="{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                                                    value="{{ $skema != null ? temporary($duTemp->id, $itemEmpat->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                                                             </div>
                                                                             @if ($itemEmpat->suffix)
                                                                                 <div class="flex-shrink-0 mt-2.5rem">
@@ -709,7 +736,7 @@ $dataIndex = match ($skema) {
                                                                         <input type="file" id="{{ $idLevelEmpat }}"
                                                                             name="upload_file[{{ $itemEmpat->id }}]" data-id="{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->id }}"
                                                                             placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                            class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text}}">
+                                                                            class="form-input limit-size" value="{{$skema != null ? temporary($duTemp->id, $itemEmpat->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text}}">
                                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload file
                                                                             size is 5 MB</span>
                                                                     </div>
@@ -723,7 +750,7 @@ $dataIndex = match ($skema) {
                                                                         <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->id }}" id="">
                                                                         <textarea name="informasi[{{ $itemEmpat->id }}]" rows="4" id="{{ $idLevelEmpat }}" maxlength="255"
-                                                                            class="form-input" placeholder="Masukkan informasi {{ $itemEmpat->nama }}">{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}</textarea>
+                                                                            class="form-input" placeholder="Masukkan informasi {{ $itemEmpat->nama }}">{{ $skema != null ? temporary($duTemp->id, $itemEmpat->id)?->opsi_text : temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}</textarea>
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -754,8 +781,15 @@ $dataIndex = match ($skema) {
                                                                             <option value=""> --Pilih Opsi -- </option>
                                                                             @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                                                                 <option id="{{ $idLevelEmpat . '_' . $key }}"
-                                                                                    value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ temporary_select_dagulir($itemEmpat->id, $duTemp->id)?->id_jawaban == $itemJawabanEmpat->id ?
-                                                                                        'selected' : '' }}>
+                                                                                    value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}"
+                                                                                    @if ($skema != null)
+                                                                                    {{ temporary_select($itemEmpat->id, $duTemp->id)?->id_jawaban == $itemJawabanEmpat->id ?
+                                                                                        'selected' : '' }}
+                                                                                    @else
+                                                                                    {{ temporary_select_dagulir($itemEmpat->id, $duTemp->id)?->id_jawaban == $itemJawabanEmpat->id ?
+                                                                                        'selected' : '' }}
+                                                                                    @endif
+                                                                                   >
                                                                                     {{ $itemJawabanEmpat->option }}</option>
                                                                             @endforeach
                                                                         </select>
@@ -778,7 +812,7 @@ $dataIndex = match ($skema) {
                                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
                                         <textarea name="pendapat_per_aspek[{{ $value->id }}]"
                                             class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
-                                            cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ temporary_usulan_dagulir($value->id, $duTemp->id)?->usulan }}</textarea>
+                                            cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ $skema != null ? temporary_usulan($value->id, $duTemp->id)?->usulan : temporary_usulan_dagulir($value->id, $duTemp->id)?->usulan }}</textarea>
                                         @error('pendapat_per_aspek')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -984,68 +1018,70 @@ $dataIndex = match ($skema) {
             }
         })
     });
+    @if ($skema != null)
 
-    $('#kabupaten').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getKecamatan') }}?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    console.log('kecamatan');
-                    console.log(res);
-                    if (res) {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
-                        $("#kecamatan").append('<option value="0">---Pilih Kecamatan---</option>');
-                        $("#desa").append('<option value="0">---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
-                            `);
-                        });
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getKecamatan') }}?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        console.log('kecamatan');
+                        console.log(res);
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#desa").empty();
+                            $("#kecamatan").append('<option value="0">---Pilih Kecamatan---</option>');
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                    <option value="${kode}" ${kode == {{ $duTemp?->id_kecamatan ?? 'null' }} ? 'selected' : '' }>${nama}</option>
+                                `);
+                            });
 
-                        $('#kecamatan').trigger('change');
-                    } else {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                            $("#desa").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#kecamatan").empty();
-            $("#desa").empty();
-        }
-    });
+                });
+            } else {
+                $("#kecamatan").empty();
+                $("#desa").empty();
+            }
+        });
 
-    $('#kecamatan').change(function() {
-        var kecID = $(this).val();
-        // //console.log(kecID);
-        if (kecID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getDesa') }}?kecID=" + kecID,
-                dataType: 'JSON',
-                success: function(res) {
-                    //    //console.log(res);
-                    if (res) {
-                        $("#desa").empty();
-                        $("#desa").append('<option value="0">---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#desa').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->desa_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
-                            `);
-                        });
-                    } else {
-                        $("#desa").empty();
+        $('#kecamatan').change(function() {
+            var kecID = $(this).val();
+            // //console.log(kecID);
+            if (kecID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getDesa') }}?kecID=" + kecID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        //    //console.log(res);
+                        if (res) {
+                            $("#desa").empty();
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#desa').append(`
+                                    <option value="${kode}" ${kode == {{ $duTemp?->id_desa ?? 'null' }} ? 'selected' : '' }>${nama}</option>
+                                `);
+                            });
+                        } else {
+                            $("#desa").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#desa").empty();
-        }
-    });
+                });
+            } else {
+                $("#desa").empty();
+            }
+        });
+    @endif
 
     //cek apakah opsi yg dipilih memiliki sub column
     $('.cek-sub-column').change(function(e) {
@@ -1986,122 +2022,123 @@ $dataIndex = match ($skema) {
     @endif
     // End Validation
 
+    @if ($skema == null)
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                    <option value="${kode}" ${kode == {{ $duTemp?->kec_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
+                                `);
+                            });
 
-    $('#kabupaten').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan").empty();
-                        $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan').trigger('change');
-                    } else {
-                        $("#kecamatan").empty();
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#kecamatan").empty();
-        }
-    });
-    $('#kabupaten_domisili').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan_domisili").empty();
-                        $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan_domisili').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_dom ?? null }} ? 'selected' : ''}>${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan_domisili').trigger('change');
-                    } else {
-                        $("#kecamatan_domisili").empty();
-                    }
-                }
-            });
-        } else {
-            $("#kecamatan_domisili").empty();
-        }
-    });
-    $('#kabupaten_usaha').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan_usaha").empty();
-                        $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan_usaha').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_usaha ?? null }} ? 'selected' : ''}>${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan_usaha').trigger('change');
-                    } else {
-                        $("#kecamatan_usaha").empty();
-                    }
-                }
-            });
-        } else {
-            $("#kecamatan_usaha").empty();
-        }
-    });
-
-    $('#status_nasabah').on('change', function(e){
-        var status = $(this).val();
-        if (status == 2) {
-            $('#label-ktp-nasabah').empty();
-            $('#label-ktp-nasabah').html('Foto KTP Nasabah');
-            $('#nik_pasangan').removeClass('hidden');
-            $('#ktp-pasangan').removeClass('hidden');
-        } else {
-            $('#label-ktp-nasabah').empty();
-            $('#label-ktp-nasabah').html('Foto KTP Nasabah');
-            $('#nik_pasangan').addClass('hidden');
-            $('#ktp-pasangan').addClass('hidden');
-        }
-    })
-
-    $('#tipe').on('change',function(e) {
-        var tipe = $(this).val();
-        if (tipe == '2' || tipe == "0" ) {
-            $('#tempat_berdiri').addClass('hidden');
-        }else{
-            $('#tempat_berdiri').removeClass('hidden');
-            //badan usaha
-            if (tipe == '3') {
-                $('#label_pj').html('Nama penanggung jawab');
-                $('#input_pj').attr('placeholder', 'Masukkan Nama Penanggung Jawab');
+                });
+            } else {
+                $("#kecamatan").empty();
             }
-            // perorangan
-            else if (tipe == '4') {
-                $('#label_pj').html('Nama ketua');
-                $('#input_pj').attr('placeholder', 'Masukkan Nama Ketua');
+        });
+        $('#kabupaten_domisili').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan_domisili").empty();
+                            $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_domisili').append(`
+                                    <option value="${kode}" ${kode == {{ $duTemp?->kec_dom ?? null }} ? 'selected' : ''}>${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_domisili').trigger('change');
+                        } else {
+                            $("#kecamatan_domisili").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_domisili").empty();
             }
-        }
-    })
+        });
+        $('#kabupaten_usaha').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan_usaha").empty();
+                            $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_usaha').append(`
+                                    <option value="${kode}" ${kode == {{ $duTemp?->kec_usaha ?? null }} ? 'selected' : ''}>${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_usaha').trigger('change');
+                        } else {
+                            $("#kecamatan_usaha").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+
+        $('#status_nasabah').on('change', function(e){
+            var status = $(this).val();
+            if (status == 2) {
+                $('#label-ktp-nasabah').empty();
+                $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+                $('#nik_pasangan').removeClass('hidden');
+                $('#ktp-pasangan').removeClass('hidden');
+            } else {
+                $('#label-ktp-nasabah').empty();
+                $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+                $('#nik_pasangan').addClass('hidden');
+                $('#ktp-pasangan').addClass('hidden');
+            }
+        })
+
+        $('#tipe').on('change',function(e) {
+            var tipe = $(this).val();
+            if (tipe == '2' || tipe == "0" ) {
+                $('#tempat_berdiri').addClass('hidden');
+            }else{
+                $('#tempat_berdiri').removeClass('hidden');
+                //badan usaha
+                if (tipe == '3') {
+                    $('#label_pj').html('Nama penanggung jawab');
+                    $('#input_pj').attr('placeholder', 'Masukkan Nama Penanggung Jawab');
+                }
+                // perorangan
+                else if (tipe == '4') {
+                    $('#label_pj').html('Nama ketua');
+                    $('#input_pj').attr('placeholder', 'Masukkan Nama Ketua');
+                }
+            }
+        })
+    @endif
 
     function validatePhoneNumber(input) {
         var phoneNumber = input.value.replace(/\D/g, '');

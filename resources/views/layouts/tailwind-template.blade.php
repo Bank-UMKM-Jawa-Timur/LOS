@@ -25,7 +25,7 @@
     {{-- wrapping all layout --}}
     <div class="layout-wrapper flex justify-center">
         {{-- sidebar --}}
-        
+
         <div class="layout-sidebar flex-auto">
             @if(\Request::route()->getName() != 'change_password')
                 @include('components.new.sidebar')

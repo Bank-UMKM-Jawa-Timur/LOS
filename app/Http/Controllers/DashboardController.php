@@ -90,7 +90,7 @@ class DashboardController extends Controller
         $param['dataPosisi'] = $this->repo->getDataPosisi($request);
         $param['dataSkema'] = $this->repo->getDataSkema($request);
         $param['dataRangking'] = $this->repo->getRangking($request);
-
+        
         return view('dashboard', $param);
     }
 

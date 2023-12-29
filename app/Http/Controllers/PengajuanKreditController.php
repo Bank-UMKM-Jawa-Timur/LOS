@@ -730,8 +730,8 @@ class PengajuanKreditController extends Controller
 
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
-        // return view('pengajuan-kredit.add-pengajuan-kredit', $param);
-        return view('new-pengajuan.add-pengajuan', $param);
+        return view('pengajuan-kredit.add-pengajuan-kredit', $param);
+        // return view('new-pengajuan.add-pengajuan', $param);
     }
 
     public function checkSubColumn(Request $request)
@@ -1244,7 +1244,7 @@ class PengajuanKreditController extends Controller
             $addData->no_ktp = $request->no_ktp;
             $addData->telp = $request->get('no_telp');
             $addData->tempat_lahir = $request->tempat_lahir;
-            $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
+            $addData->tanggal_lahir = $request->tanggal_lahir;
             $addData->status = $request->status;
             $addData->sektor_kredit = $request->sektor_kredit;
             $addData->jenis_usaha = $request->jenis_usaha;
@@ -1685,9 +1685,6 @@ class PengajuanKreditController extends Controller
             'jaminan' => 'required',
             'hubungan_bank' => 'required',
             'hasil_verifikasi' => 'required',
-            // 'dataLevelDua.*' => $checkLevelDua,
-            // 'dataLevelTiga.*' => $checkLevelTiga,
-            // 'dataLevelEmpat.*' => $checkLevelEmpat,
         ], [
             'required' => 'data harus terisi.',
             'not_in' => 'kolom harus dipilih.',

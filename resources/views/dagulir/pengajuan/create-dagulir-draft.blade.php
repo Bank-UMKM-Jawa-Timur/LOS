@@ -48,6 +48,7 @@
         class="p-5 w-full space-y-5 "
         id="data-umum"
     >
+        <input type="hidden" name="skema_kredit" id="skema_kredit" value="Dagulir">
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Nama Lengkap</label>

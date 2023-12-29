@@ -1,7 +1,6 @@
-@extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
+@extends('layouts.tailwind-template')
 @include('layouts.popup')
-
 @php
 $status = ['belum menikah', 'menikah', 'duda', 'janda'];
 
@@ -38,7 +37,6 @@ $dataIndex = match ($skema) {
                 <span class="percentage">0%</span> Data PO
             </button>
             @endif
-
             @foreach ($dataAspek as $item)
                 @php
                     $title = str_replace('&', 'dan', strtolower($item->nama));
@@ -51,19 +49,19 @@ $dataIndex = match ($skema) {
     </nav>
     <div class="p-3">
         <div class="body-pages">
-            <form action="{{ route('pengajuan-kredit.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if (\Request::has('dagulir'))
                     <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
                 @endif
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp">
+                <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema !=null) value="{{ $skema ?? '' }}" @endif>
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema !=null) value="{{ $skema ?? '' }}" @endif>
                         @include('dagulir.pengajuan.create-pengajuan')
                     </div>
                     @if ($skema == 'KKB')
-                      @include('dagulir.pengajuan.data-po')
+                        @include('dagulir.pengajuan.data-po')
                     @endif
                     @foreach ($dataAspek as $key => $value)
                         @php
@@ -401,8 +399,8 @@ $dataIndex = match ($skema) {
                                                                 <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input"
                                                                     >
                                                                     <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                                                    <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
-                                                                    </option>
+                                                                    {{-- <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
+                                                                    </option> --}}
                                                                     <option value="Tanah">Tanah</option>
                                                                     <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
                                                                     <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
@@ -773,7 +771,7 @@ $dataIndex = match ($skema) {
                                     <div class="flex justify-between">
                                         <a href="{{route('dagulir.pengajuan.index')}}">
                                             <button type="button"
-                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali"
                                                 >
                                                 Kembali
                                             </button>
@@ -817,7 +815,7 @@ $dataIndex = match ($skema) {
                                 <div class="flex justify-between">
                                         <a href="{{route('dagulir.pengajuan.index')}}">
                                             <button type="button"
-                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali"
                                                 >
                                                 Kembali
                                             </button>
@@ -847,6 +845,7 @@ $dataIndex = match ($skema) {
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
     // Start Validation
     @if (count($errors->all()))
         Swal.fire({
@@ -864,6 +863,9 @@ $dataIndex = match ($skema) {
         });
     @endif
     let nullValue = [];
+    $(document).ready(function() {
+        countFormPercentage()
+    });
     $(document).ready(function() {
         let valSkema = $("#skema_kredit").val();
         if (valSkema == null || valSkema == '') {
@@ -989,73 +991,39 @@ $dataIndex = match ($skema) {
         });
     @endif
 
-    $("#status").change(function() {
-            let value = $(this).val();
-            $("#foto-ktp-istri").empty();
-            $("#foto-ktp-suami").empty();
-            $("#foto-ktp-nasabah").empty();
-            $("#foto-ktp-istri").removeClass('form-group col-md-6');
-            $("#foto-ktp-suami").removeClass('form-group col-md-6');
-            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+    $('#status_nasabah').on('change', function(e){
+        var status = $(this).val();
+        if (status == 2) {
+            $('#label-ktp-nasabah').empty();
+            $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+            $('#nik_pasangan').removeClass('hidden');
+            $('#ktp-pasangan').removeClass('hidden');
+        } else {
+            $('#label-ktp-nasabah').empty();
+            $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+            $('#nik_pasangan').addClass('hidden');
+            $('#ktp-pasangan').addClass('hidden');
+        }
+    })
 
-            if (value == "menikah") {
-                $("#foto-ktp-istri").addClass('form-group col-md-6')
-                $("#foto-ktp-suami").addClass('form-group col-md-6')
-                $("#foto-ktp-istri").append(`
-                    <label for="">{{ $itemKTPIs->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size" id="foto_ktp_istri">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;"></span>
-                `)
-                $("#foto-ktp-suami").append(`
-                        <label for="">{{ $itemKTPSu->nama }}</label>
-                        <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                        <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size" id="foto_ktp_suami">
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                        @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('dataLevelDua.' . $key) }}
-                            </div>
-                        @endif
-                        <span class="filename" style="display: inline;"></span>
-                `);
-            } else {
-                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
-                $("#foto-ktp-nasabah").append(`
-                    @isset($itemKTPNas)
-                    <label for="">{{ $itemKTPNas->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size" id="foto_ktp_nasabah">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;"></span>
-                    @endisset
-                `)
+    $('#tipe').on('change',function(e) {
+        var tipe = $(this).val();
+        if (tipe == '2' || tipe == "0" ) {
+            $('#tempat_berdiri').addClass('hidden');
+        }else{
+            $('#tempat_berdiri').removeClass('hidden');
+            //badan usaha
+            if (tipe == '3') {
+                $('#label_pj').html('Nama penanggung jawab');
+                $('#input_pj').attr('placeholder', 'Masukkan Nama Penanggung Jawab');
             }
-            $('.limit-size').on('change', function() {
-                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                if (size > 5) {
-                    $(this).next().css({
-                        "display": "block"
-                    });
-                    this.value = ''
-                } else {
-                    $(this).next().css({
-                        "display": "none"
-                    });
-                }
-            })
-        });
+            // perorangan
+            else if (tipe == '4') {
+                $('#label_pj').html('Nama ketua');
+                $('#input_pj').attr('placeholder', 'Masukkan Nama Ketua');
+            }
+        }
+    })
 
     function validatePhoneNumber(input) {
         var phoneNumber = input.value.replace(/\D/g, '');
@@ -1458,7 +1426,7 @@ $dataIndex = match ($skema) {
         var totalReadHidden = (totalInputHidden + totalInputReadOnly);
         var total = totalInput + totalInputChecked;
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100;
-        return parseInt(percent)
+        return parseInt(percent) > 100 ? 100 : parseInt(percent)
     }
 
     $(".toggle-side").click(function(e) {
