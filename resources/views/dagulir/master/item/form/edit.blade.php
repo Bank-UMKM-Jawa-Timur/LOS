@@ -36,19 +36,21 @@
                                 <option value="4" {{ $item->level == 4 ? 'selected' : '' }}>4</option>
                             </select>
                         </div>
-                        <div class="input-box">
-                            <label for="item_turunan">Item Turunan</label>
-                            <input type="text" name="id_turunan" value="{{ $itemTurunan->id }}" hidden>
-                            <input type="text" name="id_item" value="{{ $item->id }}" hidden>
-                            <input type="text" name="item_turunan"
-                                class="form-input @error('item_turunan') is-invalid @enderror"
-                                value="{{ old('item_turunan', $itemTurunan->nama) }}" readonly>
-                            @error('item_turunan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                        @if ($itemTurunan)
+                            <div class="input-box">
+                                <label for="item_turunan">Item Turunan</label>
+                                <input type="text" name="id_turunan" value="{{ $itemTurunan->id  }}" hidden>
+                                <input type="text" name="id_item" value="{{ $item->id }}" hidden>
+                                <input type="text" name="item_turunan"
+                                    class="form-input @error('item_turunan') is-invalid @enderror"
+                                    value="{{ old('item_turunan', $itemTurunan->nama) }}" readonly>
+                                @error('item_turunan')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        @endif
                     </div>
                     <div class="form-group-2">
                         <div class="input-box">
@@ -60,7 +62,7 @@
                                     {{ $message }}
                                 </div>
                             @enderror
-                            @if (!$isParent)
+                            @if ($item->opsi_jawaban != "kosong")
                                 <div class="flex gap-2">
                                     <input class="form-check" type="checkbox" value="1" id="is_commentable"
                                         name="is_commentable" {{ $item->is_commentable == 'Ya' ? 'checked' : '' }}>
@@ -73,25 +75,33 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="input-box">
-                            <label for="">Opsi Jawaban</label>
-                            <select id="opsi_jawaban" class="form-input @error('opsi_jawaban') is-invalid @enderror" disabled>
-                                <option value="kosong" {{ $item->opsi_jawaban == 'kosong' ? 'selected' : '' }}>Pilih Opsi
-                                    Jawaban</option>
-                                <option value="input text" {{ $item->opsi_jawaban == 'input text' ? 'selected' : '' }}>Input
-                                    Text</option>
-                                <option value="option" {{ $item->opsi_jawaban == 'option' ? 'selected' : '' }}>Opsi</option>
-                            </select>
-                            @error('opsi_jawaban')
-                                <small class="text-danger">
-                                    {{ $message }}
-                                </small>
-                            @enderror
-                            {{-- <div class="flex gap-2">
-                                <input type="checkbox" name="" class="form-check" id="is-skored" />
-                                <label for="is-skored">Perhitungan Skor</label>
-                            </div> --}}
-                        </div>
+                        @if ($item)
+                            <div class="input-box">
+                                <label for="">Opsi Jawaban</label>
+                                <select id="opsi_jawaban" name="opsi_jawaban" class="form-input @error('opsi_jawaban') is-invalid @enderror" disabled>
+                                    <option value="kosong" {{ $item->opsi_jawaban == 'kosong' ? 'selected' : '' }}>Pilih Opsi
+                                        Jawaban</option>
+                                    <option value="input text" {{ $item->opsi_jawaban == 'input text' ? 'selected' : '' }}>Input
+                                        Text</option>
+                                    <option value="option" {{ $item->opsi_jawaban == 'option' ? 'selected' : '' }}>Opsi</option>
+                                    <option value="option" {{ $item->opsi_jawaban == 'number' ? 'selected' : '' }}>Number</option>
+                                    <option value="option" {{ $item->opsi_jawaban == 'persen' ? 'selected' : '' }}>Persen</option>
+                                    <option value="option" {{ $item->opsi_jawaban == 'long text' ? 'selected' : '' }}>Long Text</option>
+                                    <option value="option" {{ $item->opsi_jawaban == 'file' ? 'selected' : '' }}>Upload FIle</option>
+                                </select>
+                                @error('opsi_jawaban')
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
+                                @enderror
+                                @if ($item->opsi_jawaban == "option")
+                                    <div class="flex gap-2">
+                                        <input type="checkbox" name="" class="form-check" id="is-skored" />
+                                        <label for="is-skored">Perhitungan Skor</label>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                     <hr>
                     <div class="detail-lawan">

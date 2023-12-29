@@ -15,6 +15,7 @@ use \App\Http\Controllers\CetakSuratController;
 use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 use \App\Http\Controllers\Dagulir\DagulirController;
+use App\Http\Controllers\Dagulir\master\KonfirgurasiApi;
 use App\Http\Controllers\Dagulir\master\NewCabangController;
 use App\Http\Controllers\Dagulir\master\NewDesaController;
 use App\Http\Controllers\Dagulir\master\NewItemController;
@@ -135,6 +136,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('user', NewUserController::class);
             Route::resource('merk', NewMerkController::class);
             Route::resource('tipe', NewTipeController::class);
+            Route::resource('konfigurasi-api', KonfirgurasiApi::class);
             Route::resource('master-item', NewItemController::class);
             Route::get('add-edit-item', [NewItemController::class, 'addEditItem'])->name('add-edit-item');
             Route::get('data-item-satu', [NewItemController::class, 'dataItemSatu'])->name('getItemSatu');

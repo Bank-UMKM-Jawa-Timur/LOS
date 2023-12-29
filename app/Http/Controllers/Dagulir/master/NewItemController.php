@@ -164,7 +164,8 @@ class NewItemController extends Controller
                     }
                 }
             }
-            return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
+            alert()->success('Berhasil', 'Berhasil menambahkan data.');
+            return redirect()->route('dagulir.master.master-item.index')->withStatus('Berhasil menambah data.');
         } catch (Exception $e) {
             return back()->withError('Terjadi Kesalahan.' . $e->getMessage());
             return $e;

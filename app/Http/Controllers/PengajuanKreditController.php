@@ -730,8 +730,8 @@ class PengajuanKreditController extends Controller
 
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
-        // return view('pengajuan-kredit.add-pengajuan-kredit', $param);
-        return view('new-pengajuan.add-pengajuan', $param);
+        return view('pengajuan-kredit.add-pengajuan-kredit', $param);
+        // return view('new-pengajuan.add-pengajuan', $param);
     }
 
     public function checkSubColumn(Request $request)

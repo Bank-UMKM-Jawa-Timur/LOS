@@ -2536,7 +2536,7 @@ class NewDagulirController extends Controller
 
     public function cetakDagulir($id)
     {
-        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
         $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
                         ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
                         ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
@@ -2545,8 +2545,9 @@ class NewDagulirController extends Controller
                         ->where('pengajuan.id', $id)
                         ->first();
         $param['dataNasabah'] = $dataNasabah;
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
-                            ->find($id);
+        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+        ->find($id);
+        $param['dataUmum'] = $dataUmum;
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
@@ -2559,10 +2560,15 @@ class NewDagulirController extends Controller
         }
         $pdf->save($filePath.'/'.$fileName);
 
-        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
+        // return $param['dataUmum'];
+        if ($dataUmum->skema_kredit == "Kusuma") {
+            return view('dagulir.cetak.cetak-surat-kusuma', $param);
+        } else {
+            return view('dagulir.cetak.cetak-surat', $param);
+        }
 
+        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
         return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
-        // return view('dagulir.cetak.cetak-surat', $param);
     }
 
     public function cetakLampiranAnalisa($id_pengajuan) {
