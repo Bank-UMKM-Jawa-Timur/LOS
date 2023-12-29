@@ -29,10 +29,12 @@
                     {{-- <th>No</th> --}}
                     {{-- <th>Kode Cabang</th> --}}
                     <th>Cabang</th>
-                    <th>Total Pengajuan</th>
-                    <th>Disetujui</th>
-                    <th>Ditolak</th>
-                    <th>Diproses</th>
+                    <th>Staff</th>
+                    <th>Review Penyelia</th>
+                    <th>PBO</th>
+                    <th>PBP</th>
+                    <th>Pincab</th>
+                    <th>Total Proses</th>
                 </thead>
                 <tbody>
                     @foreach ($cabang as $item)
@@ -40,10 +42,12 @@
                         {{-- <td>{{ $loop->iteration }}</td> --}}
                         {{-- <td>{{ $item->kode_cabang }}</td> --}}
                         <td>{{ $item->cabang }}</td>
+                        <td>{{ $item->proses_input_data }}</td>
+                        <td>{{ $item->review_penyelia }}</td>
+                        <td>{{ $item->pbo }}</td>
+                        <td>{{ $item->pbp }}</td>
+                        <td>{{ $item->pincab }}</td>
                         <td>{{ $item->total }}</td>
-                        <td>{{ $item->disetujui }}</td>
-                        <td>{{ $item->ditolak }}</td>
-                        <td>{{ $item->diproses }}</td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -68,7 +68,7 @@
                         Disetujui
                     </p>
                 </div>
-                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                <a href="{{ route('dashboard-detail-disetujui') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
         <div class="card p-5 w-full border bg-white h-[127px] relative">
@@ -84,7 +84,7 @@
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
                 </div>
-                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                <a href="{{ route('dashboard-detail-ditolak') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
         <div class="card p-5 w-full border bg-white h-[127px] relative">
@@ -100,7 +100,7 @@
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
                 </div>
-                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                <a href="{{ route('dashboard-detail-diproses') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
     </div>

@@ -9,155 +9,142 @@ use Maatwebsite\Excel\Concerns\ToArray;
 
 class DashboardRepository
 {
-    public function getDetailPosisi(Request $request){
-        $role = auth()->user()->role;
-        $idUser = auth()->user()->id;
-
-        $data = DB::table('pengajuan')
-        ->whereNull('deleted_at')
+    public function getDetailSkemaTotal(Request $request){
+        $data = DB::table('cabang AS c')
         ->select(
-            'id_staf',
-            'id_penyelia',
-            'id_pbo',
-            'id_pbp',
-            'id_pincab',
-            'posisi'
-        );
+            'c.kode_cabang',
+            'c.cabang',
+            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ', 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(p.skema_kredit = 'KKB', 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh', 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra', 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir', 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma', 1, 0)) AS kusuma"),
+        )
+        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->where('c.kode_cabang', '!=', 000)
+        ->whereNull('p.deleted_at')
+        ->groupBy('c.kode_cabang', 'c.cabang')
+        ->orderBy('c.kode_cabang')
+        ->get();
 
-        if($role == 'Staf Analis Kredit'){
-            $data->where('id_staf', $idUser);
-        } else if($role == 'Penyelia Kredit'){
-            $data->where('id_penyelia', $idUser);
-        } else if($role == 'PBO'){
-            $data->where('id_pbo', $idUser);
-        } else if($role == 'PBP'){
-            $data->where('id_pbp', $idUser);
-        } else if($role == 'Pincab'){
-            $data->where('id_pincab', $idUser);
-        }else{
-            $data;
-        }
-
-        $processedData = [
-            'staf' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'penyelia' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'pbo' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'pbp' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'pincab' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-        ];
-
-        foreach ($data->get() as $value) {
-            $staffRole = '';
-
-            if (!empty($value->id_staf) && !empty($value->id_penyelia) && !empty($value->id_pincab) ) {
-                $processedData['staf']['total_pengajuan'] += 1;
-                $processedData['staf']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-                $processedData['staf']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-                $processedData['staf']['diproses'] += $value->posisi == 'Proses Input Data' ? 1 : 0;
-
-                $processedData['penyelia']['total_pengajuan'] += 1;
-                $processedData['penyelia']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-                $processedData['penyelia']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-                $processedData['penyelia']['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
-
-                $processedData['pincab']['total_pengajuan'] += 1;
-                $processedData['pincab']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-                $processedData['pincab']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-                $processedData['pincab']['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
-            } else {
-                if (!empty($value->id_staf)) {
-                    $staffRole = 'staf';
-                } elseif (!empty($value->id_penyelia)) {
-                    $staffRole = 'penyelia';
-                } elseif (!empty($value->id_pbo)) {
-                    $staffRole = 'pbo';
-                } elseif (!empty($value->id_pbp)) {
-                    $staffRole = 'pbp';
-                } elseif (!empty($value->id_pincab)) {
-                    $staffRole = 'pincab';
-                }
-
-                if ($staffRole) {
-                    $processedData[$staffRole]['total_pengajuan'] += 1;
-                    $processedData[$staffRole]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-                    $processedData[$staffRole]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-                    $processedData[$staffRole]['diproses'] += ($value->posisi == 'Proses Input Data') ? 1 : 0;
-                }
-            }
-        }
-
-        return $processedData;
+        return $data;
     }
 
-    public function getDetailSkema(Request $request){
-        $role = auth()->user()->role;
-        $idUser = auth()->user()->id;
-
-        $data = DB::table('pengajuan')
+    public function getDetailCabangTotal(Request $request){
+        $data = DB::table('cabang AS c')
         ->select(
-            'id_staf',
-            'id_penyelia',
-            'id_pbo',
-            'id_pbp',
-            'id_pincab',
-            'posisi',
-            'skema_kredit'
-        );
-        if($role == 'Staf Analis Kredit'){
-            $data->where('id_staf', $idUser);
-        } else if($role == 'Penyelia Kredit'){
-            $data->where('id_penyelia', $idUser);
-        } else if($role == 'PBO'){
-            $data->where('id_pbo', $idUser);
-        } else if($role == 'PBP'){
-            $data->where('id_pbp', $idUser);
-        } else if($role == 'Pincab'){
-            $data->where('id_pincab', $idUser);
-        }else{
-            $data;
-        }
+            'c.kode_cabang',
+            'c.cabang',
+            DB::raw("SUM(IF(p.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'), 1, 0)) AS diproses"),
+            DB::raw("SUM(IF(p.posisi = 'Selesai', 1, 0)) AS disetujui"),
+            DB::raw("SUM(IF(p.posisi = 'Ditolak', 1, 0)) AS ditolak"),
+            DB::raw("SUM(IF(p.id_cabang = c.id, 1, 0)) AS total")
+        )
+        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->where('c.kode_cabang', '!=', 000)
+        ->whereNull('p.deleted_at')
+        ->groupBy('c.kode_cabang', 'c.cabang')
+        ->orderBy('c.kode_cabang')
+        ->get();
 
-        $processedData = [
-            'PKPJ' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'KKB' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'Talangan' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'Prokesra' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'Kusuma' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-            'Dagulir' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
-        ];
+        return $data;
+    }
 
-        foreach ($data->get() as $value) {
-            $paramSkema = '';
+    public function getDetailCabangDisetujui(Request $request){
+        $data = DB::table('cabang AS c')
+        ->select(
+            'c.kode_cabang',
+            'c.cabang',
+            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ' AND p.posisi = 'Selesai', 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(p.skema_kredit = 'KKB' AND p.posisi = 'Selesai', 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh' AND p.posisi = 'Selesai', 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra' AND p.posisi = 'Selesai', 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir' AND p.posisi = 'Selesai', 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma' AND p.posisi = 'Selesai', 1, 0)) AS kusuma")
+        )
+        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->where('c.kode_cabang', '!=', 000)
+        ->whereNull('p.deleted_at')
+        ->groupBy('c.kode_cabang', 'c.cabang')
+        ->orderBy('c.kode_cabang')
+        ->get();
 
-            if($value->skema_kredit == "PKPJ") {
-                $paramSkema = "PKPJ";
-            }elseif($value->skema_kredit == "KKB"){
-                $paramSkema = "KKB";
-            }elseif($value->skema_kredit == "Talangan Umroh"){
-                $paramSkema = "Talangan";
-            }elseif($value->skema_kredit == "Prokesra"){
-                $paramSkema = "Prokesra";
-            }elseif($value->skema_kredit == "Kusuma"){
-                $paramSkema = "Kusuma";
-            }elseif($value->skema_kredit == "Dagulir"){
-                $paramSkema = "Dagulir";
-            }
+        return $data;
+    }
+    public function getDetailCabangDitolak(Request $request){
+        $data = DB::table('cabang AS c')
+        ->select(
+            'c.kode_cabang',
+            'c.cabang',
+            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ' AND p.posisi = 'Ditolak', 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(p.skema_kredit = 'KKB' AND p.posisi = 'Ditolak', 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh' AND p.posisi = 'Ditolak', 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra' AND p.posisi = 'Ditolak', 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir' AND p.posisi = 'Ditolak', 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma' AND p.posisi = 'Ditolak', 1, 0)) AS kusuma")
+        )
+        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->where('c.kode_cabang', '!=', 000)
+        ->whereNull('p.deleted_at')
+        ->groupBy('c.kode_cabang', 'c.cabang')
+        ->orderBy('c.kode_cabang')
+        ->get();
 
-            if (!empty($value->id_staf) && !empty($value->id_penyelia) && !empty($value->id_pincab) ) {
-                $processedData[$paramSkema]['total_pengajuan'] += 1;
-                $processedData[$paramSkema]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-                $processedData[$paramSkema]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-                $processedData[$paramSkema]['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
-            }else{
-                $processedData[$paramSkema]['total_pengajuan'] += 1;
-                $processedData[$paramSkema]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-                $processedData[$paramSkema]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-                $processedData[$paramSkema]['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
-            }
+        return $data;
+    }
+    public function getDetailCabangDiproses(Request $request){
+        $data = DB::table('cabang AS c')
+        ->select(
+            'c.kode_cabang',
+            'c.cabang',
+            DB::raw("SUM(IF(p.posisi = 'Proses Input Data', 1, 0)) AS proses_input_data"),
+            DB::raw("SUM(IF(p.posisi = 'Review Penyelia', 1, 0)) AS review_penyelia"),
+            DB::raw("SUM(IF(p.posisi = 'PBO', 1, 0)) AS pbo"),
+            DB::raw("SUM(IF(p.posisi = 'PBP', 1, 0)) AS pbp"),
+            DB::raw("SUM(IF(p.posisi = 'Pincab', 1, 0)) AS pincab"),
+            DB::raw("SUM(IF(p.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'), 1, 0)) AS total"),
+        )
+        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->where('c.kode_cabang', '!=', 000)
+        ->whereNull('p.deleted_at')
+        ->groupBy('c.kode_cabang', 'c.cabang')
+        ->orderBy('c.kode_cabang')
+        ->get();
 
-        }
+        return $data;
+    }
+    public function getDetailSkemaDiproses(Request $request){
+        $data = DB::table('cabang AS c')
+        ->select(
+            'c.kode_cabang',
+            'c.cabang',
+            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(p.skema_kredit = 'KKB' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS kusuma")
+        )
+        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->where('c.kode_cabang', '!=', 000)
+        ->whereNull('p.deleted_at')
+        ->groupBy('c.kode_cabang', 'c.cabang')
+        ->orderBy('c.kode_cabang')
+        ->get();
 
-        return $processedData;
+        return $data;
+    }
+    public function getDetailRankCabang(Request $request){
+        $data = DB::table('cabang')
+        ->leftJoin('pengajuan', 'cabang.id', '=', 'pengajuan.id_cabang')
+        ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+        ->where('cabang.kode_cabang', '!=', '000')
+        ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+        ->orderByRaw('total DESC, cabang.kode_cabang ASC')
+        ->get();
+
+        return $data;
     }
 
     public function getCount(Request $request){

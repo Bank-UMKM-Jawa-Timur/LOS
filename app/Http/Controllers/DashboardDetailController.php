@@ -37,11 +37,121 @@ class DashboardDetailController extends Controller
             $kode_cabang = $current_cabang->kode_cabang;
         $param['kode_cabang'] = $kode_cabang;
 
-        $param['dataDetailPosisi'] = $this->repo->getDetailPosisi($request);
+        $param['skema'] = $this->repo->getDetailSkemaTotal($request);
 
-        $param['dataDetailSkema'] = $this->repo->getDetailSkema($request);
+        $param['cabang'] = $this->repo->getDetailCabangTotal($request);
 
         return view('dashboard.detail.dashboard-detail', $param);
+    }
+
+    public function detailDisetujui(Request $request){
+        // return 'masuk';
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
+        $param['cabangs'] = DB::table('cabang')
+            ->get();
+        $id_cabang = Auth::user()->id_cabang;
+        $current_cabang = DB::table('cabang')->select('kode_cabang')->where('id', $id_cabang)->first();
+        $kode_cabang = '-';
+        if ($current_cabang)
+            $kode_cabang = $current_cabang->kode_cabang;
+        $param['kode_cabang'] = $kode_cabang;
+
+        $param['cabang'] = $this->repo->getDetailCabangDisetujui($request);
+
+        return view('dashboard.detail.disetujui', $param);
+    }
+    public function detailDitolak(Request $request){
+        // return 'masuk';
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
+        $param['cabangs'] = DB::table('cabang')
+            ->get();
+        $id_cabang = Auth::user()->id_cabang;
+        $current_cabang = DB::table('cabang')->select('kode_cabang')->where('id', $id_cabang)->first();
+        $kode_cabang = '-';
+        if ($current_cabang)
+            $kode_cabang = $current_cabang->kode_cabang;
+        $param['kode_cabang'] = $kode_cabang;
+
+        $param['cabang'] = $this->repo->getDetailCabangDitolak($request);
+
+        return view('dashboard.detail.ditolak', $param);
+    }
+    public function detailDiproses(Request $request){
+        // return 'masuk';
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
+        $param['cabangs'] = DB::table('cabang')
+            ->get();
+        $id_cabang = Auth::user()->id_cabang;
+        $current_cabang = DB::table('cabang')->select('kode_cabang')->where('id', $id_cabang)->first();
+        $kode_cabang = '-';
+        if ($current_cabang)
+            $kode_cabang = $current_cabang->kode_cabang;
+        $param['kode_cabang'] = $kode_cabang;
+
+        $param['cabang'] = $this->repo->getDetailCabangDiproses($request);
+        $param['skema'] = $this->repo->getDetailSkemaDiproses($request);
+        // return $param['skema'];
+
+        return view('dashboard.detail.diproses', $param);
+    }
+    public function detailRankCabang(Request $request){
+        // return 'masuk';
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
+        $param['cabangs'] = DB::table('cabang')
+            ->get();
+        $id_cabang = Auth::user()->id_cabang;
+        $current_cabang = DB::table('cabang')->select('kode_cabang')->where('id', $id_cabang)->first();
+        $kode_cabang = '-';
+        if ($current_cabang)
+            $kode_cabang = $current_cabang->kode_cabang;
+        $param['kode_cabang'] = $kode_cabang;
+
+        $param['data'] = $this->repo->getDetailRankCabang($request);
+        // return $param['skema'];
+
+        return view('dashboard.detail.rank-cabang', $param);
+    }
+    public function detailPieChartPosisi(Request $request){
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
+        $role = Auth::user()->role;
+        return $role;
+        if ($role == 'Pincab') {
+            $param['role'] = "Pincab";
+        }
+        else if ($role == 'Penyelia Kredit') {
+            $param['role'] = "Pincab";
+        }
+        else if ($role == 'PBO' || $role = 'PBP') {
+            $param['role'] = "pbo/pbp";
+        }
+        $param['cabangs'] = DB::table('cabang')
+            ->get();
+        $id_cabang = Auth::user()->id_cabang;
+        $current_cabang = DB::table('cabang')->select('kode_cabang')->where('id', $id_cabang)->first();
+        $kode_cabang = '-';
+        if ($current_cabang)
+            $kode_cabang = $current_cabang->kode_cabang;
+        $param['kode_cabang'] = $kode_cabang;
+
+        $param['data'] = $this->repo->getDetailRankCabang($request);
+        // return $param['skema'];
+
+        return view('dashboard.detail.rank-cabang', $param);
     }
 
     /**

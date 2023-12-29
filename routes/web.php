@@ -61,9 +61,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/detail', [DashboardDetailController::class, 'index'])->name('dashboard-detail');
     Route::get('/dashboard/detail/skema', [DashboardDetailController::class, 'index'])->name('dashboard-detail-skema');
-    // Route::get('/dashboard/detail', function() {
-    //     return view('dashboard.detail.dashboard-detail');
-    // });
+    Route::get('/dashboard/detail/disetujui', [DashboardDetailController::class, 'detailDisetujui'])->name('dashboard-detail-disetujui');
+    Route::get('/dashboard/detail/ditolak', [DashboardDetailController::class, 'detailDitolak'])->name('dashboard-detail-ditolak');
+    Route::get('/dashboard/detail/diproses', [DashboardDetailController::class, 'detailDiproses'])->name('dashboard-detail-diproses');
+    Route::get('/dashboard/detail/rank-cabang', [DashboardDetailController::class, 'detailRankCabang'])->name('dashboard-detail-rank-cabang');
+    Route::get('/dashboard/detail/chart-posisi', [DashboardDetailController::class, 'detailPieChartPosisi'])->name('dashboard-detail-chart-posisi');
+
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
