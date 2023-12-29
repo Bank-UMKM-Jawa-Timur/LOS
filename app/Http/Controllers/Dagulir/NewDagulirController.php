@@ -2254,10 +2254,9 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
-        $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.pk', $param);
 
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
-        // return view('dagulir.cetak.cetak-pk', $param);
     }
     public function cetakSPPk($id)
     {
@@ -2322,7 +2321,6 @@ class NewDagulirController extends Controller
         $param['bulan'] = date('d', strtotime($dataNasabah->tanggal));
         $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
 
-
         $kodePincab = $param['dataUmum']->skema_kredit == 'Dagulir' ? $dataNasabah->id_pincab : $dataUmum->id_pincab;
         $kodePenyelia =$param['dataUmum']->skema_kredit == 'Dagulir' ?  $dataNasabah->id_penyelia : $dataUmum->id_pincab;
 
@@ -2337,10 +2335,9 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
-        $pdf = PDF::loadView('dagulir.cetak.cetak-sppk', $param);
-
-        return $pdf->download('SPPK-' . $dataNasabah->nama . '.pdf');
         // return view('dagulir.cetak.cetak-sppk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-sppk', $param);
+        return $pdf->download('SPPK-' . $dataNasabah->nama . '.pdf');
     }
 
     public function kembalikanDataKePosisiSebelumnya(Request $request){

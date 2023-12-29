@@ -2864,12 +2864,14 @@ class PengajuanKreditController extends Controller
                 ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
                 ->where('calon_nasabah.id_pengajuan', $id)
                 ->first();
+        // return $param['dataNasabah'];
         $param['dataKecamatan'] = Kecamatan::find($param['dataNasabah']->id_kecamatan);
         $param['dataKabupaten'] = Kabupaten::find($param['dataNasabah']->id_kabupaten);
         $param['dataDesa'] = Desa::find($param['dataNasabah']->id_desa);
 
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
             ->find($id);
+
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
 
         $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
