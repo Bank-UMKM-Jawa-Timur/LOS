@@ -28,6 +28,12 @@
     }
 
     function saveTempFile(inputFile){
+        let skema_kredit = null
+        if ($("#skema_kredit").val() != null || $('#skema_kredit').val() != "") {
+            skema_kredit = $('#skema_kredit').val();
+        } else {
+            skema_kredit = null;
+        }
         const url = `{{ route('dagulir.temp.file') }}`;
         const inputData = inputFile;
         const formData = new FormData();
@@ -37,6 +43,7 @@
         formData.append('file_id', inputData.attr('data-id'));
         formData.append('answer_id', answerId);
         formData.append('id_dagulir_temp', $("#id_dagulir_temp").val());
+        formData.append('skema_kredit',skema_kredit);
 
         $.ajax({
             url,
@@ -47,6 +54,7 @@
             contentType: false,
             success: (res) => {
                 //inputData.val('');
+                // console.log(res);
                 inputData.siblings('.filename').html(res.data.filename);
                 inputData.attr('data-id', res.data.file_id);
                 fillTempFile(inputFile + `input[data-id="${res.data.file_id}"]`);
@@ -80,7 +88,7 @@
             method: 'POST',
             data: data,
             success(res) {
-                // console.log(res);
+                console.log(res);
                 $("#id_dagulir_temp").val(res.data.id);
                 $("#dagulir-tab input[type=file]").each(function() {
                     const inputFile = $(this);
@@ -92,10 +100,17 @@
         });
     }
     function saveDataTemporary(id){
-        ////console.log('---saveDataTemporary---')
+        //console.log('---saveDataTemporary---')
         ////console.log('id_nasabah : '+$("#id_nasabah").val())
+        let skema_kredit = null
+        if ($("#skema_kredit").val() != null || $('#skema_kredit').val() != "") {
+            skema_kredit = $('#skema_kredit').val();
+        } else {
+            skema_kredit = null;
+        }
         let data = {
             id_dagulir_temp: $("#id_dagulir_temp").val(),
+            skema_kredit: skema_kredit,
         };
         let form = $(`${id}`);
 
@@ -114,6 +129,10 @@
             success(res) {
                 console.log('------temp jawaban------')
                 console.log(res);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
             }
         });
         $(`#${id} input[type=file]`).each(function(){

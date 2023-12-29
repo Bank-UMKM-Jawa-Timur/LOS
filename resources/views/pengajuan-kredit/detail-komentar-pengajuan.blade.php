@@ -56,8 +56,109 @@
                         @include('dagulir.pengajuan-kredit.review.data-umum-analis')
                     </div>
                 </div>
+                @if ($dataUmum->skema_kredit == 'KKB')
+                    <div class="accordion-section">
+                        <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative mb-4">
+                            <div class="flex justify-between gap-3">
+                            <div class="flex justify-start gap-3">
+                                <button class="p-2 rounded-full bg-theme-primary w-10 h-10 text-white">
+                                    <h2 class="text-lg">3</h2>
+                                </button>
+                                <h3 class="font-bold text-lg tracking-tighter mt-[6px]">Data PO</h3>
+                            </div>
+                                <div class="transform accordion-icon mr-2 mt-1">
+                                    <iconify-icon icon="uim:angle-down" class="text-3xl"></iconify-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-content p-3">
+                            <div class="form-group-1 col-span-2">
+                                <div>
+                                    <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                            Jenis Kendaraan Roda 2 :
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group-2">
+                                <div class="field-review">
+                                    <div class="field-name">
+                                        <label for="">Merk Kendaraan</label>
+                                    </div>
+                                    <div class="field-answer">
+                                        <p>{{ $dataPO?->merk ?? '' }}</p>
+                                    </div>
+                                </div>
+                                <div class="field-review">
+                                    <div class="field-name">
+                                        <label for="">Tipe Kendaraan</label>
+                                    </div>
+                                    <div class="field-answer">
+                                        <p>{{ $dataPO?->tipe ?? '' }}</p>
+                                    </div>
+                                </div>
+                                <div class="field-review">
+                                    <div class="field-name">
+                                        <label for="">Tahun</label>
+                                    </div>
+                                    <div class="field-answer">
+                                        <p>{{ $dataPO?->tahun_kendaraan ?? '' }}</p>
+                                    </div>
+                                </div>
+                                <div class="field-review">
+                                    <div class="field-name">
+                                        <label for="">Warna</label>
+                                    </div>
+                                    <div class="field-answer">
+                                        <p>{{ $dataPO?->warna ?? '' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group-1 col-span-2">
+                                <div>
+                                    <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                            Keterangan :
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group-2">
+                                <div class="field-review">
+                                    <div class="field-name">
+                                        <label for="">Pemesanan</label>
+                                    </div>
+                                    <div class="field-answer">
+                                        <p>{{ $pemesanan ?? '' }}</p>
+                                    </div>
+                                </div>
+                                <div class="field-review">
+                                    <div class="field-name">
+                                        <label for="">Sejumlah</label>
+                                    </div>
+                                    <div class="field-answer">
+                                        <p>{{ $dataPO?->jumlah ?? '' }}</p>
+                                    </div>
+                                </div>
+                                <div class="field-review">
+                                    <div class="field-name">
+                                        <label for="">Harga</label>
+                                    </div>
+                                    <div class="field-answer">
+                                        <p>{{ $dataPO->harga ? 'Rp '. number_format($dataPO->harga, 2, ',', '.') :'' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             @php
-                $no_aspek = 2;
+                if ($dataUmum->skema_kredit == 'KKB') {
+                    $no_aspek = 3;
+                } else {
+                    $no_aspek = 2;
+                }
             @endphp
             @foreach ($dataAspek as $itemAspek)
                 @php

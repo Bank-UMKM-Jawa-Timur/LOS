@@ -278,7 +278,7 @@ function getKaryawan($nip){
                     <div class="form-group row">
                         {{-- KTP Suami --}}
                         <label for="staticEmail" class="col-sm-3 col-form-label">KTP Suami</label>
-                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                             <div class="d-flex justify-content-end">
                                 <div style="width: 20px">
                                     :
@@ -2165,7 +2165,7 @@ function getKaryawan($nip){
                             <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Pendapat
                                 & Usulan <br> (Penyelia)</label>
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex justify-content            -end">
                                     <div style="width: 20px">
                                         :
                                     </div>
