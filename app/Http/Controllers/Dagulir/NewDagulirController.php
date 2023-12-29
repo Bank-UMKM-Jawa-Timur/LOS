@@ -2228,7 +2228,6 @@ class NewDagulirController extends Controller
                         ->first();
             $param['bulan'] = date('m', strtotime($dataNasabah->tanggal_lahir));
             $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal_lahir));
-
         }
 
 
@@ -2257,7 +2256,6 @@ class NewDagulirController extends Controller
         ->where('id_pengajuan', $id)
         ->where('id_jawaban', 140)
         ->first() ?? '0';
-
         // return $dataNasabah;
         return view('dagulir.cetak.cetak-pk', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);

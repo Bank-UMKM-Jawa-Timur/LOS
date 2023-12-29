@@ -237,8 +237,8 @@
             <tr>
                 <td style="vertical-align: top; width: 3%;">1. </td>
                 <td>
-                    Bank memberikan kepada “Peminjam” fasilitas kredit sejumlah Rp. {{ rupiah($dataNasabah->nominal) }} ({{ penyebut($dataNasabah->nominal)}}), yang dipergunakan untuk Modal Kerja
-                    <b><i>{{$dataNasabah->tujuan_penggunaan}}</i></b> dengan jangka waktu {{ intval($dataNasabah->jangka_waktu) }} bulan terhitung sejak tanggal ....................
+                    Bank memberikan kepada “Peminjam” fasilitas kredit sejumlah Rp. {{ $dataUmum->skema_kredit == 'Dagulir' ? rupiah($dataNasabah->nominal) : rupiah($dataNasabah->jumlah_kredit) }} ({{ $dataUmum->skema_kredit == 'Dagulir' ? penyebut($dataNasabah->nominal) : penyebut($dataNasabah->jumlah_kredit)}}), yang dipergunakan untuk Modal Kerja
+                    <b><i>{{$dataNasabah->tujuan_penggunaan}}</i></b> dengan jangka waktu {{ $dataUmum->skema_kredit == 'Dagulir' ? intval($dataNasabah->jangka_waktu) : intval($dataNasabah->tenor_yang_diminta) }} bulan terhitung sejak tanggal ....................
                     sampai dengan tanggal .................
                 </td>
             </tr>
