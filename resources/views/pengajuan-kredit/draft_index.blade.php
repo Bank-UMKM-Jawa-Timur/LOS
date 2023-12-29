@@ -60,7 +60,7 @@
                         @endphp
                         @forelse ($data_pengajuan as $key => $item)
                             <tr>
-                                <    <td class="text-center">{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td>
@@ -71,7 +71,7 @@
                                                 </iconify-icon>
                                             </button>
                                             <ul class="dropdown-tb-menu hidden">
-                                                <a href="{{ route('dagulir.temp.continue', $item->id) }}"
+                                                <a href="{{ route('dagulir.temp.continue', ['id' => $item->id, 'skema_kredit' => $item->skema_kredit]) }}"
                                                     class="dropdown-item cursor-pointer w-full">
                                                     <li class="item-tb-dropdown">
                                                         Lanjutkan

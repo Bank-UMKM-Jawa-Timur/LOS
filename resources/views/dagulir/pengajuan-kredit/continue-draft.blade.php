@@ -37,6 +37,11 @@ $dataIndex = match ($skema) {
             <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
                 <span class="percentage">0%</span> Data Umum
             </button>
+            @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')
+            <button data-toggle="tab" data-tab="data-po" class="btn btn-tab font-semibold">
+                <span class="percentage">0%</span> Data PO
+            </button>
+            @endif
             @foreach ($dataAspek as $item)
                 @php
                     $title = str_replace('&', 'dan', strtolower($item->nama));
@@ -55,8 +60,15 @@ $dataIndex = match ($skema) {
                 <input type="hidden" name="isDraft" value="1">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.create-dagulir-draft')
+                        @if ($skema == null)
+                            @include('dagulir.pengajuan.create-dagulir-draft')
+                        @else
+                            @include('dagulir.pengajuan.create-pengajuan-draft')
+                        @endif
                     </div>
+                    @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')
+                        @include('dagulir.pengajuan.draft-data-po')
+                    @endif
                     @foreach ($dataAspek as $key => $value)
                         @php
                             $title_id = str_replace('&', 'dan', strtolower($value->nama));
@@ -1986,7 +1998,8 @@ $dataIndex = match ($skema) {
     @endif
     // End Validation
 
-
+    @if (count($errors->all()))
+    @endif
     $('#kabupaten').change(function() {
         var kabID = $(this).val();
         if (kabID) {

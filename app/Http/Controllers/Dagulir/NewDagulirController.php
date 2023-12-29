@@ -3469,13 +3469,19 @@ class NewDagulirController extends Controller
         return view('dagulir.pengajuan-kredit.index-draft', compact('data'));
     }
 
-    public function continueDraft($id)
+    public function continueDraft($id,Request $request)
     {
-        $nasabah = PengajuanDagulirTemp::find($id);
+        if ($request->has('skema_kredit')) {
+            $skema_kredit = $request->skema_kredit;
+            $nasabah = CalonNasabahTemp::findOrFail($id);
+        }else{
+            $skema_kredit = null;
+            $nasabah = PengajuanDagulirTemp::find($id);
+        }
         $createRoute = route('dagulir.temp.continue-draft');
         // dd($createRoute);
 
-        return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true");
+        return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true&skema_kredit={$request->skema_kredit}");
     }
 
     public function showContinueDraft(Request $request)
@@ -3501,18 +3507,24 @@ class NewDagulirController extends Controller
         $param['dataMerk'] = MerkModel::all();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
-        $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+        if ($request->skema_kredit == null) {
+            $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+        }else{
+            // $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+            $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
+            $param['dataPO'] = DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->tempId)->first();
+        }
         $param['jawabanLaporanSlik'] =JawabanTemp::where('temporary_dagulir_id', $request->tempId)
                                             ->where('id_jawaban', 146)
                                             ->first();
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
-// return $param['jawabanLaporanSlik'];
+        $param['skema'] = $request->skema_kredit ?? $param['duTemp']?->skema_kredit;
         return view('dagulir.pengajuan-kredit.continue-draft', $param);
     }
 
     public function tempDagulir(Request $request){
-        if ($request->skema_kredit != null || $request->has('skema_kredit')) {
+        if ($request->skema_kredit != 'Dagulir' || $request->has('skema_kredit')) {
             if (isset($request->id_dagulir_temp)) {
                 $nasabah = TemporaryService::saveNasabah(
                     $request->id_dagulir_temp,
@@ -3523,6 +3535,7 @@ class NewDagulirController extends Controller
                     null,
                     TemporaryService::convertNasabahReq($request)
                 );
+
             }
         } else {
             if(isset($request->id_dagulir_temp)){
@@ -3538,17 +3551,17 @@ class NewDagulirController extends Controller
             }
         }
 
-        if ($request->skema_kredit != null) {
+        if ($request->skema_kredit != 'Dagulir') {
             foreach ($request->dataLevelDua as $key => $value) {
                 $dataSlik = $this->getDataLevel($value);
                 $cek = DB::table('jawaban_temp')
-                    ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
+                    ->where('id_temporary_calon_nasabah', $request->id_dagulir_temp ?? $nasabah->id)
                     ->where('id_jawaban', $dataSlik[1])
                     ->count('id');
                 if ($cek < 1) {
                     DB::table('jawaban_temp')
                         ->insert([
-                            'id_temporary_calon_nasabah' => $request->id_nasabah ?? $nasabah->id,
+                            'id_temporary_calon_nasabah' => $request->id_dagulir_temp ?? $nasabah->id,
                             'id_jawaban' => $dataSlik[1],
                             'skor' => $dataSlik[0],
                             'id_option' => $key,
@@ -3556,7 +3569,7 @@ class NewDagulirController extends Controller
                         ]);
                 } else {
                     DB::table('jawaban_temp')
-                        ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
+                        ->where('id_temporary_calon_nasabah', $request->id_dagulir_temp ?? $nasabah->id)
                         ->where('id_option', $key)
                         ->update([
                             'id_jawaban' => $dataSlik[1],
@@ -3594,15 +3607,25 @@ class NewDagulirController extends Controller
                     }
                 }
             } catch (\Exception $e) {
+                return $e;
             }
         }
 
 
-        return response()->json([
-            'status' => 'ok',
-            'code' => 200,
-            'data' => $dagulir,
-        ]);
+        if ($request->skema_kredit != 'Dagulir' || $request->has('skema_kredit')) {
+            return response()->json([
+                'status' => 'ok',
+                'code' => 200,
+                'data' => $nasabah,
+            ]);
+
+        }else{
+            return response()->json([
+                'status' => 'ok',
+                'code' => 200,
+                'data' => $dagulir,
+            ]);
+        }
     }
 
     public function tempJawaban(Request $request)
