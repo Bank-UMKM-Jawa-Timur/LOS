@@ -32,13 +32,8 @@
                         <div class="form-group-2">
                             <div class="input-box">
                                 <label for="">HCS Host</label>
-                                <input type="text"name="hcs_host" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->hcs_host : '' }}">
+                                <input type="text"name="hcs_host" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->hcs_host : 'https://bankumkm.id/hcs' }}">
                                 {{-- <textarea name="hcs_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->hcs_host : '' }}</textarea> --}}
-                            </div>
-                            <div class="input-box">
-                                <label for="">SIPDE Host</label>
-                                <input type="text"name="sipde_host" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_host : '' }}">
-                                {{-- <textarea name="sipde_host" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_host : '' }}</textarea> --}}
                             </div>
                         </div>
                         <div class="form-group-1 col-span-2 pl-0">
@@ -53,15 +48,15 @@
                         <div class="form-group-3">
                             <div class="input-box">
                                 <label for="">DWH Host</label>
-                                <input type="text"name="dwh_host" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_host : '' }}">
+                                <input type="text"name="dwh_host" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_host : 'http://127.0.0.1:8001' }}">
                             </div>
                             <div class="input-box">
                                 <label for="">DWH Store Kredit API URL</label>
-                                <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_store_kredit_api_url : '' }}">
+                                <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_store_kredit_api_url : '/api/v1/store-kredit' }}">
                             </div>
                             <div class="input-box">
                                 <label for="">DWH Token</label>
-                                <input type="text"name="dwh_token" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_token : '' }}">
+                                <input type="text"name="dwh_token" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_token : '$2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u' }}">
                             </div>
                         </div>
                         <div class="form-group-1 col-span-2 pl-0">
@@ -76,11 +71,11 @@
                         <div class="form-group-2">
                             <div class="input-box">
                                 <label for="">SIPDE Username</label>
-                                <input type="text"name="sipde_username" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_username : '' }}">
+                                <input type="text"name="sipde_username" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_username : 'bankpusat_bpr' }}">
                             </div>
                             <div class="input-box">
                                 <label for="">SIPDE Password</label>
-                                <input type="text"name="sipde_password" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_password : '' }}">
+                                <input type="text"name="sipde_password" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_password : 'admin123' }}">
                                 {{-- <textarea name="sipde_password" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_password : '' }}</textarea> --}}
                             </div>
                         </div>

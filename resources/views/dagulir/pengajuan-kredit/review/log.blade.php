@@ -1,6 +1,7 @@
 @php
     function getKaryawan($nip){
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -49,7 +50,7 @@
             } elseif ($itemRole == 'Pincab') {
                 $avg = $dataUmum->average_by_penyelia;
             }
-            
+
             if ($avg > 0 && $avg <= 2) {
                 $status = 'merah';
             } elseif ($avg > 2 && $avg <= 3) {
@@ -59,7 +60,7 @@
             } else {
                 $status = 'merah';
             }
-            
+
             if (!$log) {
                 $user = DB::table('pengajuan')
                     ->join('users', 'users.id', 'pengajuan.' . $rolesPemroses['idRoles'][$key])

@@ -15,7 +15,8 @@
     };
 
     function getKaryawan($nip){
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -76,7 +77,7 @@
                             <p class="font-semibold text-gray-400">Review Pengajuan</p>
                         </div>
                         <div class="self-start bg-white w-full border">
-                           
+
                             <div class="p-5 w-full space-y-5" id="data-umum">
                                 <div class="form-group-1 col-span-2 pl-2">
                                     <div>
@@ -87,7 +88,7 @@
                                         </div>
                                     </div>
                                 </div>
-                              
+
                                 <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
@@ -237,7 +238,7 @@
                                             <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                                         </div>
                                     </div>
-                                    
+
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Foto KTP Nasabah</label>
@@ -681,7 +682,7 @@
                                                                         @endif
                                                                     </div>
                                                                 </div>
-                                                                
+
                                                                 @if ($itemTextDua->is_commentable)
                                                                     @if (Auth::user()->role != 'Pincab')
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
