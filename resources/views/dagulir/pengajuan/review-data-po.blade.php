@@ -21,110 +21,79 @@
             <input type="hidden" name="id_data_po_temp" id="id_data_po_temp">
             <div class="form-group-1 col-span-2">
                 <div>
-                    <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
-                        <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
                             Jenis Kendaraan Roda 2 :
                         </h2>
                     </div>
                 </div>
             </div>
             <div class="form-group-2">
-                <div class="form-group">
-                    <div class="input-box">
-                        <label>Merk Kendaraan</label>
-                        <input type="text" name="merk" id="merk" class="form-input @error('merk') is-invalid @enderror"
-                            placeholder="Merk kendaraan" value="{{$dataPO->merk}}">
-                        @error('merk')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                <div class="field-review">
+                    <div class="field-name">
+                        <label for="">Merk Kendaraan</label>
+                    </div>
+                    <div class="field-answer">
+                        <p>{{ $dataPO?->merk ?? '' }}</p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-box">
-                        <label>Tipe Kendaraan</label>
-                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan"
-                            class="form-input @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan" value="{{$dataPO->tipe}}">
-                        @error('tipe_kendaraan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                <div class="field-review">
+                    <div class="field-name">
+                        <label for="">Tipe Kendaraan</label>
+                    </div>
+                    <div class="field-answer">
+                        <p>{{ $dataPO?->tipe ?? '' }}</p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-box">
+                <div class="field-review">
+                    <div class="field-name">
                         <label for="">Tahun</label>
-                        <input type="number" name="tahun" id="tahun" class="form-input @error('tahun') is-invalid @enderror"
-                            placeholder="Tahun Kendaraan" value="{{ $dataPO->tahun_kendaraan ?? '' }}" min="2000">
-                        @error('tahun')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                    </div>
+                    <div class="field-answer">
+                        <p>{{ $dataPO?->tahun_kendaraan ?? '' }}</p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-box">
+                <div class="field-review">
+                    <div class="field-name">
                         <label for="">Warna</label>
-                        <input type="text" maxlength="25" name="warna" id="warna"
-                            class="form-input @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan" value="{{ $dataPO?->warna ?? '' }}">
-                        @error('warna')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                    </div>
+                    <div class="field-answer">
+                        <p>{{ $dataPO?->warna ?? '' }}</p>
                     </div>
                 </div>
             </div>
             <div class="form-group-1 col-span-2">
                 <div>
-                    <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
-                        <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
                             Keterangan :
                         </h2>
                     </div>
                 </div>
             </div>
             <div class="form-group-2">
-                <div class="form-group">
-                    <div class="input-box">
+                <div class="field-review">
+                    <div class="field-name">
                         <label for="">Pemesanan</label>
-                        <input type="text" maxlength="255" name="pemesanan" id="pemesanan"
-                            class="form-input @error('pemesanan') is-invalid @enderror" placeholder="Pemesanan Kendaraan"
-                            value="{{ $pemesanan ?? '' }}">
-                        @error('pemesanan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                    </div>
+                    <div class="field-answer">
+                        <p>{{ $pemesanan ?? '' }}</p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-box">
+                <div class="field-review">
+                    <div class="field-name">
                         <label for="">Sejumlah</label>
-                        <input type="number" name="sejumlah" id="sejumlah"
-                            class="form-input @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
-                            value="{{ $dataPO?->jumlah ?? '' }}">
-                        @error('sejumlah')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                    </div>
+                    <div class="field-answer">
+                        <p>{{ $dataPO?->jumlah ?? '' }}</p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-box">
+                <div class="field-review">
+                    <div class="field-name">
                         <label for="">Harga</label>
-                        <input type="text" name="harga" id="harga"
-                            class="form-input rupiah @error('harga') is-invalid @enderror" placeholder="Harga Kendaraan"
-                            value="{{ $dataPO?->harga ?? '' }}">
-                        @error('harga')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                    </div>
+                    <div class="field-answer">
+                        <p>{{ $dataPO->harga ? 'Rp '. number_format($dataPO->harga, 2, ',', '.') :'' }}</p>
                     </div>
                 </div>
             </div>
@@ -135,11 +104,18 @@
                         Kembali
                     </button>
                 </a>
-                <button type="button"
-                class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
-                >
-                Selanjutnya
-                </button>
+                <div class="">
+                    <button type="button"
+                        class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
+                    >
+                        Sebelumnya
+                    </button>
+                    <button type="button"
+                    class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
+                    >
+                    Selanjutnya
+                    </button>
+                </div>
             </div>
         </div>
     </div>
