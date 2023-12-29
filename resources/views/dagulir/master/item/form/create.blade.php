@@ -85,7 +85,7 @@
                     </div>
                     <hr>
 
-                    <div class="form-group-2">
+                    <div class="form-group-1">
                         <div class="w-full" id="opsi">
                             <table class="table opsi-jawaban w-full">
                                 <thead>
@@ -131,18 +131,18 @@
                                                 </td>
                                                 <td>
                                                     @if ($key == 0)
-                                                        <div class="flex gap-2">
-                                                            <button class="btn-add mt-10 plus" type="button">
+                                                        <div class="flex gap-2 items-center">
+                                                            <button class="btn-add plus" type="button">
                                                                 <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
                                                             </button>
                                                             {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
                                                         </div>
                                                     @else
                                                         <div class="flex gap-2">
-                                                            <button class="btn-add mt-10 plus">
+                                                            <button class="btn-add plus">
                                                                 <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
                                                             </button>
-                                                            <button class="btn-minus mt-10 minus">
+                                                            <button class="btn-minus minus">
                                                                 <iconify-icon icon="tabler:minus" class="mt-3"></iconify-icon>
                                                             </button>
                                                         </div>
@@ -402,10 +402,10 @@
                                 </td>\
                             <td class="">\
                                 <div class="flex gap-2">\
-                                    <button class="btn-add mt-10 plus" type="button">\
+                                    <button class="btn-add plus" type="button">\
                                         <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>\
                                     </button>\
-                                    <button class="btn-minus mt-10 minus" type="button">\
+                                    <button class="btn-minus minus" type="button">\
                                         <iconify-icon icon="tabler:minus" class="mt-3"></iconify-icon>\
                                     </button>\
                                 </div>\
