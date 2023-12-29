@@ -163,7 +163,8 @@ class PengajuanKreditController extends Controller
     public function getKaryawanFromAPI($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -187,7 +188,8 @@ class PengajuanKreditController extends Controller
     public static function getKaryawanFromAPIStatic($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -215,7 +217,8 @@ class PengajuanKreditController extends Controller
 
     public function getNameKaryawan($nip)
     {
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -3738,10 +3741,14 @@ class PengajuanKreditController extends Controller
                             ->where('dp.id_pengajuan', $id)->first();
 
                         // store api
-                        $host = env('DWH_HOST');
-                        $apiURL = $host . env('DWH_STORE_KREDIT_API');
+                        $konfiAPI = DB::table('api_configuration')->first();
+                        // $host = env('DWH_HOST');
+                        $host = $konfiAPI->dwh_host;
+                        // $apiURL = $host . env('DWH_STORE_KREDIT_API');
+                        $apiURL = $host . $konfiAPI->dwh_store_kredit_api_url;
                         $headers = [
-                            'mid-client-key' => env('DWH_TOKEN')
+                            // 'mid-client-key' => env('DWH_TOKEN')
+                            'mid-client-key' => $konfiAPI->dwh_token
                         ];
                         try {
                             $response = Http::timeout(60)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL, [

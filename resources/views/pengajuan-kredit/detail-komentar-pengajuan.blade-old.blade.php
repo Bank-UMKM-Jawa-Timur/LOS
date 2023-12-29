@@ -38,7 +38,8 @@ if ($dataUmum->id_cabang == 1) {
 }
 
 function getKaryawan($nip){
-    $host = env('HCS_HOST');
+    $konfiAPI = DB::table('api_configuration')->first();
+    $host = $konfiAPI->hcs_host;
     $curl = curl_init();
     curl_setopt_array($curl, [
         CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,

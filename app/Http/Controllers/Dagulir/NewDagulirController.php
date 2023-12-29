@@ -113,7 +113,8 @@ class NewDagulirController extends Controller
     public function getKaryawanFromAPI($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -137,7 +138,8 @@ class NewDagulirController extends Controller
     public static function getKaryawanFromAPIStatic($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -166,7 +168,8 @@ class NewDagulirController extends Controller
 
     public function getNameKaryawan($nip)
     {
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -2205,8 +2208,9 @@ class NewDagulirController extends Controller
             ]);
         }
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
         ->find($id);
+        $param['dataUmum'] = $dataUmum;
 
         if ($param['dataUmum']->skema_kredit == 'Dagulir') {
             $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan.*')
@@ -2216,6 +2220,8 @@ class NewDagulirController extends Controller
                         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
                         ->where('pengajuan.id', $id)
                         ->first();
+            $param['bulan'] = date('m', strtotime($dataNasabah->tanggal));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
         }else{
             $dataNasabah = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
                         ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
@@ -2223,8 +2229,10 @@ class NewDagulirController extends Controller
                         ->join('desa','desa.id','calon_nasabah.id_desa')
                         ->where('calon_nasabah.id_pengajuan',$id)
                         ->first();
-
+            $param['bulan'] = date('m', strtotime($dataNasabah->tanggal_lahir));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal_lahir));
         }
+
 
         $param['dataNasabah'] = $dataNasabah;
 
@@ -2233,8 +2241,6 @@ class NewDagulirController extends Controller
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
 
-        $param['bulan'] = date('m', strtotime($dataNasabah->tanggal));
-        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
 
         $param['tglCetak'] = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
@@ -2254,8 +2260,9 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
-        $pdf = PDF::loadView('dagulir.cetak.pk', $param);
-
+        // return $dataNasabah;
+        // return view('dagulir.cetak.cetak-pk-kusuma-badan-usaha', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
     }
     public function cetakSPPk($id)
