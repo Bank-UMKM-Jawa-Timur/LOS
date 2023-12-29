@@ -42,6 +42,10 @@
             width: 80%;
         }
 
+        @media print {
+            footer {page-break-after: always;}
+        }
+
         .table-ttd {
             width: 80%;
             padding-top: 5%;
