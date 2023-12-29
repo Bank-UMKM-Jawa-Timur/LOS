@@ -22,29 +22,29 @@
             }
         }
         .data-surat {
-            width: 100%;
+            width: 80%;
             margin: 0 auto;
         }
 
         .table-header-tgl {
-            width: 100%;
+            width: 80%;
         }
 
         .table-header-perihal {
-            width: 100%;
+            width: 80%;
         }
 
         .table-body {
-            width: 100%;
+            width: 80%;
         }
 
         .table-body-2 {
-            width: 100%;
+            width: 80%;
             text-align: justify
         }
 
         .table-ttd {
-            width: 100%;
+            width: 80%;
         }
 
         ul {
@@ -276,7 +276,7 @@
             </tr>
             <tr>
                 <td style="text-align: center; padding-top: 100px">
-                    <table style="width: 100%; text-align: center;">
+                    <table style="width: 80%; text-align: center;">
                         <tr>
                             <td>({{ strtoupper($dataNasabah->nama) }})</td>
                         </tr>
@@ -286,7 +286,7 @@
                     </table>
                 </td>
                 <td style="text-align: center; padding-top: 100px">
-                    <table style="width: 100%; text-align: center;">
+                    <table style="width: 80%; text-align: center;">
                         <tr>
                             <td>({{ getKaryawan($dataPincab[0]['nip']) }})</td>
                             <td>({{ getKaryawan($dataPenyelia[0]['nip']) }})</td>
