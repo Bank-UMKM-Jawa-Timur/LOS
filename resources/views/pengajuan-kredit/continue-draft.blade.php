@@ -801,8 +801,7 @@ is-invalid
                     @foreach ($dataJawaban as $key => $itemJawaban)
                     <option id="{{ $idLevelDua . '_' . $key }}"
                         value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}"
-                        {{ temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : ''
-                        }}>
+                        {{ temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : ''}}>
                         {{ $itemJawaban->option }}</option>
                     @endforeach
                 </select>
@@ -1297,7 +1296,7 @@ is-invalid
                     }
                 }
             }
-    
+
             if (formIndex == 4) {
                 var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
                 if (jaminanTambSel == "Tanah dan Bangunan") {
@@ -1308,7 +1307,7 @@ is-invalid
                     subtotalInput -= 2;
                 }
             }
-    
+
             if (formIndex == 7) {
                 subtotalInput -= 1;
             }
@@ -1338,7 +1337,7 @@ is-invalid
                     }
                 }
             }
-    
+
             if (formIndex == 3) {
                 var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
                 if (jaminanTambSel == "Tanah dan Bangunan") {
@@ -1349,7 +1348,7 @@ is-invalid
                     subtotalInput -= 2;
                 }
             }
-    
+
             if (formIndex == 6) {
                 subtotalInput -= 1;
             }
@@ -2732,7 +2731,7 @@ is-invalid
                                         }
                                     }
                                 }
-        
+
                                 if (inputId == "file sku") {
                                     if ((v.value == '' || v.value == null) && (filename == '' || filename == null)) {
                                         if (!fileEmpty.includes(inputId))

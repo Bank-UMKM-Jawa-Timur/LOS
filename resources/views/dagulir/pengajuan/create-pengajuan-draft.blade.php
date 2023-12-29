@@ -146,13 +146,13 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema !=null) value="{{ $skema ?? '' }}"
+        <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema != null) value="{{ $skema ?? '' }}"
         @elseif($duTemp->skema_kredit != null) value="{{ $duTemp->skema_kredit ?? '' }}" @endif>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Nama Lengkap</label>
                 <input type="text" name="name" id="nama" class="form-input @error('name') is-invalid @enderror"
-                    placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? "" }}" required maxlength="255">
+                    placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? "" }}"  maxlength="255">
                 @error('name')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -216,7 +216,7 @@
         <div class="input-box">
             <label for="">No Telp</label>
             <input type="text" name="no_telp" id="nama" class="form-input @error('no_telp') is-invalid @enderror"
-                placeholder="No Telp" value="{{ $duTemp?->telp ?? '' }}" required maxlength="255">
+                placeholder="No Telp" value="{{ $duTemp?->telp ?? '' }}"  maxlength="255">
             @error('no_telp')
             <div class="invalid-feedback">
                 {{ $message }}
@@ -381,7 +381,7 @@
                     <div class="flex-1">
                         <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
                             class="form-input only-number @error('tenor_yang_diminta') is-invalid @enderror"
-                            aria-describedby="addon_tenor_yang_diminta" required maxlength="3" value="{{ $duTemp?->tenor_yang_diminta }}" />
+                            aria-describedby="addon_tenor_yang_diminta"  maxlength="3" value="{{ $duTemp?->tenor_yang_diminta }}" />
                     </div>
                     <div class="flex-shrink-0 mt-2.5rem">
                         <span class="form-input bg-gray-100">Bulan</span>

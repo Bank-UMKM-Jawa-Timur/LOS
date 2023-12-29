@@ -41,7 +41,7 @@
                     <div class="input-box">
                         <label>Tipe Kendaraan</label>
                         <input type="text" name="tipe_kendaraan" id="tipe_kendaraan"
-                            class="form-input @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan" value="{{$dataPO->tipe}}">
+                            class="form-input @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan" value="{{$dataPO?->tipe}}">
                         @error('tipe_kendaraan')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -53,7 +53,7 @@
                     <div class="input-box">
                         <label for="">Tahun</label>
                         <input type="number" name="tahun" id="tahun" class="form-input @error('tahun') is-invalid @enderror"
-                            placeholder="Tahun Kendaraan" value="{{ $dataPO->tahun_kendaraan ?? '' }}" min="2000">
+                            placeholder="Tahun Kendaraan" value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000">
                         @error('tahun')
                         <div class="invalid-feedback">
                             {{ $message }}

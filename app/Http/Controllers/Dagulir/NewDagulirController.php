@@ -321,11 +321,31 @@ class NewDagulirController extends Controller
                     'hasil_verifikasi' => 'required',
                 ]);
             }
+        }else{
+            $request->validate([
+                'name' => 'required',
+                'alamat_rumah' => 'required',
+                'alamat_usaha' => 'required',
+                'no_ktp' => 'required',
+                'kabupaten' => 'required|not_in:0',
+                'kec' => 'required|not_in:0',
+                'desa' => 'required|not_in:0',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'status' => 'required',
+                'sektor_kredit' => 'required',
+                'jenis_usaha' => 'required',
+                'jumlah_kredit' => 'required',
+                'tenor_yang_diminta' => 'required',
+                'tujuan_kredit' => 'required',
+                'jaminan' => 'required',
+                'hubungan_bank' => 'required',
+                'hasil_verifikasi' => 'required',
+            ]);
         }
 
         $statusSlik = false;
         $find = array('Rp ', '.', ',');
-
         DB::beginTransaction();
         try {
             $find = array('Rp.', '.', ',');
@@ -446,30 +466,6 @@ class NewDagulirController extends Controller
                 $dataNasabah = $tempNasabah->toArray();
                 $dataNasabah['id_pengajuan'] = $id_pengajuan;
             }else{
-                $request->validate([
-                    'name' => 'required',
-                    'no_telp' => 'required',
-                    'alamat_rumah' => 'required',
-                    'alamat_usaha' => 'required',
-                    'no_ktp' => 'required',
-                    'kabupaten' => 'required|not_in:0',
-                    'kec' => 'required|not_in:0',
-                    'desa' => 'required|not_in:0',
-                    'tempat_lahir' => 'required',
-                    'tanggal_lahir' => 'required',
-                    'status' => 'required',
-                    'sektor_kredit' => 'required',
-                    'jenis_usaha' => 'required',
-                    'jumlah_kredit' => 'required',
-                    'tenor_yang_diminta' => 'required',
-                    'tujuan_kredit' => 'required',
-                    'jaminan' => 'required',
-                    'hubungan_bank' => 'required',
-                    'hasil_verifikasi' => 'required',
-                ], [
-                    'required' => 'Data :attribute harus terisi.',
-                    'not_in' => 'kolom harus dipilih.',
-                ]);
                 $addPengajuan = new PengajuanModel;
                 $addPengajuan->id_staf = auth()->user()->id;
                 $addPengajuan->tanggal = date(now());
@@ -3965,11 +3961,18 @@ class NewDagulirController extends Controller
         return view('dagulir.pengajuan-kredit.index-draft');
     }
 
-    public function deleteDraft($id){
+    public function deleteDraft($id, Request $request){
         DB::beginTransaction();
         try{
-            $pengajuanTemp = PengajuanDagulirTemp::find($id);
-            $pengajuanTemp->delete();
+            if ($request->has('skema_kredit')) {
+                DB::table('jawaban_temp')->where('id_temporary_calon_nasabah', $id)->delete();
+                DB::table('temporary_jawaban_text')->where('id_temporary_calon_nasabah', $id)->delete();
+                DB::table('temporary_usulan_dan_pendapat')->where('id_temp', $id)->delete();
+                DB::table('temporary_calon_nasabah')->where('id', $id)->delete();
+            }else{
+                $pengajuanTemp = PengajuanDagulirTemp::find($id);
+                $pengajuanTemp->delete();
+            }
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menghapus data draft');
