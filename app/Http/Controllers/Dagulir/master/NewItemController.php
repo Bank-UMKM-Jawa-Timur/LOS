@@ -282,17 +282,26 @@ class NewItemController extends Controller
      */
     public function destroy($id)
     {
+        // return Request()->all();
         try {
-            $id_item =  Request()->id_item;
-            $data = OptionModel::where('id_item', $id_item)->delete();
-            $deleteItem = ItemModel::find($id_item)->delete();
-            alert()->success('Berhasil', 'Berhasil menghapus data.');
-            return redirect()->route('dagulir.master.master-item.index')->withStatus('Berhasil menghapus data.');
+            $id_item = Request()->id_item;
+            OptionModel::where('id_item', $id_item)->delete();
+            $item = ItemModel::find($id_item);
+            if ($item) {
+                $item->delete();
+                alert()->success('Berhasil', 'Berhasil menghapus data.');
+                return redirect()->back();
+            } else {
+                alert()->error('error', 'Item Tidak ditemukan.');
+                return redirect()->back()->withStatus('Item Tidak ditemukan.');
+            }
         } catch (Exception $e) {
             return $e;
+            // You may want to log the exception for further analysis
             return redirect()->back()->withStatus('Terjadi Kesalahan.');
         } catch (QueryException $e) {
             return $e;
+            // You may want to log the exception for further analysis
             return redirect()->back()->withStatus('Terjadi Kesalahan.');
         }
     }

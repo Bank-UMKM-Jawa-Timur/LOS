@@ -346,31 +346,43 @@
                                             </iconify-icon>
                                         </button>
                                         <ul class="dropdown-tb-menu hidden">
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
-                                            </li>
-                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
-                                                <a href="#">Kembalikan ke Staff</a>
-                                            </li>
+                                            <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}" class="w-full cursor-pointer">
+                                                <li class="item-tb-dropdown">
+                                                    Review
+                                                </li>
+                                            </a>
+                                            <a href="#" class="w-full cursor-pointer">
+                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
+                                                    Kembalikan ke Staff
+                                                </li>
+                                            </a>
                                             @if ($userPBO)
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
-                                            </li>
+                                            <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                                <li class="item-tb-dropdown">
+                                                Lanjut ke PBO
+                                                </li>
+                                            </a>
                                             @else
                                                 @if ($userPBP)
-                                                <li class="item-tb-dropdown">
-                                                    <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">Lanjut ke PBP</a>
-                                                </li>
+                                                <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
+                                                    <li class="item-tb-dropdown">
+                                                        Lanjut ke PBP
+                                                    </li>
+                                                </a>
                                                 @else
-                                                <li class="item-tb-dropdown">
-                                                    <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
-                                                </li>
+                                                <a class="w-full cursor-pointer review-pincab" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                    <li class="item-tb-dropdown">
+                                                        Lanjut ke Pincab
+                                                    </li>
+                                                </a>
                                                 @endif
                                             @endif
-                                            <li class="item-tb-dropdown">
-                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Cetak</a>
-                                            </li>
+                                            <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                class="w-full cursor-pointer">
+                                                <li class="item-tb-dropdown">
+                                                    Cetak
+                                                </li>
+                                            </a>
                                         </ul>
                                     @else
                                         <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
@@ -378,25 +390,35 @@
                                             </iconify-icon>
                                         </button>
                                         <ul class="dropdown-tb-menu hidden">
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
-                                            </li>
-                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
-                                                <a href="#">Kembalikan ke Staff</a>
-                                            </li>
+                                            <a class="w-full cursor-pointer" href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">
+                                                <li class="item-tb-dropdown">
+                                                    Review
+                                                </li>
+                                            </a>
+                                            <a class="w-full cursor-pointer" href="#">
+                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
+                                                    Kembalikan ke Staff
+                                                </li>
+                                            </a>
                                             @if ($userPBO)
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
-                                            </li>
+                                            <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                                <li class="item-tb-dropdown">
+                                                    Lanjut ke PBO
+                                                </li>
+                                            </a>
                                             @else
-                                            <li class="item-tb-dropdown">
-                                                <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
-                                            </li>
+                                            <a class="w-full cursor-pointer review-pincab" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                <li class="item-tb-dropdown">
+                                                    Lanjut ke Pincab
+                                                </li>
+                                            </a>
                                             @endif
-                                            <li class="item-tb-dropdown">
-                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Cetak</a>
-                                            </li>
+                                            <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                class="w-full cursor-pointer">
+                                                <li class="item-tb-dropdown">
+                                                    Cetak
+                                                </li>
+                                            </a>
                                         </ul>
                                     @endif
                                 @else
@@ -405,24 +427,32 @@
                                     </iconify-icon>
                                 </button>
                                 <ul class="dropdown-tb-menu hidden">
-                                    <li class="item-tb-dropdown">
-                                        <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                            class="dropdown-item">Cetak</a>
-                                    </li>
+                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                        class="w-full cursor-pointer">
+                                        <li class="item-tb-dropdown">
+                                            Cetak
+                                        </li>
+                                    </a>
                                     @if ($item->posisi == "PBP")
                                         @if ($item->id_pbo != null)
-                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
-                                                <a href="#">Kembalikan ke PBO</a>
-                                            </li>
+                                            <a class="w-full cursor-pointer" href="#">
+                                                    <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
+                                                    Kembalikan ke PBO
+                                                </li>
+                                            </a>
                                         @else
-                                        <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
-                                            <a href="#">Kembalikan ke Penyelia</a>
-                                        </li>
+                                        <a class="w-full cursor-pointer" href="#">
+                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
+                                                Kembalikan ke Penyelia
+                                            </li>
+                                        </a>
                                         @endif
                                     @elseif ($item->posisi == "PBO")
-                                    <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
-                                        <a href="#">Kembalikan ke Penyelia</a>
-                                    </li>
+                                    <a class="w-full cursor-pointer" href="#">
+                                        <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
+                                            Kembalikan ke Penyelia
+                                        </li>
+                                    </a>
                                     @endif
                                 </ul>
                                 @endif

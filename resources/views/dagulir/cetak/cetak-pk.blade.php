@@ -187,7 +187,11 @@
                 <td style="width: 3%"></td>
                 <td style="width: 20%">Alamat</td>
                 <td style="width: 1%">:</td>
-                <td>{{ $dataNasabah->alamat_ktp }}</td>
+                @if ($dataUmum->skema_kredit == 'Dagulir')
+                    <td>{{ $dataNasabah->alamat_ktp }}</td>
+                @else
+                    <td>{{ $dataNasabah->alamat_rumah }}</td>
+                @endif
             </tr>
             {{-- <tr>
                 <td style="width: 3%"></td>
@@ -199,7 +203,11 @@
                 <td style="width: 3%"></td>
                 <td style="width: 20%">No. KTP/SIM</td>
                 <td style="width: 1%">:</td>
-                <td>{{ $dataNasabah->nik }}</td>
+                @if ($dataUmum->skema_kredit == 'Dagulir')
+                    <td>{{ $dataNasabah->nik }}</td>
+                @else
+                    <td>{{ $dataNasabah->no_ktp }}</td>
+                @endif
             </tr>
         </table>
 

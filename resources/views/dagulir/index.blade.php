@@ -436,7 +436,7 @@
                                                                     class="cursor-pointer">Review</a>
                                                             </li>
                                                             <li class="item-tb-dropdown">
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown review-pincab">Lanjutkan Ke Pincab</a>
                                                             </li>
                                                             <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                                 data-id="{{ $item->pengajuan->id }}" data-backto="penyelia">
@@ -453,7 +453,7 @@
                                                                     class="cursor-pointer">Review</a>
                                                             </li>
                                                             <li class="item-tb-dropdown">
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown review-pincab">Lanjutkan Ke Pincab</a>
                                                             </li>
                                                             <li class="item-tb-dropdown kembalikan-modal" cursor-pointer>
                                                                 <a href="#"
@@ -795,7 +795,7 @@
                                                                 </a>
                                                             @endif
                                                             @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
                                                                     <li class="item-tb-dropdown">
                                                                         Lanjutkan Ke Pincab
                                                                     </li>
@@ -817,7 +817,7 @@
                                                             @endif
                                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_pbo
                                                                 && $item->pengajuan->id_pbo)
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
                                                                     <li class="item-tb-dropdown">
                                                                         Lanjutkan Ke Pincab
                                                                     </li>
@@ -840,7 +840,7 @@
                                                             @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_penyelia
                                                                 && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
                                                                 && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
-                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
                                                                         <li class="item-tb-dropdown">
                                                                             Lanjutkan Ke Pincab
                                                                         </li>
