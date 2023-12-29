@@ -205,7 +205,7 @@
                             </button>
                         </a>
                     </li>
-                    <li class="menu-item toggle-dp-menu @active('master,master.*', 'active-menu')">
+                    <li class="menu-item toggle-dp-menu {{ Request::segment(2) == 'master' ? 'active-menu' : '' }} ">
                         <a href="#"">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
@@ -288,7 +288,7 @@
                             </li>
                         </ul>
                     </div>
-                    <li class="toggle-dp-menu menu-item @active('master,master.*', 'active-menu')">
+                    <li class="toggle-dp-menu menu-item @active('dagulir.pengajuan', 'active-menu')">
                         <a href="#">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                      <span>
