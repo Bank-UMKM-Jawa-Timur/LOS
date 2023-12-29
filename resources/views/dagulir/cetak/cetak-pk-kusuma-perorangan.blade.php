@@ -231,11 +231,11 @@
         <table class="table-perjanjian-3">
             <tr>
                 <td style="width: 3%">1. </td>
-                <td colspan="3">1 lembar foto ukuran 4x6 (suami & itri);</td>
+                <td colspan="3">1 lembar foto ukuran 4x6 (suami & istri);</td>
             </tr>
             <tr>
                 <td style="width: 3%">2. </td>
-                <td colspan="3">1 lembar fotokopi KTP (suami & itri);</td>
+                <td colspan="3">1 lembar fotokopi KTP (suami & istri);</td>
             </tr>
             <tr>
                 <td style="width: 3%">3. </td>
@@ -268,6 +268,10 @@
             <tr>
                 <td style="width: 3%">10. </td>
                 <td colspan="3">Fotokopi transaksi buku tabungan 3 bulan terakhir;</td>
+            </tr>
+            <tr>
+                <td style="width: 3%">11. </td>
+                <td colspan="3">Nomor gesekan rangka dan mesin untuk sepeda motor/mobil;</td>
             </tr>
             <tr>
                 <td style="width: 3%">12. </td>

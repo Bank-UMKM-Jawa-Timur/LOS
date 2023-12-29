@@ -157,7 +157,7 @@
                 <td>. . . . . . . . . . . . . . . . . . . . . . . . .(lama / baru)</td>
             </tr>
             <tr>
-                <td style="width: 20%">Nama ibu kandung</td>
+                <td style="width: 20%">Nama Direktur</td>
                 <td style="width: 1%">:</td>
                 <td>. . . . . . . . . . . . . . . . . . . . . . . . .</td>
             </tr>
@@ -231,19 +231,19 @@
         <table class="table-perjanjian-3">
             <tr>
                 <td style="width: 3%">1. </td>
-                <td colspan="3">1 lembar foto ukuran 4x6 (suami & itri);</td>
+                <td colspan="3">1 lembar foto ukuran 4x6 (Direktur & Pengurus);</td>
             </tr>
             <tr>
                 <td style="width: 3%">2. </td>
-                <td colspan="3">1 lembar fotokopi KTP (suami & itri);</td>
+                <td colspan="3">1 lembar fotokopi KTP (Pengurus);</td>
             </tr>
             <tr>
                 <td style="width: 3%">3. </td>
-                <td colspan="3">1 lembar fotokopi Surat Nikah;</td>
+                <td colspan="3">1 lembar fotokopi Surat Nikah (Pengurus);</td>
             </tr>
             <tr>
                 <td style="width: 3%">4. </td>
-                <td colspan="3">1 lembar fotokopi KSK;</td>
+                <td colspan="3">1 lembar fotokopi KSK (Pengurus);</td>
             </tr>
             <tr>
                 <td style="width: 3%">5. </td>
@@ -270,7 +270,15 @@
                 <td colspan="3">Fotokopi transaksi buku tabungan 3 bulan terakhir;</td>
             </tr>
             <tr>
+                <td style="width: 3%">11. </td>
+                <td colspan="3">Nomor gesekan rangka dan mesin untuk sepeda motor/mobil;</td>
+            </tr>
+            <tr>
                 <td style="width: 3%">12. </td>
+                <td colspan="3">Laporan Keuangan (Neraca, Laba/Rugi, Arus Kas, catatan pembelian dan penjualan);</td>
+            </tr>
+            <tr>
+                <td style="width: 3%">13. </td>
                 <td colspan="3">. . . . . . . . . .  . . . . ;</td>
             </tr>
         </table>
