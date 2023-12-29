@@ -2258,8 +2258,7 @@ class NewDagulirController extends Controller
         ->first() ?? '0';
 
         // return $dataNasabah;
-
-        return view('dagulir.cetak.cetak-pk-kusuma-badan-usaha', $param);
+        // return view('dagulir.cetak.cetak-pk-kusuma-badan-usaha', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
     }
