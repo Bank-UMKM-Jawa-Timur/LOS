@@ -47,6 +47,11 @@
             <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
                 <span class="percentage">0%</span> Data Umum
             </button>
+            @if ($dataUmumNasabah->skema_kredit == 'KKB')
+            <button data-toggle="tab" data-tab="data-po" class="btn btn-tab font-semibold">
+                <span class="percentage">0%</span> Data PO
+            </button>
+            @endif
             @foreach ($dataAspek as $item)
                 @php
                     $title = str_replace('&', 'dan', strtolower($item->nama));
@@ -643,6 +648,9 @@
                             </div>
                         </div>
                     </div>
+                    @if ($dataUmumNasabah->skema_kredit == 'KKB')
+                        @include('dagulir.pengajuan.review-data-po')
+                    @endif
                     @foreach ($dataAspek as $key => $value)
                         @php
                             $title_id = str_replace('&', 'dan', strtolower($value->nama));
@@ -2586,7 +2594,13 @@
 
         percent = (totalInputFilled / totalInput) * 100
 
-        return tabId == 'dagulir-tab' ? 100 : parseInt(percent)
+        if (tabId == 'dagulir-tab' || tabId == 'data-po-tab') {
+            return 100;
+        } else {
+            return parseInt(percent);
+        }
+
+        // return tabId == 'dagulir-tab' ? tab : parseInt(percent)
     }
 
     $(".toggle-side").click(function(e) {

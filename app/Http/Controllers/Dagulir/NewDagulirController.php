@@ -3632,6 +3632,7 @@ class NewDagulirController extends Controller
 
     public function tempJawaban(Request $request)
     {
+        return $request;
         $find = array('Rp ', '.');
 
         try {

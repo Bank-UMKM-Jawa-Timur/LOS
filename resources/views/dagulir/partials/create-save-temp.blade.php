@@ -94,8 +94,15 @@
     function saveDataTemporary(id){
         ////console.log('---saveDataTemporary---')
         ////console.log('id_nasabah : '+$("#id_nasabah").val())
+        let skema_kredit = null
+        if ($("#skema_kredit").val() != null || $('#skema_kredit').val() != "") {
+            skema_kredit = $('#skema_kredit').val();
+        } else {
+            skema_kredit = null;
+        }
         let data = {
             id_dagulir_temp: $("#id_dagulir_temp").val(),
+            skema_kredit: skema_kredit,
         };
         let form = $(`${id}`);
 
