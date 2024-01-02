@@ -5,10 +5,10 @@
     <div class="lg:flex grid grid-cols-1 justify-between w-full font-poppins">
         <div class="heading flex-auto">
             <p class="text-theme-primary font-semibold font-poppins text-xs">
-                Dagulir
+                Dashboard
             </p>
             <h2 id="title-page" class="font-bold tracking-tighter text-lg text-theme-text">
-                Detail Cabang
+                Detail Ranking Cabang
             </h2>
         </div>
     </div>
