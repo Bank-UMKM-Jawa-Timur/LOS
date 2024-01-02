@@ -45,12 +45,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-3">
+                        <div class="form-group-2">
                             <div class="input-box">
                                 <label for="">DWH Host</label>
                                 <input type="text"name="dwh_host" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_host : 'http://127.0.0.1:8001' }}">
                             </div>
-                            <div class="input-box">
+                            <div class="input-box hidden">
                                 <label for="">DWH Store Kredit API URL</label>
                                 <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_store_kredit_api_url : '/api/v1/store-kredit' }}">
                             </div>
@@ -70,15 +70,15 @@
                         </div>
                         <div class="form-group-3">
                             <div class="input-box">
-                                <label for="">SIPDE Store Kredit API URL</label>
-                                <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->dwh_store_kredit_api_url : '' }}">
+                                <label for="">SIPDe Host</label>
+                                <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_host : '' }}">
                             </div>
                             <div class="input-box">
-                                <label for="">SIPDE Username</label>
+                                <label for="">SIPDe Username</label>
                                 <input type="text"name="sipde_username" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_username : 'bankpusat_bpr' }}">
                             </div>
                             <div class="input-box">
-                                <label for="">SIPDE Password</label>
+                                <label for="">SIPDe Password</label>
                                 <input type="text"name="sipde_password" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_password : 'admin123' }}">
                                 {{-- <textarea name="sipde_password" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_password : '' }}</textarea> --}}
                             </div>
