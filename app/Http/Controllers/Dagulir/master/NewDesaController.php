@@ -12,6 +12,7 @@ use \App\Models\Kecamatan;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class NewDesaController extends Controller
 {
@@ -78,7 +79,7 @@ class NewDesaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(DesaRequest $request)
+    public function store(Request $request)
     {
         /*
         TODO
@@ -87,7 +88,28 @@ class NewDesaController extends Controller
         3. redirect ke index
         */
 
-        $validated = $request->validated();
+        $validatedData = Validator::make($request->all(),
+            [
+                'desa' => 'required|max:191',
+                'id_kabupaten' => 'required',
+                'id_kecamatan' => 'required',
+            ],[
+                'desa.required' => 'Desa harus diisi.',
+                'desa.max' => 'Maksimal jumlah karakter 191.',
+                'id_kabupaten.required' => 'Kabupaten harus diisi.',
+                'id_kecamatan.required' => 'Kecamatan harus diisi.'
+            ]
+        );
+        if ($validatedData->fails()) {
+            $html = "<ul style='list-style: none;'>";
+            foreach($validatedData->errors()->getMessages() as $error) {
+                $html .= "<li>$error[0]</li>";
+            }
+            $html .= "</ul>";
+
+            alert()->html('Terjadi kesalahan eror!', $html, 'error');
+            return redirect()->route('dagulir.master.desa.index');
+        }
         try {
             $data = Desa::where('desa', 'LIKE', "%{$request->desa}%")
             ->where('id_kecamatan', 'LIKE', "%{$request->id_kecamatan}%")
@@ -158,7 +180,7 @@ class NewDesaController extends Controller
         $desa = Desa::where('id',$id_desa)->first();
 
         try {
-            $data = Desa::where('desa', 'LIKE', "%{$request->desa}%")
+            $data = Desa::where('desa', $request->desa)
             ->where('id_kecamatan', 'LIKE', "%{$request->id_kecamatan}%")
             ->Where('id_kabupaten', 'LIKE', "%{$request->id_kabupaten}%")
             ->first();
@@ -167,7 +189,7 @@ class NewDesaController extends Controller
                 alert()->error('error', 'Kecamatan sudah ada.');
                 return back()->withError('Terjadi kesalahan.');
             }
-            
+
             $desa->desa = $request->get('desa');
             $desa->id_kecamatan = $request->get('id_kecamatan');
             $desa->id_kabupaten = $request->get('id_kabupaten');
