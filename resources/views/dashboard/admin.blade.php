@@ -20,7 +20,7 @@
                     </span>
                     <span class="ml-3 text-sm"> Filter </span>
                 </button>
-                <button data-modal-id="modal-filter-export"
+                <button id="modal-filter-export"
                     class="open-modal px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
                     <span class="lg:mt-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="lg:w-[24px] w-[19px]" viewBox="-2 -2 256 256">
@@ -68,7 +68,9 @@
                         Disetujui
                     </p>
                 </div>
-                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                @if (Auth::user()->role == 'Administrator' || Auth::user()->role == 'Kredit Umum' || Auth::user()->role == 'Direksi')
+                    <a href="{{ route('dashboard-detail-disetujui') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                @endif
             </div>
         </div>
         <div class="card p-5 w-full border bg-white h-[127px] relative">
@@ -84,7 +86,9 @@
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
                 </div>
-                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                @if (Auth::user()->role == 'Administrator' || Auth::user()->role == 'Kredit Umum' || Auth::user()->role == 'Direksi')
+                    <a href="{{ route('dashboard-detail-ditolak') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                @endif
             </div>
         </div>
         <div class="card p-5 w-full border bg-white h-[127px] relative">
@@ -100,7 +104,9 @@
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
                 </div>
-                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                @if (Auth::user()->role == 'Administrator' || Auth::user()->role == 'Kredit Umum' || Auth::user()->role == 'Direksi')
+                    <a href="{{ route('dashboard-detail-diproses') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                @endif
             </div>
         </div>
     </div>
@@ -201,7 +207,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="posisi-pengajuan"></div>
             </div>
-            <a href="{{ route('dashboard-detail') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            <a href="{{ route('dashboard-detail-chart-posisi-two') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
         <div class="card p-5 w-full border bg-white relative">
             <div class="head">
@@ -212,7 +218,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="skema-kredit"></div>
             </div>
-            <a href="{{ route('dashboard-detail-skema') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            <a href="{{ route('dashboard-detail-chart-Skema-two') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
     </div>
 </section>

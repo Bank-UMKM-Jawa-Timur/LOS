@@ -467,6 +467,23 @@ video {
   color: rgb(85 85 85 / var(--tw-text-opacity));
 }
 
+    .table-posisi {
+  width: 100%;
+  border-collapse: collapse;
+  border-width: 1px;
+}
+
+    .table-posisi th,
+    td {
+  border-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+
     .tables .status {
   border-radius: 0.375rem;
   padding-left: 1.25rem;
