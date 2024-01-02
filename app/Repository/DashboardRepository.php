@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Models\PengajuanModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -145,6 +146,184 @@ class DashboardRepository
         ->get();
 
         return $data;
+    }
+    public function getDetailChartPosisiStaff($id_user, $role){
+        $data = PengajuanModel::select(
+            'pengajuan.id',
+            'users.name as nama',
+            'users.nip',
+            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
+            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
+        )
+        ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+        ->join('users', 'users.id', 'pengajuan.id_staf')->get();
+        if ($role == 'Pincab') {
+            $data->where('pengajuan.id_pincab', $id_user);
+        } else if ($role == 'Penyelia Kredit') {
+            $data->where('pengajuan.id_penyelia', $id_user);
+        } else if ($role == 'PBO' || $role = 'PBP') {
+            $data->where('pengajuan.id_pbo', $id_user)->orWhere('pengajuan.id_pbp', $id_user);
+        }
+        // ->groupBy('pengajuan.id_pincab')
+        // ->groupBy('pengajuan.id_staf')
+
+        return $data;
+    }
+    public function getDetailChartPosisiPenyelia($id_user, $role){
+        $data = PengajuanModel::select(
+            'pengajuan.id',
+            'users.name as nama',
+            'users.nip',
+            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
+            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
+        )
+        ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+        ->join('users', 'users.id', 'pengajuan.id_penyelia')->get();
+        if ($role == 'Pincab') {
+            $data->where('pengajuan.id_pincab', $id_user);
+        } else if ($role == 'PBO' || $role = 'PBP') {
+            $data->where('pengajuan.id_pbo', $id_user)->orWhere('pengajuan.id_pbp', $id_user);
+        }
+
+        return $data;
+    }
+    public function getDetailChartPosisiPincab($id_user, $role){
+        $data = PengajuanModel::select(
+            'pengajuan.id',
+            'users.name as nama',
+            'users.nip',
+            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
+            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah'),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Selesai', 1, 0)) AS disetujui"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Ditolak', 1, 0)) AS ditolak")
+        )
+        ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+        ->join('users', 'users.id', 'pengajuan.id_pincab')
+        ->get();
+        if ($role == 'Pincab') {
+            $data->where('pengajuan.id_pincab', $id_user);
+        } else if ($role == 'PBO' || $role = 'PBP') {
+            $data->where('pengajuan.id_pbo', $id_user)->orWhere('pengajuan.id_pbp', $id_user);
+        }
+
+        return $data;
+    }
+    public function getDetailChartPosisiPBOorPBP($id_user, $role){
+        $data = PengajuanModel::select(
+            'pengajuan.id',
+            'users.name as nama',
+            'users.nip',
+            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
+            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
+        )
+        ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id');
+        if ($role == 'Pincab') {
+            $data->join('users', 'users.id', 'pengajuan.id_pincab')
+                ->where('pengajuan.id_pincab', $id_user);
+        }
+        else if ($role == 'PBO') {
+            $data->join('users', 'users.id', 'pengajuan.id_pbo')
+                ->where('pengajuan.id_pbo', $id_user)->orWhere('pengajuan.id_pbp', $id_user);
+        }
+        else if ($role == 'PBP') {
+            $data->join('users', 'users.id', 'pengajuan.id_pbp')
+                ->where('pengajuan.id_pbo', $id_user)->orWhere('pengajuan.id_pbp', $id_user);
+        }
+
+        $data->get();
+
+        return $data;
+    }
+    public function getDetailChartSkema($idUser, $role)
+    {
+        $data = DB::table('pengajuan')
+        ->select(
+            'id_staf',
+            'id_penyelia',
+            'id_pbo',
+            'id_pbp',
+            'id_pincab',
+            'posisi',
+            'skema_kredit'
+        );
+        if ($role == 'Staf Analis Kredit') {
+            $data->where('id_staf', $idUser);
+        } else if ($role == 'Penyelia Kredit') {
+            $data->where('id_penyelia', $idUser);
+        } else if ($role == 'PBO') {
+            $data->where('id_pbo', $idUser);
+        } else if ($role == 'PBP') {
+            $data->where('id_pbp', $idUser);
+        } else if ($role == 'Pincab') {
+            $data->where('id_pincab', $idUser);
+        } else {
+            $data;
+        }
+
+        $processedData = [
+            'PKPJ' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0, 'staf' => 0, 'penyelia'=> 0, 'pbo_pbp' => 0, 'pincab' => 0],
+            'KKB' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0, 'staf' => 0, 'penyelia'=> 0, 'pbo_pbp' => 0, 'pincab' => 0],
+            'Talangan' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0, 'staf' => 0, 'penyelia'=> 0, 'pbo_pbp' => 0, 'pincab' => 0],
+            'Prokesra' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0, 'staf' => 0, 'penyelia'=> 0, 'pbo_pbp' => 0, 'pincab' => 0],
+            'Kusuma' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0, 'staf' => 0, 'penyelia'=> 0, 'pbo_pbp' => 0, 'pincab' => 0],
+            'Dagulir' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0, 'staf' => 0, 'penyelia'=> 0, 'pbo_pbp' => 0, 'pincab' => 0],
+        ];
+
+        foreach ($data->get() as $value) {
+            $paramSkema = '';
+
+            if ($value->skema_kredit == "PKPJ") {
+                $paramSkema = "PKPJ";
+            } elseif ($value->skema_kredit == "KKB") {
+                $paramSkema = "KKB";
+            } elseif ($value->skema_kredit == "Talangan Umroh") {
+                $paramSkema = "Talangan";
+            } elseif ($value->skema_kredit == "Prokesra") {
+                $paramSkema = "Prokesra";
+            } elseif ($value->skema_kredit == "Kusuma") {
+                $paramSkema = "Kusuma";
+            } elseif ($value->skema_kredit == "Dagulir") {
+                $paramSkema = "Dagulir";
+            }
+
+            if (!empty($value->id_staf) && !empty($value->id_penyelia) && !empty($value->id_pincab)) {
+                $processedData[$paramSkema]['total_pengajuan'] += 1;
+                $processedData[$paramSkema]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                $processedData[$paramSkema]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                $processedData[$paramSkema]['staf'] += ($value->posisi == 'Proses Input Data') ? 1 : 0;
+                $processedData[$paramSkema]['penyelia'] += ($value->posisi == 'Review Penyelia') ? 1 : 0;
+                $processedData[$paramSkema]['pincab'] += ($value->posisi == 'Pincab') ? 1 : 0;
+                $processedData[$paramSkema]['pbo_pbp'] += ($value->posisi == 'PBO' || $value->posisi == 'PBP') ? 1 : 0;
+                $processedData[$paramSkema]['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
+            } else {
+                $processedData[$paramSkema]['total_pengajuan'] += 1;
+                $processedData[$paramSkema]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                $processedData[$paramSkema]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                $processedData[$paramSkema]['staf'] += ($value->posisi == 'Proses Input Data') ? 1 : 0;
+                $processedData[$paramSkema]['penyelia'] += ($value->posisi == 'Review Penyelia') ? 1 : 0;
+                $processedData[$paramSkema]['pincab'] += ($value->posisi == 'Pincab') ? 1 : 0;
+                $processedData[$paramSkema]['pbo_pbp'] += ($value->posisi == 'PBO' || $value->posisi == 'PBP') ? 1 : 0;
+                $processedData[$paramSkema]['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
+            }
+        }
+
+        return $processedData;
+    }
+
+    function getPosisiPengajuan($role)
+    {
+        switch ($role) {
+            case 'Penyelia':
+                return 'Review Penyelia';
+            case 'PBO':
+                return 'PBO';
+            case 'PBP':
+                return 'PBP';
+            case 'Pincab':
+                return 'Pincab';
+            default:
+                return 'Proses Input Data';
+        }
     }
 
     public function getCount(Request $request){

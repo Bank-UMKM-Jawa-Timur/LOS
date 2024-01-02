@@ -83,7 +83,6 @@ class DashboardDetailController extends Controller
         return view('dashboard.detail.ditolak', $param);
     }
     public function detailDiproses(Request $request){
-        // return 'masuk';
         $param['pageTitle'] = "Analisa Kredit";
         if (Auth::user()->password_change_at == null) {
             return redirect()->route('change_password');
@@ -128,30 +127,52 @@ class DashboardDetailController extends Controller
         if (Auth::user()->password_change_at == null) {
             return redirect()->route('change_password');
         }
+        $id_user = Auth::user()->id;
         $role = Auth::user()->role;
-        return $role;
+
         if ($role == 'Pincab') {
             $param['role'] = "Pincab";
         }
         else if ($role == 'Penyelia Kredit') {
-            $param['role'] = "Pincab";
+            $param['role'] = "Penyelia";
+        }
+        else if ($role == 'Kredit Umum') {
+            $param['role'] = "Kredit Umum";
+        }
+        else if ($role == 'Direksi') {
+            $param['role'] = "Direksi";
+        }
+        else if ($role == 'Administrator') {
+            $param['role'] = "Admin";
+        }
+        else if ($role == 'Staf Analis Kredit') {
+            $param['role'] = "Staf";
         }
         else if ($role == 'PBO' || $role = 'PBP') {
             $param['role'] = "pbo/pbp";
         }
-        $param['cabangs'] = DB::table('cabang')
-            ->get();
-        $id_cabang = Auth::user()->id_cabang;
-        $current_cabang = DB::table('cabang')->select('kode_cabang')->where('id', $id_cabang)->first();
-        $kode_cabang = '-';
-        if ($current_cabang)
-            $kode_cabang = $current_cabang->kode_cabang;
-        $param['kode_cabang'] = $kode_cabang;
+        $param['dataStaf'] = $this->repo->getDetailChartPosisiStaff($id_user, $role);
+        if ($role == 'Pincab' || $role == 'pbo/pbp') {
+            $param['penyelia'] = $this->repo->getDetailChartPosisiPenyelia($id_user, $role);
+            $param['pincab'] = $this->repo->getDetailChartPosisiPincab($id_user, $role);
+            $param['PBOPBP'] = $this->repo->getDetailChartPosisiPBOorPBP($id_user, $role);
+        }
 
-        $param['data'] = $this->repo->getDetailRankCabang($request);
-        // return $param['skema'];
+        return view('dashboard.detail.pie-chart-posisi', $param);
+    }
+    public function detailPieChartSkema(Request $request){
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
 
-        return view('dashboard.detail.rank-cabang', $param);
+        $role = auth()->user()->role;
+        $idUser = auth()->user()->id;
+
+        $param['data'] = $this->repo->getDetailChartSkema($idUser, $role);
+
+        // return $param['data'];
+        return view('dashboard.detail.pie-chart-skema', $param);
     }
 
     /**

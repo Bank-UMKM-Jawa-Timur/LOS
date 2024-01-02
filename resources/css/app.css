@@ -35,6 +35,15 @@
         @apply border-t border-b text-center p-2 text-sm text-theme-text;
     }
 
+    .table-posisi {
+        @apply w-full border-collapse border ;
+    }
+
+    .table-posisi th,
+    td {
+        @apply border text-center p-2 text-sm text-theme-text;
+    }
+
     .tables .status {
         @apply px-5 rounded-md py-2;
     }
