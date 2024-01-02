@@ -29,18 +29,20 @@
                     Analisa Kredit
                 </h2>
             </div>
-            <div class="layout lg:flex grid grid-cols-1 lg:mt-0 justify-between w-full gap-5">
-                <div class="left-button gap-2 flex lg:justify-end">
-                    <div class="tab-table-wrapper p-0">
-                        <button data-tab="dagulir" id="pincetar-button" class="tab-button tab-button-start {{ Request()->query('search_tab') == "" || Request()->query('search_tab') == "pincetar" ? 'active' : '' }}">
-                            <iconify-icon icon="tabler:database-dollar" class="mt-1"></iconify-icon>Data Pengajuan
-                        </button>
-                        <button data-tab="sipde" id="sipde-button" class="tab-button tab-button-end {{ Request()->query('search_tab') == "sipde" ? 'active' : '' }}">
-                            <iconify-icon icon="solar:dollar-minimalistic-linear" class="mt-1"></iconify-icon>Sampah Pengajuan
-                        </button>
+            <div class="{{Auth::user()->role == 'Administrator' ? 'layout lg:flex grid grid-cols-1 lg:mt-0 justify-between w-full gap-5' : ''}}">
+                @if (Auth::user()->role == 'Administrator')
+                    <div class="left-button gap-2 flex lg:justify-end">
+                        <div class="tab-table-wrapper p-0">
+                            <button data-tab="dagulir" id="pincetar-button" class="tab-button tab-button-start {{ Request()->query('search_tab') == "" || Request()->query('search_tab') == "pincetar" ? 'active' : '' }}">
+                                <iconify-icon icon="tabler:database-dollar" class="mt-1"></iconify-icon>Data Pengajuan
+                            </button>
+                            <button data-tab="sipde" id="sipde-button" class="tab-button tab-button-end {{ Request()->query('search_tab') == "sipde" ? 'active' : '' }}">
+                                <iconify-icon icon="solar:dollar-minimalistic-linear" class="mt-1"></iconify-icon>Sampah Pengajuan
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="right-button gap-2 flex lg:justify-start">
+                @endif
+                <div class="right-button gap-2 flex lg:justify-end">
                     @if (Request()->query() != null)
                     <a href="{{ url()->current() }}"
                         class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
@@ -474,7 +476,7 @@
                                                             @if ($item->posisi == 'Pincab')
                                                                 @if ($item->id_pincab)
                                                                 <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                                    class="w-full cursor-pointer">
+                                                                    class="w-full cursor-pointer review-pincab">
                                                                     <li class="item-tb-dropdown">
                                                                             Review
                                                                     </li>
@@ -539,6 +541,7 @@
                     </div>
                 </div>
                 {{-- data-sampah --}}
+                @if (Auth::user()->role == 'Administrator')
                 <div id="tab-sipde" class="tab-content {{ Request()->query('search_tab') == "sipde" ? 'active' : '' }}">
                     <div class="table-wrapper border bg-white">
                         <form id="form" method="get">
@@ -779,6 +782,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </section>
@@ -786,6 +790,9 @@
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    $('.review-pincab').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
     // tab pane
     $(".tab-table-wrapper .tab-button").click(function(e) {
         e.preventDefault();

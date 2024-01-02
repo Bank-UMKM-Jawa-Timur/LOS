@@ -2,6 +2,7 @@
 
 @section('modal')
     @include('pengajuan-kredit.modal.new-modal-filter')
+    @include('components.new.modal.loading')
 @endsection
 
 @section('content')
@@ -346,7 +347,7 @@
                                             </iconify-icon>
                                         </button>
                                         <ul class="dropdown-tb-menu hidden">
-                                            <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}" class="w-full cursor-pointer">
+                                            <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}" class="w-full cursor-pointer review-penyelia">
                                                 <li class="item-tb-dropdown">
                                                     Review
                                                 </li>
@@ -390,7 +391,7 @@
                                             </iconify-icon>
                                         </button>
                                         <ul class="dropdown-tb-menu hidden">
-                                            <a class="w-full cursor-pointer" href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">
+                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">
                                                 <li class="item-tb-dropdown">
                                                     Review
                                                 </li>
@@ -487,4 +488,11 @@
         </div>
     </section>
 @endsection
+@push('script-inject')
+<script>
+    $('.review-penyelia').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+</script>
+@endpush
 @include('pengajuan-kredit.modal.modal-kembalikan')
