@@ -119,14 +119,14 @@
             </div>
             <div id="chart-total-pengajuan" class="w-full"></div>
         </div>
-        <div class="card bg-white p-5 lg:mt-0 mt-4 lg:w-2/4 border rounded-md w-full">
-            <div class="head flex justify-between gap-5">
+        <div class="card bg-white p-5 lg:mt-0 mt-4 lg:w-2/4 border rounded-md w-full relative">
+            <div class="head flex lg:flex-row flex-col justify-between gap-5">
                 <div class="title">
                     <h2 class="font-semibold tracking-tighter text-lg text-theme-text">
                         Ranking Cabang
                     </h2>
                 </div>
-                <div class="legend-wrapper flex gap-5">
+                <div class="legend-wrapper flex gap-5 mt-1">
                     <div class="legend-1 flex gap-3">
                         <div>
                             <iconify-icon icon="material-symbols-light:circle" class="text-green-500 text-lg">
@@ -150,6 +150,7 @@
                         </div>
                     </div>
                 </div>
+                <a href="#" class="rounded lg:relative absolute lg:right-0 right-5 flex gap-2 px-5 py-1 text-gray-500 bg-gray-50 transition-all text-sm font-semibold border hover:bg-theme-primary hover:text-white"><iconify-icon icon="solar:document-outline" class="mt-1"></iconify-icon> Detail</a>
             </div>
             <div class="body-card w-full box">
                 <div class="lg:flex grid grid-cols-1 gap-5 w-full mt-5 box-border">
