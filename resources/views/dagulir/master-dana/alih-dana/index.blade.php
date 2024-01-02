@@ -40,7 +40,7 @@
                     success: function(res) {
                         if (res.length > 0) {
                             $("#ke_cabang").empty();
-                            $("#ke_cabang").append('<option>---Pilih Cabang---</option>');
+                            $("#ke_cabang").append('<option value="0">---Pilih Cabang---</option>');
 
                             $.each(res, function(index, cabang) {
                                 $('#ke_cabang').append(`

@@ -1299,29 +1299,74 @@
                                                     @endif
                                                     {{-- INI --}}
                                                     @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
-                                                        @if (!$itemEmpat->is_hide)
-                                                            @if ($itemEmpat->opsi_jawaban != 'option')
+                                                    @if (!$itemEmpat->is_hide)
+                                                        @if ($itemEmpat->opsi_jawaban != 'option')
+                                                            @php
+                                                                $dataDetailJawabanTextEmpat = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                                    ->where('jawaban_text.id_jawaban', $itemEmpat->id)
+                                                                    ->orderBy('id_jawaban')
+                                                                    ->get();
+                                                            @endphp
+                                                            @if ($itemEmpat->id == 148)
                                                                 @php
-                                                                    $dataDetailJawabanTextEmpat = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                                        ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                                                        ->where('jawaban_text.id_jawaban', $itemEmpat->id)
-                                                                        ->orderBy('id_jawaban')
-                                                                        ->get();
+                                                                    $gridClass = 'grid-cols-1';
+                                                                    if (count($dataDetailJawabanTextEmpat) > 1) {
+                                                                        $gridClass = 'grid-cols-2';
+                                                                    }
+                                                                    if (count($dataDetailJawabanTextEmpat) > 2) {
+                                                                        $gridClass = 'grid-cols-3';
+                                                                    }
                                                                 @endphp
-                                                                @if ($itemEmpat->id == 148)
-                                                                    @php
-                                                                        $gridClass = 'grid-cols-1';
-                                                                        if (count($dataDetailJawabanTextEmpat) > 1) {
-                                                                            $gridClass = 'grid-cols-2';
-                                                                        }
-                                                                        if (count($dataDetailJawabanTextEmpat) > 2) {
-                                                                            $gridClass = 'grid-cols-3';
-                                                                        }
-                                                                    @endphp
-                                                                    <div class="row grid col-span-2 {{$gridClass}}">
-                                                                        @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
-                                                                            <div class="foto">
+                                                                <div class="row grid col-span-2 {{$gridClass}}">
+                                                                    @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                                                        <div class="foto">
+                                                                            @if (intval($itemTextEmpat->opsi_text) > 1)
+                                                                                <b class="pl-2">{{ $itemTextEmpat->nama }}</b>
+                                                                                @php
+                                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                                @endphp
+                                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                                    <div class="pl-2">
+                                                                                        <iframe
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            width="100%" height="400"></iframe>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="pl-2">
+                                                                                        <img style="border: 5px solid #c2c7cf"
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            alt="" class="w-full">
+                                                                                    </div>
+                                                                                @endif
+                                                                            @else
+                                                                                @php
+                                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                                @endphp
+                                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                                    <div class="pl-2">
+                                                                                        <iframe
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            width="100%" height="500px"></iframe>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="pl-2">
+                                                                                        <img style="border: 5px solid #c2c7cf"
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            alt="" width="500px">
+                                                                                    </div>
+                                                                                @endif
+                                                                            @endif
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @endif
+                                                            @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                                                <div class="row">
+                                                                    <div class="foto">
+                                                                        @if ($itemEmpat->id != 148)
+                                                                            @if ($itemEmpat->opsi_jawaban == 'file')
                                                                                 @if (intval($itemTextEmpat->opsi_text) > 1)
                                                                                     <b class="pl-2">{{ $itemTextEmpat->nama }}</b>
                                                                                     @php
@@ -1358,229 +1403,191 @@
                                                                                         </div>
                                                                                     @endif
                                                                                 @endif
-                                                                            </div>
-                                                                        @endforeach
-                                                                    </div>
-                                                                @endif
-                                                                @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
-                                                                    <div class="row">
-                                                                        <div class="foto">
-                                                                            @if ($itemEmpat->id != 148)
-                                                                                @if ($itemEmpat->opsi_jawaban == 'file')
-                                                                                    @if (intval($itemTextEmpat->opsi_text) > 1)
-                                                                                        <b class="pl-2">{{ $itemTextEmpat->nama }}</b>
-                                                                                        @php
-                                                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                                        @endphp
-                                                                                        @if ($file_parts['extension'] == 'pdf')
-                                                                                            <div class="pl-2">
-                                                                                                <iframe
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    width="100%" height="400"></iframe>
-                                                                                            </div>
-                                                                                        @else
-                                                                                            <div class="pl-2">
-                                                                                                <img style="border: 5px solid #c2c7cf"
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    alt="" class="w-full">
-                                                                                            </div>
-                                                                                        @endif
-                                                                                    @else
-                                                                                        @php
-                                                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                                        @endphp
-                                                                                        @if ($file_parts['extension'] == 'pdf')
-                                                                                            <div class="pl-2">
-                                                                                                <iframe
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    width="100%" height="500px"></iframe>
-                                                                                            </div>
-                                                                                        @else
-                                                                                            <div class="pl-2">
-                                                                                                <img style="border: 5px solid #c2c7cf"
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    alt="" width="500px">
-                                                                                            </div>
-                                                                                        @endif
-                                                                                    @endif
-                                                                                {{-- Rupiah data empat --}}
-                                                                                @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
-                                                                                    <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
-                                                                                            <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
-                                                                                        </div>
-                                                                                    @endif
-                                                                                @else
-                                                                                    @php
-                                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                                    @endphp
-                                                                                    @if ($file_parts['extension'] == 'pdf')
-                                                                                        <div class="pl-2">
-                                                                                            <iframe
-                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                width="100%" height="500px"></iframe>
-                                                                                        </div>
-                                                                                        <div class="field-answer">
-                                                                                            <p>
-                                                                                                @if ($itemEmpat->is_rupiah == 1)
-                                                                                                    Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}
-                                                                                                @else
-                                                                                                    {{ $itemEmpat->opsi_jawaban == 'persen' ? round(floatval($itemTextEmpat->opsi_text),2) : $itemTextEmpat->opsi_text }}
-                                                                                                @endif
-
-                                                                                                @if ($itemEmpat->opsi_jawaban == 'persen')
-                                                                                                    %
-                                                                                                @elseif($itemEmpat->id == 130)
-                                                                                                    Bulan
-                                                                                                @else
-                                                                                                @endif
-                                                                                            </p>
-                                                                                        </div>
+                                                                            {{-- Rupiah data empat --}}
+                                                                            @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
+                                                                                <div class="jawaban-responsive border-b p-2 font-medium">
+                                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
+                                                                                        <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
                                                                                     </div>
-                                                                                    @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                                            <div class="input-k-bottom">
-                                                                                                <input type="hidden" name="id_item[]"
-                                                                                                    value="{{ $item->id }}">
-                                                                                                <input type="text"
-                                                                                                    class="form-input komentar"
-                                                                                                    name="komentar_penyelia[]"
-                                                                                                    placeholder="Masukkan Komentar">
-                                                                                            </div>
-                                                                                        @endif
+                                                                                </div>
+                                                                                @if ($itemTextEmpat->is_commentable == 'Ya')
+                                                                                    @if (Auth::user()->role != 'Pincab')
+                                                                                        <div class="input-k-bottom">
+                                                                                            <input type="hidden" name="id_item[]"
+                                                                                                value="{{ $item->id }}">
+                                                                                            <input type="text"
+                                                                                                class="form-input komentar"
+                                                                                                name="komentar_penyelia[]"
+                                                                                                placeholder="Masukkan Komentar">
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @endif
+                                                                            @else
+                                                                                <div class="field-review">
+                                                                                    <div class="field-name">
+                                                                                        <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                                                    </div>
+                                                                                    <div class="field-answer">
+                                                                                        <p>
+                                                                                            @if ($itemEmpat->is_rupiah == 1)
+                                                                                                Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}
+                                                                                            @else
+                                                                                                {{ $itemEmpat->opsi_jawaban == 'persen' ? round(floatval($itemTextEmpat->opsi_text),2) : $itemTextEmpat->opsi_text }}
+                                                                                            @endif
+
+                                                                                            @if ($itemEmpat->opsi_jawaban == 'persen')
+                                                                                                %
+                                                                                            @elseif($itemEmpat->id == 130)
+                                                                                                Bulan
+                                                                                            @else
+                                                                                            @endif
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                @if ($itemTextEmpat->is_commentable == 'Ya')
+                                                                                    @if (Auth::user()->role != 'Pincab')
+                                                                                        <div class="input-k-bottom">
+                                                                                            <input type="hidden" name="id_item[]"
+                                                                                                value="{{ $item->id }}">
+                                                                                            <input type="text"
+                                                                                                class="form-input komentar"
+                                                                                                name="komentar_penyelia[]"
+                                                                                                placeholder="Masukkan Komentar">
+                                                                                        </div>
                                                                                     @endif
                                                                                 @endif
                                                                             @endif
-                                                                        </div>
-                                                                    </div>
-                                                                    <input type="hidden" class="form-input mb-3"
-                                                                        placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                                        value="{{ $itemTextEmpat->nama }}" disabled>
-                                                                    <input type="hidden" class="form-input mb-3"
-                                                                        placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                                        value="{{ $itemTextEmpat->opsi_text }}" disabled>
-                                                                    <input type="hidden" name="id_jawaban_text[]"
-                                                                        value="{{ $itemTextEmpat->id }}">
-                                                                    <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
-                                                                @endforeach
-                                                            @endif
-                                                            @php
-                                                                // check level empat
-                                                                $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
-                                                                    ->where('id_item', $itemEmpat->id)
-                                                                    ->get();
-                                                                $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
-                                                                    ->where('id_item', $itemEmpat->id)
-                                                                    ->get();
-                                                                $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban', 'option.id')
-                                                                    ->where('jawaban.id_pengajuan', $dataUmum->id)
-                                                                    ->where('id_item', $itemEmpat->id)
-                                                                    ->count();
-
-                                                                $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
-                                                                    ->where('id_pengajuan', $dataUmum->id)
-                                                                    ->where('id_item', $itemEmpat->id)
-                                                                    ->first();
-                                                                // echo "<pre>";
-                                                                // print_r ($dataOptionEmpat);
-                                                                // echo "</pre>";
-                                                                // ;
-                                                            @endphp
-                                                            @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
-                                                                @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                    {{-- <div class="row">
-                                                                        <div class="form-group-1 mb-0">
-                                                                            <label for="">{{ $itemEmpat->nama }}</label>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                @endif
-                                                            @endif
-
-                                                            {{-- Data jawaban Level Empat --}}
-                                                            @if (count($dataJawabanLevelEmpat) != 0)
-                                                                <div class="row col-span-2">
-                                                                    @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
-                                                                        @php
-                                                                            $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                                                ->where('id_pengajuan', $dataUmum->id)
-                                                                                ->get();
-                                                                            $count = count($dataDetailJawaban);
-                                                                            for ($i = 0; $i < $count; $i++) {
-                                                                                $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                                            }
-                                                                            $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                                                ->where('id_pengajuan', $dataUmum->id)
-                                                                                ->where('id_jawaban', $itemJawabanLevelEmpat->id)
-                                                                                ->first();
-                                                                        @endphp
-                                                                        @if (in_array($itemJawabanLevelEmpat->id, $data))
-                                                                            @if (isset($data))
-                                                                                <div class="form-group-1">
-                                                                                    @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                                        <div class="row form-group-2">
-                                                                                            <div class="col-md-12">
-                                                                                                <div class="field-review">
-                                                                                                    <div class="field-name">
-                                                                                                        <label for="">{{ $itemEmpat->nama }}</label>
-                                                                                                    </div>
-                                                                                                    <div class="field-answer">
-                                                                                                        <p>{{ $itemJawabanLevelEmpat->option }}</p>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                {{-- <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : OYY</span>
-                                                                                                    <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
-                                                                                                </div> --}}
-
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    @endif
-                                                                                    <div class="input-group input-b-bottom mt-3">
-                                                                                        @if ($itemEmpat->is_commentable == 'Ya')
-                                                                                            <input type="hidden" name="id_item[]"
-                                                                                                value="{{ $itemEmpat->id }}">
-                                                                                            <input type="hidden" name="id_option[]"
-                                                                                                value="{{ $itemJawabanLevelEmpat->id }}">
-                                                                                            <div class="flex pl-2">
-                                                                                                <div class="flex-1 w-64">
-                                                                                                    <label for="">Komentar</label>
-                                                                                                    <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
-                                                                                                        name="komentar_penyelia[]" placeholder="Masukkan Komentar"
-                                                                                                        value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                                                </div>
-                                                                                                <div class="flex-3 w-5"></div>
-                                                                                                <div class="flex-2 w-16">
-                                                                                                    <label for="">Skor</label>
-                                                                                                    @php
-                                                                                                        $skorInput4 = null;
-                                                                                                        $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
-                                                                                                    @endphp
-                                                                                                    <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
-                                                                                                        placeholder="" name="skor_penyelia[]"
-                                                                                                        min="0"
-                                                                                                        max="4"
-                                                                                                        onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                                                                        {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
-                                                                                                        value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
-                                                                                                </div>
-                                                                                                <div class="flex-3 w-5"></div>
-                                                                                            </div>
-                                                                                        @endif
-                                                                                    </div>
-                                                                                </div>
-                                                                                <input type="hidden" class="form-input mb-3"
-                                                                                    placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                                                    value="{{ $itemJawabanLevelEmpat->option }}" disabled>
-                                                                                <input type="hidden" name="id[]"
-                                                                                    value="{{ $itemEmpat->id }}">
-                                                                            @endif
                                                                         @endif
-                                                                    @endforeach
+                                                                    </div>
                                                                 </div>
+                                                                <input type="hidden" class="form-input mb-3"
+                                                                    placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                                    value="{{ $itemTextEmpat->nama }}" disabled>
+                                                                <input type="hidden" class="form-input mb-3"
+                                                                    placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                                    value="{{ $itemTextEmpat->opsi_text }}" disabled>
+                                                                <input type="hidden" name="id_jawaban_text[]"
+                                                                    value="{{ $itemTextEmpat->id }}">
+                                                                <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
+                                                            @endforeach
+                                                        @endif
+                                                        @php
+                                                            // check level empat
+                                                            $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
+                                                                ->where('id_item', $itemEmpat->id)
+                                                                ->get();
+                                                            $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
+                                                                ->where('id_item', $itemEmpat->id)
+                                                                ->get();
+                                                            $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban', 'option.id')
+                                                                ->where('jawaban.id_pengajuan', $dataUmum->id)
+                                                                ->where('id_item', $itemEmpat->id)
+                                                                ->count();
+
+                                                            $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                                                                ->where('id_pengajuan', $dataUmum->id)
+                                                                ->where('id_item', $itemEmpat->id)
+                                                                ->first();
+                                                            // echo "<pre>";
+                                                            // print_r ($dataOptionEmpat);
+                                                            // echo "</pre>";
+                                                            // ;
+                                                        @endphp
+                                                        @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
+                                                            @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
+                                                                {{-- <div class="row">
+                                                                    <div class="form-group-1 mb-0">
+                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                    </div>
+                                                                </div> --}}
                                                             @endif
                                                         @endif
-                                                    @endforeach
+
+                                                        {{-- Data jawaban Level Empat --}}
+                                                        @if (count($dataJawabanLevelEmpat) != 0)
+                                                            <div class="row col-span-2">
+                                                                @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
+                                                                    @php
+                                                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                                            ->where('id_pengajuan', $dataUmum->id)
+                                                                            ->get();
+                                                                        $count = count($dataDetailJawaban);
+                                                                        for ($i = 0; $i < $count; $i++) {
+                                                                            $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                                        }
+                                                                        $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                                            ->where('id_pengajuan', $dataUmum->id)
+                                                                            ->where('id_jawaban', $itemJawabanLevelEmpat->id)
+                                                                            ->first();
+                                                                    @endphp
+                                                                    @if (in_array($itemJawabanLevelEmpat->id, $data))
+                                                                        @if (isset($data))
+                                                                            <div class="form-group-1">
+                                                                                @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
+                                                                                    <div class="row form-group-2">
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="field-review">
+                                                                                                <div class="field-name">
+                                                                                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                                                                                </div>
+                                                                                                <div class="field-answer">
+                                                                                                    <p>{{ $itemJawabanLevelEmpat->option }}</p>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            {{-- <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : OYY</span>
+                                                                                                <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
+                                                                                            </div> --}}
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @endif
+                                                                                <div class="input-group input-b-bottom mt-3">
+                                                                                    @if ($itemEmpat->is_commentable == 'Ya')
+                                                                                        <input type="hidden" name="id_item[]"
+                                                                                            value="{{ $itemEmpat->id }}">
+                                                                                        <input type="hidden" name="id_option[]"
+                                                                                            value="{{ $itemJawabanLevelEmpat->id }}">
+                                                                                        <div class="flex pl-2">
+                                                                                            <div class="flex-1 w-64">
+                                                                                                <label for="">Komentar</label>
+                                                                                                <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                                                    value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                                            </div>
+                                                                                            <div class="flex-3 w-5"></div>
+                                                                                            <div class="flex-2 w-16">
+                                                                                                <label for="">Skor</label>
+                                                                                                @php
+                                                                                                    $skorInput4 = null;
+                                                                                                    $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
+                                                                                                @endphp
+                                                                                                <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
+                                                                                                    placeholder="" name="skor_penyelia[]"
+                                                                                                    min="0"
+                                                                                                    max="4"
+                                                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                                                                    {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
+                                                                                                    value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
+                                                                                            </div>
+                                                                                            <div class="flex-3 w-5"></div>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+                                                                            <input type="hidden" class="form-input mb-3"
+                                                                                placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                                                value="{{ $itemJawabanLevelEmpat->option }}" disabled>
+                                                                            <input type="hidden" name="id[]"
+                                                                                value="{{ $itemEmpat->id }}">
+                                                                        @endif
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                @endforeach
                                                 @endif
                                             @endforeach
                                         @endforeach
