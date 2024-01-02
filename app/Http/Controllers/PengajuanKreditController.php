@@ -3863,13 +3863,13 @@ class PengajuanKreditController extends Controller
     {
         $id_pengajuan = Request()->idPengajuan;
         $data = PengajuanModel::find($id_pengajuan);
-
         if ($data) {
             $data->delete();
             event(new EventMonitoring('delete pengajuan'));
-
+            alert()->success('Data '.$data->nama .' berhasil dihapus.');
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama .' berhasil dihapus.');
         } else {
+            alert()->error('Data dengan ID tersebut tidak ditemukan.');
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
         }
     }
@@ -3883,9 +3883,10 @@ class PengajuanKreditController extends Controller
         if ($data) {
             $data->restore();
             event(new EventMonitoring('restore pengajuan'));
-
+            alert()->success('Data '.$data->nama.' berhasil direstore.');
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama.' berhasil direstore.');
         } else {
+            alert()->error('Data dengan ID tersebut tidak ditemukan.');
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
         }
     }

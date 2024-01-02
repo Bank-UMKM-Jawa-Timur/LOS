@@ -38,15 +38,16 @@
             $log = [];
         }
     @endphp
-    <div class="modal-layout hidden" id="modalLogPengajuan-{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal modal-sm bg-white">
-            <div class="modal-head">
-                <h5 class="title" id="exampleModalLabel">Log Pengajuan</h5>
-                <button data-dismiss-id="modalLogPengajuan-{{ $item->id }}" type="button">
-                    <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
+    <div class="modal fade" id="modalLogPengajuan-{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Log Pengajuan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body space-y-5">
+            <div class="modal-body">
                 @forelse ($log as $items)
                     <div class="content">
                         <h2 class="title-log">{{ date('d F Y', strtotime($items['tgl'])) }}</h2>
@@ -70,8 +71,8 @@
                 </div>
                 @endforelse
             </div>
-            <div class="modal-footer justify-end">
-                <button type="button" class="btn-submit" data-dismiss="modal">Batal</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
             </div>
         </div>
