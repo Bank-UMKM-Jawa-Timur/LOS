@@ -2298,6 +2298,8 @@ class NewDagulirController extends Controller
                         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
                         ->where('pengajuan.id', $id)
                         ->first();
+            $param['bulan'] = date('d', strtotime($dataNasabah->tanggal));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
         }else{
             $dataUmum = PengajuanModel::find($id);
 
@@ -2307,7 +2309,8 @@ class NewDagulirController extends Controller
                         ->join('desa','desa.id','calon_nasabah.id_desa')
                         ->where('calon_nasabah.id_pengajuan',$id)
                         ->first();
-
+            $param['bulan'] = date('m', strtotime($dataNasabah->tanggal_lahir));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal_lahir));
         }
 
         // return $dataNasabah;
@@ -2324,9 +2327,6 @@ class NewDagulirController extends Controller
         ->where('id_pengajuan', $id)
         ->first();
         $param['tglCetak'] = $tglCetak;
-
-        $param['bulan'] = date('d', strtotime($dataNasabah->tanggal));
-        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
 
         $kodePincab = $param['dataUmum']->skema_kredit == 'Dagulir' ? $dataNasabah->id_pincab : $dataUmum->id_pincab;
         $kodePenyelia =$param['dataUmum']->skema_kredit == 'Dagulir' ?  $dataNasabah->id_penyelia : $dataUmum->id_pincab;

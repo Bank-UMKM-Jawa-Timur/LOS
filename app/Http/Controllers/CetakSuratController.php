@@ -10,6 +10,7 @@ use App\Models\PengajuanModel;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CetakSuratController extends Controller
 {
@@ -162,7 +163,9 @@ class CetakSuratController extends Controller
             ->where('id_jawaban', 140)
             ->first() ?? '0';
 
-        return view('cetak.cetak-sppk', $param);
+        // return view('cetak.cetak-sppk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-sppk', $param);
+        return $pdf->download('SPPK-' . $dataNasabah->nama . '.pdf');
     }
 
     public function cetakPO($id)
@@ -233,12 +236,14 @@ class CetakSuratController extends Controller
                 ]);
         }
 
-        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
-            ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
-            ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
-            ->join('desa','desa.id','calon_nasabah.id_desa')
-            ->where('calon_nasabah.id_pengajuan',$id)
-            ->first();
+        $dataNasabah = CalonNasabah::select('calon_nasabah.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
+        ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')
+        ->join('kecamatan', 'kecamatan.id', 'calon_nasabah.id_kecamatan')
+        ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
+        ->where('calon_nasabah.id_pengajuan', $id)
+        ->first();
+
+        $param['dataNasabah'] = $dataNasabah;
 
 
         $param['tglCetak'] = DB::table('log_cetak_kkb')
@@ -255,6 +260,8 @@ class CetakSuratController extends Controller
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
 
-        return view('cetak.cetak-pk', $param);
+        // return view('cetak.cetak-pk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
+        return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
     }
 }
