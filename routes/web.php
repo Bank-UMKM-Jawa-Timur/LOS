@@ -67,6 +67,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/detail/rank-cabang', [DashboardDetailController::class, 'detailRankCabang'])->name('dashboard-detail-rank-cabang');
     Route::get('/dashboard/detail/chart-posisi', [DashboardDetailController::class, 'detailPieChartPosisi'])->name('dashboard-detail-chart-posisi');
     Route::get('/dashboard/detail/chart-skema', [DashboardDetailController::class, 'detailPieChartSkema'])->name('dashboard-detail-chart-Skema');
+    Route::get('/dashboard/detail/chart-posisi-two', [DashboardDetailController::class, 'detailPieChartPosisiTwo'])->name('dashboard-detail-chart-posisi-two');
+    Route::get('/dashboard/detail/chart-skema-two', [DashboardDetailController::class, 'detailPieChartSkemaTwo'])->name('dashboard-detail-chart-Skema-two');
 
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 

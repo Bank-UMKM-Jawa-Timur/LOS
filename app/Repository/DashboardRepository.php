@@ -39,6 +39,11 @@ class DashboardRepository
             'c.cabang',
             DB::raw("SUM(IF(p.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'), 1, 0)) AS diproses"),
             DB::raw("SUM(IF(p.posisi = 'Selesai', 1, 0)) AS disetujui"),
+            DB::raw("SUM(IF(p.posisi = 'Proses Input Data', 1, 0)) AS staf"),
+            DB::raw("SUM(IF(p.posisi = 'Review Penyelia', 1, 0)) AS penyelia"),
+            DB::raw("SUM(IF(p.posisi = 'PBO', 1, 0)) AS pbo"),
+            DB::raw("SUM(IF(p.posisi = 'PBP', 1, 0)) AS pbp"),
+            DB::raw("SUM(IF(p.posisi = 'Pincab', 1, 0)) AS pincab"),
             DB::raw("SUM(IF(p.posisi = 'Ditolak', 1, 0)) AS ditolak"),
             DB::raw("SUM(IF(p.id_cabang = c.id, 1, 0)) AS total")
         )
@@ -333,9 +338,11 @@ class DashboardRepository
         $tanggalAwal = $request->tAwal;
         $tanggalAkhir = $request->tAkhir;
         $cabang = $request->cbg;
+        $bulan_sekarang = date('m');
 
         $data = DB::table('pengajuan')
             ->whereNull('deleted_at')
+            ->whereMonth('tanggal', $bulan_sekarang)
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);
             })
@@ -444,7 +451,7 @@ class DashboardRepository
     public function getDataYear(){
         $role = auth()->user()->role;
         $idUser = auth()->user()->id;
-        $tAwal = now()->subYear();
+        $tAwal = date('Y') . '-' . date('m') . '-01';
         $tAkhir = now();
 
         if (request()->has('tAwal')) {
@@ -586,8 +593,9 @@ class DashboardRepository
         $tanggalAwal = $request->tAwal ?? null;
         $tanggalAkhir = $request->tAkhir ?? null;
         $cabang = $request->cbg;
+        $bulan_sekarang = date('m');
 
-        $data = DB::table('pengajuan')
+        $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
             ->selectRaw("CAST(sum(posisi='pincab') AS UNSIGNED) as pincab,
                 CAST(sum(posisi='PBP') AS UNSIGNED) as pbp,
                 CAST(sum(posisi='PBO') AS UNSIGNED) as pbo,
@@ -640,7 +648,8 @@ class DashboardRepository
         $tanggalAwal = $request->tAwal;
         $tanggalAkhir = $request->tAkhir;
         $cabang = $request->cbg;
-        $data = DB::table('pengajuan')
+        $bulan_sekarang = date('m');
+        $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
             ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma, sum(skema_kredit='Dagulir') as Dagulir")
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);
@@ -682,9 +691,11 @@ class DashboardRepository
     }
 
     public function getRangking(Request $request){
+
         $total_cabang = DB::table('cabang')->where('kode_cabang', '!=', '000')->count();
         $tanggalAwal = $request->tAwal;
         $tanggalAkhir = $request->tAkhir;
+        $bulan_sekarang = date('m');
 
         $dataTertinggi = DB::table('cabang')
             ->leftJoin('pengajuan', function ($join) use ($tanggalAwal,$tanggalAkhir) {
@@ -696,9 +707,14 @@ class DashboardRepository
                         return $query->where('tanggal', '<=', $tanggalAkhir);
                     });
             })
-            ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+            ->select(
+                DB::raw("COALESCE(COUNT(pengajuan.id), 0) AS total"),
+                // 'IFNULL(COUNT(pengajuan.id), 0) AS total',
+                'cabang.kode_cabang',
+                'cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+            ->whereMonth('tanggal', $bulan_sekarang)
             ->orderByRaw('total DESC, cabang.kode_cabang ASC')
             ->limit(5)
             ->get();
@@ -713,11 +729,15 @@ class DashboardRepository
                         return $query->where('tanggal', '<=', $tanggalAkhir);
                     });
             })
-            ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+            ->select(
+                'cabang.kode_cabang',
+                'cabang.cabang',
+                DB::raw("COALESCE(COUNT(pengajuan.id), 0) AS total"))
             ->where('cabang.kode_cabang', '!=', '000')
             // ->where('pengajuan.posisi', 'Selesai')
             ->whereNull('pengajuan.deleted_at')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+            ->whereMonth('tanggal', $bulan_sekarang)
             ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
             ->limit(5)
             ->get();

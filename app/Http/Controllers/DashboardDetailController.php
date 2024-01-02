@@ -98,7 +98,6 @@ class DashboardDetailController extends Controller
 
         $param['cabang'] = $this->repo->getDetailCabangDiproses($request);
         $param['skema'] = $this->repo->getDetailSkemaDiproses($request);
-        // return $param['skema'];
 
         return view('dashboard.detail.diproses', $param);
     }
@@ -118,7 +117,6 @@ class DashboardDetailController extends Controller
         $param['kode_cabang'] = $kode_cabang;
 
         $param['data'] = $this->repo->getDetailRankCabang($request);
-        // return $param['skema'];
 
         return view('dashboard.detail.rank-cabang', $param);
     }
@@ -171,8 +169,32 @@ class DashboardDetailController extends Controller
 
         $param['data'] = $this->repo->getDetailChartSkema($idUser, $role);
 
-        // return $param['data'];
         return view('dashboard.detail.pie-chart-skema', $param);
+    }
+    public function detailPieChartSkemaTwo(Request $request){
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
+
+        $role = auth()->user()->role;
+        $idUser = auth()->user()->id;
+
+        $param['cabang'] = $this->repo->getDetailSkemaTotal($request);
+
+        return view('dashboard.detail.pie-chart-skema-two', $param);
+    }
+    public function detailPieChartPosisiTwo(Request $request){
+        $param['pageTitle'] = "Analisa Kredit";
+        if (Auth::user()->password_change_at == null) {
+            return redirect()->route('change_password');
+        }
+
+        $role = auth()->user()->role;
+        $idUser = auth()->user()->id;
+
+        $param['cabang'] = $this->repo->getDetailCabangTotal($request);
+        return view('dashboard.detail.pie-chart-posisi-two', $param);
     }
 
     /**

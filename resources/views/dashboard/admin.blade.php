@@ -207,7 +207,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="posisi-pengajuan"></div>
             </div>
-            {{-- <a href="{{ route('dashboard-detail-chart-posisi') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a> --}}
+            <a href="{{ route('dashboard-detail-chart-posisi-two') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
         <div class="card p-5 w-full border bg-white relative">
             <div class="head">
@@ -218,7 +218,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="skema-kredit"></div>
             </div>
-            {{-- <a href="{{ route('dashboard-detail-skema') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a> --}}
+            <a href="{{ route('dashboard-detail-chart-Skema-two') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
     </div>
 </section>
