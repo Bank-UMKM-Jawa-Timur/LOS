@@ -27,20 +27,24 @@
     .table-responsive {
         @apply overflow-x-auto;
     }
-    .tables {
-        @apply w-full border-collapse border border-l-0 border-r-0;
+    table.tables {
+        @apply w-full border-collapse border;
     }
-    .tables th,
-    td {
+    table.tables th {
+        @apply border-t border-b text-center p-2 text-sm text-theme-text;
+    }
+    table.tables td {
         @apply border-t border-b text-center p-2 text-sm text-theme-text;
     }
 
-    .table-posisi {
-        @apply w-full border-collapse border ;
+    table.table-posisi {
+        @apply w-full border-collapse border;
     }
 
-    .table-posisi th,
-    td {
+    table.table-posisi th {
+        @apply border text-center p-2 text-sm text-theme-text;
+    }
+    table.table-posisi td {
         @apply border text-center p-2 text-sm text-theme-text;
     }
 
