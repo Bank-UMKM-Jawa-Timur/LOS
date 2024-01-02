@@ -342,6 +342,21 @@
                             </li>
                         </ul>
                     </div>
+                    <li class="menu-item">
+                        <a href="{{ route('pembayaran.index') }}">
+                            <button
+                                class="item-link @active('pembayaran', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24">
+                                        <path fill="currentColor"
+                                            d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Zm2-10h4V5H5v6Zm10 8h4v-6h-4v6Zm0-12h4V5h-4v2ZM5 19h4v-2H5v2Zm4-8Zm6-4Zm0 6Zm-6 4Z" />
+                                    </svg>
+                                </span>
+                                <span class="mt-[2px]"> Pembayaran </span>
+                            </button>
+                        </a>
+                    </li>
                 @endif
             </ul>
         </div>
