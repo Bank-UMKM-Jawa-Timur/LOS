@@ -1,5 +1,6 @@
 @extends('layouts.tailwind-template')
 @include('dagulir.modal.filter-dashboard')
+@include('dagulir.modal.filter-print-data-nominatif')
 @section('modal')
 @endsection
 @section('content')
@@ -13,6 +14,9 @@
 
 @push('script-inject')
 <script>
+    $(`#modal-filter-export`).on('click', function(){
+        $(`#modal-data-nominatif`).removeClass('hidden')
+    })
     var options = {
         series: [
             {

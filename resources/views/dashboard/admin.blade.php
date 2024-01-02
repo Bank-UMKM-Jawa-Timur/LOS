@@ -20,7 +20,7 @@
                     </span>
                     <span class="ml-3 text-sm"> Filter </span>
                 </button>
-                <button data-modal-id="modal-filter-export"
+                <button id="modal-filter-export"
                     class="open-modal px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
                     <span class="lg:mt-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="lg:w-[24px] w-[19px]" viewBox="-2 -2 256 256">
