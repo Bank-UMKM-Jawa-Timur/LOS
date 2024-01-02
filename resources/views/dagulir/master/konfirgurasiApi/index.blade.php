@@ -71,7 +71,7 @@
                         <div class="form-group-3">
                             <div class="input-box">
                                 <label for="">SIPDe Host</label>
-                                <input type="text"name="dwh_store_kredit_api_url" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_host : '' }}">
+                                <input type="text"name="sipde_host" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->sipde_host : '' }}">
                             </div>
                             <div class="input-box">
                                 <label for="">SIPDe Username</label>

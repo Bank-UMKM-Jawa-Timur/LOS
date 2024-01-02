@@ -263,7 +263,7 @@ class MasterDanaController extends Controller
             'cabang_ke' => 'required|not_in:0',
         ]);
         try {
-            if (formatNumber($request->get('dana_modal_setelah_dari')) < 0) {
+            if (formatNumber($request->get('dana_modal_setelah_ke')) < 0) {
                 DB::commit();
                 alert()->warning('Perhatian','Dana tidak mencukupi.');
                 return redirect()->route('master-dana.alih-dana');
