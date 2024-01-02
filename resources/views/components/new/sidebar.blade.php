@@ -190,6 +190,7 @@
                     </div>
                 @endif
                 @if (auth()->user()->role == 'Administrator')
+
                     <li class="menu-item">
                         <a href="{{ route('dashboard') }}">
                             <button
@@ -227,6 +228,7 @@
                             </button>
                         </a>
                     </li>
+
                     <div class="dropdown-menu-link hidden">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>

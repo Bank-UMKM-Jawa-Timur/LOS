@@ -181,24 +181,31 @@
             </div>
         </div>
     </div>
+    @php
+        $ktpSuami = \DB::table('jawaban_text')
+                        ->select('id', 'id_jawaban', 'opsi_text')
+                        ->where('id_pengajuan', $dataUmum->id)
+                        ->where('id_jawaban', 150)
+                        ->first();
+        $ktpIstri = \DB::table('jawaban_text')
+                        ->select('id', 'id_jawaban', 'opsi_text')
+                        ->where('id_pengajuan', $dataUmum->id)
+                        ->where('id_jawaban', 151)
+                        ->first();
+        $ktpNasabah = \DB::table('jawaban_text')
+                        ->select('id', 'id_jawaban', 'opsi_text')
+                        ->where('id_pengajuan', $dataUmum->id)
+                        ->where('id_jawaban', 156)
+                        ->first();
+    @endphp
     <div class="form-group-2">
         <div class="field-review">
             <div class="field-name">
-                <label for="">Foto Nasabah</label>
+                <label for="">Foto KTP </label>
             </div>
             <div class="field-answer">
-                <a href="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Nasabah : {{ $dataNasabah->nama }}">
-                    <img src="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
-                </a>
-            </div>
-        </div>
-        <div class="field-review">
-            <div class="field-name">
-                <label for="">Foto KTP Nasabah</label>
-            </div>
-            <div class="field-answer">
-                <a href="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" data-lightbox="{{ $dataNasabah->id }}" data-title="Foto KTP Nasabah : {{ $dataNasabah->nama }}">
-                    <img src="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
+                <a href="{{ $ktpNasabah ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpNasabah->id_jawaban.'/'.$ktpNasabah->opsi_text : asset('img/no-image.png') }}" data-lightbox="{{ $dataNasabah->id }}" data-title="Foto KTP Nasabah : {{ $dataNasabah->nama }}">
+                    <img src="{{ $ktpNasabah ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpNasabah->id_jawaban.'/'.$ktpNasabah->opsi_text : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
                 </a>
             </div>
         </div>
@@ -208,11 +215,11 @@
         <div class="form-group-2">
             <div class="field-review">
                 <div class="field-name">
-                    <label for="">Foto Pasangan</label>
+                    <label for="">Foto KTP Pasangan</label>
                 </div>
                 <div class="field-answer">
-                    <a href="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
-                        <img src="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
+                    <a href="{{ $ktpIstri ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpIstri->id_jawaban.'/'.$ktpIstri->opsi_text : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
+                        <img src="{{ $ktpIstri ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpIstri->id_jawaban.'/'.$ktpIstri->opsi_text : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
                     </a>
                 </div>
             </div>

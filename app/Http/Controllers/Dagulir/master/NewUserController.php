@@ -97,6 +97,7 @@ class NewUserController extends Controller
             $user->role = $validated['role'];
             $user->password = \Hash::make('12345678');
             $user->id_cabang = $validated['role'] == 'PBP' ? 1 : $request->id_cabang;
+            $user->user_dagulir = $request->has('is_dagulir') ? 1 : 0;
             $user->save();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
@@ -168,6 +169,7 @@ class NewUserController extends Controller
             $user->email = $request['email'];
             $user->role = $request->get('role');
             $user->id_cabang = $request['id_cabang'];
+            $user->user_dagulir = $request->has('is_dagulir') ? true : false;
             $user->save();
         } catch (\Exception $e) {
             alert()->error('Error','Terjadi Kesalahan.');

@@ -80,6 +80,7 @@
                             <th>Email</th>
                             <th>Role</th>
                             <th>Kantor Cabang</th>
+                            <th>User Dagulir</th>
                             <th>Aksi</th>
                         </thead>
                         <tbody>
@@ -98,6 +99,13 @@
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->role }}</td>
                                     <td>{{ $item->cabang->cabang }}</td>
+                                    <td>
+                                        @if ($item->user_dagulir == 1)
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-1 py-1 rounded dark:bg-green-900 dark:text-green-300">Ya</span>
+                                        @else
+                                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-1 py-1 rounded dark:bg-red-900 dark:text-red-300">Tidak</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="flex">
                                             <div class="dropdown-tb">
@@ -118,6 +126,7 @@
                                                         data-nama="{{$item->name}}"
                                                         data-email="{{$item->email}}"
                                                         data-role="{{$item->role}}"
+                                                        data-user_dagulir="{{ $item->user_dagulir }}"
                                                         data-cabang="{{$item->cabang->cabang}}">
                                                         <li class="item-tb-dropdown">
                                                             Edit
@@ -170,6 +179,7 @@
         const nama = $(this).data("nama");
         const email = $(this).data("email");
         const role = $(this).data("role");
+        const user_dagulir = $(this).data('user_dagulir');
         const cabang = $(this).data("cabang");
         const target = $(this).data("target");
 
@@ -177,6 +187,12 @@
         $(`#${target} .nip-edit`).val(nip);
         $(`#${target} .name-edit`).val(nama);
         $(`#${target} .email-edit`).val(email);
+        if (user_dagulir == 0) {
+            $(`#${target} .checked-checkbox-dagulir`).prop('checked', true);
+        } else {
+            $(`#${target} .checked-checkbox-dagulir`).val("1");
+
+        }
 
         $(`#${target}`).removeClass('hidden')
     });

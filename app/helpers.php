@@ -157,9 +157,9 @@ if (!function_exists('sipde_token')) {
         $json = json_decode(file_get_contents($filePath), true);
         $date = Carbon::now()->toDateTimeString();
         if ($json['token'] == "" || $date >= $json['exp']) {
-            $response = Http::post(config('dagulir.host').'/login', [
-                'username' => config('dagulir.username'),
-                'password' => config('dagulir.password'),
+            $response = Http::post(sipdeHost().'/login', [
+                'username' => sipdeUsername(),
+                'password' => sipdePassword(),
             ])->json();
             $filePath = storage_path('app/response.json');
             file_put_contents($filePath, json_encode($response));
@@ -169,7 +169,7 @@ if (!function_exists('sipde_token')) {
                 'token' => $json['token'],
             ];
         }
-        
+
         if ($date >= $json['exp']) {
             sipde_token();
         }else{
@@ -321,6 +321,28 @@ if (!function_exists('tambah_pengajuan')) {
             return 'Silahkan login kembali';
         }
     }
+}
+
+function sipdeHost()
+{
+    $konfiAPI = DB::table('api_configuration')->first();
+    $host = $konfiAPI->sipde_host;
+
+    return $host;
+}
+function sipdeUsername()
+{
+    $konfiAPI = DB::table('api_configuration')->first();
+    $host = $konfiAPI->sipde_username;
+
+    return $host;
+}
+function sipdePassword()
+{
+    $konfiAPI = DB::table('api_configuration')->first();
+    $host = $konfiAPI->sipde_password;
+
+    return $host;
 }
 
 function formatNumber($param)

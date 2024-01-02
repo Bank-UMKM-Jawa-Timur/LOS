@@ -163,7 +163,8 @@ class PengajuanKreditController extends Controller
     public function getKaryawanFromAPI($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -187,7 +188,8 @@ class PengajuanKreditController extends Controller
     public static function getKaryawanFromAPIStatic($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -215,7 +217,8 @@ class PengajuanKreditController extends Controller
 
     public function getNameKaryawan($nip)
     {
-        $host = env('HCS_HOST');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -2864,12 +2867,14 @@ class PengajuanKreditController extends Controller
                 ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
                 ->where('calon_nasabah.id_pengajuan', $id)
                 ->first();
+        // return $param['dataNasabah'];
         $param['dataKecamatan'] = Kecamatan::find($param['dataNasabah']->id_kecamatan);
         $param['dataKabupaten'] = Kabupaten::find($param['dataNasabah']->id_kabupaten);
         $param['dataDesa'] = Desa::find($param['dataNasabah']->id_desa);
 
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
             ->find($id);
+
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
 
         $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
@@ -3736,10 +3741,14 @@ class PengajuanKreditController extends Controller
                             ->where('dp.id_pengajuan', $id)->first();
 
                         // store api
-                        $host = env('DWH_HOST');
-                        $apiURL = $host . env('DWH_STORE_KREDIT_API');
+                        $konfiAPI = DB::table('api_configuration')->first();
+                        // $host = env('DWH_HOST');
+                        $host = $konfiAPI->dwh_host;
+                        // $apiURL = $host . env('DWH_STORE_KREDIT_API');
+                        $apiURL = $host . $konfiAPI->dwh_store_kredit_api_url;
                         $headers = [
-                            'mid-client-key' => env('DWH_TOKEN')
+                            // 'mid-client-key' => env('DWH_TOKEN')
+                            'mid-client-key' => $konfiAPI->dwh_token
                         ];
                         try {
                             $response = Http::timeout(60)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL, [
@@ -3854,13 +3863,13 @@ class PengajuanKreditController extends Controller
     {
         $id_pengajuan = Request()->idPengajuan;
         $data = PengajuanModel::find($id_pengajuan);
-
         if ($data) {
             $data->delete();
             event(new EventMonitoring('delete pengajuan'));
-
+            alert()->success('Data '.$data->nama .' berhasil dihapus.');
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama .' berhasil dihapus.');
         } else {
+            alert()->error('Data dengan ID tersebut tidak ditemukan.');
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
         }
     }
@@ -3874,9 +3883,10 @@ class PengajuanKreditController extends Controller
         if ($data) {
             $data->restore();
             event(new EventMonitoring('restore pengajuan'));
-
+            alert()->success('Data '.$data->nama.' berhasil direstore.');
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama.' berhasil direstore.');
         } else {
+            alert()->error('Data dengan ID tersebut tidak ditemukan.');
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
         }
     }
