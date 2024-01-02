@@ -149,6 +149,7 @@ class DashboardDetailController extends Controller
         else if ($role == 'PBO' || $role = 'PBP') {
             $param['role'] = "pbo/pbp";
         }
+
         $param['dataStaf'] = $this->repo->getDetailChartPosisiStaff($id_user, $role);
         if ($role == 'Pincab' || $role == 'pbo/pbp') {
             $param['penyelia'] = $this->repo->getDetailChartPosisiPenyelia($id_user, $role);
