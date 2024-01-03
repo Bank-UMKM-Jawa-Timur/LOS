@@ -58,13 +58,25 @@ class PembayaranController extends Controller
 
             }
 
-            $body = [
-                'file_json' => $txt_data,
-                'dictionary' => $fieldPositions
-            ];
-            $pembayaran = Http::post('http://127.0.0.1:5001'.'/pembayaran', $body)->json();
+            $result = array();
+            for ($i = 0; $i < count($txt_data); $i++) {
+                $val = trim($txt_data[$i]);
+                $objects = array();
+                foreach ($fieldPositions as $j) {
+                    $value = substr($val, $j['from']-1, $j['to']-$j['from']+1);
+                    $value = ltrim(rtrim($value));
+                    $objects[$j['field']] = $value;
+                }
+                $result[] = $objects;
+            }
+            // $body = [
+            //     'file_json' => $txt_data,
+            //     'dictionary' => $fieldPositions
+            // ];
+            // $pembayaran = Http::post('http://127.0.0.1:5001'.'/pembayaran', $body)->json();
 
-            return view('pembayaran.upload',['data' => $pembayaran['data']]);
+            // return view('pembayaran.upload',['data' => $pembayaran['data']]);
+            return view('pembayaran.upload',['data' => $result]);
         } catch (\Exception $e) {
             return $e;
             // return redirect(route('users.index'));
@@ -102,21 +114,34 @@ class PembayaranController extends Controller
 
         }
 
-        $body = [
-            'file_json' => $txt_data,
-            'dictionary' => $fieldPositions
-        ];
-        $pembayaran = Http::post(env('EXTRA_HOST').'/pembayaran', $body)->json();
+        // $body = [
+        //     'file_json' => $txt_data,
+        //     'dictionary' => $fieldPositions
+        // ];
+        // $pembayaran = Http::post(env('EXTRA_HOST').'/pembayaran', $body)->json();
+        // $result = $pembayaran['data'];
+        $result = array();
+        for ($i = 0; $i < count($txt_data); $i++) {
+            $val = trim($txt_data[$i]);
+            $objects = array();
+            foreach ($fieldPositions as $j) {
+                $value = substr($val, $j['from']-1, $j['to']-$j['from']+1);
+                $value = ltrim(rtrim($value));
+                $objects[$j['field']] = $value;
+            }
+            $result[] = $objects;
+        }
 
-        foreach ($pembayaran['data'] as $key => $value) {
+        foreach ($result as $key => $value) {
             if ($request->get('filter') != '0') {
                 if ($value['HLACKY'] != $request->get('filter')) {
-                    unset($pembayaran['data'][$key]);
+                    unset($result[$key]);
                 }
             }
 
         }
-        return view('pembayaran.upload',['data' => $pembayaran['data']]);
+        return view('pembayaran.upload',['data' => $result]);
+        // return view('pembayaran.upload',['data' => $pembayaran['data']]);
 
 
     }
