@@ -388,6 +388,8 @@ class NewDagulirController extends Controller
                         if (array_key_exists('79', $request->informasi)) {
                             $npwp = str_replace(['.','-'], '', $request->informasi[79]);
                         }
+                    } else {
+                        $npwp = null;
                     }
                     $pengajuan->npwp = $npwp;
                     $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
@@ -2298,6 +2300,8 @@ class NewDagulirController extends Controller
                         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
                         ->where('pengajuan.id', $id)
                         ->first();
+            $param['bulan'] = date('d', strtotime($dataNasabah->tanggal));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
         }else{
             $dataUmum = PengajuanModel::find($id);
 
@@ -2307,7 +2311,8 @@ class NewDagulirController extends Controller
                         ->join('desa','desa.id','calon_nasabah.id_desa')
                         ->where('calon_nasabah.id_pengajuan',$id)
                         ->first();
-
+            $param['bulan'] = date('m', strtotime($dataNasabah->tanggal_lahir));
+            $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal_lahir));
         }
 
         // return $dataNasabah;
@@ -2324,9 +2329,6 @@ class NewDagulirController extends Controller
         ->where('id_pengajuan', $id)
         ->first();
         $param['tglCetak'] = $tglCetak;
-
-        $param['bulan'] = date('d', strtotime($dataNasabah->tanggal));
-        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
 
         $kodePincab = $param['dataUmum']->skema_kredit == 'Dagulir' ? $dataNasabah->id_pincab : $dataUmum->id_pincab;
         $kodePenyelia =$param['dataUmum']->skema_kredit == 'Dagulir' ?  $dataNasabah->id_penyelia : $dataUmum->id_pincab;
@@ -2686,6 +2688,7 @@ class NewDagulirController extends Controller
 
     public function update(Request $request, $id)
     {
+        // return $request;
         $statusSlik = false;
         $find = array('Rp ', '.', ',');
 
@@ -2694,6 +2697,7 @@ class NewDagulirController extends Controller
         try {
             $find = array('Rp.', '.', ',');
             $id_pengajuan = $pengajuanModel->id;
+            $npwp = null;
             if ($pengajuanModel->skema_kredit == 'Dagulir') {
                 if ($request->has('dagulir_id')) {
                     $pengajuan = PengajuanDagulir::find($request->dagulir_id);
@@ -2728,6 +2732,8 @@ class NewDagulirController extends Controller
                         if (array_key_exists('79', $request->informasi)) {
                             $npwp = str_replace(['.','-'], '', $request->informasi[79]);
                         }
+                    } else {
+                        $npwp = null;
                     }
                     $pengajuan->npwp = $npwp;
                     $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
@@ -2914,89 +2920,112 @@ class NewDagulirController extends Controller
                                         'updated_at' => now(),
                                     ]);
                 }
-                $pengajuan->npwp = $npwp;
-                $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
-                $pengajuan->tanggal = now();
-                $pengajuan->status = 8;
-                $pengajuan->from_apps = 'pincetar';
+                // $pengajuan = DB::table('pengajuan')->where('id', $request->id_dagulir_temp)->first();
+                if ($pengajuanModel->skema_kredit == 'Dagulir') {
+                    if ($request->has('dagulir_id')) {
+                        $pengajuan = PengajuanDagulir::find($request->dagulir_id);
+                    } else {
+                        $pengajuan = PengajuanDagulir::find($pengajuanModel->dagulir_id);
+                    }
+                    $pengajuan->npwp = $npwp != null ? $npwp : null;
+                    $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
+                    $pengajuan->tanggal = now();
+                    $pengajuan->status = 8;
+                    $pengajuan->from_apps = 'pincetar';
+                }
             }
-            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
-            $pengajuan->hubungan_bank = $request->get('hub_bank');
-            $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
-            $pengajuan->desa_ktp = $request->get('desa');
-            $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
-            $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
-            $pengajuan->user_id = Auth::user()->id;
-            $pengajuan->status_pernikahan = $request->get('status');
-            $pengajuan->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
-            $pengajuan->created_at = now();
-            $pengajuan->save();
+            if ($pengajuanModel->skema_kredit == 'Dagulir') {
+                if ($request->has('dagulir_id')) {
+                    $pengajuan = PengajuanDagulir::find($request->dagulir_id);
+                } else {
+                    $pengajuan = PengajuanDagulir::find($pengajuanModel->dagulir_id);
+                }
+                $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
+                $pengajuan->hubungan_bank = $request->get('hub_bank');
+                $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
+                $pengajuan->desa_ktp = $request->get('desa');
+                $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
+                $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
+                $pengajuan->user_id = Auth::user()->id;
+                $pengajuan->status_pernikahan = $request->get('status');
+                $pengajuan->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
+                $pengajuan->created_at = now();
+                $pengajuan->save();
 
-            $dagulir_id = $pengajuan->id;
+
+                $dagulir_id = $pengajuan->id;
+                $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
+            } else {
+                $pengajuan = CalonNasabah::find($request->id_nasabah);
+                $update_pengajuan = CalonNasabah::find($pengajuan->id);
+            }
+
+
 
             $id_pengajuan = $pengajuanModel->id;
 
-            $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
-            // foto nasabah
-            if ($request->has('foto_nasabah')) {
-                // Delete current image
-                $current = $update_pengajuan->foto_nasabah;
-                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
-                if (file_exists($path_file)) {
-                    @unlink($path_file);
-                }
+            if ($pengajuanModel->skema_kredit == 'Dagulir') {
+                // foto nasabah
+                if ($request->has('foto_nasabah')) {
+                    // Delete current image
+                    $current = $update_pengajuan->foto_nasabah;
+                    $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                    if (file_exists($path_file)) {
+                        @unlink($path_file);
+                    }
 
-                // Update new image
-                $image = $request->file('foto_nasabah');
-                $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $image->move($filePath, $fileNameNasabah);
-                $update_pengajuan->foto_nasabah = $fileNameNasabah;
+                    // Update new image
+                    $image = $request->file('foto_nasabah');
+                    $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $image->move($filePath, $fileNameNasabah);
+                    $update_pengajuan->foto_nasabah = $fileNameNasabah;
 
+                }
+                if ($request->has('ktp_pasangan')) {
+                    // Delete current image
+                    $current = $update_pengajuan->ktp_pasangan;
+                    $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                    if (file_exists($path_file)) {
+                        @unlink($path_file);
+                    }
+
+                    // Update new image
+                    $image = $request->file('ktp_pasangan');
+                    $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $image->move($filePath, $fileNamePasangan);
+                    $update_pengajuan->foto_pasangan = $fileNamePasangan;
+
+                }
+                if ($request->has('ktp_nasabah')) {
+                    // Delete current image
+                    $current = $update_pengajuan->ktp_nasabah;
+                    $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                    if (file_exists($path_file)) {
+                        @unlink($path_file);
+                    }
+
+                    // Update new image
+                    $image = $request->file('ktp_nasabah');
+                    $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                    $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+                    $image->move($filePath, $fileNameKtpNasabah);
+                    $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
+
+                }
+                // ktp nasabah
+                $update_pengajuan->update();
             }
-            if ($request->has('ktp_pasangan')) {
-                // Delete current image
-                $current = $update_pengajuan->ktp_pasangan;
-                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
-                if (file_exists($path_file)) {
-                    @unlink($path_file);
-                }
-
-                // Update new image
-                $image = $request->file('ktp_pasangan');
-                $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $image->move($filePath, $fileNamePasangan);
-                $update_pengajuan->foto_pasangan = $fileNamePasangan;
-
-            }
-            if ($request->has('ktp_nasabah')) {
-                // Delete current image
-                $current = $update_pengajuan->ktp_nasabah;
-                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
-                if (file_exists($path_file)) {
-                    @unlink($path_file);
-                }
-
-                // Update new image
-                $image = $request->file('ktp_nasabah');
-                $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $image->move($filePath, $fileNameKtpNasabah);
-                $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
-
-            }
-            // ktp nasabah
-            $update_pengajuan->update();
 
             $oldAnswer = JawabanTextModel::select('jawaban_text.*')
                                         ->join('item', 'item.id', 'jawaban_text.id_jawaban')

@@ -70,7 +70,7 @@
                     <div class="dropdown-menu-link hidden">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
-                                <a href="{{route('dana.dashboard')}}">
+                                <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
                                     <button class="item-dp-link">
                                         Dashboard
                                     </button>
@@ -123,7 +123,7 @@
                     <div class="dropdown-menu-link @active('dagulir,dagulir.*,dana-dashboard', '', 'hidden')">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
-                                <a href="{{route('dana.dashboard')}}">
+                                <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
                                     <button class="item-dp-link @active('dana.dashboard', 'active-item')">
                                         Dashboard
                                     </button>
@@ -324,7 +324,7 @@
                     <div class="dropdown-menu-link hidden">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
-                                <a href="{{route('dana.dashboard')}}">
+                                <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
                                     <button class="item-dp-link">
                                         Dashboard
                                     </button>

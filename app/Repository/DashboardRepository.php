@@ -157,8 +157,8 @@ class DashboardRepository
             'pengajuan.id',
             'users.name as nama',
             'users.nip',
-            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
-            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
+            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
+            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
         )
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         ->join('users', 'users.id', 'pengajuan.id_staf')->get();
@@ -705,16 +705,14 @@ class DashboardRepository
                     })
                     ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
                         return $query->where('tanggal', '<=', $tanggalAkhir);
+                    })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                        return $query->whereMonth('tanggal', now()->month);
                     });
             })
-            ->select(
-                DB::raw("COALESCE(COUNT(pengajuan.id), 0) AS total"),
-                // 'IFNULL(COUNT(pengajuan.id), 0) AS total',
-                'cabang.kode_cabang',
-                'cabang.cabang')
+            ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
-            ->whereMonth('tanggal', $bulan_sekarang)
+            // ->whereMonth('tanggal', $bulan_sekarang)
             ->orderByRaw('total DESC, cabang.kode_cabang ASC')
             ->limit(5)
             ->get();
@@ -727,17 +725,15 @@ class DashboardRepository
                     })
                     ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
                         return $query->where('tanggal', '<=', $tanggalAkhir);
+                    })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                        return $query->whereMonth('tanggal', now()->month);
                     });
             })
-            ->select(
-                'cabang.kode_cabang',
-                'cabang.cabang',
-                DB::raw("COALESCE(COUNT(pengajuan.id), 0) AS total"))
+            ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             // ->where('pengajuan.posisi', 'Selesai')
             ->whereNull('pengajuan.deleted_at')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
-            ->whereMonth('tanggal', $bulan_sekarang)
             ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
             ->limit(5)
             ->get();

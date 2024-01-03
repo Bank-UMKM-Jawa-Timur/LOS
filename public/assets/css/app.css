@@ -448,15 +448,22 @@ video {
     .table-responsive {
   overflow-x: auto;
 }
-    .tables {
+    table.tables {
   width: 100%;
   border-collapse: collapse;
   border-width: 1px;
-  border-left-width: 0px;
-  border-right-width: 0px;
 }
-    .tables th,
-    td {
+    table.tables th {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    table.tables td {
   border-top-width: 1px;
   border-bottom-width: 1px;
   padding: 0.5rem;
@@ -467,14 +474,22 @@ video {
   color: rgb(85 85 85 / var(--tw-text-opacity));
 }
 
-    .table-posisi {
+    table.table-posisi {
   width: 100%;
   border-collapse: collapse;
   border-width: 1px;
 }
 
-    .table-posisi th,
-    td {
+    table.table-posisi th {
+  border-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    table.table-posisi td {
   border-width: 1px;
   padding: 0.5rem;
   text-align: center;
@@ -2100,6 +2115,9 @@ video {
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+.flex-col {
+  flex-direction: column;
+}
 .flex-wrap {
   flex-wrap: wrap;
 }
@@ -2835,6 +2853,11 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
 .duration-150 {
   transition-duration: 150ms;
 }
@@ -2945,6 +2968,11 @@ video {
   background-color: rgb(185 28 28 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-theme-primary:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 53 69 / var(--tw-bg-opacity));
+}
+
 .hover\:text-gray-500:hover {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
@@ -2958,6 +2986,11 @@ video {
 .hover\:text-gray-800:hover {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .focus\:border-blue-300:focus {
@@ -3229,6 +3262,10 @@ video {
     position: relative;
   }
 
+  .lg\:right-0 {
+    right: 0px;
+  }
+
   .lg\:right-32 {
     right: 8rem;
   }
@@ -3275,6 +3312,10 @@ video {
 
   .lg\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lg\:flex-row {
+    flex-direction: row;
   }
 
   .lg\:justify-start {
