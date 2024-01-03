@@ -69,6 +69,14 @@ class PembayaranController extends Controller
                 }
                 $result[] = $objects;
             }
+
+            foreach ($result as $key => $value) {
+                if ($value['HLACKY'] == 'PYSPI' || $value['HLACKY'] == 'PDYPI' || $value['HLACKY'] == "MRYPI+") {
+                    unset($result[$key]);
+                }
+
+            }
+
             // $body = [
             //     'file_json' => $txt_data,
             //     'dictionary' => $fieldPositions

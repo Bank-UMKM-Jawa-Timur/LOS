@@ -31,7 +31,7 @@
             </form>
             @if ($data != null)
             <div class="table-responsive pl-5 pr-5">
-                <form action="{{ route('pembayaran.filter') }}" method="POST">
+                {{-- <form action="{{ route('pembayaran.filter') }}" method="POST">
                     @csrf
                     <div class="flex justify-end my-4">
                         <div class="form-group flex justify-center align-middle items-center" >
@@ -49,13 +49,13 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                </form> --}}
 
                 <table class="tables">
                     <thead>
                         <tr>
                             <th>No</th>
-                            {{-- <th>Tipe</th> --}}
+                            <th>Tipe</th>
                             <th>Sequence</th>
                             <th>No. Loan</th>
                             <th>Tanggal Pembayaran</th>
@@ -69,7 +69,7 @@
                         @foreach ($data as $key => $item)
                         <tr>
                             <td>{{ $no++ }}</td>
-                            {{-- <td>{{ $item['HLACKY'] }}</td> --}}
+                            <td>{{ $item['HLACKY'] }}</td>
                             <td>{{ $item['HLSEQN'] }}</td>
                             <td>{{ $item['HLLNNO'] }}</td>
                             <td>{{ $item['HLDTVL'] }}</td>
