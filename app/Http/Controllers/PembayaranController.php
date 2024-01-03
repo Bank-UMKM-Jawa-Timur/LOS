@@ -46,6 +46,15 @@ class PembayaranController extends Controller
                 $file->storeAs('dictionary/',$filename);
             }
             $theArray = Excel::toCollection([], storage_path('app/dictionary/').'dictionary.xlsx');
+            // end process file_dic
+            //start file_nomi
+            // if ($request->has('file_nomi')) {
+            //     $file_nomi = $request->file('file_nomi');
+            //     $filename = 'nomi'.'.'.$file_nomi->extension();
+            //     $file_nomi->storeAs('file-nomi/',$filename);
+            // }
+            // $theArrayNomi = Excel::toCollection([],storage_path('app/file-nomi'));
+            //end file_nomi
             for ($i=0; $i < count($theArray[0]); $i++) {
                 // Sequence(HLSEQN) | No. Loan(HLLNNO) | Tanggal Pembayaran(HLDTVL) | Nominal(HLOPMT)
                 if ($i > 4) {
@@ -58,18 +67,26 @@ class PembayaranController extends Controller
 
             }
 
-            $result = array();
-            for ($i = 0; $i < count($txt_data); $i++) {
-                $val = trim($txt_data[$i]);
-                $objects = array();
-                foreach ($fieldPositions as $j) {
-                    $value = substr($val, $j['from']-1, $j['to']-$j['from']+1);
-                    $value = ltrim(rtrim($value));
-                    $objects[$j['field']] = $value;
-                }
-                $result[] = $objects;
-            }
+            // $result = array();
+            // for ($i = 0; $i < count($txt_data); $i++) {
+            //     $val = trim($txt_data[$i]);
+            //     $objects = array();
+            //     foreach ($fieldPositions as $j) {
+            //         $value = substr($val, $j['from']-1, $j['to']-$j['from']+1);
+            //         $value = ltrim(rtrim($value));
+            //         $objects[$j['field']] = $value;
+            //     }
+            //     $result[] = $objects;
+            // }
 
+
+            $body = [
+                'file_json' => $txt_data,
+                'dictionary' => $fieldPositions
+            ];
+            $pembayaran = Http::post(env('EXTRACT_HOST').'/pembayaran', $body)->json();
+
+            $result = $pembayaran['data'];
             foreach ($result as $key => $value) {
                 if ($value['HLACKY'] == 'PYSPI' || $value['HLACKY'] == 'PDYPI' || $value['HLACKY'] == "MRYPI+") {
                     $result[$key];
@@ -78,12 +95,6 @@ class PembayaranController extends Controller
                 }
 
             }
-
-            // $body = [
-            //     'file_json' => $txt_data,
-            //     'dictionary' => $fieldPositions
-            // ];
-            // $pembayaran = Http::post('http://127.0.0.1:5001'.'/pembayaran', $body)->json();
 
             // return view('pembayaran.upload',['data' => $pembayaran['data']]);
             return view('pembayaran.upload',['data' => $result]);
