@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DanaCabang;
 use App\Models\MasterDana;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardKreditProgramController extends Controller
 {

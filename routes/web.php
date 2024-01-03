@@ -180,7 +180,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/get-detail', [NotificationController::class, 'getDetail'])->name('getDetail');
             });
     });
-    Route::middleware(['KreditProgram'])->group(function () {
+    Route::middleware(['auth'])->group(function () {
             // Dashboard Dana
             Route::get('dashboard-dana',[DashboardKreditProgramController::class,'index'])->name('dana.dashboard');
             // Master Dana
