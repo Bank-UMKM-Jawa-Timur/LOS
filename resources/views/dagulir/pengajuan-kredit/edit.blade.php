@@ -154,7 +154,11 @@ $dataIndex = match ($skema) {
                                                     @endphp
                                                     @if ($file)
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                                            data-title="{{$itemNIB->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemNIB->id}}/{{$file}}">Preview</a>
+                                                            data-title="{{$itemNIB->nama}}"
+                                                            data-type="image"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id_jawaban}/{$file}") }}"
+                                                            >Preview
+                                                        </a>
                                                     @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
@@ -192,7 +196,11 @@ $dataIndex = match ($skema) {
                                                     @endphp
                                                     @if ($file)
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                                            data-title="Dokumen Surat Keterangan Usaha" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemSKU->id}}/{{$file}}">Preview</a>
+                                                            data-title="Dokumen Surat Keterangan Usaha"
+                                                            data-type="image"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemSKU->id_jawaban}/{$file}") }}"
+                                                            >Preview
+                                                        </a>
                                                     @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
                                                         id="docSKU_id">
@@ -229,7 +237,11 @@ $dataIndex = match ($skema) {
                                                     @endphp
                                                     @if ($file)
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                                            data-title="{{ $itemNPWP->nama }}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemNPWP ->id}}/{{$file}}">Preview</a>
+                                                            data-title="{{ $itemNPWP->nama }}"
+                                                            data-type="image"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNPWP->id}/{$file}") }}"
+                                                            >Preview
+                                                        </a>
                                                     @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
@@ -343,11 +355,17 @@ $dataIndex = match ($skema) {
                                                         <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp, .pdf)</small>
                                                         @php
                                                             $file = edit_text_dagulir($pengajuan->id, $itemNIB->id)?->opsi_text;
+                                                            $is_multiple = $item->is_multiple;
+                                                            $files = edit_text_dagulir($pengajuan->id, $item->id, $is_multiple);
                                                         @endphp
-                                                        @if ($file)
-                                                            <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                                                data-title="{{$item->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemNIB->id}}/{{$file}}">Preview</a>
-                                                        @endif
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                            data-title="{{$item->nama}}"
+                                                            data-type="image"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id}/{$file}") }}"
+                                                            >Preview
+                                                        </a>
+                                                        {{-- @if ($file)
+                                                        @endif --}}
                                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
                                                                         id="{{ $idLevelDua }}"> --}}
                                                         <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
@@ -544,7 +562,11 @@ $dataIndex = match ($skema) {
                                                                     @foreach ($files as $f)
                                                                         @if ($f)
                                                                             <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                                                                data-title="{{$itemTiga->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemTiga->id}}/{{$f->opsi_text}}">Preview</a>
+                                                                                data-title="{{$itemTiga->nama}}"
+                                                                                data-type="image"
+                                                                                data-filepath="{{ asset("../upload/{$pengajuan?->id}/{$itemTiga->id}/{$f->opsi_text}") }}"
+                                                                                >Preview
+                                                                            </a>
                                                                         @endif
                                                                         <div class="input-box mb-4">
                                                                             <div class="flex gap-4">
@@ -571,7 +593,11 @@ $dataIndex = match ($skema) {
                                                                 @else
                                                                     @if ($files)
                                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                                                            data-title="{{$itemTiga->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemTiga->id}}/{{$files->opsi_text}}">Preview</a>
+                                                                            data-title="{{$itemTiga->nama}}"
+                                                                            data-type="image"
+                                                                            data-filepath="{{ asset("../upload/{$pengajuan?->id}/{$itemTiga->id}/{$files->opsi_text}") }}"
+                                                                            >Preview
+                                                                        </a>
                                                                     @endif
                                                                     <div class="input-box mb-4">
                                                                         <div class="flex gap-4">

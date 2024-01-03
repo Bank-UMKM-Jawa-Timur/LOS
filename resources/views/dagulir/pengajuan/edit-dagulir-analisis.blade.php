@@ -43,9 +43,16 @@
                         $jawabanFotoSP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id_pengajuan)
                             ->where('id_jawaban', 145)
                             ->first();
+                        // dd($pengajuan);
                     @endphp
                     <input type="hidden" name="id_file_text[]" value="{{ $itemSP->id }}">
                     <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP?->opsi_text }}</label>
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                        data-title="{{ $itemSP->nama }}"
+                        data-type="image"
+                        data-filepath="{{ asset("../upload/{$pengajuan->id}/{$jawabanFotoSP->id_jawaban}/{$jawabanFotoSP->opsi_text}") }}">
+                        Preview
+                    </a>
                     <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}"
                         id="surat_permohonan" placeholder="Masukkan informasi {{ $itemSP?->nama }}"
                         class="form-input limit-size">
@@ -235,7 +242,11 @@
                         <label for="">Foto KTP Nasabah</label>
                         @if ($jawabanFotoKTPNas->opsi_text)
                             <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                                data-title="Foto KTP Nasabah" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$dataUmum->id}}/{{$jawabanFotoKTPNas?->opsi_text}}">Preview</a>
+                                data-title="Foto KTP Nasabah"
+                                data-type="image"
+                                data-filepath="{{asset("../upload/{$jawabanFotoKTPNas->id_pengajuan}/{$jawabanFotoKTPNas->id_jawaban}/{$jawabanFotoKTPNas->opsi_text}")}}"
+                                >Preview
+                            </a>
                         @endif
                         <input type="hidden" name="id_file_text[]" value="{{ $itemKTPNas->id }}" id="">
                         @if (isset($jawabanFotoKTPNas->opsi_text) != null)
@@ -378,8 +389,13 @@
                             ->where('id_jawaban', 146)
                             ->first();
                     @endphp
-                    <label for="">Laporan SLIK</label> <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                    data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}">Preview</a>
+                    <label for="">Laporan SLIK</label>
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                        data-title="{{$itemP->nama}}"
+                        data-type="pdf"
+                        data-filepath="{{ asset("../upload/{$pengajuan->id}/{$jawabanLaporanSlik->id_jawaban}/{$jawabanLaporanSlik->opsi_text}") }}">
+                        Preview
+                    </a>
                     <input type="hidden" name="id_file_text[]" value="146" id="">
                     <label for="update_file" style="display: none"
                         id="nama_file">{{ $jawabanLaporanSlik?->opsi_text }}</label>
