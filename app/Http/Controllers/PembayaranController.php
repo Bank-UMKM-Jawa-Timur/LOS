@@ -106,7 +106,7 @@ class PembayaranController extends Controller
             'file_json' => $txt_data,
             'dictionary' => $fieldPositions
         ];
-        $pembayaran = Http::post('http://127.0.0.1:5001'.'/pembayaran', $body)->json();
+        $pembayaran = Http::post(env('EXTRA_HOST').'/pembayaran', $body)->json();
 
         foreach ($pembayaran['data'] as $key => $value) {
             if ($request->get('filter') != '0') {
