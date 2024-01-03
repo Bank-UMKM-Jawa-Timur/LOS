@@ -2025,7 +2025,7 @@ class PengajuanKreditController extends Controller
                 }
             }
 
-            dd($request->id_text, $request->id_jawaban_text);
+            // dd($request->id_text, $request->id_jawaban_text);
             // dd($finalArray_text);
             // return $finalArray_text;
             for ($i = 0; $i < count($request->id_text); $i++) {
@@ -3892,7 +3892,7 @@ class PengajuanKreditController extends Controller
     }
 
     public function kembalikanDataKePosisiSebelumnya(Request $request){
-        // dd($request);
+        // return $request;
         DB::beginTransaction();
         try{
             $dataPengajuan = PengajuanModel::find($request->id);
@@ -3956,6 +3956,7 @@ class PengajuanKreditController extends Controller
 
             event(new EventMonitoring('kembalikan data pengajuan'));
 
+            alert()->success('Berhasil mengembalikan data ke ' . $ke . '.');
             return redirect()->back()->withStatus('Berhasil mengembalikan data ke ' . $ke . '.');
         } catch(Exception $e){
             DB::rollBack();

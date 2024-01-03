@@ -156,12 +156,16 @@
             },
             success: function(res){
                 $(`#row-read${id}`).html('Dibaca')
-                $("#field-kode_sipde").html(res.data.kode_pendaftaran)
+                if (res.data.skema_kredit == 'Dagulir') {
+                    $("#field-kode_sipde").html(res.data.kode_pendaftaran)
+                } else {
+                    $("#kode_sipde").addClass('hidden')
+                }
                 $("#field-nama").html(res.data.nama)
                 $("#field-tanggal_pengajuan").html(res.data.tanggal_pengajuan)
                 $("#field-jenis_usaha").html(res.data.jenis_usaha)
                 $("#field-tipe_pengajuan").html(res.data.tipe_pengajuan)
-                $("#field-plafon").html(res.data.nominal)
+                $("#field-plafon").html(new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(res.data.nominal));
                 $("#field-tenor").html(res.data.jangka_waktu + " Bulan")
 
                 $(targetModal).removeClass('hidden');

@@ -47,7 +47,6 @@ $(document).click(function (e) {
 $(".open-modal").on("click", function () {
   $(".modal").css("animation", "swipe-in 0.4s ease-in-out");
   $(".modal-layout").css("animation", "opacity-in 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)");
-  $(".modal-layout-no-backdrop").css("animation", "opacity-in 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)");
   var modalId = $(this).data("modal-id");
   $("#" + modalId).removeClass("hidden");
 });
@@ -86,7 +85,6 @@ $("[data-dismiss-id]").on("click", function () {
   setTimeout(function () {
     $(".modal").css("animation", "swipe-out 0.2s ease-in-out");
     $(".modal-layout").css("animation", "opacity-out 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)");
-    $(".modal-layout-no-backdrop").css("animation", "opacity-out 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)");
   }, 200);
   setTimeout(function () {
     $("#" + dismissId).addClass("hidden");
