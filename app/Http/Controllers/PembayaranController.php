@@ -109,8 +109,10 @@ class PembayaranController extends Controller
         $pembayaran = Http::post('http://127.0.0.1:5001'.'/pembayaran', $body)->json();
 
         foreach ($pembayaran['data'] as $key => $value) {
-            if ($value['HLACKY'] != $request->get('filter')) {
-                unset($pembayaran['data'][$key]);
+            if ($request->get('filter') != '0') {
+                if ($value['HLACKY'] != $request->get('filter')) {
+                    unset($pembayaran['data'][$key]);
+                }
             }
 
         }

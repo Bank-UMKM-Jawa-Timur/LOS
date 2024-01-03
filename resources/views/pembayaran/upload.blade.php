@@ -38,7 +38,7 @@
                             <div class="input-box">
                                 <label for="">Filter</label>
                                 <select name="filter" class="form-select" id="">
-                                    <option value="">Pilih Filter</option>
+                                    <option value="0">Pilih Filter</option>
                                     <option value="PYSPI" {{ request('filter') == 'PYSPI' ? 'selected' : ' ' }}>PYSPI</option>
                                     <option value="PDYPI" {{ request('filter') == 'PDYPI' ? 'selected' : ' ' }}>PDYPI</option>
                                     <option value="MRYPI+" {{ request('filter') == 'MRYPI+' ? 'selected' : ' ' }}>MRYPI+</option>
@@ -54,7 +54,8 @@
                 <table class="tables">
                     <thead>
                         <tr>
-                            <th>Tipe</th>
+                            <th>No</th>
+                            {{-- <th>Tipe</th> --}}
                             <th>Sequence</th>
                             <th>No. Loan</th>
                             <th>Tanggal Pembayaran</th>
@@ -62,13 +63,17 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $no = 1;
+                        @endphp
                         @foreach ($data as $key => $item)
                         <tr>
-                            <td>{{ $item['HLACKY'] }}</td>
+                            <td>{{ $no++ }}</td>
+                            {{-- <td>{{ $item['HLACKY'] }}</td> --}}
                             <td>{{ $item['HLSEQN'] }}</td>
                             <td>{{ $item['HLLNNO'] }}</td>
                             <td>{{ $item['HLDTVL'] }}</td>
-                            <td>{{ $item['HLORMT'] }}</td>
+                            <td>{{ number_format($item['HLORMT'],0,".",".") }}</td>
                         </tr>
                         @endforeach
                     </tbody>
