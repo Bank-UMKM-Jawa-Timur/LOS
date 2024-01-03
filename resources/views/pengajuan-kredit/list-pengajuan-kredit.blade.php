@@ -3,6 +3,7 @@
 @section('modal')
     @include('pengajuan-kredit.modal.new-modal-filter')
     @include('components.new.modal.loading')
+    @include('pengajuan-kredit.modal.modal-kembalikan-new')
 @endsection
 
 @section('content')
@@ -352,8 +353,8 @@
                                                     Review
                                                 </li>
                                             </a>
-                                            <a href="#" class="w-full cursor-pointer">
-                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
+                                            <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                <li class="item-tb-dropdown open-modal">
                                                     Kembalikan ke Staff
                                                 </li>
                                             </a>
@@ -396,8 +397,8 @@
                                                     Review
                                                 </li>
                                             </a>
-                                            <a class="w-full cursor-pointer" href="#">
-                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
+                                            <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                <li class="item-tb-dropdown open-modal">
                                                     Kembalikan ke Staff
                                                 </li>
                                             </a>
@@ -493,6 +494,21 @@
     $('.review-penyelia').on('click', function(){
         $("#preload-data").removeClass("hidden");
     })
+    $('.btn-kembalikan').on('click', function(){
+        $("#modalKembalikan").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+
+    })
+
+    $('.kembalikan_pengajuan').on('click', function(){
+        console.log('Masuk cok');
+        const target = '#modalKembalikan';
+        const id = $(this).data('id');
+        const backto = $(this).data('backto')
+
+        $(`${target} #id_pengajuan`).val(id)
+        $(`${target} #text_backton`).html(backto)
+        $(`${target}`).removeClass('hidden')
+    })
 </script>
 @endpush
-@include('pengajuan-kredit.modal.modal-kembalikan')

@@ -312,6 +312,11 @@
                                                             Edit data
                                                         </li>
                                                     </a>
+                                                    <a href="#" onclick="showTindakLanjut({{ $item->id }},'penyelia kredit')" class="w-full cursor-pointer">
+                                                        <li class="item-tb-dropdown">
+                                                            Tindak lanjut Review Penyelia
+                                                        </li>
+                                                    </a>
                                                     @if ($item->average_by_sistem)
                                                         @if (!$item->id_penyelia)
                                                             <a href="#" onclick="showTindakLanjut({{ $item->id }},'penyelia kredit')" class="w-full cursor-pointer">
@@ -449,7 +454,7 @@
                                                         <a href="{{ route('dagulir.detailjawaban_pincab', $item->id) }}"
                                                             class="w-full cursor-pointer review-pincab">
                                                             <li class="item-tb-dropdown">
-                                                                    Review
+                                                                Review
                                                             </li>
                                                         </a>
                                                         <a href="#" class="w-full cursor-pointer">

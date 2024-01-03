@@ -448,15 +448,22 @@ video {
     .table-responsive {
   overflow-x: auto;
 }
-    .tables {
+    table.tables {
   width: 100%;
   border-collapse: collapse;
   border-width: 1px;
-  border-left-width: 0px;
-  border-right-width: 0px;
 }
-    .tables th,
-    td {
+    table.tables th {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    table.tables td {
   border-top-width: 1px;
   border-bottom-width: 1px;
   padding: 0.5rem;
@@ -467,14 +474,22 @@ video {
   color: rgb(85 85 85 / var(--tw-text-opacity));
 }
 
-    .table-posisi {
+    table.table-posisi {
   width: 100%;
   border-collapse: collapse;
   border-width: 1px;
 }
 
-    .table-posisi th,
-    td {
+    table.table-posisi th {
+  border-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    table.table-posisi td {
   border-width: 1px;
   padding: 0.5rem;
   text-align: center;

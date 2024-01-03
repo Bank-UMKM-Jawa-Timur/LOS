@@ -3892,7 +3892,7 @@ class PengajuanKreditController extends Controller
     }
 
     public function kembalikanDataKePosisiSebelumnya(Request $request){
-        // dd($request);
+        // return $request;
         DB::beginTransaction();
         try{
             $dataPengajuan = PengajuanModel::find($request->id);
@@ -3956,6 +3956,7 @@ class PengajuanKreditController extends Controller
 
             event(new EventMonitoring('kembalikan data pengajuan'));
 
+            alert()->success('Berhasil mengembalikan data ke ' . $ke . '.');
             return redirect()->back()->withStatus('Berhasil mengembalikan data ke ' . $ke . '.');
         } catch(Exception $e){
             DB::rollBack();
