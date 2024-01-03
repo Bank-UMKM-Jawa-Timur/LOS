@@ -72,6 +72,8 @@ class PembayaranController extends Controller
 
             foreach ($result as $key => $value) {
                 if ($value['HLACKY'] == 'PYSPI' || $value['HLACKY'] == 'PDYPI' || $value['HLACKY'] == "MRYPI+") {
+                    $result[$key];
+                }else{
                     unset($result[$key]);
                 }
 
