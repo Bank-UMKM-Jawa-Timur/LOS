@@ -307,6 +307,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Pembayaran
     Route::get('pembayaran',[PembayaranController::class,'index'])->name('pembayaran.index');
     Route::post('pembayaran/post',[PembayaranController::class,'store'])->name('pembayaran.store');
+    Route::post('pembayaran/post/filter',[PembayaranController::class,'filter'])->name('pembayaran.filter');
 });
 
 require __DIR__ . '/auth.php';
