@@ -29,6 +29,7 @@ use App\Http\Controllers\DashboardDetailController;
 use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PembayaranController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -302,6 +303,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
 
     Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [PengajuanKreditController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
+
+    // Pembayaran
+    Route::get('pembayaran',[PembayaranController::class,'index'])->name('pembayaran.index');
+    Route::post('pembayaran/post',[PembayaranController::class,'store'])->name('pembayaran.store');
+    Route::post('pembayaran/post/filter',[PembayaranController::class,'filter'])->name('pembayaran.filter');
 });
 
 require __DIR__ . '/auth.php';
