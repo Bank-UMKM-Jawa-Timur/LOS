@@ -211,7 +211,7 @@
 
 @push('script-inject')
 <script>
-    
+
     // tab
     $(".tab-wrapper .btn-tab").click(function(e) {
         console.log(e);
