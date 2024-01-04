@@ -366,13 +366,13 @@
                                                             </a>
                                                         @if ($item->id_cabang == 1)
                                                                 @if ($userPBP)
-                                                                    <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
+                                                                    <a class="w-full cursor-pointer review-pbo-pbp" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
                                                                         <li class="item-tb-dropdown">
                                                                             Tindak Lanjut ke PBP
                                                                         </li>
                                                                     </a>
                                                                 @else
-                                                                <a class="w-full cursor-pointer review-pincab" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                                <a class="w-full cursor-pointer review-pbo-pbp" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                                     <li class="item-tb-dropdown">
                                                                         Tindak Lanjut ke Pincab
                                                                     </li>
@@ -430,7 +430,7 @@
     $('.review-pbo-pbp').on('click', function(){
         $("#preload-data").removeClass("hidden");
     })
-    $('.btn-kembalikan').on('click', function(){
+    $('.btn-kembalikan-pengajuan').on('click', function(){
         $("#modalKembalikan").addClass("hidden");
         $("#preload-data").removeClass("hidden");
 

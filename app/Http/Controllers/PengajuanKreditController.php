@@ -2822,6 +2822,7 @@ class PengajuanKreditController extends Controller
                     return redirect()->back()->withError('Belum di review PBP.');
                 }
             } else {
+                alert()->error('gagal', 'Tidak memiliki hak akses');
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
             DB::commit();
