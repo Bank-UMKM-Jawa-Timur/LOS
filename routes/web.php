@@ -306,8 +306,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Pembayaran
     Route::get('pembayaran',[PembayaranController::class,'index'])->name('pembayaran.index');
-    Route::post('pembayaran/post',[PembayaranController::class,'store'])->name('pembayaran.store');
-    Route::post('pembayaran/post/filter',[PembayaranController::class,'filter'])->name('pembayaran.filter');
+    Route::post('pembayaran/upload',[PembayaranController::class,'upload'])->name('pembayaran.upload');
+    Route::get('pembayaran/check-data',[PembayaranController::class,'store'])->name('pembayaran.store');
 });
 
 require __DIR__ . '/auth.php';

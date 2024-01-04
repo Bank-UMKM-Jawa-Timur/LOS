@@ -340,6 +340,12 @@
                                     <button class="item-dp-link">Laporan</button>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('pembayaran.index') }}">
+                                    <button class="item-dp-link">Pembayaran</button>
+                                </a>
+                            </li>
+
                         </ul>
                     </div>
                     <li class="menu-item">
