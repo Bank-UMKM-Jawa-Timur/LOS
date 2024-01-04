@@ -2004,18 +2004,18 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBP</label>
-                                            <input type="text" class="form-input rupiah" name="plafon_usulan_pbp" value="">
+                                            <input type="text" class="form-input rupiah" name="plafon_usulan_pbp" value="{{ number_format($plafonUsulan?->plafon_usulan_pbp ?? '-', 0, ',', '.') }}">
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan PBP</label>
-                                            <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="">
+                                            <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ?? '-' }}">
                                         </div>
                                     </div>
                                     <div class="form-group-1 pl-3">
                                         <label for="">Pendapat dan Usulan PBP</label>
                                         <textarea name="komentar_pbp_keseluruhan"
                                             class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
-                                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" ></textarea>
+                                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ $dataKomentar->komentar_pbp ? $dataKomentar->komentar_pbp : '' }}</textarea>
                                         @error('komentar_pbp_keseluruhan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
