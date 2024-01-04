@@ -2361,6 +2361,7 @@ class PengajuanKreditController extends Controller
                 ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
                 ->select('users.nip', 'alasan_pengembalian_data.*')
                 ->get();
+            $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
             return view('new-pengajuan.detail-pengajuan-jawaban', $param);
         } else {

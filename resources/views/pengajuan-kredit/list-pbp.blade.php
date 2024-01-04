@@ -2,6 +2,7 @@
 
 @section('modal')
     @include('pengajuan-kredit.modal.new-modal-filter')
+    @include('components.new.modal.loading')
     @include('pengajuan-kredit.modal.modal-kembalikan-new')
 @endsection
 
