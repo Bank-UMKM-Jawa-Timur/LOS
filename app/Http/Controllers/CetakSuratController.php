@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Spatie\PdfToImage\Pdf as PdfToImage;
 
 class CetakSuratController extends Controller
 {
@@ -19,7 +20,7 @@ class CetakSuratController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // protected $param;
+    protected $param;
     protected $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     public function index()
     {
@@ -98,17 +99,59 @@ class CetakSuratController extends Controller
     public function cetak($id)
     {
         $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
-                                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
-                                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
-                                        ->join('desa','desa.id','calon_nasabah.id_desa')
-                                        ->where('calon_nasabah.id_pengajuan',$id)
-                                        ->first();
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
-                                        ->find($id);
+        $dataNasabah = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+                    ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+                    ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+                    ->join('desa','desa.id','calon_nasabah.id_desa')
+                    ->where('calon_nasabah.id_pengajuan',$id)
+                    ->first();
+        $param['dataNasabah'] = $dataNasabah;
+        $dataUmum = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+                        ->find($id);
+        $param['dataUmum'] = $dataUmum;
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+        $itemSP = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+        $param['itemSP'] = $itemSP;
 
-        return view('cetak.cetak-surat', $param);
+        $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+        ->where('level', 2)
+        ->where('id_parent', $itemSP->id)
+        ->where('nama', 'Laporan SLIK')
+        ->get();
+
+        foreach ($dataLS as $key => $value) {
+            if ($value->opsi_jawaban == 'file') {
+                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                ->where('jawaban_text.id_jawaban', $value->id)
+                ->get();
+
+                foreach ($dataDetailJawabanText as $key => $value2) {
+                    $pdfPath = asset('upload/' . $dataUmum->id . '/' . $value2->id_item . '/' . $value2->opsi_text);
+                }
+            }
+        }
+
+        // $pdf = new PdftoImage($pdfPath);
+
+        // $outputImagePath = public_path('file_lainnya/' . $dataUmum->id);
+        // if (!file_exists($outputImagePath)) {
+        //     mkdir($outputImagePath, 0777, true);
+        // }
+
+        // foreach (range(1, $pdf->getNumberOfPages()) as $pageNumber) {
+        //     $imagePath = $outputImagePath . '/slik_image_' . $pageNumber . '.png';
+        //     if (!file_exists($imagePath)) {
+        //         $pdf->setPage($pageNumber)->saveImage($imagePath);
+        //     }
+        // }
+
+        return view('cetak.cetak-surat-kusuma', $param);
+        // if ($dataUmum->skema_kredit == "Kusuma") {
+        // } else {
+            // return view('cetak.cetak-surat', $param);
+        // }
     }
 
     public function cetakSPPk($id)

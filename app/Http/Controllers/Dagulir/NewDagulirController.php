@@ -2570,13 +2570,14 @@ class NewDagulirController extends Controller
 
         // return $param['dataUmum'];
         if ($dataUmum->skema_kredit == "Kusuma") {
-            return view('dagulir.cetak.cetak-surat-kusuma', $param);
+            // return view('dagulir.cetak.cetak-surat-kusuma', $param);
+            $pdf = PDF::loadView('dagulir.cetak.cetak-surat-kusumasurat', $param);
         } else {
-            return view('dagulir.cetak.cetak-surat', $param);
+            // return view('dagulir.cetak.cetak-surat', $param);
+            $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
         }
-
-        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
         return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
+
     }
 
     public function cetakLampiranAnalisa($id_pengajuan) {
