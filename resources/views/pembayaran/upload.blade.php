@@ -24,10 +24,10 @@
                         <label for="">Dictionary</label>
                         <input type="file" name="file_dic" class="form-input" id="">
                     </div>
-                    {{-- <div class="input-box">
+                    <div class="input-box">
                         <label for="">Nomi</label>
                         <input type="file" name="file_nomi" class="form-input" id="">
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="flex justify-end my-5 py-4">
                     <button class="px-5 py-2 border rounded bg-theme-primary text-white">Check File</button>
@@ -35,26 +35,6 @@
             </form>
             @if ($data != null)
             <div class="table-responsive pl-5 pr-5">
-                {{-- <form action="{{ route('pembayaran.filter') }}" method="POST">
-                    @csrf
-                    <div class="flex justify-end my-4">
-                        <div class="form-group flex justify-center align-middle items-center" >
-                            <div class="input-box">
-                                <label for="">Filter</label>
-                                <select name="filter" class="form-select" id="">
-                                    <option value="0">Pilih Filter</option>
-                                    <option value="PYSPI" {{ request('filter') == 'PYSPI' ? 'selected' : ' ' }}>PYSPI</option>
-                                    <option value="PDYPI" {{ request('filter') == 'PDYPI' ? 'selected' : ' ' }}>PDYPI</option>
-                                    <option value="MRYPI+" {{ request('filter') == 'MRYPI+' ? 'selected' : ' ' }}>MRYPI+</option>
-                                </select>
-                            </div>
-                            <div class="items-center mt-8 mx-2">
-                                <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white">Filter Data</button>
-                            </div>
-                        </div>
-                    </div>
-                </form> --}}
-
                 <table class="tables">
                     <thead>
                         <tr>
@@ -63,6 +43,7 @@
                             <th>No. Loan</th>
                             <th>Tanggal Pembayaran</th>
                             <th>Nominal</th>
+                            <th>Kolek</th>
                             <th>Tipe</th>
                         </tr>
                     </thead>
@@ -80,6 +61,7 @@
                             <td>{{ $item['HLLNNO'] }}</td>
                             <td>{{ date('d-m-Y',$date) }}</td>
                             <td>{{ number_format((int)$item['HLORMT'] / 100,2,",",".") }}</td>
+                            <td>{{ $item['kolek'] }}</td>
                             <td>{{ $item['HLACKY'] }}</td>
                         </tr>
                         @endforeach
