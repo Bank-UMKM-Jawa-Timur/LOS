@@ -1733,16 +1733,28 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1">
-                                            <h4 class="font-semibold text-base" for=""> Penyelia Kredit</h4>
-                                            <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
+                                        {{-- <div class="form-group-2"> --}}
+                                            {{-- <h4 class="font-semibold text-base" for=""> Penyelia Kredit</h4>
+                                            <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p> --}}
+                                        {{-- </div>  --}}
                                     @elseif (Auth::user()->role == 'Pincab')
                                         @php
                                             $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
                                                 ->where('id_aspek', $value->id)
                                                 ->where('id_pbp', Auth::user()->id)
                                                 ->first();
+
+                                            $plafon_usulan = DB::table('plafon_usulan')->where('id_pengajuan', $dataUmum->id)->first();
                                         @endphp
                                         <div class="form-group-2">
                                             <div class="field-review">
@@ -1823,7 +1835,7 @@
                             <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
                         </div>
                         @php
-                            $dataKomentar = \App\Models\KomentarModel::select('id','id_pengajuan','komentar_pincab','id_pincab','komentar_staff','id_staff','komentar_penyelia','id_penyelia')
+                            $dataKomentar = \App\Models\KomentarModel::select('id','id_pengajuan','komentar_pincab','id_pincab','komentar_staff','id_staff','komentar_penyelia','id_penyelia', 'komentar_pbo', 'id_pbo', 'komentar_pbp', 'id_pbp')
                                     ->where('id_pengajuan',$dataUmum->id)
                                     ->first();
                             $dataPlafon = \App\Models\PlafonUsulan::select('id','id_pengajuan','plafon_usulan_penyelia','jangka_waktu_usulan_penyelia')
@@ -1916,18 +1928,18 @@
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
-                                                <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="">
+                                                <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="{{ number_format($plafonUsulan?->plafon_usulan_pbo ?? '-', 0, ',', '.') }}">
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan PBO</label>
-                                                <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="">
+                                                <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbo ?? '-' }}">
                                             </div>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan PBO</label>
                                             <textarea name="komentar_pbo_keseluruhan"
                                                 class="form-input @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" ></textarea>
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ $dataKomentar->komentar_pbo ? $dataKomentar->komentar_pbo : '' }}</textarea>
                                             @error('komentar_pbo_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}

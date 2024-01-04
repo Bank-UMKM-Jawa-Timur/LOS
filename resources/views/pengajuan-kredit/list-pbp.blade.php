@@ -368,16 +368,16 @@
                                                                 @if ($userPBP)
                                                                     <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
                                                                         <li class="item-tb-dropdown">
-                                                                            Tidak Lanjut ke PBP
+                                                                            Tindak Lanjut ke PBP
                                                                         </li>
                                                                     </a>
+                                                                @else
+                                                                <a class="w-full cursor-pointer review-pincab" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Tindak Lanjut ke Pincab
+                                                                    </li>
+                                                                </a>
                                                                 @endif
-                                                            @else
-                                                            <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}">
-                                                                <li class="item-tb-dropdown">
-                                                                    Tindak lanjut Pincab
-                                                                </li>
-                                                            </a>
                                                             @endif
                                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                                 class="dropdown-item">
