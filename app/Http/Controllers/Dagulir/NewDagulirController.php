@@ -935,6 +935,7 @@ class NewDagulirController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
+        // return $request;
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') {
             DB::beginTransaction();
@@ -1178,7 +1179,12 @@ class NewDagulirController extends Controller
                 event(new EventMonitoring('review pengajuan'));
 
                 Alert::success('success', 'Berhasil Mereview');
-                return redirect()->route('dagulir.pengajuan.index');
+                if ($updateData->skema_kredit == 'Dagulir') {
+                    return redirect()->route('dagulir.pengajuan.index');
+                } else {
+                    return redirect()->route('pengajuan-kredit.index');
+                }
+
             } catch (Exception $e) {
                 DB::rollBack();
                 alert()->error('error', $e->getMessage());
