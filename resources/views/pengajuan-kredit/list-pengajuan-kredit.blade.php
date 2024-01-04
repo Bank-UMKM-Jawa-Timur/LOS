@@ -501,13 +501,13 @@
     })
 
     $('.kembalikan_pengajuan').on('click', function(){
-        console.log('Masuk cok');
         const target = '#modalKembalikan';
         const id = $(this).data('id');
         const backto = $(this).data('backto')
+        console.log(backto);
 
         $(`${target} #id_pengajuan`).val(id)
-        $(`${target} #text_backton`).html(backto)
+        $(`${target} #text_backto`).html(backto)
         $(`${target}`).removeClass('hidden')
     })
 </script>
