@@ -22,6 +22,8 @@
                     <th>PBO</th>
                     <th>PBP</th>
                     <th>Pincab</th>
+                    <th>Disetujui</th>
+                    <th>Ditolak</th>
                 </thead>
                 <tbody>
                     @foreach ($cabang as $item)
@@ -32,6 +34,8 @@
                         <td>{{ $item->pbo }}</td>
                         <td>{{ $item->pbp }}</td>
                         <td>{{ $item->pincab }}</td>
+                        <td>{{ $item->disetujui }}</td>
+                        <td>{{ $item->ditolak }}</td>
                     </tr>
                     @endforeach
                 </tbody>

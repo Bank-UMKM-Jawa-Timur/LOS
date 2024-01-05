@@ -11,20 +11,33 @@ use Maatwebsite\Excel\Concerns\ToArray;
 class DashboardRepository
 {
     public function getDetailSkemaTotal(Request $request){
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
         $data = DB::table('cabang AS c')
         ->select(
             'c.kode_cabang',
             'c.cabang',
-            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ', 1, 0)) AS pkpj"),
-            DB::raw("SUM(IF(p.skema_kredit = 'KKB', 1, 0)) AS kkb"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh', 1, 0)) AS umroh"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra', 1, 0)) AS prokesra"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir', 1, 0)) AS dagulir"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma', 1, 0)) AS kusuma"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'PKPJ', 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'KKB', 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Talangan Umroh', 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Prokesra', 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Dagulir', 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Kusuma', 1, 0)) AS kusuma"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Selesai', 1, 0)) AS disetujui"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Ditolak', 1, 0)) AS ditolak")
         )
-        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            $join->on('c.id', '=', 'pengajuan.id_cabang')
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
+                })
+                ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
+                })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
+                });
+        })
         ->where('c.kode_cabang', '!=', 000)
-        ->whereNull('p.deleted_at')
         ->groupBy('c.kode_cabang', 'c.cabang')
         ->orderBy('c.kode_cabang')
         ->get();
@@ -33,23 +46,34 @@ class DashboardRepository
     }
 
     public function getDetailCabangTotal(Request $request){
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
         $data = DB::table('cabang AS c')
         ->select(
             'c.kode_cabang',
             'c.cabang',
-            DB::raw("SUM(IF(p.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'), 1, 0)) AS diproses"),
-            DB::raw("SUM(IF(p.posisi = 'Selesai', 1, 0)) AS disetujui"),
-            DB::raw("SUM(IF(p.posisi = 'Proses Input Data', 1, 0)) AS staf"),
-            DB::raw("SUM(IF(p.posisi = 'Review Penyelia', 1, 0)) AS penyelia"),
-            DB::raw("SUM(IF(p.posisi = 'PBO', 1, 0)) AS pbo"),
-            DB::raw("SUM(IF(p.posisi = 'PBP', 1, 0)) AS pbp"),
-            DB::raw("SUM(IF(p.posisi = 'Pincab', 1, 0)) AS pincab"),
-            DB::raw("SUM(IF(p.posisi = 'Ditolak', 1, 0)) AS ditolak"),
-            DB::raw("SUM(IF(p.id_cabang = c.id, 1, 0)) AS total")
+            DB::raw("SUM(IF(pengajuan.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'), 1, 0)) AS diproses"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Selesai', 1, 0)) AS disetujui"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Proses Input Data', 1, 0)) AS staf"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Review Penyelia', 1, 0)) AS penyelia"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'PBO', 1, 0)) AS pbo"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'PBP', 1, 0)) AS pbp"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Pincab', 1, 0)) AS pincab"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Ditolak', 1, 0)) AS ditolak"),
+            DB::raw("SUM(IF(pengajuan.id_cabang = c.id, 1, 0)) AS total")
         )
-        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            $join->on('c.id', '=', 'pengajuan.id_cabang')
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
+                })
+                ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
+                })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
+                });
+        })
         ->where('c.kode_cabang', '!=', 000)
-        ->whereNull('p.deleted_at')
         ->groupBy('c.kode_cabang', 'c.cabang')
         ->orderBy('c.kode_cabang')
         ->get();
@@ -58,20 +82,31 @@ class DashboardRepository
     }
 
     public function getDetailCabangDisetujui(Request $request){
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
         $data = DB::table('cabang AS c')
         ->select(
             'c.kode_cabang',
             'c.cabang',
-            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ' AND p.posisi = 'Selesai', 1, 0)) AS pkpj"),
-            DB::raw("SUM(IF(p.skema_kredit = 'KKB' AND p.posisi = 'Selesai', 1, 0)) AS kkb"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh' AND p.posisi = 'Selesai', 1, 0)) AS umroh"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra' AND p.posisi = 'Selesai', 1, 0)) AS prokesra"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir' AND p.posisi = 'Selesai', 1, 0)) AS dagulir"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma' AND p.posisi = 'Selesai', 1, 0)) AS kusuma")
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'PKPJ' AND pengajuan.posisi = 'Selesai', 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'KKB' AND pengajuan.posisi = 'Selesai', 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Talangan Umroh' AND pengajuan.posisi = 'Selesai', 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Prokesra' AND pengajuan.posisi = 'Selesai', 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Dagulir' AND pengajuan.posisi = 'Selesai', 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Kusuma' AND pengajuan.posisi = 'Selesai', 1, 0)) AS kusuma")
         )
-        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            $join->on('c.id', '=', 'pengajuan.id_cabang')
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
+                })
+                ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
+                })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
+                });
+        })
         ->where('c.kode_cabang', '!=', 000)
-        ->whereNull('p.deleted_at')
         ->groupBy('c.kode_cabang', 'c.cabang')
         ->orderBy('c.kode_cabang')
         ->get();
@@ -79,20 +114,31 @@ class DashboardRepository
         return $data;
     }
     public function getDetailCabangDitolak(Request $request){
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
         $data = DB::table('cabang AS c')
         ->select(
             'c.kode_cabang',
             'c.cabang',
-            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ' AND p.posisi = 'Ditolak', 1, 0)) AS pkpj"),
-            DB::raw("SUM(IF(p.skema_kredit = 'KKB' AND p.posisi = 'Ditolak', 1, 0)) AS kkb"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh' AND p.posisi = 'Ditolak', 1, 0)) AS umroh"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra' AND p.posisi = 'Ditolak', 1, 0)) AS prokesra"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir' AND p.posisi = 'Ditolak', 1, 0)) AS dagulir"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma' AND p.posisi = 'Ditolak', 1, 0)) AS kusuma")
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'PKPJ' AND pengajuan.posisi = 'Ditolak', 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'KKB' AND pengajuan.posisi = 'Ditolak', 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Talangan Umroh' AND pengajuan.posisi = 'Ditolak', 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Prokesra' AND pengajuan.posisi = 'Ditolak', 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Dagulir' AND pengajuan.posisi = 'Ditolak', 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Kusuma' AND pengajuan.posisi = 'Ditolak', 1, 0)) AS kusuma")
         )
-        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            $join->on('c.id', '=', 'pengajuan.id_cabang')
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
+                })
+                ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
+                })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
+                });
+        })
         ->where('c.kode_cabang', '!=', 000)
-        ->whereNull('p.deleted_at')
         ->groupBy('c.kode_cabang', 'c.cabang')
         ->orderBy('c.kode_cabang')
         ->get();
@@ -100,20 +146,34 @@ class DashboardRepository
         return $data;
     }
     public function getDetailCabangDiproses(Request $request){
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
         $data = DB::table('cabang AS c')
         ->select(
             'c.kode_cabang',
             'c.cabang',
-            DB::raw("SUM(IF(p.posisi = 'Proses Input Data', 1, 0)) AS proses_input_data"),
-            DB::raw("SUM(IF(p.posisi = 'Review Penyelia', 1, 0)) AS review_penyelia"),
-            DB::raw("SUM(IF(p.posisi = 'PBO', 1, 0)) AS pbo"),
-            DB::raw("SUM(IF(p.posisi = 'PBP', 1, 0)) AS pbp"),
-            DB::raw("SUM(IF(p.posisi = 'Pincab', 1, 0)) AS pincab"),
-            DB::raw("SUM(IF(p.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'), 1, 0)) AS total"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Proses Input Data', 1, 0)) AS proses_input_data"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Review Penyelia', 1, 0)) AS review_penyelia"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'PBO', 1, 0)) AS pbo"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'PBP', 1, 0)) AS pbp"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Pincab', 1, 0)) AS pincab"),
+            DB::raw("SUM(IF(pengajuan.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'), 1, 0)) AS total"),
         )
-        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            $join->on('c.id', '=', 'pengajuan.id_cabang')
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
+                })
+                ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
+                })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
+                });
+        })
         ->where('c.kode_cabang', '!=', 000)
-        ->whereNull('p.deleted_at')
         ->groupBy('c.kode_cabang', 'c.cabang')
         ->orderBy('c.kode_cabang')
         ->get();
@@ -121,20 +181,31 @@ class DashboardRepository
         return $data;
     }
     public function getDetailSkemaDiproses(Request $request){
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
         $data = DB::table('cabang AS c')
         ->select(
             'c.kode_cabang',
             'c.cabang',
-            DB::raw("SUM(IF(p.skema_kredit = 'PKPJ' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS pkpj"),
-            DB::raw("SUM(IF(p.skema_kredit = 'KKB' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS kkb"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Talangan Umroh' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS umroh"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Prokesra' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS prokesra"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Dagulir' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS dagulir"),
-            DB::raw("SUM(IF(p.skema_kredit = 'Kusuma' AND p.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS kusuma")
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'PKPJ' AND pengajuan.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS pkpj"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'KKB' AND pengajuan.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS kkb"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Talangan Umroh' AND pengajuan.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS umroh"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Prokesra' AND pengajuan.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS prokesra"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Dagulir' AND pengajuan.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS dagulir"),
+            DB::raw("SUM(IF(pengajuan.skema_kredit = 'Kusuma' AND pengajuan.posisi NOT IN ('Selesai', 'Ditolak'), 1, 0)) AS kusuma")
         )
-        ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+        ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            $join->on('c.id', '=', 'pengajuan.id_cabang')
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
+                })
+                ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
+                })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
+                });
+        })
         ->where('c.kode_cabang', '!=', 000)
-        ->whereNull('p.deleted_at')
         ->groupBy('c.kode_cabang', 'c.cabang')
         ->orderBy('c.kode_cabang')
         ->get();
@@ -142,8 +213,20 @@ class DashboardRepository
         return $data;
     }
     public function getDetailRankCabang(Request $request){
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
         $data = DB::table('cabang')
-        ->leftJoin('pengajuan', 'cabang.id', '=', 'pengajuan.id_cabang')
+        ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
+                })
+                ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
+                })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
+                });
+        })
         ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
         ->where('cabang.kode_cabang', '!=', '000')
         ->groupBy('cabang.kode_cabang', 'cabang.cabang')
@@ -157,9 +240,10 @@ class DashboardRepository
             'pengajuan.id',
             'users.name as nama',
             'users.nip',
-            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
-            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
+            DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
+            DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
         )
+        ->whereNull('pengajuan.deleted_at')
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         ->join('users', 'users.id', 'pengajuan.id_staf')->get();
         if ($role == 'Pincab') {
@@ -169,8 +253,6 @@ class DashboardRepository
         } else if ($role == 'PBO' || $role = 'PBP') {
             $data->where('pengajuan.id_pbo', $id_user)->orWhere('pengajuan.id_pbp', $id_user);
         }
-        // ->groupBy('pengajuan.id_pincab')
-        // ->groupBy('pengajuan.id_staf')
 
         return $data;
     }
@@ -179,9 +261,13 @@ class DashboardRepository
             'pengajuan.id',
             'users.name as nama',
             'users.nip',
+            DB::raw("SUM(IF(pengajuan.posisi = 'Selesai', 1, 0)) AS disetujui"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Ditolak', 1, 0)) AS ditolak"),
             DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
             DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
         )
+        ->whereNull('pengajuan.deleted_at')
+        ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         ->join('users', 'users.id', 'pengajuan.id_penyelia')->get();
         if ($role == 'Pincab') {
@@ -202,6 +288,8 @@ class DashboardRepository
             DB::raw("SUM(IF(pengajuan.posisi = 'Selesai', 1, 0)) AS disetujui"),
             DB::raw("SUM(IF(pengajuan.posisi = 'Ditolak', 1, 0)) AS ditolak")
         )
+        ->whereNull('pengajuan.deleted_at')
+        ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         ->join('users', 'users.id', 'pengajuan.id_pincab')
         ->get();
@@ -218,9 +306,13 @@ class DashboardRepository
             'pengajuan.id',
             'users.name as nama',
             'users.nip',
+            DB::raw("SUM(IF(pengajuan.posisi = 'Selesai', 1, 0)) AS disetujui"),
+            DB::raw("SUM(IF(pengajuan.posisi = 'Ditolak', 1, 0)) AS ditolak"),
             DB::raw('IF(pengajuan.posisi = "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS belum'),
             DB::raw('IF(pengajuan.posisi != "' . $this->getPosisiPengajuan($role) . '", 1, 0) AS sudah')
         )
+        ->whereNull('pengajuan.deleted_at')
+        ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id');
         if ($role == 'Pincab') {
             $data->join('users', 'users.id', 'pengajuan.id_pincab')
@@ -250,7 +342,7 @@ class DashboardRepository
             'id_pincab',
             'posisi',
             'skema_kredit'
-        );
+        )->whereNull('pengajuan.deleted_at')->where('pengajuan.skema_kredit', '!=', 'Dagulir');
         if ($role == 'Staf Analis Kredit') {
             $data->where('id_staf', $idUser);
         } else if ($role == 'Penyelia Kredit') {
@@ -342,6 +434,7 @@ class DashboardRepository
 
         $data = DB::table('pengajuan')
             ->whereNull('deleted_at')
+            ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
             ->whereMonth('tanggal', $bulan_sekarang)
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);
@@ -467,6 +560,7 @@ class DashboardRepository
             ->whereBetween('tanggal', [$tAwal, $tAkhir])
             ->where('posisi', 'Selesai')
             ->whereNull('pengajuan.deleted_at')
+            ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
             ->groupBy(DB::raw('MONTH(tanggal)'));
 
         $total_ditolak_perbulan = DB::table('pengajuan')
@@ -474,6 +568,7 @@ class DashboardRepository
             ->whereBetween('tanggal', [$tAwal, $tAkhir])
             ->where('posisi', 'Ditolak')
             ->whereNull('pengajuan.deleted_at')
+            ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
             ->groupBy(DB::raw('MONTH(tanggal)'));
 
         $total_diproses_perbulan = DB::table('pengajuan')
@@ -481,6 +576,7 @@ class DashboardRepository
             ->whereBetween('tanggal', [$tAwal, $tAkhir])
             ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
             ->whereNull('pengajuan.deleted_at')
+            ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
             ->groupBy(DB::raw('MONTH(tanggal)'));
 
         $dataDisetujui = [
@@ -597,6 +693,7 @@ class DashboardRepository
 
         $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
             ->whereNull('pengajuan.deleted_at')
+            ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
             ->selectRaw("CAST(sum(posisi='pincab') AS UNSIGNED) as pincab,
                 CAST(sum(posisi='PBP') AS UNSIGNED) as pbp,
                 CAST(sum(posisi='PBO') AS UNSIGNED) as pbo,
@@ -652,6 +749,7 @@ class DashboardRepository
         $bulan_sekarang = date('m');
         $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
             ->whereNull('pengajuan.deleted_at')
+            ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
             ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma, sum(skema_kredit='Dagulir') as Dagulir")
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);
@@ -703,12 +801,15 @@ class DashboardRepository
             ->leftJoin('pengajuan', function ($join) use ($tanggalAwal,$tanggalAkhir) {
                 $join->on('cabang.id', '=', 'pengajuan.id_cabang')
                     ->when($tanggalAwal, function($query) use ($tanggalAwal){
-                        return $query->where('tanggal', '>=', $tanggalAwal);
+                        return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
                     })
                     ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
-                        return $query->where('tanggal', '<=', $tanggalAkhir);
+                        return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
                     })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
-                        return $query->whereMonth('tanggal', now()->month);
+                        return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
                     });
             })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
@@ -723,18 +824,20 @@ class DashboardRepository
             ->leftJoin('pengajuan', function ($join) use ($tanggalAwal,$tanggalAkhir) {
                 $join->on('cabang.id', '=', 'pengajuan.id_cabang')
                     ->when($tanggalAwal, function($query) use ($tanggalAwal){
-                        return $query->where('tanggal', '>=', $tanggalAwal);
+                        return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
                     })
                     ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
-                        return $query->where('tanggal', '<=', $tanggalAkhir);
+                        return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
                     })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
-                        return $query->whereMonth('tanggal', now()->month);
+                        return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at')
+                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
                     });
             })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             // ->where('pengajuan.posisi', 'Selesai')
-            ->whereNull('pengajuan.deleted_at')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
             ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
             ->limit(5)

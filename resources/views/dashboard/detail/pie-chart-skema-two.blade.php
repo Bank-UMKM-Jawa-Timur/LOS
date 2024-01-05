@@ -30,6 +30,8 @@
                     <th>Prokesra</th>
                     <th>Dagulir</th>
                     <th>Kusuma</th>
+                    {{-- <th>Disetujui</th>
+                    <th>Ditolak</th> --}}
                 </thead>
                 <tbody>
                     @foreach ($cabang as $key => $item)
@@ -41,6 +43,8 @@
                         <td>{{ $item->prokesra }}</td>
                         <td>{{ $item->dagulir }}</td>
                         <td>{{ $item->kusuma }}</td>
+                        {{-- <td>{{ $item->disetujui }}</td>
+                        <td>{{ $item->ditolak }}</td> --}}
                     </tr>
                     @endforeach
                 </tbody>
