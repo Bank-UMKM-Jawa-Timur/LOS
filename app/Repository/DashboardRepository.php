@@ -596,6 +596,7 @@ class DashboardRepository
         $bulan_sekarang = date('m');
 
         $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
+            ->whereNull('pengajuan.deleted_at')
             ->selectRaw("CAST(sum(posisi='pincab') AS UNSIGNED) as pincab,
                 CAST(sum(posisi='PBP') AS UNSIGNED) as pbp,
                 CAST(sum(posisi='PBO') AS UNSIGNED) as pbo,
@@ -650,6 +651,7 @@ class DashboardRepository
         $cabang = $request->cbg;
         $bulan_sekarang = date('m');
         $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
+            ->whereNull('pengajuan.deleted_at')
             ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma, sum(skema_kredit='Dagulir') as Dagulir")
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);

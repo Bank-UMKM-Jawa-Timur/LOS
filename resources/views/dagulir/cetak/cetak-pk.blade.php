@@ -50,6 +50,9 @@
             width: 80%;
             padding-top: 5%;
         }
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 @php
@@ -425,6 +428,8 @@
             </tr>
         </table>
 
+        {{-- <div class="page-break"></div> --}}
+
         {{-- pasal 4 --}}
         <table class="table-pasal-4">
             <tr>
@@ -534,6 +539,8 @@
                 </td>
             </tr>
         </table>
+
+        <div class="page-break"></div>
 
         {{-- pasal 5 --}}
         <table class="table-pasal-5">
@@ -806,6 +813,8 @@
             </tr>
         </table>
 
+        <div class="page-break"></div>
+
         <table class="table-pasal-9">
             <tr>
                 <td style="text-align: center"><b>Pasal 9</b></td>
@@ -852,6 +861,8 @@
                 </td>
             </tr>
         </table>
+
+        <div class="page-break"></div>
 
         <table class="table-pasal-11">
             <tr>
@@ -904,8 +915,6 @@
                 </td>
             </tr>
         </table>
-
-        <br><br><br><br><br>
 
         <table class="table-pasal-12">
             <tr>

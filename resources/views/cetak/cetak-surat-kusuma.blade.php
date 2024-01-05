@@ -53,7 +53,7 @@
                 <label>Nama</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->nama }}
             </td>
         </tr>
@@ -62,7 +62,7 @@
                 <label>Alamat Rumah</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->alamat_rumah }}
             </td>
         </tr>
@@ -71,7 +71,7 @@
                 <label>Alamat Usaha</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->alamat_usaha }}
             </td>
         </tr>
@@ -80,7 +80,7 @@
                 <label>NO. Ktp</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->no_ktp }}
             </td>
         </tr>
@@ -102,7 +102,7 @@
                 <label>Tempat, Tanggal Lahir / Status</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $stp }}</span>
             </td>
         </tr>
@@ -111,7 +111,7 @@
                 <label>Sektor Kredit</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{$dataUmum->skema_kredit}}
             </td>
         </tr>
@@ -120,7 +120,7 @@
                 <label>Jenis Usaha</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{$dataNasabah->jenis_usaha}}
             </td>
         </tr>
@@ -129,7 +129,7 @@
                 <label>Jumlah Kredit Yang Diminta</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ "Rp " . number_format($dataNasabah->jumlah_kredit,2,',','.') }}
             </td>
         </tr>
@@ -138,7 +138,7 @@
                 <label>Tujuan Kredit</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->tujuan_kredit }}
             </td>
         </tr>
@@ -147,16 +147,16 @@
                 <label>Jaminan Yang Disediakan</label>
             </td>
             <td>:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ strtoupper($dataNasabah->jaminan_kredit) }}
             </td>
         </tr>
         <tr>
-            <td>
+            <td >
                 <label>Hubungan Dengan Bank</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->hubungan_bank }}
             </td>
         </tr>
@@ -165,7 +165,7 @@
                 <label>Hasil Verifikasi Karakter Umum</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td>
+            <td style="padding-left: 19px;">
                 {{ $dataNasabah->verifikasi_umum }}
             </td>
         </tr>
@@ -859,9 +859,7 @@
                                 <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
                                 <td style="padding: 20px 0px 20px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
                             </tr>
-
-                        {{-- @endif --}}
-                    @endif
+                        @endif
                 @endforeach
             @else
                 {{-- Data Umum tidak ditampilkan --}}
@@ -871,12 +869,40 @@
     <br>
     <table style="border-spacing:10px;">
         <tr>
-            <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN STAF KREDIT</span></u></b>
-            </td>
+            <td colspan="3"><b><u><span>PENDAPAT dan USULAN STAF KREDIT</span></u></b></td>
         </tr>
-        <tr>
-            <td>{{$komentar->komentar_staff}}</td>
+            <tr>
+                <td>{{$komentar->komentar_staff}}</td>
+            </tr>
+        @if ($komentar->id_penyelia != null)
+         <tr>
+            <td colspan="3"><b><u><span>PENDAPAT dan USULAN PENYELIA</span></u></b></td>
         </tr>
+            <tr>
+                <td>{{$komentar->komentar_penyelia}}</td>
+            </tr>
+        @endif
+        @if ($komentar->id_pbo != null)
+         <tr>
+            <td colspan="3"><b><u><span>PENDAPAT dan USULAN STAF PBO</span></u></b></td>
+        </tr>
+            <tr>
+                <td>{{$komentar->komentar_pbo}}</td>
+            </tr>
+        @endif
+        @if ($komentar->id_pbp != null)
+         <tr>
+            <td colspan="3"><b><u><span>PENDAPAT dan USULAN STAF PBP</span></u></b></td>
+        </tr>
+            <tr>
+                <td>{{$komentar->komentar_pbp}}</td>
+            </tr>
+            {{-- <tr>
+                <td style="width: 40%; padding: 0px 20px 20px; vertical-align: top">PENDAPAT DAN USULAN PBP</td>
+                <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
+                <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$komentar->komentar_pbp}}</td>
+            </tr --}}
+        @endif
     </table>
     <br>
     <br>
@@ -904,8 +930,45 @@
         </tr>
     </table>
     @if ($dataUmum == 'Selesai' || $dataUmum == 'Ditolak')
-        
+
     @endif
+    @php
+        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+            ->where('level', 2)
+            ->where('id_parent', $itemKTPNas->id)
+            ->where('nama', 'Foto KTP Nasabah')
+            ->get();
+    @endphp
+
+    <div class="page-break"></div>
+        <table style="width: 100%">
+            @foreach ($dataLevelDua as $item)
+                @if ($item->opsi_jawaban == 'file')
+                    @php
+                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                            ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
+                            ->where('jawaban_text.id_jawaban', $item->id)
+                            ->get();
+                    @endphp
+                    @foreach ($dataDetailJawabanText as $itemTextDua)
+                        @php
+                            $ktp = asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text;
+                        @endphp
+                    <tr>
+                        <td style="width: 40%;" >
+                            <label>{{ $item->nama }}</label>
+                        </td>
+                        <td>:</td>
+                        <td style="padding-left: 19px;">
+                            <img src="{{ $ktp }}"
+                                    alt="" width="400px"/>
+                        </td>
+                    </tr>
+                    @endforeach
+                @endif
+            @endforeach
+        </table>
     <div class="page-break"></div>
     @php
         // check level 2
@@ -928,22 +991,11 @@
                 @php
                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                 @endphp
-                <div class="form-group-1">
-                    <div class="field-review">
-                        <div class="field-name">
-                            <label for="">{{ $item->nama }}</label>
-                        </div>
+                        <label for="">{{ $item->nama }}</label>
                         <div class="field-answer">
-                            <p>
-                                @if ($file_parts['extension'] == 'pdf')
-                                    <iframe
-                                        src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                        width="100%" height="800px"></iframe>
-                                @else
-                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                        alt="" width="800px">
-                                @endif
-                            </p>
+                                <iframe
+                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                    width="100%" height="800px"></iframe>
                         </div>
                     </div>
                 </div>

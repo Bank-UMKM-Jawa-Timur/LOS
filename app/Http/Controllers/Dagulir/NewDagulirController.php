@@ -2270,6 +2270,7 @@ class NewDagulirController extends Controller
 
         // return $dataNasabah;
         // return view('dagulir.cetak.cetak-pk-kusuma-badan-usaha', $param);
+        // return redirect()->back();
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
     }
@@ -2429,7 +2430,7 @@ class NewDagulirController extends Controller
                             'sppk' => $filenameSPPK
                         ]);
                     DB::commit();
-                    Alert::success('success', $message);
+                    Alert()->success('success', $message);
                     return redirect()->route('dagulir.pengajuan.index');
                     break;
                     // File PK Handler

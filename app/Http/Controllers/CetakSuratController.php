@@ -109,6 +109,7 @@ class CetakSuratController extends Controller
         $dataUmum = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
                         ->find($id);
         $param['dataUmum'] = $dataUmum;
+        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $itemSP = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
         $param['itemSP'] = $itemSP;
