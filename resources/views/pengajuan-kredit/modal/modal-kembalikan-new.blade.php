@@ -3,7 +3,7 @@
         <div class="modal-head">
             <div class="title">
                 <h2 class="font-bold text-lg tracking-tighter text-theme-text">
-                    Kembalikan ke <span id="text_backto">Staff</span>
+                    Kembalikan ke <span id="text_backto"></span>
                 </h2>
             </div>
             <button type="button" data-dismiss-id="modalKembalikan">
