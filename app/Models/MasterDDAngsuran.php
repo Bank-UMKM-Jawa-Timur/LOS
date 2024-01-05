@@ -10,8 +10,11 @@ class MasterDDAngsuran extends Model
     use HasFactory;
     protected $table = 'dd_angsuran';
     protected $fillable = [
+        'squence',
         'id_dd_loan',
         'tanggal_angsuran',
-        'baki_debet',
+        'pokok_angsuran',
+        'kolek',
+        'keterangan',
     ];
 }
