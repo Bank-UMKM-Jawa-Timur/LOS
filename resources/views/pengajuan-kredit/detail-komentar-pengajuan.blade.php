@@ -873,6 +873,7 @@
                                 </div>
                                 @php
                                     $no = 0;
+                                    $plafon_usulan = DB::table('plafon_usulan')->where('id_pengajuan', $dataUmum->id)->first();
                                 @endphp
                             @endforeach
                             <div class="space-y-5 border">
@@ -1008,7 +1009,7 @@
                         <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
-                                    <label for="">Pincab Kredit</label>
+                                    <label for="">PBO Kredit</label>
                                 </div>
                                 <div class="field-answer">
                                     <p>{{ $pendapatDanUsulan->komentar_pbo }}</p>
@@ -1037,7 +1038,7 @@
                         </div>
                     </div>
                     @endif
-                    @if($pendapatDanUsulan->komentar_pbo)
+                    {{-- @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
                         <div class="form-group-1">
                             <div class="field-review">
@@ -1070,7 +1071,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif
+                    @endif --}}
                     @if($pendapatDanUsulan->komentar_pbp)
                     <div class="p-4">
                         <div class="form-group-1">
@@ -1089,7 +1090,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pincab }} Bulan</p>
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbp }} Bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -1099,7 +1100,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pincab, 0, ',', '.')}}</p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 0, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
