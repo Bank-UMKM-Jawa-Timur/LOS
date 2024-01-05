@@ -15,7 +15,7 @@
     @include('pengajuan-kredit.modal.modal-log-pengajuan')
     @include('pengajuan-kredit.modal.modal-hapus')
     @include('pengajuan-kredit.modal.modal-restore')
-
+    @include('pengajuan-kredit.modal.modal-kembalikan-new')
 @endsection
 
 @section('content')
@@ -478,15 +478,42 @@
                                                                 <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                                     class="w-full cursor-pointer review-pincab">
                                                                     <li class="item-tb-dropdown">
-                                                                            Review
+                                                                        Review
                                                                     </li>
                                                                 </a>
-                                                                <a href="#" class="w-full cursor-pointer">
-                                                                    <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
-                                                                        data-id="{{ $item->id }}" data-backto="{{$item->id_pbp ? 'pbp' : 'penyelia'}}">
-                                                                        Kembalikan ke {{$item->id_pbp ? 'PBP' : 'Penyelia'}}
-                                                                    </li>
-                                                                </a>
+                                                                @php
+                                                                $userPBO = \App\Models\User::select('id')
+                                                                    ->where('id_cabang', $item->id_cabang)
+                                                                    ->where('role', 'PBO')
+                                                                    ->whereNotNull('nip')
+                                                                    ->first();
+
+                                                                $userPBP = \App\Models\User::select('id')
+                                                                    ->where('id_cabang', $item->id_cabang)
+                                                                    ->where('role', 'PBP')
+                                                                    ->whereNotNull('nip')
+                                                                    ->first();
+                                                                @endphp
+                                                                    @if ($userPBP)
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBP" data-target="modalKembalikan">
+                                                                            <li class="item-tb-dropdown open-modal">
+                                                                                Kembalikan ke PBP
+                                                                            </li>
+                                                                        </a>
+                                                                    @elseif ($userPBO)
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBO" data-target="modalKembalikan">
+                                                                            <li class="item-tb-dropdown open-modal">
+                                                                                Kembalikan ke PBO
+                                                                            </li>
+                                                                        </a>
+                                                                    @else
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan">
+                                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
+                                                                                data-id="{{ $item->id }}" data-backto="Penyelia">
+                                                                                Kembalikan ke Penyelia
+                                                                            </li>
+                                                                        </a>
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         @else
@@ -792,6 +819,22 @@
 <script>
     $('.review-pincab').on('click', function(){
         $("#preload-data").removeClass("hidden");
+    })
+
+    $('.btn-kembalikan-pengajuan').on('click', function(){
+        $("#modalKembalikan").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+
+    })
+
+    $('.kembalikan_pengajuan').on('click', function(){
+        const target = '#modalKembalikan';
+        const id = $(this).data('id');
+        const backto = $(this).data('backto')
+
+        $(`${target} #id_pengajuan`).val(id)
+        $(`${target} #text_backto`).html(backto)
+        $(`${target}`).removeClass('hidden')
     })
     // tab pane
     $(".tab-table-wrapper .tab-button").click(function(e) {

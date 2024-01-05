@@ -2747,10 +2747,10 @@ class PengajuanKreditController extends Controller
                             ->where('role', 'PBP')
                             ->whereNotNull('nip')
                             ->first();
-                        $userPBO = User::select('id', 'nip')
+                            $userPincab = User::select('id', 'nip')
                             ->where('id_cabang', $dataPenyelia->id_cabang)
-                            ->where('role', 'PBO')
                             ->whereNotNull('nip')
+                            ->where('role', 'Pincab')
                             ->first();
                         if ($userPBP) {
                             $dataPenyelia->id_pbp = $userPBP->id;
@@ -2761,15 +2761,14 @@ class PengajuanKreditController extends Controller
                             // Log Pengajuan melanjutkan PBP dan mendapatkan
                             $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
                             $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
-                        } elseif ($userPBO) {
-                            $dataPenyelia->id_pbp = $userPBP->id;
-                            $dataPenyelia->tanggal_review_pbp = date(now());
+                        } elseif (!$userPBP) {
+                            $dataPenyelia->id_pincab = $userPincab->id;
+                            $dataPenyelia->tanggal_review_pincab = date(now());
                             $dataPenyelia->posisi = "Pincab";
                             $dataPenyelia->update();
 
-                            // Log Pengajuan melanjutkan PBP dan mendapatkan
-                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke Pincab dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-                            $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
+                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                            $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
                         } else {
                             return back()->withError('User pbp tidak ditemukan pada cabang ini.');
                         }
@@ -2823,6 +2822,7 @@ class PengajuanKreditController extends Controller
                     return redirect()->back()->withError('Belum di review PBP.');
                 }
             } else {
+                alert()->error('gagal', 'Tidak memiliki hak akses');
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
             DB::commit();
@@ -2888,7 +2888,7 @@ class PengajuanKreditController extends Controller
         $param['dataKabupaten'] = Kabupaten::find($param['dataNasabah']->id_kabupaten);
         $param['dataDesa'] = Desa::find($param['dataNasabah']->id_desa);
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp', 'pengajuan.id_pbo', 'pengajuan.id_pbp')
             ->find($id);
 
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
@@ -2897,10 +2897,9 @@ class PengajuanKreditController extends Controller
                                                             ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
                                                             ->select('users.nip', 'alasan_pengembalian_data.*')
                                                             ->get();
-
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
-
-        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
+        // return $param['dataUmum'];
+        // return $param['pendapatDanUsulan'];
         $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->select(
             'plafon_usulan_penyelia',
             'jangka_waktu_usulan_penyelia',

@@ -147,49 +147,57 @@
 
         <table class="table-body">
             <tr>
-                <td>1.</td>
+                <td style="width: 3%;">1.</td>
                 <td style="width: 25%">Bentuk Pinjaman</td>
                 <td style="width: 2%">:</td>
                 <td>Angsuran</td>
             </tr>
             <tr>
-                <td>2.</td>
+                <td style="width: 3%;">2.</td>
                 <td style="width: 25%">Tujuan Kredit</td>
                 <td style="width: 2%">:</td>
                 <td>Konsumsi</td>
             </tr>
             <tr>
-                <td>3.</td>
+                <td style="width: 3%;">3.</td>
                 <td style="width: 25%">Untuk Keperluan</td>
                 <td style="width: 2%">:</td>
                 <td><b>Pembelian Kendaraan Bermotor</b></td>
             </tr>
             <tr>
-                <td>4.</td>
+                <td style="width: 3%;">4.</td>
                 <td style="width: 25%">Besarnya Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>Rp. {{ rupiah($dataNasabah->nominal) }}</td>
+                @if ($dataUmum->skema_kredit == 'Dagulir')
+                    <td>Rp. {{ rupiah($dataNasabah->nominal) }}</td>
+                @else
+                    <td>Rp. {{ rupiah($dataNasabah->jumlah_kredit) }}</td>
+                @endif
             </tr>
             <tr>
-                <td>5.</td>
+                <td style="width: 3%;">5.</td>
                 <td style="width: 25%">Jangka Waktu Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>{{ intval($dataNasabah->jangka_waktu) }} bulan</td>
+                @if ($dataUmum->skema_kredit == 'Dagulir')
+                    <td>{{ intval($dataNasabah->jangka_waktu) }} bulan</td>
+                @else
+                    <td>{{ intval($dataNasabah->jangka_waktu_realisasi) }} bulan</td>
+                @endif
             </tr>
             <tr>
-                <td>6.</td>
+                <td style="width: 3%;">6.</td>
                 <td style="width: 25%">Bunga Pinjaman</td>
                 <td style="width: 2%">:</td>
                 <td>...... p.a anuitas/efektif/floating <sup>2</sup>) rate</td>
             </tr>
             <tr>
-                <td>7.</td>
+                <td style="width: 3%;">7.</td>
                 <td style="width: 25%">Angsuran Perbulan</td>
                 <td style="width: 2%">:</td>
                 <td>Rp. {{ $installment ? rupiah(intval($installment?->opsi_text)) : 0 }}</td>
             </tr>
             <tr>
-                <td>8.</td>
+                <td style="width: 3%;">8.</td>
                 <td style="width: 25%">Denda</td>
                 <td style="width: 2%">:</td>
                 <td >
@@ -202,7 +210,7 @@
                 </td>
             </tr>
             <tr>
-                <td>9.</td>
+                <td style="width: 3%;">9.</td>
                 <td style="width: 25%">Biaya - Biaya</td>
                 <td style="width: 2%">:</td>
                 <td>
@@ -241,7 +249,7 @@
                 </td>
             </tr>
             <tr>
-                <td>10.</td>
+                <td style="width: 3%;">10.</td>
                 <td style="width: 25%">Jaminan Kredit Berupa <sup>3</sup>)</td>
                 <td style="width: 2%">:</td>
                 <td>Asli BPKB Kendaraan Bermotor yang dibeli disertai faktur pembelian atas nama yang tercantum pada BPKB</td>
