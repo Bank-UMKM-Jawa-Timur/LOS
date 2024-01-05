@@ -191,12 +191,14 @@
                     if ($dataUmum->id_pbo) {
                         $pendapatUsulanPBO = \App\Models\PendapatPerAspek::select('*')
                             ->where('id_pbo', '!=', null)
+                            ->where('id_aspek', $itemAspek->id)
                             ->where('id_pengajuan', $dataUmum->id)
                             ->get();
                     }
                     if ($dataUmum->id_pbp) {
                         $pendapatUsulanPBP = \App\Models\PendapatPerAspek::select('*')
                             ->where('id_pbp', '!=', null)
+                            ->where('id_aspek', $itemAspek->id)
                             ->where('id_pengajuan', $dataUmum->id)
                             ->get();
                     }
@@ -893,47 +895,47 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
-                                @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
-                                    <div class="form-group-1">
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <h6>Penyelia</h6>
-                                            </div>
-                                            <div class="field-answer">
-                                                <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                @if ($dataUmum->id_pbo)
-                                    @foreach ($pendapatUsulanPBO as $itemPBO)
+                                    @endforeach
+                                    @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
                                         <div class="form-group-1">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <h6> PBO</h6>
+                                                    <h6>Penyelia</h6>
                                                 </div>
                                                 <div class="field-answer">
-                                                    <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                    <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
-                                @endif
-                                @if ($dataUmum->id_pbp)
-                                    @foreach ($pendapatUsulanPBP as $itemPBP)
-                                        <div class="form-group-1">
-                                            <div class="field-review">
-                                                <div class="field-name">
-                                                    <h6>PBP</h6>
-                                                </div>
-                                                <div class="field-answer">
-                                                    <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                    @if ($dataUmum->id_pbo != null)
+                                        @foreach ($pendapatUsulanPBO as $itemPBO)
+                                            <div class="form-group-1">
+                                                <div class="field-review">
+                                                    <div class="field-name">
+                                                        <h6> PBO</h6>
+                                                    </div>
+                                                    <div class="field-answer">
+                                                        <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                @endif
+                                        @endforeach
+                                    @endif
+                                    @if ($dataUmum->id_pbp != null)
+                                        @foreach ($pendapatUsulanPBP as $itemPBP)
+                                            <div class="form-group-1">
+                                                <div class="field-review">
+                                                    <div class="field-name">
+                                                        <h6>PBP</h6>
+                                                    </div>
+                                                    <div class="field-answer">
+                                                        <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -970,7 +972,7 @@
                                 </div>
                             </div>
                         @endif
-                @if($pendapatDanUsulan->komentar_penyelia)
+                    @if($pendapatDanUsulan->komentar_penyelia)
                     <div class="p-4">
                         <div class="form-group-1">
                             <div class="field-review">

@@ -2888,7 +2888,7 @@ class PengajuanKreditController extends Controller
         $param['dataKabupaten'] = Kabupaten::find($param['dataNasabah']->id_kabupaten);
         $param['dataDesa'] = Desa::find($param['dataNasabah']->id_desa);
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp', 'pengajuan.id_pbo', 'pengajuan.id_pbp')
             ->find($id);
 
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
@@ -2897,10 +2897,9 @@ class PengajuanKreditController extends Controller
                                                             ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
                                                             ->select('users.nip', 'alasan_pengembalian_data.*')
                                                             ->get();
-
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
-
-        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
+        // return $param['dataUmum'];
+        // return $param['pendapatDanUsulan'];
         $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->select(
             'plafon_usulan_penyelia',
             'jangka_waktu_usulan_penyelia',
