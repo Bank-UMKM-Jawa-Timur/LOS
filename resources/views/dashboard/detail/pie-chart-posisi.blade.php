@@ -146,10 +146,10 @@
                         <tr>
                             <td>{{ $item->nip }}</td>
                             <td>{{ $item->nama }}</td>
-                            <td>{{ $item->sudah }}</td>
-                            <td>{{ $item->belum }}</td>
                             <td>{{ $item->disetujui }}</td>
                             <td>{{ $item->ditolak }}</td>
+                            <td>{{ $item->sudah }}</td>
+                            <td>{{ $item->belum }}</td>
                         </tr>
                         @empty
                         <tr>

@@ -20,7 +20,8 @@
                 </div>
                 <div class="mt-3">
                     <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        30                    </h2>
+                        {{$total_pengajuan}}
+                    </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">
                         Total Pengajuan
                     </p>
@@ -37,7 +38,7 @@
                 </div>
                 <div class="mt-3">
                     <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        30
+                        {{$total_disetujui}}
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">
                         Disetujui
@@ -54,7 +55,7 @@
                 </div>
                 <div class="mt-3">
                     <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        30
+                        {{$total_ditolak}}
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
                 </div>
@@ -69,7 +70,7 @@
                 </div>
                 <div class="mt-3">
                     <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        30
+                        {{$total_diproses}}
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
                 </div>
@@ -162,11 +163,18 @@
 
 @push('script-inject')
 <script>
+    var danaModal = @json($dana_modal);
+    var cabang = [];
+    var dana_modal = [];
+    $.each(danaModal, function(i, item){
+        cabang.push(item.cabang);
+        dana_modal.push(item.dana);
+    })
     var options = {
     series: [
         {
         name: "Total",
-        data: [31, 40, 28, 51, 42, 45, 58, 60, 72, 80, 109, 100],
+        data: dana_modal,
         },
     ],
     colors: ["#DC3545"],
@@ -193,20 +201,7 @@
         horizontalAlign: "right",
     },
     xaxis: {
-        categories: [
-        "Surabaya",
-        "Ponorogo",
-        "Probolinggo",
-        "Sidoarjo",
-        "Madiun",
-        "Magetan",
-        "Lamongan",
-        "Bondowoso",
-        "Situbondo",
-        "Jember",
-        "Gresik",
-        "Pamekasan",
-        ],
+        categories: cabang,
     },
     tooltip: {
         x: {

@@ -26,7 +26,7 @@
                 <button class="btn-cancel" type="button" data-dismiss-id="modalKembalikan">
                     Batal
                 </button>
-                <button type="submit" class="btn-submit btn-kembalikan">Kembalikan</button>
+                <button type="submit" class="btn-submit btn-kembalikan-pengajuan">Kembalikan</button>
             </div>
         </form>
     </div>

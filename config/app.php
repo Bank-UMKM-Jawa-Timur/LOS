@@ -183,7 +183,6 @@ return [
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
-
     ],
 
     /*
@@ -244,6 +243,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'PdfToImage' => Spatie\PdfToImage\Pdf::class,
     ],
 
 ];

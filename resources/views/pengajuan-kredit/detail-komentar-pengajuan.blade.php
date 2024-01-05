@@ -191,12 +191,14 @@
                     if ($dataUmum->id_pbo) {
                         $pendapatUsulanPBO = \App\Models\PendapatPerAspek::select('*')
                             ->where('id_pbo', '!=', null)
+                            ->where('id_aspek', $itemAspek->id)
                             ->where('id_pengajuan', $dataUmum->id)
                             ->get();
                     }
                     if ($dataUmum->id_pbp) {
                         $pendapatUsulanPBP = \App\Models\PendapatPerAspek::select('*')
                             ->where('id_pbp', '!=', null)
+                            ->where('id_aspek', $itemAspek->id)
                             ->where('id_pengajuan', $dataUmum->id)
                             ->get();
                     }
@@ -873,6 +875,7 @@
                                 </div>
                                 @php
                                     $no = 0;
+                                    $plafon_usulan = DB::table('plafon_usulan')->where('id_pengajuan', $dataUmum->id)->first();
                                 @endphp
                             @endforeach
                             <div class="space-y-5 border">
@@ -892,47 +895,47 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
-                                @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
-                                    <div class="form-group-1">
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <h6>Penyelia</h6>
-                                            </div>
-                                            <div class="field-answer">
-                                                <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                @if ($dataUmum->id_pbo)
-                                    @foreach ($pendapatUsulanPBO as $itemPBO)
+                                    @endforeach
+                                    @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
                                         <div class="form-group-1">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <h6> PBO</h6>
+                                                    <h6>Penyelia</h6>
                                                 </div>
                                                 <div class="field-answer">
-                                                    <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                    <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
-                                @endif
-                                @if ($dataUmum->id_pbp)
-                                    @foreach ($pendapatUsulanPBP as $itemPBP)
-                                        <div class="form-group-1">
-                                            <div class="field-review">
-                                                <div class="field-name">
-                                                    <h6>PBP</h6>
-                                                </div>
-                                                <div class="field-answer">
-                                                    <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                    @if ($dataUmum->id_pbo != null)
+                                        @foreach ($pendapatUsulanPBO as $itemPBO)
+                                            <div class="form-group-1">
+                                                <div class="field-review">
+                                                    <div class="field-name">
+                                                        <h6> PBO</h6>
+                                                    </div>
+                                                    <div class="field-answer">
+                                                        <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                @endif
+                                        @endforeach
+                                    @endif
+                                    @if ($dataUmum->id_pbp != null)
+                                        @foreach ($pendapatUsulanPBP as $itemPBP)
+                                            <div class="form-group-1">
+                                                <div class="field-review">
+                                                    <div class="field-name">
+                                                        <h6>PBP</h6>
+                                                    </div>
+                                                    <div class="field-answer">
+                                                        <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -969,7 +972,7 @@
                                 </div>
                             </div>
                         @endif
-                @if($pendapatDanUsulan->komentar_penyelia)
+                    @if($pendapatDanUsulan->komentar_penyelia)
                     <div class="p-4">
                         <div class="form-group-1">
                             <div class="field-review">
@@ -1008,7 +1011,7 @@
                         <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
-                                    <label for="">Pincab Kredit</label>
+                                    <label for="">PBO Kredit</label>
                                 </div>
                                 <div class="field-answer">
                                     <p>{{ $pendapatDanUsulan->komentar_pbo }}</p>
@@ -1037,7 +1040,7 @@
                         </div>
                     </div>
                     @endif
-                    @if($pendapatDanUsulan->komentar_pbo)
+                    {{-- @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
                         <div class="form-group-1">
                             <div class="field-review">
@@ -1070,7 +1073,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif
+                    @endif --}}
                     @if($pendapatDanUsulan->komentar_pbp)
                     <div class="p-4">
                         <div class="form-group-1">
@@ -1089,7 +1092,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pincab }} Bulan</p>
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbp }} Bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -1099,7 +1102,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pincab, 0, ',', '.')}}</p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 0, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>

@@ -36,7 +36,7 @@ class DashboardDetailController extends Controller
         if ($current_cabang)
             $kode_cabang = $current_cabang->kode_cabang;
         $param['kode_cabang'] = $kode_cabang;
-
+        
         $param['skema'] = $this->repo->getDetailSkemaTotal($request);
 
         $param['cabang'] = $this->repo->getDetailCabangTotal($request);
