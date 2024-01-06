@@ -1918,7 +1918,7 @@
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ number_format($plafonUsulan?->plafon_usulan_penyelia ?? '-', 0, ',', '.') }}" readonly disabled>
+                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia != null ? number_format($plafonUsulan?->plafon_usulan_penyelia, 0, ',', '.') : 0 }}" readonly disabled>
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
@@ -1928,11 +1928,11 @@
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
-                                                <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="{{ number_format($plafonUsulan?->plafon_usulan_pbo ?? '-', 0, ',', '.') }}">
+                                                <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="{{ $plafonUsulan->plafon_usulan_pbo != null ? number_format($plafonUsulan->plafon_usulan_pbo , 0, ',', '.') : 0 }}">
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan PBO</label>
-                                                <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbo ?? '-' }}">
+                                                <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbo ?? 0 }}">
                                             </div>
                                         </div>
                                         <div class="form-group-1">
@@ -1984,11 +1984,11 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ number_format($plafonUsulan?->plafon_usulan_penyelia ?? '-', 0, ',', '.') }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ? number_format($plafonUsulan?->plafon_usulan_penyelia, 0, ',', '.') : 0 }}" readonly disabled>
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ? $plafonUsulan?->jangka_waktu_usulan_penyelia : '-' }}" readonly disabled>
                                         </div>
                                     </div>
                                     <div class="form-group-2">
@@ -2004,11 +2004,11 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBP</label>
-                                            <input type="text" class="form-input rupiah" name="plafon_usulan_pbp" value="{{ number_format($plafonUsulan?->plafon_usulan_pbp ?? '-', 0, ',', '.') }}">
+                                            <input type="text" class="form-input rupiah" name="plafon_usulan_pbp" value="{{ $plafonUsulan?->plafon_usulan_pbp ? number_format($plafonUsulan?->plafon_usulan_pbp, 0, ',', '.') : 0 }}">
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan PBP</label>
-                                            <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ?? '-' }}">
+                                            <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ? $plafonUsulan?->jangka_waktu_usulan_pbp : '-' }}">
                                         </div>
                                     </div>
                                     <div class="form-group-1 pl-3">
