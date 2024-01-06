@@ -325,7 +325,7 @@
                                         <font class="text-yellow-500">On Progress</font>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="flex justify-center">
                                 <div class="dropdown-tb">
                                 @php
                                     $userPBO = \App\Models\User::select('id')

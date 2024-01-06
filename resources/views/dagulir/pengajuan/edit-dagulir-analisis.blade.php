@@ -10,7 +10,7 @@
         </h2>
     </div>
     <div
-        class="p-5 w-full space-y-5 "
+        class="p-5 w-full space-y-5"
         id="data-umum"
     >
         <!-- data umum -->
@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row space-y-5">
             <div class="form-group-2">
                 <input type="hidden" name="id_nasabah" id="" value="{{ $dataUmum->id }}">
                 <div class="input-box col-md-6">
@@ -138,16 +138,7 @@
                     @enderror
                     <hr>
                 </div>
-                <div class="input-box col-md-12">
-                    <label for="">Alamat Usaha</label>
-                    <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror" maxlength="255"
-                        id="" cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmum->alamat_usaha) }}</textarea>
-                    @error('alamat_usaha')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+
                 <div class="input-box col-md-12">
                     <label for="">No. KTP</label>
                     <input type="text" name="no_ktp" maxlength="255"
@@ -327,6 +318,13 @@
                     @enderror
                 </div>
             </div>
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Slik :
+                    </h2>
+                </div>
+            </div>
             <div class="form-group-1">
                 <div class="input-box col-md-12">
                     <label for="">Sektor Kredit</label>
@@ -413,6 +411,13 @@
                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
             </div>
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Usaha :
+                    </h2>
+                </div>
+            </div>
             <div class="form-group-1">
                 <div class="input-box col-md-12">
                     <label for="">Jenis Usaha</label>
@@ -423,6 +428,23 @@
                             {{ $message }}
                         </div>
                     @enderror
+                </div>
+            </div>
+            <div class="input-box col-md-12">
+                <label for="">Alamat Usaha</label>
+                <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror" maxlength="255"
+                    id="" cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmum->alamat_usaha) }}</textarea>
+                @error('alamat_usaha')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Pengajuan :
+                    </h2>
                 </div>
             </div>
             <div class="form-group-2">

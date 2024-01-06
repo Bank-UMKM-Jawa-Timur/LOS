@@ -1,56 +1,5 @@
 <div class="p-5 space-y-5">
-    @php
-        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
-            ->where('level', 2)
-            ->where('id_parent', $itemSP->id)
-            ->where('nama', 'Surat Permohonan')
-            ->get();
-    @endphp
-    @foreach ($dataLevelDua as $item)
-        @if ($item->opsi_jawaban == 'file')
-            @php
-                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                    ->where('jawaban_text.id_jawaban', $item->id)
-                    ->get();
-            @endphp
-            @foreach ($dataDetailJawabanText as $itemTextDua)
-                @php
-                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                @endphp
-                {{-- <div class="form-group-1">
-                    <div class="form-group-1 mb-0">
-                        <label for="">{{ $item->nama }}</label>
-                    </div>
-                    <div class="form-group-1">
-                        <b>Jawaban:</b>
-                        <div class="mt-2">
-                        </div>
-                    </div>
-                </div> --}}
-                <div class="form-group-1">
-                    <div class="field-review">
-                        <div class="field-name">
-                            <label for="">{{ $item->nama }}</label>
-                        </div>
-                        <div class="field-answer">
-                            <p>
-                            @if ($file_parts['extension'] == 'pdf')
-                                <iframe
-                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                    width="100%" height="800px"></iframe>
-                            @else
-                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                    alt="" width="800px">
-                            @endif
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        @endif
-    @endforeach
+
     @php
         $tipe = "";
         $nama_pj = "";
@@ -326,6 +275,7 @@
             </div>
         </div>
     </div>
+
     <div class="form-group-2">
         <div class="field-review">
             <div class="field-name">
@@ -384,3 +334,55 @@
             </div>
         </div>
     </div>
+    @php
+    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
+        ->where('level', 2)
+        ->where('id_parent', $itemSP->id)
+        ->where('nama', 'Surat Permohonan')
+        ->get();
+@endphp
+@foreach ($dataLevelDua as $item)
+    @if ($item->opsi_jawaban == 'file')
+        @php
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                ->where('jawaban_text.id_jawaban', $item->id)
+                ->get();
+        @endphp
+        @foreach ($dataDetailJawabanText as $itemTextDua)
+            @php
+                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+            @endphp
+            {{-- <div class="form-group-1">
+                <div class="form-group-1 mb-0">
+                    <label for="">{{ $item->nama }}</label>
+                </div>
+                <div class="form-group-1">
+                    <b>Jawaban:</b>
+                    <div class="mt-2">
+                    </div>
+                </div>
+            </div> --}}
+            <div class="form-group-1">
+                <div class="field-review">
+                    <div class="field-name">
+                        <label for="">{{ $item->nama }}</label>
+                    </div>
+                    <div class="field-answer">
+                        <p>
+                        @if ($file_parts['extension'] == 'pdf')
+                            <iframe
+                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                width="100%" height="800px"></iframe>
+                        @else
+                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                alt="" width="800px">
+                        @endif
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
+@endforeach
