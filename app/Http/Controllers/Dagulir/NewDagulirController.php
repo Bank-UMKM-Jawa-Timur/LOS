@@ -8,6 +8,7 @@ use App\Http\Controllers\LogPengajuanController;
 use App\Models\AlasanPengembalianData;
 use App\Models\CalonNasabah;
 use App\Models\CalonNasabahTemp;
+use App\Models\DanaCabang;
 use App\Models\Desa;
 use App\Models\DetailKomentarModel;
 use App\Models\ItemModel;
@@ -2488,14 +2489,23 @@ class NewDagulirController extends Controller
                                         if ($update_selesai == 200) {
                                             // insert to dd loan
                                             if ($pengajuan && $plafon) {
-                                                $loan = new MasterDDLoan;
-                                                $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
-                                                $loan->no_loan = $request->get('no_loan');
-                                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
-                                                $loan->plafon = $plafon->plafon_usulan_pincab;
-                                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
-                                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
-                                                $loan->save();
+                                                $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                                $current = $dana_cabang->dana_modal - $plafon->plafon_usulan_pincab;
+                                                if ($current > 0) {
+                                                    $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                                    $update_cabang->dana_idle = $current;
+                                                    $update_cabang->update();
+
+                                                    $loan = new MasterDDLoan;
+                                                    $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
+                                                    $loan->no_loan = $request->get('no_loan');
+                                                    $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
+                                                    $loan->plafon = $plafon->plafon_usulan_pincab;
+                                                    $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
+                                                    $loan->baki_debet = $plafon->plafon_usulan_pincab;
+                                                    $loan->save();
+                                                }
+
                                             }
                                             // $repo = new MasterDanaRepository;
                                             // $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);

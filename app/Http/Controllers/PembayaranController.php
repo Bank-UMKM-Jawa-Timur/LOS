@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DanaCabang;
 use App\Models\MasterDDAngsuran;
 use App\Models\MasterDDLoan;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
@@ -198,21 +201,35 @@ class PembayaranController extends Controller
                     $result_data [] = $array1Obj;
                 }
             }
-
+            if (count($result_data) <= 0) {
+                alert()->error('error','Terjadi Kesalahan');
+                return redirect()->back();
+            }
             foreach ($result_data as $key => $value) {
                 if ($value != null) {
+                    $loan = MasterDDLoan::where('no_loan',$value['HLLNNO'])->first();
+                    $kode = $loan->kode_pendaftaran;
+                    $total_angsuran = $loan->baki_debet - (int)$value['HLORMT'] / 100;
+                    $update = MasterDDLoan::where('no_loan',$value['HLLNNO'])->first();
+                    $update->baki_debet = $total_angsuran;
+                    $update->update();
+
+                    // update sipde
+                    if ($value['HLLNNO'] == $loan->no_loan) {
+                        $this->kumulatif_debitur($kode,(int)$value['HLORMT'] / 100,$total_angsuran,$value['kolek']);
+                    }
                     $pembayaran = new MasterDDAngsuran;
                     $pembayaran->squence = $value['HLSEQN'];
                     $pembayaran->id_dd_loan = $value['HLLNNO'];
                     $pembayaran->tanggal_angsuran = date('Y-m-d h:i:s',strtotime($value['HLDTVL']));
-                    $pembayaran->pokok_angsuran = (int) $value['HLORMT'];
+                    $pembayaran->pokok_angsuran = (int)$value['HLORMT'] / 100;
                     $pembayaran->kolek = $value['kolek'];
                     $pembayaran->keterangan = $value['HLDESC'];
                     $pembayaran->save();
                 }
             }
             $result_data_angsuran = [];
-            $data_anggsuran = MasterDDAngsuran::latest()->get();
+            $data_anggsuran = MasterDDAngsuran::whereDate('created_at',Carbon::now())->get();
             foreach ($data_anggsuran as $item_angsuran) {
                 $result_data_angsuran[] = [
                     'HLSEQN' => $item_angsuran->squence,
@@ -223,11 +240,59 @@ class PembayaranController extends Controller
                     'kolek' => $item_angsuran->kolek,
                 ];
             }
+
+            // $loan = MasterDDLoan::lastest()->get();
+            // foreach ($loan as $key => $value) {
+            //     if ($loan) {
+            //         $pokok_pembayaran = MasterDDAngsuran::whereDate('created_at',Carbon::now())->where('id_dd_loan',$value->no_loan)->sum('pokok_angsuran');
+            //         $value->baki_debet = $pokok_pembayaran - $value->baki_debet;
+            //     }
+            // }
+
+
+
             return view('pembayaran.upload',['data' => $result_data_angsuran]);
         } catch (Exception $e) {
             DB::rollBack();
             return $e;
 
+        }
+    }
+
+    function kumulatif_debitur($kode, $pokok_angsuran, $kolek, $status) {
+        DB::beginTransaction();
+        try {
+            $token = sipde_token()['token'];
+            $body = [
+                'kode_pendaftaran' => $kode,
+                'kumulatif_pokok_angsuran' =>(int)$pokok_angsuran,
+                'baki_debet' =>  (int)$kolek,
+                'kolektibilitas' => (int)$kolek,
+                'status_kolektibilitas' => (int)$status,
+            ];
+            $pembayaran_kumulatif = Http::withHeaders([
+                'Authorization' => 'Bearer ' .$token,
+            ])->post(config('dagulir.host').'/kumulatif_dana_debitur.json', $body)->json();
+            if (array_key_exists('data', $pembayaran_kumulatif)) {
+                $response = $pembayaran_kumulatif['data'];
+                if ($response['status_code'] == 200) {
+                    DB::commit();
+                    return $response['status_code'];
+                }else{
+                    return array_key_exists('message', $response) ? $response['message'] : 'failed';
+                }
+            }else{
+                DB::commit();
+                $message = 'Terjadi kesalahan.';
+                if (array_key_exists('error', $pembayaran_kumulatif)) $message .= ' '.$pembayaran_kumulatif['error'];
+
+                return $message;
+            }
+
+
+        } catch (Exception $e) {
+
+            return $e;
         }
     }
 }
