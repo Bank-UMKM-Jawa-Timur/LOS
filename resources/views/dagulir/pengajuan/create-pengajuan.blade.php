@@ -222,7 +222,7 @@
         </div>
         <div class="input-box">
             <label for="">Alamat Rumah</label>
-            <textarea name="alamat_rumah" class="form-input @error('alamat_rumah') is-invalid @enderror"
+            <textarea name="alamat_rumah" class="form-textarea @error('alamat_rumah') is-invalid @enderror"
                 maxlength="255" id="alamat_rumah" cols="30" rows="4"
                 placeholder="Alamat Rumah disesuaikan dengan KTP"></textarea>
             @error('alamat_rumah')
@@ -231,16 +231,6 @@
             </div>
             @enderror
             <hr>
-        </div>
-        <div class="input-box">
-            <label for="">Alamat Usaha</label>
-            <textarea name="alamat_usaha" class="form-input @error('alamat_usaha') is-invalid @enderror"
-                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha"></textarea>
-            @error('alamat_usaha')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
         </div>
         <div class="form-group-3">
             <div class="input-box">
@@ -298,6 +288,13 @@
         </div>
         <div class="input-box" id="foto-ktp-nasabah">
         </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Slik :
+                </h2>
+            </div>
+        </div>
         <div class="form-group-3">
             <div class="input-box ">
                 <label for="">Sektor Kredit</label>
@@ -348,15 +345,39 @@
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
         </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Data Usaha :
+                </h2>
+            </div>
+        </div>
         <div class="input-box ">
             <label for="">Jenis Usaha</label>
-            <textarea name="jenis_usaha" class="form-input @error('jenis_usaha') is-invalid @enderror"
+            <textarea name="jenis_usaha" class="form-textarea @error('jenis_usaha') is-invalid @enderror"
                 maxlength="255" id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik"></textarea>
             @error('jenis_usaha')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
             @enderror
+        </div>
+        <div class="input-box">
+            <label for="">Alamat Usaha</label>
+            <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror"
+                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha"></textarea>
+            @error('alamat_usaha')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+                <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Data Pengajuan :
+                </h2>
+            </div>
         </div>
         <div class="form-group-2">
             <div class="input-box">
@@ -390,7 +411,7 @@
         </div>
         <div class="input-box">
             <label for="">Tujuan Kredit</label>
-            <textarea name="tujuan_kredit" class="form-input @error('tujuan_kredit') is-invalid @enderror"
+            <textarea name="tujuan_kredit" class="form-textarea @error('tujuan_kredit') is-invalid @enderror"
                 maxlength="255" id="tujuan_kredit" cols="30" rows="4" placeholder="Tujuan Kredit"></textarea>
             @error('tujuan_kredit')
             <div class="invalid-feedback">
@@ -400,7 +421,7 @@
         </div>
         <div class="input-box">
             <label for="">Jaminan yang disediakan</label>
-            <textarea name="jaminan" class="form-input @error('jaminan') is-invalid @enderror" maxlength="255"
+            <textarea name="jaminan" class="form-textarea @error('jaminan') is-invalid @enderror" maxlength="255"
                 id="" cols="30" rows="4" placeholder="Jaminan yang disediakan"></textarea>
             @error('jaminan')
             <div class="invalid-feedback">
@@ -410,7 +431,7 @@
         </div>
         <div class="input-box">
             <label for="">Hubungan Bank</label>
-            <textarea name="hubungan_bank" class="form-input @error('hubungan_bank') is-invalid @enderror"
+            <textarea name="hubungan_bank" class="form-textarea @error('hubungan_bank') is-invalid @enderror"
                 maxlength="255" id="hubungan_bank" cols="30" rows="4" placeholder="Hubungan dengan Bank"></textarea>
             @error('hubungan_bank')
             <div class="invalid-feedback">
@@ -420,7 +441,7 @@
         </div>
         <div class="input-box">
             <label for="">Hasil Verifikasi</label>
-            <textarea name="hasil_verifikasi" class="form-input @error('hasil_verifikasi') is-invalid @enderror"
+            <textarea name="hasil_verifikasi" class="form-textarea @error('hasil_verifikasi') is-invalid @enderror"
                 maxlength="255" id="hasil_verivikasi" cols="30" rows="4"
                 placeholder="Hasil Verifikasi Karakter Umum"></textarea>
             @error('hasil_verifikasi')
