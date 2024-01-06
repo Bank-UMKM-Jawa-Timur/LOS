@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class MasterDDAngsuran extends Model
 {
     use HasFactory;
-    protected $table = 'dd_angsuran';
+    protected $table = 'dd_pembayaran';
     protected $fillable = [
         'squence',
-        'id_dd_loan',
-        'tanggal_angsuran',
-        'pokok_angsuran',
+        'no_loan',
+        'tanggal_pembayaran',
+        'pokok_pembayaran',
         'kolek',
         'keterangan',
     ];
