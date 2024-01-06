@@ -165,17 +165,14 @@
                 @enderror
             </div>
             <div class="input-box">
-                <label for="">{{ $itemSP->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
-                    placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <label for="">No Telp</label>
+                <input type="text" name="no_telp" id="nama" class="form-input @error('no_telp') is-invalid @enderror"
+                    placeholder="No Telp" value="" required maxlength="255">
+                @error('no_telp')
                 <div class="invalid-feedback">
-                    {{ $errors->first('dataLevelDua.' . $key) }}
+                    {{ $message }}
                 </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
+                @enderror
             </div>
         </div>
         <div class="form-group-3">
@@ -216,16 +213,6 @@
                 </div>
                 @enderror
             </div>
-        </div>
-        <div class="input-box">
-            <label for="">No Telp</label>
-            <input type="text" name="no_telp" id="nama" class="form-input @error('no_telp') is-invalid @enderror"
-                placeholder="No Telp" value="" required maxlength="255">
-            @error('no_telp')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
         </div>
         <div class="input-box">
             <label for="">Alamat Rumah</label>
@@ -303,22 +290,7 @@
                 </h2>
             </div>
         </div>
-        <div class="form-group-3">
-            <div class="input-box ">
-                <label for="">Sektor Kredit</label>
-                <select name="sektor_kredit" id="sektor_kredit"
-                    class="form-select @error('sektor_kredit') is-invalid @enderror select2">
-                    <option value=""> --Pilih Sektor Kredit -- </option>
-                    @foreach ($sectors as $sector)
-                    <option value="{{ $sector }}">{{ ucfirst($sector) }}</option>
-                    @endforeach
-                </select>
-                @error('sektor_kredit')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-                @enderror
-            </div>
+        <div class="form-group-2">
             <div class="input-box">
                 <label for="">{{ $itemSlik->nama }}</label>
                 <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select select2"
@@ -389,8 +361,38 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
+                <label for="">{{ $itemSP->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
+                    placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+                <span class="filename" style="display: inline;"></span>
+            </div>
+            <div class="input-box ">
+                <label for="">Sektor Kredit</label>
+                <select name="sektor_kredit" id="sektor_kredit"
+                    class="form-select @error('sektor_kredit') is-invalid @enderror select2">
+                    <option value=""> --Pilih Sektor Kredit -- </option>
+                    @foreach ($sectors as $sector)
+                    <option value="{{ $sector }}">{{ ucfirst($sector) }}</option>
+                    @endforeach
+                </select>
+                @error('sektor_kredit')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+        </div>
+        <div class="form-group-2">
+            <div class="input-box">
                 <label for="">Jumlah Kredit yang diminta</label>
-                <input type="text" name="jumlah_kredit" id="jumlah_kredit" class="form-input rupiah" value="">
+                <input type="text" name="jumlah_kredit" placeholder="Jumlah Kredit yang diminta" id="jumlah_kredit" class="form-input rupiah" value="">
 
                 @error('jumlah_kredit')
                 <div class="invalid-feedback">
@@ -404,7 +406,7 @@
                     <div class="flex-1">
                         <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
                             class="form-input only-number @error('tenor_yang_diminta') is-invalid @enderror"
-                            aria-describedby="addon_tenor_yang_diminta" required maxlength="3" />
+                            aria-describedby="addon_tenor_yang_diminta" required maxlength="3" placeholder="Tenor Yang Diminta" />
                     </div>
                     <div class="flex-shrink-0 mt-2.5rem">
                         <span class="form-input bg-gray-100">Bulan</span>

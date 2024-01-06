@@ -494,7 +494,6 @@
                                             <p>{{ $dataUmumNasabah->jaminan_kredit ? $dataUmumNasabah->jaminan_kredit : '-' }}</p>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="form-group-2">
                                     <div class="field-review">
@@ -511,6 +510,49 @@
                                         </div>
                                         <div class="field-answer">
                                             <p>{{ $dataUmumNasabah->verifikasi_umum ? $dataUmumNasabah->verifikasi_umum : '-' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-2">
+                                    @php
+                                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
+                                        ->where('level', 2)
+                                        ->where('id_parent', $itemSP->id)
+                                        ->where('nama', 'Surat Permohonan')
+                                        ->get();
+                                    @endphp
+                                    @foreach ($dataLevelDua as $item)
+                                        @php
+                                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                ->where('jawaban_text.id_jawaban', $item->id)
+                                                ->get();
+                                        @endphp
+                                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">{{ $item->nama }}</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                @php
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                @endphp
+                                                @if ($file_parts['extension'] == 'pdf')
+                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="600px"></iframe>
+                                                @else
+                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="600px">
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    @endforeach
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Sektor Kredit</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->sektor_kredit ? $dataUmumNasabah->sektor_kredit : '-' }}</p>
                                         </div>
                                     </div>
                                 </div>
