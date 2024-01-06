@@ -2363,6 +2363,7 @@ class PengajuanKreditController extends Controller
                 ->get();
             $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
+            // return $param['dataUmumNasabah'];
             return view('new-pengajuan.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
