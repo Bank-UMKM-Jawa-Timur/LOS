@@ -2487,20 +2487,20 @@ class NewDagulirController extends Controller
                                     if (!is_array($update_selesai)) {
                                         if ($update_selesai == 200) {
                                             // insert to dd loan
-                                            $repo = new MasterDanaRepository;
-                                            $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
-                                            if ($data->dana_idle != 0) {
-                                                if ($pengajuan && $plafon) {
-                                                    $loan = new MasterDDLoan;
-                                                    $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
-                                                    $loan->no_loan = $request->get('no_loan');
-                                                    $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
-                                                    $loan->plafon = $plafon->plafon_usulan_pincab;
-                                                    $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
-                                                    $loan->baki_debet = $plafon->plafon_usulan_pincab;
-                                                    $loan->save();
-                                                }
+                                            if ($pengajuan && $plafon) {
+                                                $loan = new MasterDDLoan;
+                                                $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
+                                                $loan->no_loan = $request->get('no_loan');
+                                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
+                                                $loan->plafon = $plafon->plafon_usulan_pincab;
+                                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
+                                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
+                                                $loan->save();
                                             }
+                                            // $repo = new MasterDanaRepository;
+                                            // $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
+                                            // if ($data->dana_idle != 0) {
+                                            // }
                                             DB::commit();
                                             Alert::success('success', $message);
                                             return redirect()->route('dagulir.pengajuan.index');
