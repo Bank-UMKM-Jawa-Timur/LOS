@@ -23,6 +23,13 @@
                 <input type="hidden" name="tipe_file" value="PK">
                 <input type="hidden" name="kode_pendaftaran" id="kode_pendaftaran" value="">
                     <div class="form-group-1 mt-4">
+                        <div class="form-group-1 mt-4">
+                            <div class="input-box">
+                                <label for="no_loan">No Loan</label>
+                                <input type="Text" name="no_loan" id="no_loan" class="form-input" required>
+                                <span class="text-red-500 m-0 mt-2 hidden">Harus diisi.</span>
+                            </div>
+                        </div>
                         <div class="input-box">
                             <label for="no_pk">No PK</label>
                             <input type="Text" name="no_pk" id="no_pk" class="form-input" required>
