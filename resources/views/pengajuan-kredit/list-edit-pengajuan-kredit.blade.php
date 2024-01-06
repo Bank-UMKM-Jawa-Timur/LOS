@@ -319,6 +319,12 @@
                                                                     Tindak lanjut Review Penyelia
                                                                 </li>
                                                             </a>
+                                                        @else
+                                                            <a href="#" onclick="showTindakLanjut({{ $item->id }},'penyelia kredit')" class="w-full cursor-pointer">
+                                                                <li class="item-tb-dropdown">
+                                                                    Tindak lanjut Review Penyelia
+                                                                </li>
+                                                            </a>
                                                         @endif
                                                     @else
                                                         <a href="{{route('dagulir.pengajuan.create')}}?dagulir={{$item->id}}" class="w-full cursor-pointer">
