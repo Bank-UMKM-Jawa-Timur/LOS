@@ -198,15 +198,18 @@ class PembayaranController extends Controller
                     $result_data [] = $array1Obj;
                 }
             }
+
             foreach ($result_data as $key => $value) {
-                $pembayaran = new MasterDDAngsuran;
-                $pembayaran->squence = $value['HLSEQN'];
-                $pembayaran->id_dd_loan = $value['HLLNNO'];
-                $pembayaran->tanggal_angsuran = date('Y-m-d h:i:s',strtotime($value['HLDTVL']));
-                $pembayaran->pokok_angsuran = (int) $value['HLORMT'];
-                $pembayaran->kolek = $value['kolek'];
-                $pembayaran->keterangan = $value['HLDESC'];
-                $pembayaran->save();
+                if ($value != null) {
+                    $pembayaran = new MasterDDAngsuran;
+                    $pembayaran->squence = $value['HLSEQN'];
+                    $pembayaran->id_dd_loan = $value['HLLNNO'];
+                    $pembayaran->tanggal_angsuran = date('Y-m-d h:i:s',strtotime($value['HLDTVL']));
+                    $pembayaran->pokok_angsuran = (int) $value['HLORMT'];
+                    $pembayaran->kolek = $value['kolek'];
+                    $pembayaran->keterangan = $value['HLDESC'];
+                    $pembayaran->save();
+                }
             }
             $result_data_angsuran = [];
             $data_anggsuran = MasterDDAngsuran::latest()->get();
