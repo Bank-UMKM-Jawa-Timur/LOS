@@ -272,7 +272,7 @@
                                 </td>
                                 <td>
                                     @if ($item->posisi == 'Selesai')
-                                        <font class="text-green-500">Selesai</font>
+                                        <font class="text-green-500">Disetujui</font>
                                     @elseif ($item->posisi == 'Ditolak')
                                         <font class="text-red-500">Ditolak</font>
                                     @else
@@ -344,7 +344,7 @@
                                                     @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
                                                         <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer">
                                                             <li class="item-tb-dropdown">
-                                                                Cetak SPPK
+                                                                Download SPPK
                                                             </li>
                                                         </a>
                                                     @elseif (!$item->sppk && $tglCetak->tgl_cetak_sppk)
@@ -356,13 +356,13 @@
                                                     @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
                                                         <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer">
                                                             <li class="item-tb-dropdown">
-                                                                Cetak PK
+                                                                Download PK
                                                             </li>
                                                         </a>
                                                     @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->sppk)
                                                         <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->id }}">
                                                             <li class="item-tb-dropdown">
-                                                                Upload PK
+                                                                Realisasi Kredit
                                                             </li>
                                                         </a>
                                                     @endif

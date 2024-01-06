@@ -318,7 +318,7 @@
                                 </td>
                                 <td>
                                     @if ($item->posisi == 'Selesai')
-                                        <font class="text-green-500">Selesai</font>
+                                        <font class="text-green-500">Disetujui</font>
                                     @elseif ($item->posisi == 'Ditolak')
                                         <font class="text-red-500">Ditolak</font>
                                     @else
