@@ -2216,7 +2216,7 @@ class NewDagulirController extends Controller
             ]);
         }
 
-        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
         ->find($id);
         $param['dataUmum'] = $dataUmum;
 
@@ -2293,10 +2293,10 @@ class NewDagulirController extends Controller
                 ]);
         }
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')->find($id);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'skema_kredit')->find($id);
 
         if ($param['dataUmum']->skema_kredit == 'Dagulir') {
-            $dataUmum = DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+            $dataUmum = DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
                         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
                         ->where('pengajuan.id', $id)
                         ->first();
