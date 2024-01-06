@@ -720,7 +720,7 @@
                                             @if ($item->opsi_jawaban != 'option')
                                                 @if (!$item->is_hide)
                                                     @php
-                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
                                                             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                                             ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                                             ->where('jawaban_text.id_jawaban', $item->id)
@@ -728,6 +728,19 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextDua)
                                                             @if ($item->opsi_jawaban == 'file')
+                                                                <b class="m-2">{{ $item->nama }} : </b>
+                                                                    @php
+                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                                    @endphp
+                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                            <iframe
+                                                                                class="border-4 border-gray-800 m-2"
+                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                                width="100%" height="800px"></iframe>
+                                                                    @else
+                                                                        <img class="m-2" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                            alt="" width="800px">
+                                                                    @endif
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                             @else
                                                                 @if ($item->id == 136 || $item->id == 138 || $item->id == 140 || $item->id == 143)

@@ -424,7 +424,7 @@
                                                     @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                                         @if ($item->pengajuan->posisi == 'Review Penyelia')
                                                             @if (auth()->user()->id_cabang == '1')
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
+                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer review-penyelia">
                                                                     <li class="item-tb-dropdown">
                                                                         Review
                                                                     </li>
@@ -456,7 +456,7 @@
                                                                     @endif
                                                                 @endif
                                                             @else
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
+                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer review-penyelia">
                                                                     <li class="item-tb-dropdown">
                                                                         Review
                                                                     </li>
@@ -495,7 +495,7 @@
                                                         @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
                                                             && $item->pengajuan->id_pbo)
                                                             <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                                class="cursor-pointer w-full">
+                                                                class="cursor-pointer w-full review-penyelia">
                                                                 <li class="item-tb-dropdown">
                                                                     Review
                                                                 </li>
@@ -507,7 +507,7 @@
                                                                 </li>
                                                             </a>
                                                             @else
-                                                            <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                            <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer ">
                                                                 <li class="item-tb-dropdown">
                                                                     Lanjutkan Ke Pincab
                                                                 </li>
