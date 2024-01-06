@@ -69,13 +69,15 @@
                     </li>
                     <div class="dropdown-menu-link hidden">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
-                            <li>
-                                <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
-                                    <button class="item-dp-link">
-                                        Dashboard
-                                    </button>
-                                </a>
-                            </li>
+                            @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program')
+                                <li>
+                                    <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
+                                        <button class="item-dp-link">
+                                            Dashboard
+                                        </button>
+                                    </a>
+                                </li>
+                            @endif
                             <li>
                                 <a href="{{route('dagulir.pengajuan.index')}}">
                                     <button class="item-dp-link">Pengajuan</button>
