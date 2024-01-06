@@ -297,7 +297,7 @@ class NewDagulirController extends Controller
                 $request->validate([
                     'nama_lengkap' => 'required',
                     'email' => 'required|unique:pengajuan_dagulir,email',
-                    'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik',
+                    'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik|max:16',
                     'tempat_lahir' => 'required',
                     'tanggal_lahir' => 'required',
                     'telp' => 'required',
@@ -330,7 +330,7 @@ class NewDagulirController extends Controller
                 'name' => 'required',
                 'alamat_rumah' => 'required',
                 'alamat_usaha' => 'required',
-                'no_ktp' => 'required',
+                'no_ktp' => 'required|max:16',
                 'kabupaten' => 'required|not_in:0',
                 'kec' => 'required|not_in:0',
                 'desa' => 'required|not_in:0',

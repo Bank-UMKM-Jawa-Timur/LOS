@@ -1,5 +1,12 @@
 @push('script-inject')
     <script>
+        $("input[name='nik_nasabah']").keyup(function(e){
+            if($(this).val().length < 16) {
+                $('.no_ktp_pesan').html(`No KTP Harus 16`);
+            }else{
+                $('.no_ktp_pesan').html(``);
+            }
+        });
         $('#jangka_waktu').on('change', function() {
             limitJangkaWaktu()
         })
@@ -276,8 +283,9 @@
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 onkeydown="return event.keyCode !== 69" name="no_ktp" class="form-input @error('no_ktp') is-invalid @enderror"
                 id="no_ktp" placeholder="Masukkan 16 digit No. KTP" value="">
+            <span class="text-sm text-red-500 no_ktp_pesan mt-2"></span>
             @error('no_ktp')
-            <div class="invalid-feedback">
+            <div class="invalid-feedback text-sm">
                 {{ $message }}
             </div>
             @enderror
@@ -334,8 +342,8 @@
                 <label for="">{{ $itemP->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
-                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" accept="application/pdf" class="form-input limit-size-slik only-pdf">
+                <span class="invalid-tooltip text-red-500 m-0 text-sm" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}

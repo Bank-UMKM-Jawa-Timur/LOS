@@ -845,7 +845,13 @@ $dataIndex = match ($skema) {
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
+    $("input[name='no_ktp']").keyup(function(e){
+        if($(this).val().length < 16) {
+            $('.no_ktp_pesan').html(`No KTP Harus 16`);
+        }else{
+            $('.no_ktp_pesan').html(``);
+        }
+    });
     // Start Validation
     @if (count($errors->all()))
         Swal.fire({
