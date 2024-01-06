@@ -763,6 +763,16 @@
                                                             ->where('jawaban_text.id_jawaban', $item->id)
                                                             ->get();
                                                     @endphp
+                                                    @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
+                                                        <div class="field-review">
+                                                            <div class="field-name">
+                                                                <label for="">Ijin Usaha</label>
+                                                            </div>
+                                                            <div class="field-answer">
+                                                                <p> Tidak ada legalitas usaha </p>
+                                                            </div>
+                                                        </div>
+                                                    @else
                                                     @foreach ($dataDetailJawabanText as $itemTextDua)
                                                         <div class="row
                                                                 {{ $itemTextDua->opsi_text === 'nib' ? 'hidden' : '' }}
@@ -850,6 +860,7 @@
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
                                                         <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
                                                     @endforeach
+                                                    @endif
                                                 @endif
                                             @endif
                                             @php
@@ -893,7 +904,6 @@
                                                                         <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
                                                                         <h4 class="font-bold">Tidak ada legalitas usaha</h4>
                                                                     </div>
-
                                                                 @endif
                                                             </div>
                                                         @endif

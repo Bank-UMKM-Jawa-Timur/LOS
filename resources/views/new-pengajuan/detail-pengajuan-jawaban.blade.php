@@ -737,6 +737,16 @@
                                                         ->where('jawaban_text.id_jawaban', $item->id)
                                                         ->get();
                                                 @endphp
+                                                @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
+                                                    <div class="field-review">
+                                                        <div class="field-name">
+                                                            <label for="">Ijin Usaha</label>
+                                                        </div>
+                                                        <div class="field-answer">
+                                                            <p> Tidak ada legalitas usaha </p>
+                                                        </div>
+                                                    </div>
+                                                @else
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                                     <div class="row
                                                             {{ $itemTextDua->opsi_text === 'nib' ? 'hidden' : '' }}
@@ -839,6 +849,7 @@
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
                                                     <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
                                                 @endforeach
+                                                @endif
                                             @endif
                                         @endif
                                         @php
@@ -871,7 +882,7 @@
                                                                     <div>
                                                                         <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
                                                                             <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
-                                                                                {{ $item->nama }} :
+                                                                                {{ $item->nama }}
                                                                             </h2>
                                                                         </div>
                                                                     </div>
@@ -1925,7 +1936,7 @@
                                                 <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                             </div>
                                         </div>
-                                        <div class="form-group-2">
+                                        {{-- <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
                                                 <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="{{ $plafonUsulan->plafon_usulan_pbo != null ? number_format($plafonUsulan->plafon_usulan_pbo , 0, ',', '.') : 0 }}">
@@ -1934,7 +1945,7 @@
                                                 <label for="">Jangka Waktu Usulan PBO</label>
                                                 <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbo ?? 0 }}">
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan PBO</label>
                                             <textarea name="komentar_pbo_keseluruhan"
@@ -1991,7 +2002,7 @@
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ? $plafonUsulan?->jangka_waktu_usulan_penyelia : '-' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    <div class="form-group-2">
+                                    {{-- <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBO</label>
                                             <input type="text" class="form-input rupiah" value="{{ number_format($plafonUsulan?->plafon_usulan_pbo ?? '-', 0, ',', '.') }}" readonly disabled>
@@ -2010,7 +2021,7 @@
                                             <label for="">Jangka Waktu Usulan PBP</label>
                                             <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ? $plafonUsulan?->jangka_waktu_usulan_pbp : '-' }}">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group-1 pl-3">
                                         <label for="">Pendapat dan Usulan PBP</label>
                                         <textarea name="komentar_pbp_keseluruhan"
@@ -2079,7 +2090,7 @@
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    @if ($dataUmumNasabah->id_pbo)
+                                    {{-- @if ($dataUmumNasabah->id_pbo)
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
@@ -2102,7 +2113,7 @@
                                                 <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ?? '-' }}" readonly disabled>
                                             </div>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Pincab</label>
