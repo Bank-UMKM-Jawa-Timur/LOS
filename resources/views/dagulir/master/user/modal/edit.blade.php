@@ -66,6 +66,8 @@
                             <option value="Direksi" {{ old('role') == 'Direksi' ? ' selected' : '' }}>Direksi</option>
                             <option value="Pemasaran" {{ old('role') == 'Pemasaran' ? ' selected' : '' }}>Pemasaran
                             </option>
+                            <option value="Kredit Program" {{ old('role') == 'Kredit Program' ? ' selected' : '' }}>Kredit Program
+                            </option>
                         </select>
                         @error('role')
                             <div class="invalid-feedback">

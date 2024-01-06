@@ -98,12 +98,16 @@
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->role }}</td>
-                                    <td>{{ $item->cabang->cabang }}</td>
+                                    <td>{{ $item->id == 1 ? '-' : $item->cabang->cabang }}</td>
                                     <td>
-                                        @if ($item->user_dagulir == 1)
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-1 py-1 rounded dark:bg-green-900 dark:text-green-300">Ya</span>
+                                        @if ($item->id == 1)
+                                            -
                                         @else
-                                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-1 py-1 rounded dark:bg-red-900 dark:text-red-300">Tidak</span>
+                                            @if ($item->user_dagulir == 1)
+                                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-1 py-1 rounded dark:bg-green-900 dark:text-green-300">Ya</span>
+                                            @else
+                                                <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-1 py-1 rounded dark:bg-red-900 dark:text-red-300">Tidak</span>
+                                            @endif
                                         @endif
                                     </td>
                                     <td>

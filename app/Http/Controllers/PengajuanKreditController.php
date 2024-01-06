@@ -24,7 +24,6 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
 use App\Models\MerkModel;
-use App\Models\PengajuanDagulir;
 use App\Models\PlafonUsulan;
 use App\Models\TipeModel;
 use App\Models\User;
@@ -2364,6 +2363,7 @@ class PengajuanKreditController extends Controller
                 ->get();
             $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
+            // return $param['dataUmumNasabah'];
             return view('new-pengajuan.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
@@ -2608,15 +2608,9 @@ class PengajuanKreditController extends Controller
     {
         DB::beginTransaction();
         try {
-            $pengajuan = PengajuanModel::find($id);
-            if ($pengajuan->skema_kredit == 'Dagulir') {
-                $dagulir = PengajuanDagulir::where('id', $pengajuan->dagulir_id)->first();
-                $namaNasabah = $dagulir->nama;
-            } else {
-                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
-                if ($nasabah)
-                    $namaNasabah = $nasabah->nama;
-            }
+            $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+            if ($nasabah)
+                $namaNasabah = $nasabah->nama;
 
             if (auth()->user()->role == 'Penyelia Kredit') {
                 if (auth()->user()->id_cabang == '1') {
@@ -2837,11 +2831,9 @@ class PengajuanKreditController extends Controller
             alert()->success('Berhasil','Berhasil mengganti posisi.');
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         } catch (\Exception $e) {
-            return $e;
             DB::rollBack();
             return back()->withError('Terjadi kesalahan');
         } catch (\Illuminate\Database\QueryException $e) {
-            return $e;
             DB::rollBack();
             return back()->withError('Terjadi kesalahan pada database');
         }
