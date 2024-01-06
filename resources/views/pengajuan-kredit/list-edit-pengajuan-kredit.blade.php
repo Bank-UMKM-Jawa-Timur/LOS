@@ -293,7 +293,7 @@
                                             ->whereNotNull('nip')
                                             ->first();
                                     @endphp
-                                    <div class="flex">
+                                    <div class="flex justify-center">
                                         <div class="dropdown-tb">
                                             <button
                                             type="button"
