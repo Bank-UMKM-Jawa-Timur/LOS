@@ -1326,7 +1326,7 @@
                                                                                     <div class="pl-2">
                                                                                         <img style="border: 5px solid #c2c7cf"
                                                                                             src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                            alt="" class="w-full">
+                                                                                            alt="" class="w-2/4">
                                                                                     </div>
                                                                                 @endif
                                                                             @else
