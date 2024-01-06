@@ -1714,9 +1714,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1 ">
-                                            <h4 class="font-semibold text-base" for="">Penyelia Kredit</h4>
-                                            <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
@@ -1754,9 +1760,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1">
-                                            <h4 class="font-semibold text-base" for=""> Penyelia Kredit</h4>
-                                            <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     @elseif (Auth::user()->role == 'Pincab')
                                         @php
@@ -1775,9 +1787,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1">
-                                            <label for="">Penyelia Kredit</label>
-                                            <p class="border-b p-2">{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
@@ -1927,14 +1945,14 @@
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
+                                                <input type="text" class="form-input" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}" readonly disabled>
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                                <input type="text" class="form-input" value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}" readonly disabled>
                                             </div>
                                         </div>
-                                        <div class="form-group-2">
+                                        {{-- <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
                                                 <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="">
@@ -1943,7 +1961,7 @@
                                                 <label for="">Jangka Waktu Usulan PBO</label>
                                                 <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="">
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan PBO</label>
                                             <textarea name="komentar_pbo_keseluruhan"
@@ -1993,14 +2011,14 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}" readonly disabled>
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    <div class="form-group-2">
+                                    {{-- <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBO</label>
                                             <input type="text" class="form-input rupiah" value="{{ $plafonUsulan?->plafon_usulan_pbo ?? '-' }}" readonly disabled>
@@ -2019,7 +2037,7 @@
                                             <label for="">Jangka Waktu Usulan PBP</label>
                                             <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group-1 pl-3">
                                         <label for="">Pendapat dan Usulan PBP</label>
                                         <textarea name="komentar_pbp_keseluruhan"
@@ -2081,14 +2099,14 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}" readonly disabled>
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    @if ($dataUmumNasabah->id_pbo)
+                                    {{-- @if ($dataUmumNasabah->id_pbo)
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
@@ -2111,7 +2129,7 @@
                                                 <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ?? '-' }}" readonly disabled>
                                             </div>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Pincab</label>

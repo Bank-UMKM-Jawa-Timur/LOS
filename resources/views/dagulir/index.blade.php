@@ -11,6 +11,7 @@
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde')
 @include('dagulir.modal.kembalikan')
+@include('pengajuan-kredit.modal.modal-kembalikan-new')
 @include('components.new.modal.loading')
 @include('dagulir.modal.lanjutkan-penyelia')
 @endsection
@@ -38,6 +39,7 @@
 @endpush
 
 @section('content')
+
 <section class="p-5 overflow-y-auto mt-5">
     <div class="head space-y-5 w-full font-poppins mb-5">
       <div
@@ -356,6 +358,19 @@
                                                 ></iconify-icon>
                                                 </button>
                                                 <ul class="dropdown-tb-menu hidden">
+                                                    @php
+                                                        $userPBO = \App\Models\User::select('id')
+                                                            ->where('id_cabang', $item->pengajuan->id_cabang)
+                                                            ->where('role', 'PBO')
+                                                            ->whereNotNull('nip')
+                                                            ->first();
+
+                                                        $userPBP = \App\Models\User::select('id')
+                                                            ->where('id_cabang', $item->pengajuan->id_cabang)
+                                                            ->where('role', 'PBP')
+                                                            ->whereNotNull('nip')
+                                                            ->first();
+                                                    @endphp
                                                     @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Proses Input Data')
                                                         @if ($item->pengajuan->id_penyelia == null)
                                                         <a href="#" onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')" class="w-full cursor-pointer">
@@ -408,42 +423,102 @@
                                                     @endif
                                                     @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                                         @if ($item->pengajuan->posisi == 'Review Penyelia')
-                                                            @if ($item->pengajuan->komentar)
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                                    class="w-full cursor-pointer review-penyelia">
+                                                            @if (auth()->user()->id_cabang == '1')
+                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
                                                                     <li class="item-tb-dropdown">
                                                                         Review
                                                                     </li>
                                                                 </a>
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                                <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                    <li class="item-tb-dropdown open-modal">
+                                                                        Kembalikan ke Staff
+                                                                    </li>
+                                                                </a>
+                                                                @if ($userPBO)
+                                                                <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
+                                                                    <li class="item-tb-dropdown">
+                                                                    Lanjut ke PBO
+                                                                    </li>
+                                                                </a>
+                                                                @else
+                                                                    @if ($userPBP)
+                                                                    <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbp">
+                                                                        <li class="item-tb-dropdown">
+                                                                            Lanjut ke PBP
+                                                                        </li>
+                                                                    </a>
+                                                                    @else
+                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                        <li class="item-tb-dropdown">
+                                                                            Lanjutkan Ke Pincab
+                                                                        </li>
+                                                                    </a>
+                                                                    @endif
+                                                                @endif
+                                                            @else
+                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Review
+                                                                    </li>
+                                                                </a>
+                                                                <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                    <li class="item-tb-dropdown open-modal">
+                                                                        Kembalikan ke Staff
+                                                                    </li>
+                                                                </a>
+                                                                @if ($userPBO)
+                                                                <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Lanjut ke PBO
+                                                                    </li>
+                                                                </a>
+                                                                @else
+                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
                                                                     <li class="item-tb-dropdown">
                                                                         Lanjutkan Ke Pincab
                                                                     </li>
                                                                 </a>
+                                                                @endif
                                                             @endif
-                                                            <a href="#" class="w-full cursor-pointer">
-                                                                <li class="item-tb-dropdown kembalikan-modal cursor-pointer send-to-staff"
-                                                                    data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
-                                                                    Kembalikan ke Staff
+                                                            {{-- <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
+                                                                <li class="item-tb-dropdown">
+                                                                    Review
                                                                 </li>
                                                             </a>
+                                                            <a href="#" class="w-full cursor-pointer">
+                                                                <li class="item-tb-dropdown kembalikan-modal" cursor-pointer data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
+                                                                    Kembalikan ke Staff
+                                                                </li>
+                                                            </a> --}}
                                                         @endif
                                                     @elseif ((Auth()->user()->role == 'PBO'))
                                                         @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
                                                             && $item->pengajuan->id_pbo)
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                                    class="cursor-pointer">Review</a>
-                                                            </li>
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown review-pincab">Lanjutkan Ke Pincab</a>
-                                                            </li>
-                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
-                                                                data-id="{{ $item->pengajuan->id }}" data-backto="penyelia">
-                                                                <a href="#">
+                                                            <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                                class="cursor-pointer w-full">
+                                                                <li class="item-tb-dropdown">
+                                                                    Review
+                                                                </li>
+                                                            </a>
+                                                            @if ($userPBP)
+                                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbp">
+                                                                <li class="item-tb-dropdown">
+                                                                    Lanjut ke PBP
+                                                                </li>
+                                                            </a>
+                                                            @else
+                                                            <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                <li class="item-tb-dropdown">
+                                                                    Lanjutkan Ke Pincab
+                                                                </li>
+                                                            </a>
+                                                            @endif
+                                                            <a href="#">
+                                                                <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
+                                                                    data-id="{{ $item->pengajuan->id }}" data-backto="penyelia">
                                                                     Kembalikan ke Penyelia
-                                                                </a>
-                                                            </li>
+                                                                </li>
+                                                            </a>
                                                         @endif
                                                     @elseif ((Auth()->user()->role == 'PBP'))
                                                         @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_pbp
@@ -596,6 +671,19 @@
                                     $tipe_pengajuan = config('dagulir.tipe_pengajuan');
                                 @endphp
                                 @forelse ($data_sipde as $item)
+                                    @php
+                                        $userPBO = \App\Models\User::select('id')
+                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('role', 'PBO')
+                                            ->whereNotNull('nip')
+                                            ->first();
+
+                                        $userPBP = \App\Models\User::select('id')
+                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('role', 'PBP')
+                                            ->whereNotNull('nip')
+                                            ->first();
+                                    @endphp
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->kode_pendaftaran != null ? $item->kode_pendaftaran : '-' }}</td>
@@ -783,7 +871,64 @@
                                                         @endif
                                                         @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                                             @if ($item->pengajuan->posisi == 'Review Penyelia')
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
+                                                                @if (auth()->user()->id_cabang == '1')
+                                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
+                                                                        <li class="item-tb-dropdown">
+                                                                            Review
+                                                                        </li>
+                                                                    </a>
+                                                                    <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                        <li class="item-tb-dropdown open-modal">
+                                                                            Kembalikan ke Staff
+                                                                        </li>
+                                                                    </a>
+                                                                    @if ($userPBO)
+                                                                    <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
+                                                                        <li class="item-tb-dropdown">
+                                                                        Lanjut ke PBO
+                                                                        </li>
+                                                                    </a>
+                                                                    @else
+                                                                        @if ($userPBP)
+                                                                        <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbp">
+                                                                            <li class="item-tb-dropdown">
+                                                                                Lanjut ke PBP
+                                                                            </li>
+                                                                        </a>
+                                                                        @else
+                                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                            <li class="item-tb-dropdown">
+                                                                                Lanjutkan Ke Pincab
+                                                                            </li>
+                                                                        </a>
+                                                                        @endif
+                                                                    @endif
+                                                                @else
+                                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer review-penyelia">
+                                                                        <li class="item-tb-dropdown">
+                                                                            Review
+                                                                        </li>
+                                                                    </a>
+                                                                    <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                        <li class="item-tb-dropdown open-modal">
+                                                                            Kembalikan ke Staff
+                                                                        </li>
+                                                                    </a>
+                                                                    @if ($userPBO)
+                                                                    <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
+                                                                        <li class="item-tb-dropdown">
+                                                                            Lanjut ke PBO
+                                                                        </li>
+                                                                    </a>
+                                                                    @else
+                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                        <li class="item-tb-dropdown">
+                                                                            Lanjutkan Ke Pincab
+                                                                        </li>
+                                                                    </a>
+                                                                    @endif
+                                                                @endif
+                                                                {{-- <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}" class="w-full cursor-pointer">
                                                                     <li class="item-tb-dropdown">
                                                                         Review
                                                                     </li>
@@ -792,15 +937,15 @@
                                                                     <li class="item-tb-dropdown kembalikan-modal" cursor-pointer data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
                                                                         Kembalikan ke Staff
                                                                     </li>
-                                                                </a>
+                                                                </a> --}}
                                                             @endif
-                                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
+                                                            {{-- @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                                 <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
                                                                     <li class="item-tb-dropdown">
                                                                         Lanjutkan Ke Pincab
                                                                     </li>
                                                                 </a>
-                                                            @endif
+                                                            @endif --}}
                                                         @elseif ((Auth()->user()->role == 'PBO'))
                                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
                                                                 && $item->pengajuan->id_pbo)
@@ -925,6 +1070,16 @@
             document.getElementById('confirmationModal').classList.remove('flex');
         });
     }
+    $('.kembalikan_pengajuan').on('click', function(){
+        const target = '#modalKembalikan';
+        const id = $(this).data('id');
+        const backto = $(this).data('backto')
+        console.log(backto);
+
+        $(`${target} #id_pengajuan`).val(id)
+        $(`${target} #text_backto`).html(backto)
+        $(`${target}`).removeClass('hidden')
+    })
 
     $(document).on('click', '.kembalikan-modal', function() {
         const id = $(this).data('id')
