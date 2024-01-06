@@ -29,7 +29,7 @@ class PembayaranController extends Controller
         // Process file_txt
         if ($request->hasFile('file_txt')) {
             $file = $request->file('file_txt');
-            $filename_txt = 'file'.'.'.$file->extension();
+            $filename_txt = 'LHLONINC'.'.'.$file->extension();
             $file->storeAs('file',$filename_txt);
         }
         // Process file_dic
@@ -51,12 +51,10 @@ class PembayaranController extends Controller
     }
 
     function store(Request $request) {
-
         // Process file_txt
-        $filename_txt = 'file.txt';
+        $filename_txt = 'LHLONINC.txt';
         // Ganti pembacaan file_txt dengan fungsi file
         $txt_data = array_map('utf8_encode', file(storage_path('app/file/'.$filename_txt), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
-
         // Process file_dic
         $theArray = Excel::toCollection([], storage_path('app/dictionary/').'dictionary.xlsx');
         // end process file_dic
@@ -119,8 +117,50 @@ class PembayaranController extends Controller
                 ];
             }
         }
+        $master_loan = MasterDDLoan::get()->toArray();
+        $result_data_loan = [];
+        foreach ($master_loan as $item) {
+            if (array_key_exists('no_loan', $item)) {
+                $no_loan = $item['no_loan'];
+                $array1Obj = collect($result_data)->firstWhere('HLLNNO', $no_loan);
+                $result_data_loan [] = $array1Obj;
+            }
+        }
+        foreach ($result_data_loan as $key => $value) {
+            if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
+                alert()->error('Error', 'Data is incomplete.');
+                return redirect()->route('pembayaran.index');
+            }
+
+            // current master anggsuran
+            $current_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
+                ->where('no_loan', $value['HLLNNO'])
+                ->get();
+
+            // Check if there are existing records with the same squence and no_loan
+            if (count($current_loan) > 0) {
+                alert()->error('Error', 'Data Pembayaran telah di proses.');
+                return redirect()->route('pembayaran.index');
+            }
+            // Create a new instance only if the count is not greater than 0
+            $pembayaran = new MasterDDAngsuran;
+            $pembayaran->squence = $value['HLSEQN'];
+            $pembayaran->no_loan = $value['HLLNNO'];
+            $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
+            $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
+            $pembayaran->kolek = $value['kolek'];
+            $pembayaran->keterangan = $value['HLDESC'];
+            $pembayaran->save();
+            // Fetch the inserted data
+            $inserted_data = MasterDDAngsuran::where('squence', $value['HLSEQN'])
+                            ->where('no_loan', $value['HLLNNO'])
+                            ->get();
+            return view('pembayaran.upload',['data' => $inserted_data]);
+        }
+
+         // Check if any required value is null
+
         // return view('pembayaran.upload',['data' => $pembayaran['data']]);
-        return view('pembayaran.upload',['data' => $result_data]);
     // } catch (\Exception $e) {
     //     return $e;
     //     // return redirect(route('users.index'));
@@ -151,19 +191,19 @@ class PembayaranController extends Controller
             $extension = $file->getClientOriginalExtension();
             if ($extension == 'txt' && $request->data == 'file_txt') {
                 $onlyFileName = str_replace('.'.$extension, '', $file->getClientOriginalName()); //file name without extenstion
-                $fileName = 'file_txt'.'.' . $extension; // a unique file name
+                $fileName = 'LHLONINC'.'.' . $extension; // a unique file name
                 $file->storeAs('file/',$fileName);
-
                 unlink($file->getPathname());
+            }
 
-
-            }elseif ($extension == 'xlsx' && $request->data == 'file_dic') {
+            if ($extension == 'xlsx' && $request->data == 'file_dic') {
                 $fileName = 'dictionary'.'.' . $extension; // a unique file name
                 $file->storeAs('dictionary/',$fileName);
 
                 unlink($file->getPathname());
 
-            }elseif ($extension == 'xlsx' && $request->data == 'file_nomi') {
+            }
+            if ($extension == 'xlsx' && $request->data == 'file_nomi') {
                 $fileName = 'nomi'.'.' . $extension; // a unique file name
                 $file->storeAs('file_nomi/',$fileName);
 
@@ -192,66 +232,28 @@ class PembayaranController extends Controller
         try {
             DB::commit();
             $data = json_decode($request->get('data'),true);
-            $master_loan = MasterDDLoan::get()->toArray();
-            $result_data = [];
-            foreach ($master_loan as $item) {
-                if (array_key_exists('no_loan', $item)) {
-                    $no_loan = $item['no_loan'];
-                    $array1Obj = collect($data)->firstWhere('HLLNNO', $no_loan);
-                    $result_data [] = $array1Obj;
-                }
-            }
-            if (count($result_data) <= 0) {
-                alert()->error('error','Terjadi Kesalahan');
-                return redirect()->back();
-            }
-            foreach ($result_data as $key => $value) {
+            foreach ($data as $key => $value) {
                 if ($value != null) {
-                    $loan = MasterDDLoan::where('no_loan',$value['HLLNNO'])->first();
+                    // current master anggsuran
+                    $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
                     $kode = $loan->kode_pendaftaran;
-                    $total_angsuran = $loan->baki_debet - (int)$value['HLORMT'] / 100;
-                    $update = MasterDDLoan::where('no_loan',$value['HLLNNO'])->first();
-                    $update->baki_debet = $total_angsuran;
-                    $update->update();
-
                     // update sipde
-                    if ($value['HLLNNO'] == $loan->no_loan) {
-                        $this->kumulatif_debitur($kode,(int)$value['HLORMT'] / 100,$total_angsuran,$value['kolek']);
+                    if ($value['no_loan'] == $loan->no_loan) {
+                        $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
+                        $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                        $update->baki_debet = $total_angsuran;
+                        $update->update();
+                        $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$total_angsuran,$value['kolek']);
+                        if ($response != 200) {
+                            DB::rollBack();
+                            alert()->error('Error','Terjadi Kesalahan.');
+                            return redirect()->route('pembayaran.index');
+                        }
                     }
-                    $pembayaran = new MasterDDAngsuran;
-                    $pembayaran->squence = $value['HLSEQN'];
-                    $pembayaran->id_dd_loan = $value['HLLNNO'];
-                    $pembayaran->tanggal_angsuran = date('Y-m-d h:i:s',strtotime($value['HLDTVL']));
-                    $pembayaran->pokok_angsuran = (int)$value['HLORMT'] / 100;
-                    $pembayaran->kolek = $value['kolek'];
-                    $pembayaran->keterangan = $value['HLDESC'];
-                    $pembayaran->save();
                 }
             }
-            $result_data_angsuran = [];
-            $data_anggsuran = MasterDDAngsuran::whereDate('created_at',Carbon::now())->get();
-            foreach ($data_anggsuran as $item_angsuran) {
-                $result_data_angsuran[] = [
-                    'HLSEQN' => $item_angsuran->squence,
-                    'HLLNNO' => $item_angsuran->id_dd_loan,
-                    'HLDTVL' => $item_angsuran->tanggal_angsuran,
-                    'HLORMT' => $item_angsuran->pokok_angsuran,
-                    'HLDESC' => $item_angsuran->keterangan,
-                    'kolek' => $item_angsuran->kolek,
-                ];
-            }
-
-            // $loan = MasterDDLoan::lastest()->get();
-            // foreach ($loan as $key => $value) {
-            //     if ($loan) {
-            //         $pokok_pembayaran = MasterDDAngsuran::whereDate('created_at',Carbon::now())->where('id_dd_loan',$value->no_loan)->sum('pokok_angsuran');
-            //         $value->baki_debet = $pokok_pembayaran - $value->baki_debet;
-            //     }
-            // }
-
-
-
-            return view('pembayaran.upload',['data' => $result_data_angsuran]);
+            alert()->success('Sukses','Pembayaran Berhasil dilakukan');
+            return redirect()->route('pembayaran.index');
         } catch (Exception $e) {
             DB::rollBack();
             return $e;
@@ -265,9 +267,9 @@ class PembayaranController extends Controller
             $token = sipde_token()['token'];
             $body = [
                 'kode_pendaftaran' => $kode,
-                'kumulatif_pokok_angsuran' =>(int)$pokok_angsuran,
-                'baki_debet' =>  (int)$kolek,
-                'kolektibilitas' => (int)$kolek,
+                'kumulatif_pokok_angsuran' =>(float)$pokok_angsuran,
+                'baki_debet' =>  (float)$kolek,
+                'kolektibilitas' => (float)$kolek,
                 'status_kolektibilitas' => (int)$status,
             ];
             $pembayaran_kumulatif = Http::withHeaders([

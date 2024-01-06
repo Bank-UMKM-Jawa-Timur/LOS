@@ -1,6 +1,7 @@
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
     {{-- <script>
         // $(document).ready(function () {
@@ -57,12 +58,23 @@
         let resumableDic = createResumable(browseFileDic, '{{ route('pembayaran.upload-data') }}',nameDic);
         let resumableNomi = createResumable(browseFileNomi, '{{ route('pembayaran.upload-data') }}',nameNomi);
 
+        resumableTxt.on('fileAdded', function (file) {
+            console.log('File picked')
+            const filename = file.fileName
+            const ext = file.fileName.split(".")[1]
+            if (ext !='txt') {
+                errorMessage('Hanya bisa memilih file berekstensi .txt')
+            }
+
+        });
         resumableTxt.on('fileSuccess', function (file, response) {
             console.log(response);
             response = JSON.parse(response);
             $('#check_txt').val(response.filename)
             $('.text-filename-txt').html(`File : ${response.filename}`)
+            successMessage('Berhasil mengupload file')
             checkFileInputs();
+            console.log('file uploaded')
         });
 
         resumableDic.on('fileSuccess', function (file, response) {
@@ -70,7 +82,9 @@
             response = JSON.parse(response);
             $('.text-filename-dic').html(`File : ${response.filename}`)
             $('#check_dic').val(response.filename)
+            successMessage('Berhasil mengupload file')
             checkFileInputs();
+            console.log('file uploaded')
             // updateInputFileName(browseFileDic, response.filename);
 
         });
@@ -79,8 +93,9 @@
             response = JSON.parse(response);
             $('.text-filename-nomi').html(`File : ${response.filename}`)
             $('#check_nomi').val(response.filename)
+            successMessage('Berhasil mengupload file')
             checkFileInputs();
-
+            console.log('file uploaded')
         });
 
         function createResumable(element, targetUrl,name) {
@@ -110,19 +125,19 @@
             });
 
             resumable.on('fileError', function (file, response) {
+                console.log(response);
                 alert('File uploading error.');
             });
 
             return resumable;
         }
 
-
         function showProgress(element) {
             let progressBarContainer = $('#progressBarContainer');
             progressBarContainer.find('.progress-bar').css('width', '0%');
             progressBarContainer.find('.progress-bar').html('0%');
             progressBarContainer.find('.progress-bar').removeClass('bg-success');
-            progressBarContainer.show();
+            // progressBarContainer.show();
         }
 
         function updateProgress(element, value) {
@@ -141,6 +156,24 @@
             } else {
                 $('#checkFile').hide(); // Hide the submit button
             }
+        }
+        // alert message
+        function successMessage(message) {
+            Swal.fire({
+                title: 'Sukses!',
+                text: message,
+                icon: 'success',
+                timer: 3000,
+                closeOnClickOutside: false
+            })
+        }
+
+        function errorMessage(message) {
+            swal("Gagal!", message, {
+                icon: "error",
+                timer: 3000,
+                closeOnClickOutside: false
+            })
         }
 
         $('#checkFile').on('click',function() {
@@ -228,16 +261,16 @@
                         @endphp
                         @foreach ($data as $key => $item)
                         @php
-                            $date = strtotime($item['HLDTVL']);
+                            $date = strtotime($item->tanggal_pembayaran);
                         @endphp
                         <tr>
                             <td>{{ $no++ }}</td>
-                            <td>{{ $item['HLSEQN'] }}</td>
-                            <td>{{ $item['HLLNNO'] }}</td>
+                            <td>{{ $item->squence }}</td>
+                            <td>{{ $item->no_loan }}</td>
                             <td>{{ date('d-m-Y',$date) }}</td>
-                            <td>{{ number_format((int)$item['HLORMT'] / 100,2,",",".") }}</td>
-                            <td>{{ $item['kolek'] }}</td>
-                            <td>{{ $item['HLDESC'] }}</td>
+                            <td>{{ number_format((int)$item->pokok_pembayaran,2,",",".") }}</td>
+                            <td>{{ $item->kolek }}</td>
+                            <td>{{ $item->keterangan }}</td>
                         </tr>
                         @endforeach
                     </tbody>
