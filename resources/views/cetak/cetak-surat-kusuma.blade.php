@@ -933,38 +933,71 @@
 
     @endif
     @php
-        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+        $dataKtpNasabah = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
             ->where('level', 2)
-            ->where('id_parent', $itemKTPNas->id)
+            ->where('id_parent', $itemSP->id)
             ->where('nama', 'Foto KTP Nasabah')
+            ->get();
+        $dataFotoNasabah = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+            ->where('level', 2)
+            ->where('id_parent', $itemSP->id)
+            ->where('nama', 'Foto KTP Suami')
+            ->get();
+
+        $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+            ->where('level', 2)
+            ->where('id_parent', $itemSP->id)
+            ->where('nama', 'Laporan SLIK')
             ->get();
     @endphp
 
     <div class="page-break"></div>
         <table style="width: 100%">
-            @foreach ($dataLevelDua as $item)
+            @foreach ($dataFotoNasabah as $item)
                 @if ($item->opsi_jawaban == 'file')
                     @php
                         $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
                             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                            ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
+                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                             ->where('jawaban_text.id_jawaban', $item->id)
                             ->get();
                     @endphp
                     @foreach ($dataDetailJawabanText as $itemTextDua)
                         @php
-                            $ktp = asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text;
+                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                         @endphp
-                    <tr>
-                        <td style="width: 40%;" >
-                            <label>{{ $item->nama }}</label>
-                        </td>
-                        <td>:</td>
-                        <td style="padding-left: 19px;">
-                            <img src="{{ $ktp }}"
-                                    alt="" width="400px"/>
-                        </td>
-                    </tr>
+                            <tr>
+                                <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">{{$item->nama}}</td>
+                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
+                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">
+                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="">
+                                </td>
+                            </tr>
+                        </div>
+                    @endforeach
+                @endif
+            @endforeach
+            @foreach ($dataKtpNasabah as $item)
+                @if ($item->opsi_jawaban == 'file')
+                    @php
+                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                            ->where('jawaban_text.id_jawaban', $item->id)
+                            ->get();
+                    @endphp
+                    @foreach ($dataDetailJawabanText as $itemTextDua)
+                        @php
+                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                        @endphp
+                            <tr>
+                                <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">{{$item->nama}}</td>
+                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
+                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">
+                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="">
+                                </td>
+                            </tr>
+                        </div>
                     @endforeach
                 @endif
             @endforeach
@@ -972,11 +1005,6 @@
     <div class="page-break"></div>
     @php
         // check level 2
-        $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-            ->where('level', 2)
-            ->where('id_parent', $itemSP->id)
-            ->where('nama', 'Laporan SLIK')
-            ->get();
     @endphp
     @foreach ($dataLS as $item)
         @if ($item->opsi_jawaban == 'file')
