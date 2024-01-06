@@ -135,15 +135,16 @@
             let fileTxt = $('#check_txt').val() != '' ? true : false;
             let fileDic = $('#check_dic').val() != ''  ? true : false ;
             let fileNomi = $('#check_nomi').val() != '' ? true : false;
-            console.log(`${fileTxt}-${fileDic}-${fileNomi}`);
             if (fileTxt && fileDic && fileNomi) {
                 $('#checkFile').show(); // Show the submit button
+                $('#prosesData').hide();
             } else {
                 $('#checkFile').hide(); // Hide the submit button
             }
         }
 
         $('#checkFile').on('click',function() {
+            $("#fileUploadForm").submit();
             $('#preload-data').removeClass('hidden');
         })
 
@@ -169,8 +170,7 @@
     <div class="body-pages">
         <div class="table-wrapper border bg-white mt-3 p-5">
 
-            <form id="fileUploadForm" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" method="POST">
-                @csrf
+
                 <div class="form-group-3">
                     <div class="input-box">
                         <label for="">File Txt</label>
@@ -196,9 +196,18 @@
                 </div>
 
                 <div class="flex justify-end my-5 py-4">
-                    <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white" id="checkFile" style="display:none;">Proses Data</button>
+                    @if ($data != null)
+                        <form action="{{ route('pembayaran.proses') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="data" value="{{ json_encode($data) }}">
+                            <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white" id="prosesData">Proses Data</button>
+                        </form>
+                    @endif
+                    <form id="fileUploadForm" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" method="POST">
+                        @csrf
+                        <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white" id="checkFile" style="display:none;">Check Data</button>
+                    </form>
                 </div>
-            </form>
             @if ($data != null)
             <div class="table-responsive pl-5 pr-5">
                 <table class="tables">
@@ -210,7 +219,7 @@
                             <th>Tanggal Pembayaran</th>
                             <th>Nominal</th>
                             <th>Kolek</th>
-                            <th>Tipe</th>
+                            <th>Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -228,7 +237,7 @@
                             <td>{{ date('d-m-Y',$date) }}</td>
                             <td>{{ number_format((int)$item['HLORMT'] / 100,2,",",".") }}</td>
                             <td>{{ $item['kolek'] }}</td>
-                            <td>{{ $item['HLACKY'] }}</td>
+                            <td>{{ $item['HLDESC'] }}</td>
                         </tr>
                         @endforeach
                     </tbody>

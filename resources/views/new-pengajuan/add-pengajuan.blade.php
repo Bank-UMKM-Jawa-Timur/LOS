@@ -1603,7 +1603,6 @@ $dataIndex = match ($skema) {
         parent.remove()
     })
     $(".btn-simpan-data").on('click', function(e) {
-        console.log(nullValue);
         if ($('#komentar_staff').val() == '') {
             Swal.fire({
                 icon: 'error',
@@ -1614,9 +1613,11 @@ $dataIndex = match ($skema) {
         }
         else {
             const ijinUsaha = $("#ijin_usaha").val();
-            if (nullValue.length > 0 ) {
+            const value = 'aspek keuangan';
+            dataValue = nullValue.filter(item => item !== value)
+            if (dataValue.length > 0 ) {
                 let message = "";
-                $.each(nullValue, (i, v) => {
+                $.each(dataValue, (i, v) => {
                     var item = v;
                     if (v == 'dataLevelDua')
                         item = 'slik';
@@ -1626,9 +1627,9 @@ $dataIndex = match ($skema) {
 
                     if (v == 'itemByKategori'){
                         if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
-                            for(var j = 0; j < nullValue.length; j++){
-                                while(nullValue[j] == v){
-                                    nullValue.splice(j, 1)
+                            for(var j = 0; j < dataValue.length; j++){
+                                while(dataValue[j] == v){
+                                    dataValue.splice(j, 1)
                                 }
                             }
                         } else {
@@ -1640,9 +1641,9 @@ $dataIndex = match ($skema) {
                         if (v == 'nib text' || v == 'nib_text') {
                             var nibText = $("#nib_text").val()
                             if (nibText == null || nibText == '') {
-                                for(var j = 0; j < nullValue.length; j++){
-                                    while(nullValue[j] == v){
-                                        nullValue.splice(j, 1)
+                                for(var j = 0; j < dataValue.length; j++){
+                                    while(dataValue[j] == v){
+                                        dataValue.splice(j, 1)
                                     }
                                 }
                             }
@@ -1654,12 +1655,13 @@ $dataIndex = match ($skema) {
 
                     message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
                 })
+                console.log(message);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
-                console.log(nullValue);
+                // console.log(nullValue);
                 e.preventDefault()
             } else {
                 $("#preload-data").removeClass("hidden");
