@@ -185,6 +185,7 @@
 
         //get item by kategori
         let kategoriJaminanUtama = $(this).val();
+        console.log(kategoriJaminanUtama);
 
         $.ajax({
             type: "get",
@@ -316,10 +317,11 @@
 
         //get item by kategori
         let kategoriJaminan = $(this).val();
+        let id_dagulir_temp = $('#id_dagulir_temp').val();
 
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
@@ -472,12 +474,13 @@
 
         //get item by kategori
         let kategoriJaminan = $('#kategori_jaminan_tambahan').val();
-
+         let id_dagulir_temp = $('#id_dagulir_temp').val()
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}`,
             dataType: "json",
             success: function(response) {
+                console.log(response);
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
                     $("#select_kategori_jaminan_tambahan").show()
                     $("#jaminan_tambahan").show()
@@ -497,7 +500,7 @@
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // //console.log(valOption.skor);
+                        console.log(response.dataSelect);
                         $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
@@ -549,14 +552,16 @@
                                     </div>
                                 `);
                             } else {
-                                if (response.dataJawaban[i] != null && response.dataJawaban[
-                                        i] != "") {
+                                if (response.dataJawaban[i] != null && response.dataJawaban[i] != "") {
                                     if (kategoriJaminan != 'Kendaraan Bermotor') {
-                                        isCheck =
-                                            "<input type='checkbox' class='checkKategori' checked>"
+                                        isCheck = "<input type='checkbox' class='checkKategori' checked>"
                                         isDisabled = ""
                                     }
+                                }else{
+                                    isCheck = "<input type='checkbox' class='checkKategori'>"
+                                    isDisabled = "disabled"
                                 }
+                                console.log(typeof(response.dataJawaban[i]));
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group aspek_jaminan_kategori">
                                         <label>${isCheck} ${valItem.nama}</label>

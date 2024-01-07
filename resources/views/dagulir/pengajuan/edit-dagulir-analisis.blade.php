@@ -25,7 +25,7 @@
         </div>
         <div class="row space-y-5">
             <div class="form-group-2">
-                <input type="hidden" name="id_nasabah" id="" value="{{ $dataUmum->id }}">
+                <input type="hidden" name="id_nasabah" id="id_nasabah" value="{{ $dataUmum->id }}">
                 <div class="input-box col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" maxlength="255"
