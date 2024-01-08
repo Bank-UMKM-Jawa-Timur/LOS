@@ -176,7 +176,7 @@
                                 <td>{{ $item->nama }}</td>
                                 <td class="text-center text-sm">
                                     @if ($item->pk && $item->posisi == 'Selesai')
-                                        {{$item->posisi}}
+                                       Disetujui
                                     @else
                                         {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
                                     @endif

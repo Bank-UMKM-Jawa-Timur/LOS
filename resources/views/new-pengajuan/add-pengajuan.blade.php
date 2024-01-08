@@ -1786,10 +1786,10 @@ $dataIndex = match ($skema) {
 
         //get item by kategori
         let kategoriJaminanUtama = $(this).val();
-
+        let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 // jika kategori bukan stock dan piutang
@@ -1910,6 +1910,7 @@ $dataIndex = match ($skema) {
 
     //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
     $('#kategori_jaminan_tambahan').change(function(e) {
+
         //clear item
         $('#select_kategori_jaminan_tambahan').empty();
 
@@ -1918,10 +1919,10 @@ $dataIndex = match ($skema) {
 
         //get item by kategori
         let kategoriJaminan = $(this).val();
-
+        let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
