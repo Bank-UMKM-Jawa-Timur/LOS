@@ -899,25 +899,25 @@ class PengajuanKreditController extends Controller
         }
 
         $pengajuan =  PengajuanModel::find($request->id);
-        if ($pengajuan->skema_kredit != 'Dagulir') {
-            $dataJawaban = [];
-            $id_nasabah = CalonNasabah::where('id_pengajuan',$pengajuan->id)->first()->id;
-            foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
-                array_push($dataJawaban, temporary($id_nasabah, $i->id)?->opsi_text ?? '');
-            }
+        $dataJawaban = [];
+        $dataSelect = [];
+        if ($pengajuan) {
+            if ($pengajuan->skema_kredit != 'Dagulir') {
+                $id_nasabah = CalonNasabah::where('id_pengajuan',$pengajuan->id)->first()->id;
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+                    array_push($dataJawaban, temporary($id_nasabah, $i->id)?->opsi_text ?? '');
+                }
 
-            $dataSelect = [];
-            if ($id_nasabah)
-                $dataSelect = temporary_select($item->id, $id_nasabah)?->id_jawaban;
-        } else {
-            $dataJawaban = [];
-            foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
-                array_push($dataJawaban, temporary_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
-            }
+                if ($id_nasabah)
+                    $dataSelect = temporary_select($item->id, $id_nasabah)?->id_jawaban;
+            } else {
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+                    array_push($dataJawaban, temporary_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
+                }
 
-            $dataSelect = [];
-            if ($pengajuan->dagulir_id)
-                $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
+                if ($pengajuan->dagulir_id)
+                    $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
+            }
         }
 
 
