@@ -1342,7 +1342,7 @@ class NewDagulirController extends Controller
             // return $param['dataKecamatanDom'];
             $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
-            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
+            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp', 'pengajuan.id_pbo', 'pengajuan.id_pbp')
                 ->find($id);
             $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
 
@@ -1399,7 +1399,6 @@ class NewDagulirController extends Controller
             }
             $param['logPengajuan'] = $log;
             $param['rolesPemroses'] = $this->repo->getDataPemroses($nasabah);
-
             return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
 
         } else {

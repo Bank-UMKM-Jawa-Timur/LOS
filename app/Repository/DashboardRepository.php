@@ -434,7 +434,6 @@ class DashboardRepository
 
         $data = DB::table('pengajuan')
             ->whereNull('deleted_at')
-            ->where('pengajuan.skema_kredit', '!=', 'Dagulir')
             ->whereMonth('tanggal', $bulan_sekarang)
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);
@@ -470,6 +469,8 @@ class DashboardRepository
             $data->where('id_pbp', $idUser);
         } else if($role == 'Pincab'){
             $data->where('id_pincab', $idUser);
+        } else {
+            $data;
         }
 
         $total_proses = 0;

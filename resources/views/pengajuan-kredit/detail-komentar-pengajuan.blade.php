@@ -187,6 +187,10 @@
                                                 ->where('id_cabang', $dataUmum->id_cabang)
                                                 ->where('role', 'PBO')
                                                 ->first();
+                    $userPBP = \App\Models\User::select('id')
+                                                ->where('id_cabang', $dataUmum->id_cabang)
+                                                ->where('role', 'PBP')
+                                                ->first();
 
                     if ($dataUmum->id_pbo) {
                         $pendapatUsulanPBO = \App\Models\PendapatPerAspek::select('*')
@@ -897,16 +901,16 @@
                                     </div>
                                     @endforeach
                                     @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
-                                        <div class="form-group-1">
-                                            <div class="field-review">
-                                                <div class="field-name">
-                                                    <h6>Penyelia</h6>
-                                                </div>
-                                                <div class="field-answer">
-                                                    <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
-                                                </div>
+                                    <div class="form-group-1">
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <h6>Penyelia</h6>
+                                            </div>
+                                            <div class="field-answer">
+                                                <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
                                             </div>
                                         </div>
+                                    </div>
                                     @endforeach
                                     @if ($dataUmum->id_pbo != null)
                                         @foreach ($pendapatUsulanPBO as $itemPBO)
@@ -1018,7 +1022,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-1">
+                        {{-- <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Tenor</label>
@@ -1037,7 +1041,7 @@
                                     <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbo, 0, ',', '.')}}</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     @endif
                     {{-- @if($pendapatDanUsulan->komentar_pbo)
@@ -1086,7 +1090,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-1">
+                        {{-- <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Tenor</label>
@@ -1105,7 +1109,7 @@
                                     <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 0, ',', '.')}}</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     @endif
                     <div class="p-4">
