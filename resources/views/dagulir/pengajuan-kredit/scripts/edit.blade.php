@@ -318,10 +318,11 @@
         //get item by kategori
         let kategoriJaminan = $(this).val();
         let id_dagulir_temp = $('#id_dagulir_temp').val();
+        let id_nasabah = $('#id_nasabah').val()
 
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}&id_nasabah=${id_nasabah}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {

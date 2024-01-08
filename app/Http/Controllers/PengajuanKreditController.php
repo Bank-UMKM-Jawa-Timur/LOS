@@ -921,6 +921,26 @@ class PengajuanKreditController extends Controller
                     $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
             }
         }else{
+            if ($request->skema == 'Dagulir') {
+                if ($request->has('id_nasabah')) {
+                    # code...
+                }
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+
+                    array_push($dataJawaban, temporary($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
+                }
+
+                if ($pengajuan->dagulir_id)
+                    $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
+            }else{
+
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+                    array_push($dataJawaban, temporary_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
+                }
+
+                if ($pengajuan->dagulir_id)
+                    $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
+            }
 
         }
 

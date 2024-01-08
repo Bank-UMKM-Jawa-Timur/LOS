@@ -21,6 +21,7 @@
             </h2>
         </div>
     </div>
+    <input type="hidden" name="id_nasabah" id="" value="{{ $duTemp?->id }}">
     <div class="form-group-2">
         <div class="input-box">
             <label for="">Tipe Pengajuan</label>
@@ -450,7 +451,7 @@
         </div>
 
         <div class="form-group-2" id="form_tipe_pengajuan">
-            
+
             <div class="input-box">
                 <label for="">Jenis badan hukum</label>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
