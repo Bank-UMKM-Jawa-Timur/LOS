@@ -56,7 +56,7 @@ $dataIndex = match ($skema) {
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp" value="{{ $pengajuan?->id }}">
-                <input type="hidden" name="skema" id="skema" value="{{ $pengajuan?->skema_kredit }}">
+                <input type="hidden" name="skema_kredit" id="skema_kredit" value="{{ $pengajuan?->skema_kredit }}">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         @if ($pengajuan->skema_kredit != 'Dagulir')

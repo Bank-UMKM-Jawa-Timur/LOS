@@ -840,7 +840,6 @@ class PengajuanKreditController extends Controller
 
     public function getItemJaminanByKategoriJaminanTambahan(Request $request)
     {
-        return $request;
         $kategori = $request->get('kategori');
 
         $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 110)->first();
@@ -921,25 +920,22 @@ class PengajuanKreditController extends Controller
                     $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
             }
         }else{
-            if ($request->skema == 'Dagulir') {
-                if ($request->has('id_nasabah')) {
-                    # code...
-                }
+            if ($request->skema_kredit == 'Dagulir') {
                 foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
 
-                    array_push($dataJawaban, temporary($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
+                    array_push($dataJawaban, temporary($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
                 }
 
-                if ($pengajuan->dagulir_id)
-                    $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
+                if ($request->idCalonNasabah)
+                    $dataSelect = temporary_select_dagulir($item->id, $request->idCalonNasabah)?->id_jawaban;
             }else{
 
                 foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
-                    array_push($dataJawaban, temporary_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
+                    array_push($dataJawaban, temporary_dagulir($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
                 }
 
-                if ($pengajuan->dagulir_id)
-                    $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
+                if ($request->idCalonNasabah)
+                    $dataSelect = temporary_select_dagulir($item->id, $request->idCalonNasabah)?->id_jawaban;
             }
 
         }

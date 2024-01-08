@@ -319,10 +319,11 @@
         let kategoriJaminan = $(this).val();
         let id_dagulir_temp = $('#id_dagulir_temp').val();
         let id_nasabah = $('#id_nasabah').val()
+        let skema = $('#skema_kredit').val()
 
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}&id_nasabah=${id_nasabah}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
@@ -374,6 +375,12 @@
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group file-wrapper item-${valItem.id}">
                                         <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                            data-title="{{$itemNIB->nama}}"
+                                            data-type="image"
+                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id_jawaban}/{$file}") }}"
+                                            >Preview
+                                        </a>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"
