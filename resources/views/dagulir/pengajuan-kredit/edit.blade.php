@@ -56,6 +56,7 @@ $dataIndex = match ($skema) {
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp" value="{{ $pengajuan?->id }}">
+                <input type="hidden" name="skema" id="skema" value="{{ $pengajuan?->skema_kredit }}">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         @if ($pengajuan->skema_kredit != 'Dagulir')
@@ -354,14 +355,14 @@ $dataIndex = match ($skema) {
                                                     <div class="input-box">
                                                         <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp, .pdf)</small>
                                                         @php
-                                                            $file = edit_text_dagulir($pengajuan->id, $itemNIB->id)?->opsi_text;
+                                                            $file = edit_text_dagulir($pengajuan->id, $item->id)?->opsi_text;
                                                             $is_multiple = $item->is_multiple;
                                                             $files = edit_text_dagulir($pengajuan->id, $item->id, $is_multiple);
                                                         @endphp
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                             data-title="{{$item->nama}}"
                                                             data-type="image"
-                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id}/{$file}") }}"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$item->id}/{$file}") }}"
                                                             >Preview
                                                         </a>
                                                         {{-- @if ($file)

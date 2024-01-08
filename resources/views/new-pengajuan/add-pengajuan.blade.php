@@ -313,11 +313,11 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp, .pdf)</small>
-                                                            <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
+                                                            <input type="hidden" name="id_item_file[{{ $item->id }}][]" value="{{ $item->id }}"
                                                                 id="">
-                                                            <input type="file" name="upload_file[{{ $item->id }}] image-pdf" id="{{ $idLevelDua }}"
+                                                            <input type="file" name="upload_file[{{ $item->id }}][]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size {{$item->only_accept}}"
+                                                                class="form-input limit-size image-pdf {{$item->only_accept}}"
                                                                 >
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>

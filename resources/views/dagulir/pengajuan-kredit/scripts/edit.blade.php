@@ -474,10 +474,11 @@
 
         //get item by kategori
         let kategoriJaminan = $('#kategori_jaminan_tambahan').val();
-         let id_dagulir_temp = $('#id_dagulir_temp').val()
+        let id_dagulir_temp = $('#id_dagulir_temp').val()
+        let skema = $('#skema').val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}&skema=`,
             dataType: "json",
             success: function(response) {
                 console.log(response);
@@ -535,7 +536,7 @@
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"
                                                     value="${valItem.id}" id="">
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
-                                                    name="upload_file[${valItem.id}][]" data-id=""
+                                                    name="upload_file[${valItem.id}][]" value="${response.dataJawaban[i]}" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
                                                 <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
@@ -552,7 +553,7 @@
                                     </div>
                                 `);
                             } else {
-                                if (response.dataJawaban[i] != null && response.dataJawaban[i] != "") {
+                                if (response.dataDetailJawabanText[i] != null && response.dataJawaban[i] != "") {
                                     if (kategoriJaminan != 'Kendaraan Bermotor') {
                                         isCheck = "<input type='checkbox' class='checkKategori' checked>"
                                         isDisabled = ""

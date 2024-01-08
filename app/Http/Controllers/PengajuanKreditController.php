@@ -840,6 +840,7 @@ class PengajuanKreditController extends Controller
 
     public function getItemJaminanByKategoriJaminanTambahan(Request $request)
     {
+        return $request;
         $kategori = $request->get('kategori');
 
         $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 110)->first();
@@ -905,12 +906,13 @@ class PengajuanKreditController extends Controller
             if ($pengajuan->skema_kredit != 'Dagulir') {
                 $id_nasabah = CalonNasabah::where('id_pengajuan',$pengajuan->id)->first()->id;
                 foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
-                    array_push($dataJawaban, temporary($id_nasabah, $i->id)?->opsi_text ?? '');
+                    array_push($dataJawaban, edit($pengajuan->id, $i->id)?->opsi_text ?? '');
                 }
 
                 if ($id_nasabah)
-                    $dataSelect = temporary_select($item->id, $id_nasabah)?->id_jawaban;
+                    $dataSelect = edit_select($detailJawabanOption->first()->id_jawaban, $pengajuan->id)?->id_jawaban;
             } else {
+
                 foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
                     array_push($dataJawaban, temporary_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
                 }
@@ -918,6 +920,8 @@ class PengajuanKreditController extends Controller
                 if ($pengajuan->dagulir_id)
                     $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
             }
+        }else{
+
         }
 
 
