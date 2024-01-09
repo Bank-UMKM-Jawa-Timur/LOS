@@ -535,10 +535,22 @@
                         } else {
                             var name_lowercase = valItem.nama.toLowerCase();
                             name_lowercase = name_lowercase.replaceAll(' ', '_')
+                            var linkElement = $(".open-modal");
+
+                            // Assuming you have the correct values for the variables
+                            var itemId = `{{ $pengajuan?->id }}`; // Replace with the actual value
+                            var itemNIBId = valItem.id; // Replace with the actual value
+                            var file = response.dataJawaban[i]; // Replace with the actual value
+
+                            // Construct the new filepath URL
+                            var newFilepath = "{{asset('../upload')}}/" + itemId + "/" + itemNIBId + "/" + file;
+
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group file-wrapper item-${valItem.id}">
                                         <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                data-title="${valItem.nama}" data-filepath="${newFilepath}">Preview</a>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"
