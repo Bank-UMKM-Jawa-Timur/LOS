@@ -136,7 +136,7 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" id="space_nib"></div>
+                                            {{-- <div class="form-group" id="space_nib"></div> --}}
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
@@ -199,7 +199,7 @@ $dataIndex = match ($skema) {
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                             data-title="Dokumen Surat Keterangan Usaha"
                                                             data-type="image"
-                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemSKU->id_jawaban}/{$file}") }}"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemSKU->id}/{$file}") }}"
                                                             >Preview
                                                         </a>
                                                     @endif
@@ -373,6 +373,7 @@ $dataIndex = match ($skema) {
                                                             id="">
                                                         <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                             data-id="{{ edit_text_dagulir($pengajuan->id, $item->id)?->id }}" placeholder="Masukkan informasi {{ $item->nama }}"
+                                                            value="{{ $file }}"
                                                             class="form-input limit-size">
                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                             MB</span>

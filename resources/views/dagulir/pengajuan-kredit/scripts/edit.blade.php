@@ -640,7 +640,7 @@
     $('#npwp_id').attr('disabled', true);
     $('#npwp_text').attr('disabled', true);
     $('#npwp_file').attr('disabled', true);
-    $('#npwp_text').val('');
+    // $('#npwp_text').val('');
     $('#npwp_opsi_jawaban').attr('disabled', true);
 
     $('#docNPWP').hide();
@@ -779,8 +779,33 @@
         }
     });
     // end milih ijin usaha
-
     // Cek Npwp
+    if ($("#isNpwp").is(":checked")) {
+        $('#npwp').show();
+        $('#npwp_id').removeAttr('disabled');
+        $('#npwp_text').removeAttr('disabled');
+        $('#npwp_file').removeAttr('disabled');
+        $('#npwp_opsi_jawaban').removeAttr('disabled');
+
+        $('#docNPWP').show();
+        $('#docNPWP_id').removeAttr('disabled');
+        $('#docNPWP_text').removeAttr('disabled');
+        $('#docNPWP_text').val('');
+        $('#docNPWP_upload_file').removeAttr('disabled');
+    } else {
+        $('#npwp').hide();
+        $('#npwp_id').attr('disabled', true);
+        $('#npwp_text').attr('disabled', true);
+        $('#npwp_file').attr('disabled', true);
+        $('#npwp_text').val('');
+        $('#npwp_opsi_jawaban').attr('disabled', true);
+
+        $('#docNPWP').hide();
+        $('#docNPWP_id').attr('disabled', true);
+        $('#docNPWP_text').attr('disabled', true);
+        $('#docNPWP_text').val('');
+        $('#docNPWP_upload_file').attr('disabled', true);
+    }
     $('#isNpwp').change(function() {
         if ($(this).is(':checked')) {
             $('#npwp').show();
@@ -799,7 +824,6 @@
             $('#npwp_id').attr('disabled', true);
             $('#npwp_text').attr('disabled', true);
             $('#npwp_file').attr('disabled', true);
-            $('#npwp_text').val('');
             $('#npwp_opsi_jawaban').attr('disabled', true);
 
             $('#docNPWP').hide();
@@ -810,16 +834,16 @@
         }
     });
 
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
-        }
-    }
-    // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
-        $(this).val(formatNpwp(input))
-    })
+    // function formatNpwp(value) {
+    //     if (typeof value === 'string') {
+    //         return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+    //     }
+    // }
+    // // NPWP format
+    // $(document).on('keyup', '#npwp_text', function() {
+    //     var input = $(this).val()
+    //     $(this).val(formatNpwp(input))
+    // })
 
     //triger hitung ratio coverage
     $('#thls').change(function(e) {
@@ -1876,10 +1900,39 @@
             return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
         }
     }
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [
+                    match[1],
+                    match[2] ? ".": "",
+                    match[2],
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+
+        } catch(err) {
+            return "";
+        }
+    }
+    var npwp = $('#npwp_text').val();
+    const NPWP = document.getElementById("npwp_text")
+
+    NPWP.oninput = (e) => {
+        e.target.value = autoFormatNPWP(e.target.value);
+    }
+    $('#npwp_text').val(autoFormatNPWP(npwp))
+    // console.log($('#npwp_text').val().replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6'));
     // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
-        $(this).val(formatNpwp(input))
-    })
+    // $(document).on('keyup', '#npwp_text', function() {
+    //     var input = $(this).val()
+    //     $(this).val(formatNpwp(input))
+    // })
 </script>
 <script src="{{ asset('') }}js/custom.js"></script>
