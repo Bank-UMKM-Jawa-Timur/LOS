@@ -304,7 +304,8 @@ class CetakSuratController extends Controller
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
 
-        // return view('cetak.cetak-pk', $param);
+
+        // return view('dagulir.cetak.cetak-pk', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
     }

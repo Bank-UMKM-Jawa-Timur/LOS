@@ -3731,6 +3731,7 @@ class PengajuanKreditController extends Controller
 
     public function postFileKKB(Request $request, $id)
     {
+        // return $request;
         $kode_cabang = DB::table('cabang')
             ->join('pengajuan', 'pengajuan.id_cabang', 'cabang.id')
             ->where('pengajuan.id', $id)
@@ -3868,6 +3869,7 @@ class PengajuanKreditController extends Controller
             }
 
             DB::commit();
+            Alert()->success('Berhasil menambahkan', $message);
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan ' . $message);
         } catch (Exception $e) {
             DB::rollBack();

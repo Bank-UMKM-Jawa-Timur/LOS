@@ -76,6 +76,15 @@
         '11' => 'November',
         '12' => 'Desember',
     ];
+    $namaHari = [
+        'Sunday' => 'Minggu',
+        'Monday' => 'senin',
+        'Tuesday' => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday' => 'Kamis',
+        'Friday' => 'Jumat',
+        'Saturday' => 'Sabtu',
+    ];
 
     $nilai = 0;
 
@@ -107,15 +116,42 @@
         }
         return $temp;
     }
+
+    function getKaryawan($nip){
+        // from api
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
+        $apiURL = $host . '/api/karyawan';
+
+        $response = Http::get($apiURL, [
+            'nip' => $nip,
+        ]);
+
+        $statusCode = $response->status();
+
+        if ($statusCode === 200) {
+            $responseData = $response->json();
+            $nama = $responseData['data']['nama'];
+            return $nama;
+        } else {
+            return null;
+        }
+    }
 @endphp
 <body onload="printPage()">
     <div class="data-surat">
         <div class="heading">
             <h3>PERJANJIAN KREDIT DAN PENGAKUAN HUTANG</h3>
-            <p class="no-surat">Nomor : ......../DAGULIR/{{ $dataCabang->cabang }}/{{$namaBulan[$bulan]}}/{{$tahun}}</p>
+            <p class="no-surat">Nomor : ......../{{strtoupper($dataUmum->skema_kredit)}}/{{ $dataCabang->cabang }}/{{$namaBulan[$bulan]}}/{{$tahun}}</p>
         </div>
 
-        <p>Pada hari ini....................., tanggal ............................, yang bertanda tangan dibawah ini:</p>
+        @php
+            $today = new DateTime();
+            // $hariIni ->format('l F Y, H:i')
+            $hariIni = $today->format('l')
+        @endphp
+
+        <p>Pada hari ini {{$namaHari[$hariIni]}}, tanggal {{ date('d') . '-' . $namaBulan[date('m')] . '-' . date('Y') }}, yang bertanda tangan dibawah ini:</p>
 
         <table class="table-perjanjian">
             <tr>
@@ -123,7 +159,7 @@
                 <td style="width: 20%">Nama</td>
                 <td style="width: 1%">:</td>
                 <td>
-                    {{-- {{ $dataNasabah->nama }} --}}
+                    ({{ getKaryawan($dataPincab[0]['nip']) }})
                 </td>
             </tr>
             <tr>
@@ -149,7 +185,7 @@
                 <td style="width: 20%">Nama</td>
                 <td style="width: 1%">:</td>
                 <td>
-                    {{-- {{ $dataNasabah->nama }} --}}
+                    ({{ getKaryawan($dataPenyelia[0]['nip']) }})
                 </td>
             </tr>
             <tr>
@@ -1043,8 +1079,8 @@
                 <td style="text-align: center">
                     <table style="width: 80%; text-align: center;">
                         <tr>
-                            <td>(.....................................)</td>
-                            <td>(.....................................)</td>
+                            <td>({{ getKaryawan($dataPincab[0]['nip']) }})</td>
+                            <td>({{ getKaryawan($dataPenyelia[0]['nip']) }})</td>
                         </tr>
                         <tr>
                             <td style="text-align: center;">
@@ -1059,7 +1095,7 @@
                 <td style="text-align: center">
                     <table style="width: 100%; text-align: center;">
                         <tr>
-                            <td>(.....................................)</td>
+                            <td>({{$dataNasabah->nama}})</td>
                         </tr>
                         <tr>
                             <td>Debitur</td>
