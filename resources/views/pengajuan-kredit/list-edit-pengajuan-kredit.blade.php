@@ -360,7 +360,7 @@
                                                             </li>
                                                         </a>
                                                     @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->sppk)
-                                                        <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->id }}">
+                                                        <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-skema="{{$item->skema_kredit}}" data-id="{{ $item->id }}">
                                                             <li class="item-tb-dropdown">
                                                                 Realisasi Kredit
                                                             </li>
@@ -608,14 +608,22 @@
         const target = $(this).data('target')
         const id = $(this).data('id')
         const kode_pendaftaran = $(this).data('kode_pendaftaran')
+        const skema = $(this).data('skema')
         const url_form = "{{url('/dagulir/post-file')}}/"+id
         const url_cetak = "{{url('/dagulir/cetak-pk')}}/"+id
         var token = generateCsrfToken()
+
+        if (skema == 'Dagulir') {
+            $(`#${target} #div_no_loan`).removeClass('hidden')
+        } else {
+            $(`#${target} #div_no_loan`).addClass('hidden')
+        }
 
         $(`#${target} #form-pk`).attr('action', url_form)
         $(`#${target} #token`).val(token)
         $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
         $(`#${target} #kode_pendaftaran`).val(kode_pendaftaran)
+        $(`#${target} #skema`).val(skema)
         $(`#${target}`).removeClass('hidden');
     })
     $(".tab-table-wrapper .tab-button").click(function(e) {

@@ -335,6 +335,7 @@ class PengajuanKreditController extends Controller
                 ->where('pengajuan.id_cabang', $id_cabang)
                 ->paginate($limit)
                 ->withQueryString();
+            // return $param['data_pengajuan'];
             return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
         } elseif ($role == 'Penyelia Kredit') {
             // $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();

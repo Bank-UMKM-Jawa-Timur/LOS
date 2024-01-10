@@ -1798,6 +1798,7 @@ class NewDagulirController extends Controller
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Administrator', $id_user, $allFilter, 'sipde');
         }
 
+        // return $pengajuan_dagulir;
         return view('dagulir.index',[
             'data' => $pengajuan_dagulir,
             'data_sipde' => $pengajuan_sipde,
@@ -2269,10 +2270,10 @@ class NewDagulirController extends Controller
         ->first() ?? '0';
 
         // return $dataNasabah;
-        // return redirect()->back();
-        return view('dagulir.cetak.cetak-pk', $param);
+        // return view('dagulir.cetak.cetak-pk', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
+        return redirect()->back();
     }
     public function cetakSPPk($id)
     {
@@ -2455,7 +2456,7 @@ class NewDagulirController extends Controller
                     ->where('id_pengajuan', $id)
                     ->update([
                         'no_pk' => $request->get('no_pk'),
-                        'no_loan' => $request->get('no_loan'),
+                        'no_loan' => $request->get('no_loan') ? $request->get('no_loan') : null,
                     ]);
                     DB::table('pengajuan')
                     ->where('id', $id)
