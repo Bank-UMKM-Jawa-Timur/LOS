@@ -538,13 +538,13 @@
         // Refresh the page after a delay (adjust as needed)
         setTimeout(function() {
                 location.reload();
-            }, 1500);
+            }, 2000);
     })
     $('#download-sppk').on('click',function(e) {
         // Refresh the page after a delay (adjust as needed)
         setTimeout(function() {
                 location.reload();
-            }, 1500);
+            }, 2000);
     })
     if (document.getElementById('modalConfirmPincab')) {
         document.getElementById('modalConfirmPincab').addEventListener('click', function () {
