@@ -297,7 +297,7 @@ class NewDagulirController extends Controller
                 $request->validate([
                     'nama_lengkap' => 'required',
                     'email' => 'required|unique:pengajuan_dagulir,email',
-                    'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik',
+                    'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik|max:16',
                     'tempat_lahir' => 'required',
                     'tanggal_lahir' => 'required',
                     'telp' => 'required',
@@ -330,7 +330,7 @@ class NewDagulirController extends Controller
                 'name' => 'required',
                 'alamat_rumah' => 'required',
                 'alamat_usaha' => 'required',
-                'no_ktp' => 'required',
+                'no_ktp' => 'required|max:16',
                 'kabupaten' => 'required|not_in:0',
                 'kec' => 'required|not_in:0',
                 'desa' => 'required|not_in:0',
@@ -754,9 +754,20 @@ class NewDagulirController extends Controller
             // Log Pengajuan Baru
             $namaNasabah = $request->skema_kredit == 'Dagulir' ? $pengajuan->nama : CalonNasabah::find($addData->id)->nama;
             // Delete data Draft
-            JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
-            JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
-            PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
+            if ($request->skema_kredit == 'Dagulir') {
+                JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+                JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+                PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
+            } else {
+                JawabanTemp::where('id_temporary_calon_nasabah', $request->id_dagulir_temp)->delete();
+                JawabanTempModel::where('id_temporary_calon_nasabah', $request->id_dagulir_temp)->delete();
+                CalonNasabahTemp::find($request->id_dagulir_temp)->delete();
+                DB::table('temporary_usulan_dan_pendapat')
+                    ->where('id_temp', $request->id_dagulir_temp)
+                    ->delete();
+                DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->id_dagulir_temp)->delete();
+            }
+
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 

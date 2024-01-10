@@ -899,15 +899,48 @@ class PengajuanKreditController extends Controller
                 ->get();
         }
 
+        $pengajuan =  PengajuanModel::find($request->id);
         $dataJawaban = [];
-        foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
-            array_push($dataJawaban, temporary($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
+        $dataSelect = [];
+        if ($pengajuan) {
+            if ($pengajuan->skema_kredit != 'Dagulir') {
+                $id_nasabah = CalonNasabah::where('id_pengajuan',$pengajuan->id)->first()->id;
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+                    array_push($dataJawaban, edit($pengajuan->id, $i->id)?->opsi_text ?? '');
+                }
+
+                if ($id_nasabah)
+                    $dataSelect = edit_select($detailJawabanOption->first()->id_jawaban, $pengajuan->id)?->id_jawaban;
+            } else {
+
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+                    array_push($dataJawaban, temporary_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
+                }
+
+                if ($pengajuan->dagulir_id)
+                    $dataSelect = temporary_select_dagulir($item->id, $pengajuan->dagulir_id)?->id_jawaban;
+            }
+        }else{
+            if ($request->skema_kredit == 'Dagulir') {
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+
+                    array_push($dataJawaban, temporary($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
+                }
+
+                if ($request->idCalonNasabah)
+                    $dataSelect = temporary_select_dagulir($item->id, $request->idCalonNasabah)?->id_jawaban;
+            }else{
+
+                foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
+                    array_push($dataJawaban, temporary_dagulir($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
+                }
+
+                if ($request->idCalonNasabah)
+                    $dataSelect = temporary_select_dagulir($item->id, $request->idCalonNasabah)?->id_jawaban;
+            }
+
         }
 
-        $dataSelect = [];
-
-        if ($request->idCalonNasabah)
-            $dataSelect = temporary_select($item->id, $request->idCalonNasabah)?->id_jawaban;
 
         $data = [
             'detailJawabanOption' => $detailJawabanOption->first(),

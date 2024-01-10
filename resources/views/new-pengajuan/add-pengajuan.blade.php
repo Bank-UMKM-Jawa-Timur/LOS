@@ -313,11 +313,11 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp, .pdf)</small>
-                                                            <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
+                                                            <input type="hidden" name="id_item_file[{{ $item->id }}][]" value="{{ $item->id }}"
                                                                 id="">
-                                                            <input type="file" name="upload_file[{{ $item->id }}] image-pdf" id="{{ $idLevelDua }}"
+                                                            <input type="file" name="upload_file[{{ $item->id }}][]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size {{$item->only_accept}}"
+                                                                class="form-input limit-size image-pdf {{$item->only_accept}}"
                                                                 >
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
@@ -845,7 +845,13 @@ $dataIndex = match ($skema) {
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
+    $("input[name='no_ktp']").keyup(function(e){
+        if($(this).val().length < 16) {
+            $('.no_ktp_pesan').html(`No KTP Harus 16`);
+        }else{
+            $('.no_ktp_pesan').html(``);
+        }
+    });
     // Start Validation
     @if (count($errors->all()))
         Swal.fire({
@@ -1780,10 +1786,10 @@ $dataIndex = match ($skema) {
 
         //get item by kategori
         let kategoriJaminanUtama = $(this).val();
-
+        let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 // jika kategori bukan stock dan piutang
@@ -1904,6 +1910,7 @@ $dataIndex = match ($skema) {
 
     //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
     $('#kategori_jaminan_tambahan').change(function(e) {
+
         //clear item
         $('#select_kategori_jaminan_tambahan').empty();
 
@@ -1912,10 +1919,10 @@ $dataIndex = match ($skema) {
 
         //get item by kategori
         let kategoriJaminan = $(this).val();
-
+        let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {

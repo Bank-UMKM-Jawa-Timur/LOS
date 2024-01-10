@@ -310,11 +310,11 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp, .pdf)</small>
-                                                            <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
+                                                            <input type="hidden" name="id_item_file[{{ $item->id }}][]" value="{{ $item->id }}"
                                                                 id="">
-                                                            <input type="file" name="upload_file[{{ $item->id }}] image-pdf" id="{{ $idLevelDua }}"
+                                                            <input type="file" name="upload_file[{{ $item->id }}][]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size {{$item->only_accept}}"
+                                                                class="form-input limit-size {{$item->only_accept}} image-pdf"
                                                                 >
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
@@ -1761,9 +1761,11 @@ $dataIndex = match ($skema) {
         //get item by kategori
         let kategoriJaminanUtama = $(this).val();
 
+        let id = $("#id_dagulir_temp").val();
+
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 // jika kategori bukan stock dan piutang
@@ -1893,9 +1895,11 @@ $dataIndex = match ($skema) {
         //get item by kategori
         let kategoriJaminan = $(this).val();
 
+        let id = $("#id_dagulir_temp").val();
+
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {

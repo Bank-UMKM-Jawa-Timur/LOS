@@ -176,7 +176,7 @@
                                 <td>{{ $item->nama }}</td>
                                 <td class="text-center text-sm">
                                     @if ($item->pk && $item->posisi == 'Selesai')
-                                        {{$item->posisi}}
+                                       Disetujui
                                     @else
                                         {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
                                     @endif
@@ -342,7 +342,7 @@
                                                     @endphp
 
                                                     @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer">
+                                                        <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-sppk">
                                                             <li class="item-tb-dropdown">
                                                                 Download SPPK
                                                             </li>
@@ -354,7 +354,7 @@
                                                             </li>
                                                         </a>
                                                     @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer">
+                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-pk">
                                                             <li class="item-tb-dropdown">
                                                                 Download PK
                                                             </li>
@@ -534,6 +534,18 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+    $('#download-pk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
+    $('#download-sppk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
     if (document.getElementById('modalConfirmPincab')) {
         document.getElementById('modalConfirmPincab').addEventListener('click', function () {
             document.getElementById('confirmationModal').classList.remove('hidden');
