@@ -238,7 +238,6 @@
                                                 ->where('detail_komentar.id_item', $itemTextDua->id_item)
                                                 ->get();
                                         @endphp
-
                                         @if ($itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
                                             <div class="form-group-1">
                                                 <div class="field-review">
