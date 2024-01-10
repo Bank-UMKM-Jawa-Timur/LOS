@@ -231,13 +231,14 @@ class CetakSuratController extends Controller
                 ]);
         }
 
-        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa','pengajuan.*')
+        $dataNasabah = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa','pengajuan.*')
             ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
             ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
             ->join('desa','desa.id','calon_nasabah.id_desa')
             ->join('pengajuan','pengajuan.id','calon_nasabah.id_pengajuan')
             ->where('calon_nasabah.id_pengajuan',$id)
             ->first();
+        $param['dataNasabah'] = $dataNasabah;
 
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
             ->find($id);
@@ -264,7 +265,9 @@ class CetakSuratController extends Controller
         $param['dataPO'] = DB::table('data_po')
             ->where('id_pengajuan', $id)
             ->first();
-        return view('cetak.cetak-po', $param);
+        // return view('cetak.cetak-po', $param);
+        $pdf = PDF::loadView('cetak.cetak-po', $param);
+        return $pdf->download('PO-' . $dataNasabah->nama . '.pdf');
     }
 
     public function cetakPk($id)

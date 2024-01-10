@@ -2447,6 +2447,25 @@ class NewDagulirController extends Controller
                     Alert()->success('success', $message);
                     return redirect()->route('dagulir.pengajuan.index');
                     break;
+                case 'PO':
+                    $message = 'File PO berhasil diupload';
+                    $folderPO = public_path() . '/upload/' . $id . '/po/';
+                    $filePO = $request->po;
+                    $filenamePO = date('YmdHis') . '.' . $filePO->getClientOriginalExtension();
+                    $pathPO = realpath($folderPO);
+                    if (!($pathPO !== true and is_dir($pathPO))) {
+                        mkdir($folderPO, 0755, true);
+                    }
+                    $filePO->move($folderPO, $filenamePO);
+                    DB::table('pengajuan')
+                        ->where('id', $id)
+                        ->update([
+                            'PO' => $filenamePO
+                        ]);
+                    DB::commit();
+                    Alert()->success('success', $message);
+                    return redirect()->route('dagulir.pengajuan.index');
+                    break;
                     // File PK Handler
                 case 'PK':
                     ini_set('max_execution_time', 120);

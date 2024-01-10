@@ -2677,7 +2677,7 @@ class PengajuanKreditController extends Controller
                                 $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
                             } else {
                                 DB::rollBack();
-                                alert()->error('gagal', 'Tidak memiliki hak akses');
+                                alert()->error('gagal', 'Belum di review Penyelia.');
                                 return redirect()->back()->withError('Belum di review Penyelia.');
                             }
                         } else {
