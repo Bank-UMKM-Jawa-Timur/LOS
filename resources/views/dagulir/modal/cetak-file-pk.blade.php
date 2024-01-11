@@ -23,7 +23,7 @@
                 <input type="hidden" name="tipe_file" value="PK">
                 <input type="hidden" name="kode_pendaftaran" id="kode_pendaftaran" value="">
                     <div class="form-group-1 mt-4">
-                        <div class="form-group-1 mt-4">
+                        <div class="form-group-1 mt-4" id="div_no_loan">
                             <div class="input-box">
                                 <label for="no_loan">No Loan</label>
                                 <input type="Text" name="no_loan" id="no_loan" class="form-input" required>
@@ -46,6 +46,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" name="skema" id="skema">
             <div class="modal-footer justify-end">
                 <button class="btn-cancel" type="button" data-dismiss-id="uploadPKModal">
                     Batal
@@ -74,6 +75,7 @@
             var no_pk = $('#no_pk').val()
             var no_loan = $('#no_loan').val()
             var file = $('#pk').val()
+            var skema = $('#skema').val()
 
             if (no_pk == '') {
                 $('#no_pk').next().removeClass('hidden')
@@ -97,8 +99,14 @@
                 $('#pk').next().addClass('hidden')
             }
 
-            if (no_pk != '' && no_loan != '' && file != '') {
-                $('#uploadPKModal #form-pk').submit()
+            if (skema == 'Dagulir') {
+                if (no_pk != '' && no_loan != '' && file != '') {
+                    $('#uploadPKModal #form-pk').submit()
+                }
+            } else {
+                if (no_pk != '' && file != '') {
+                    $('#uploadPKModal #form-pk').submit()
+                }
             }
         })
     </script>

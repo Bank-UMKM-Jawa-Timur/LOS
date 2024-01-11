@@ -1809,6 +1809,7 @@ class NewDagulirController extends Controller
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Administrator', $id_user, $allFilter, 'sipde');
         }
 
+        // return $pengajuan_dagulir;
         return view('dagulir.index',[
             'data' => $pengajuan_dagulir,
             'data_sipde' => $pengajuan_sipde,
@@ -2227,7 +2228,7 @@ class NewDagulirController extends Controller
             ]);
         }
 
-        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'id_pincab', 'id_penyelia')
         ->find($id);
         $param['dataUmum'] = $dataUmum;
 
@@ -2265,11 +2266,11 @@ class NewDagulirController extends Controller
         ->where('id_pengajuan', $id)
         ->first();
 
-        $kodePincab = $dataNasabah->id_pincab;
-        $kodePenyelia = $dataNasabah->id_penyelia;
+        $kodePincab = $param['dataUmum']->skema_kredit == 'Dagulir' ? $dataNasabah->id_pincab : $dataUmum->id_pincab;
+        $kodePenyelia = $param['dataUmum']->skema_kredit == 'Dagulir' ?  $dataNasabah->id_penyelia : $dataUmum->id_penyelia;
+
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
-        // return ['Pincab' => $param['dataPincab'], 'penyelia' => $param['dataPenyelia']];
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
@@ -2280,10 +2281,10 @@ class NewDagulirController extends Controller
         ->first() ?? '0';
 
         // return $dataNasabah;
-        // return view('dagulir.cetak.cetak-pk-kusuma-badan-usaha', $param);
-        // return redirect()->back();
+        // return view('dagulir.cetak.cetak-pk', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
+        return redirect()->back();
     }
     public function cetakSPPk($id)
     {
@@ -2365,6 +2366,7 @@ class NewDagulirController extends Controller
         // return view('dagulir.cetak.cetak-sppk', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-sppk', $param);
         return $pdf->download('SPPK-' . $dataNasabah->nama . '.pdf');
+        return redirect()->back();
     }
 
     public function kembalikanDataKePosisiSebelumnya(Request $request){
@@ -2420,6 +2422,7 @@ class NewDagulirController extends Controller
 
     public function postFileDagulir(Request $request, $id)
     {
+        // return $request;
         DB::beginTransaction();
         try {
             $message = null;
@@ -2439,6 +2442,25 @@ class NewDagulirController extends Controller
                         ->where('id', $id)
                         ->update([
                             'sppk' => $filenameSPPK
+                        ]);
+                    DB::commit();
+                    Alert()->success('success', $message);
+                    return redirect()->route('dagulir.pengajuan.index');
+                    break;
+                case 'PO':
+                    $message = 'File PO berhasil diupload';
+                    $folderPO = public_path() . '/upload/' . $id . '/po/';
+                    $filePO = $request->po;
+                    $filenamePO = date('YmdHis') . '.' . $filePO->getClientOriginalExtension();
+                    $pathPO = realpath($folderPO);
+                    if (!($pathPO !== true and is_dir($pathPO))) {
+                        mkdir($folderPO, 0755, true);
+                    }
+                    $filePO->move($folderPO, $filenamePO);
+                    DB::table('pengajuan')
+                        ->where('id', $id)
+                        ->update([
+                            'PO' => $filenamePO
                         ]);
                     DB::commit();
                     Alert()->success('success', $message);
@@ -2464,7 +2486,7 @@ class NewDagulirController extends Controller
                     ->where('id_pengajuan', $id)
                     ->update([
                         'no_pk' => $request->get('no_pk'),
-                        'no_loan' => $request->get('no_loan'),
+                        'no_loan' => $request->get('no_loan') ? $request->get('no_loan') : null,
                     ]);
                     DB::table('pengajuan')
                     ->where('id', $id)

@@ -414,7 +414,7 @@
                                                             </a>
                                                         @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
                                                             <a href="#" class="dropdown-item show-upload-pk w-full" data-toggle="modal" data-target="uploadPKModal"
-                                                            data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
+                                                            data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}" data-skema="{{$item->pengajuan->skema_kredit}}">
                                                                 <li class="item-tb-dropdown">
                                                                     Realisasi Kredit
                                                                 </li>
