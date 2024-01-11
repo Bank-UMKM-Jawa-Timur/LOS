@@ -140,18 +140,18 @@ class PembayaranController extends Controller
 
             // Check if there are existing records with the same squence and no_loan
             if (count($current_loan) > 0) {
-                alert()->error('Error', 'Data Pembayaran telah di proses.');
-                return redirect()->route('pembayaran.index');
+
+            }else{
+                // Create a new instance only if the count is not greater than 0
+                $pembayaran = new MasterDDAngsuran;
+                $pembayaran->squence = $value['HLSEQN'];
+                $pembayaran->no_loan = $value['HLLNNO'];
+                $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
+                $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
+                $pembayaran->kolek = $value['kolek'];
+                $pembayaran->keterangan = $value['HLDESC'];
+                $pembayaran->save();
             }
-            // Create a new instance only if the count is not greater than 0
-            $pembayaran = new MasterDDAngsuran;
-            $pembayaran->squence = $value['HLSEQN'];
-            $pembayaran->no_loan = $value['HLLNNO'];
-            $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
-            $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
-            $pembayaran->kolek = $value['kolek'];
-            $pembayaran->keterangan = $value['HLDESC'];
-            $pembayaran->save();
             // Fetch the inserted data
             $inserted_data = MasterDDAngsuran::where('squence', $value['HLSEQN'])
                             ->where('no_loan', $value['HLLNNO'])
