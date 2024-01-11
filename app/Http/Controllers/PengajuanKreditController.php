@@ -335,6 +335,7 @@ class PengajuanKreditController extends Controller
                 ->where('pengajuan.id_cabang', $id_cabang)
                 ->paginate($limit)
                 ->withQueryString();
+            // return $param['data_pengajuan'];
             return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
         } elseif ($role == 'Penyelia Kredit') {
             // $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
@@ -2676,7 +2677,7 @@ class PengajuanKreditController extends Controller
                                 $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
                             } else {
                                 DB::rollBack();
-                                alert()->error('gagal', 'Tidak memiliki hak akses');
+                                alert()->error('gagal', 'Belum di review Penyelia.');
                                 return redirect()->back()->withError('Belum di review Penyelia.');
                             }
                         } else {
@@ -3764,6 +3765,7 @@ class PengajuanKreditController extends Controller
 
     public function postFileKKB(Request $request, $id)
     {
+        // return $request;
         $kode_cabang = DB::table('cabang')
             ->join('pengajuan', 'pengajuan.id_cabang', 'cabang.id')
             ->where('pengajuan.id', $id)
@@ -3901,6 +3903,7 @@ class PengajuanKreditController extends Controller
             }
 
             DB::commit();
+            Alert()->success('Berhasil menambahkan', $message);
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan ' . $message);
         } catch (Exception $e) {
             DB::rollBack();

@@ -227,7 +227,7 @@
                                         <br>
                                         <span class="text-color-soft">({{$nama_pemroses}})</span>
                                     @else
-                                        <span>Selesai</span>
+                                        <span>Disetujui</span>
                                     @endif
                                 </td>
                                 <td>
@@ -435,7 +435,7 @@
                                             Cetak
                                         </li>
                                     </a>
-                                    @if ($item->posisi == "PBP")
+                                    {{-- @if ($item->posisi == "PBP")
                                         @if ($item->id_pbo != null)
                                             <a class="w-full cursor-pointer" href="#">
                                                     <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
@@ -455,7 +455,7 @@
                                             Kembalikan ke Penyelia
                                         </li>
                                     </a>
-                                    @endif
+                                    @endif --}}
                                 </ul>
                                 @endif
                             </div>

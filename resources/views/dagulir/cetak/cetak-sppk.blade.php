@@ -96,7 +96,7 @@
         }
     }
 @endphp
-<body onload="printPage()">
+<body>
     <div class="data-surat">
         <table class="table-header-tgl">
             <tr>
@@ -142,7 +142,7 @@
             </tr>
         </table>
 
-        <p>Dengan ini kami beritahukan, bahwa permohonan kredit saudara sesuai buku register nomor ............/{{ $dataCabang->kode_cabang }}/SPPK/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }} tanggal {{ $tgl }},
+        <p>Dengan ini kami beritahukan, bahwa permohonan kredit saudara sesuai buku register nomor {{ $dataCabang->kode_cabang }}/SPPK/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }} tanggal {{ $tgl }},
            pada prinsipnya dapat kami setujui dengan ketentuan sebagai berikut:</p>
 
         <table class="table-body">
@@ -150,22 +150,22 @@
                 <td style="width: 3%;">1.</td>
                 <td style="width: 25%">Bentuk Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>Angsuran</td>
+                <td>Angsuran / Plafon tetap <sup>1</sup>)</td>
             </tr>
             <tr>
                 <td style="width: 3%;">2.</td>
                 <td style="width: 25%">Tujuan Kredit</td>
                 <td style="width: 2%">:</td>
-                <td>Konsumsi</td>
+                <td>Modal Kerja / Investasi <sup>2</sup>)</td>
             </tr>
-            <tr>
+            {{-- <tr>
                 <td style="width: 3%;">3.</td>
                 <td style="width: 25%">Untuk Keperluan</td>
                 <td style="width: 2%">:</td>
                 <td><b>Pembelian Kendaraan Bermotor</b></td>
-            </tr>
+            </tr> --}}
             <tr>
-                <td style="width: 3%;">4.</td>
+                <td style="width: 3%;">3.</td>
                 <td style="width: 25%">Besarnya Pinjaman</td>
                 <td style="width: 2%">:</td>
                 @if ($dataUmum->skema_kredit == 'Dagulir')
@@ -175,7 +175,7 @@
                 @endif
             </tr>
             <tr>
-                <td style="width: 3%;">5.</td>
+                <td style="width: 3%;">4.</td>
                 <td style="width: 25%">Jangka Waktu Pinjaman</td>
                 <td style="width: 2%">:</td>
                 @if ($dataUmum->skema_kredit == 'Dagulir')
@@ -185,32 +185,32 @@
                 @endif
             </tr>
             <tr>
-                <td style="width: 3%;">6.</td>
+                <td style="width: 3%;">5.</td>
                 <td style="width: 25%">Bunga Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>...... p.a anuitas/efektif/floating <sup>2</sup>) rate</td>
+                <td>...... % p.a (anuitas, efektif, flat, floating) rate</td>
             </tr>
             <tr>
-                <td style="width: 3%;">7.</td>
+                <td style="width: 3%;">6.</td>
                 <td style="width: 25%">Angsuran Perbulan</td>
                 <td style="width: 2%">:</td>
                 <td>Rp. {{ $installment ? rupiah(intval($installment?->opsi_text)) : 0 }}</td>
             </tr>
             <tr>
-                <td style="width: 3%;">8.</td>
+                <td style="width: 3%;">7.</td>
                 <td style="width: 25%">Denda</td>
                 <td style="width: 2%">:</td>
                 <td >
                     <ul>
-                        <li>Terhadap kelambatan pembayaran angsuaran kredit lebih dari 7 (tujuh) hari sesudah tanggal angsuran yang telah ditentukan
-                            dikenakan denda sebesar 1% (satu persen) perbulan dari jumlah angsuran pokok dan bunga yang harus dibayar dan dihitung secara harian.
+                        <li>Terhadap kelambatan pembayaran angsuaran kredit lebih dari 3 (tiga) hari sesudah tanggal angsuran yang telah ditentukan
+                            dikenakan denda sebesar 10% (sepuluh persen) perbulan dari jumlah angsuran pokok dan bunga yang harus dibayar dan dihitung secara harian.
                         </li>
                         <li>Terhadap kelambatan pelunasan baik hutang pokok maupun bunga dikenakan denda sebesar 50% (lima puluh persen) dari suku bunga yang berlaku atas sisa kredit yang bersangkutan.</li>
                     </ul>
                 </td>
             </tr>
             <tr>
-                <td style="width: 3%;">9.</td>
+                <td style="width: 3%;">8.</td>
                 <td style="width: 25%">Biaya - Biaya</td>
                 <td style="width: 2%">:</td>
                 <td>
@@ -249,7 +249,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 3%;">10.</td>
+                <td style="width: 3%;">9.</td>
                 <td style="width: 25%">Jaminan Kredit Berupa <sup>3</sup>)</td>
                 <td style="width: 2%">:</td>
                 <td>Asli BPKB Kendaraan Bermotor yang dibeli disertai faktur pembelian atas nama yang tercantum pada BPKB</td>
@@ -258,34 +258,47 @@
 
         <table class="table-body-2">
             <tr>
-                <td style="vertical-align: text-top"><b>11.</b></td>
-                <td><b>Debitur diwajibkan membuka rekening tabungan yang digunakan sebagai rekening penampungan realisasi kredit, angsuran kredit Bank dan pembayaran kendaraan.</b></td>
+                <td style="vertical-align: text-top"><b>10.</b></td>
+                <td>Peminjam diwajibkan membuka rekening tabungan yang digunakan sebagai rekening penampungan realisasi kredit dan angsuran kredit Bank.</td>
             </tr>
             <tr>
-                <td style="vertical-align: text-top">12.</td>
+                <td style="vertical-align: text-top">11.</td>
                 <td>Semua surat-surat asli dari barang-barang yang dijaminkan harus diserahkan pada Bank dan pemilik jaminan ikut menandatangani.</td>
             </tr>
             <tr>
+                <td style="vertical-align: text-top">12.</td>
+                <td><b>Barang-barang jaminan berupa tanah dan/atau bangunan/kendaraan bermotor/mesin/peralatan kerja/alat/perkakas/alat peraga <sup>2</sup>) harus diasuransikan atas nama Bank dengan biaya beban debitur.</b></td>
+            </tr>
+            <tr>
                 <td style="vertical-align: text-top">13.</td>
-                <td>Permohonan kredit Saudara dapat direalisir paling awal pada 1 hari kerja setelah {{ $tgl }}</td>
+                {{-- <td>Permohonan kredit Saudara dapat direalisir paling awal pada 1 hari kerja setelah {{ $tgl }}</td> --}}
+                <td>Permohonan kredit Saudara dapat direalisir pada tanggal {{ $tgl }}</td>
             </tr>
             <tr>
                 <td style="vertical-align: text-top">14.</td>
-                <td>Sesuai dengan ketentuan perkreditan yang berlaku.<br>
-                    Selanjutnya apabila ketentuan-ketentuan tersebut di atas Suadara setujui, maka lembar kedua dari surat ini, sesudah ditandatangani harap dikirim kepada kami sebagai tanda persetujuan saudara.<br>
-                    <br>Demikian untuk menjadikan saudara maklum
-                </td>
+                <td>Sesuai dengan ketentuan perkreditan yang berlaku.</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: text-top">15.</td>
+                <td style="text-decoration: underline;"><b>Saudara dilarang memberikan imbalan dalam bentuk uang atau materi lainnya kepada Pegawai Bank BPR Jatim Bank UMKM Jawa timur atas pencarian kredit Bank BPR Jatim Bank UMKM Jawa Timur</b></td>
             </tr>
         </table>
 
-        <table class="table-ttd">
+
+        <table class="table-body-2">
+            <tr>
+                <td style="vertical-align: text-top"><p>Apabila ketentuan-ketentuan tersebut di atas Saudara setujui, maka lembar kedua dari surat ini, sesudah ditandatangani harap dikirim kepada kami sebagai tanda persetujuan saudara. Demikian untuk menjadikan saudara maklum.</p></td>
+            </tr>
+        </table>
+
+        <table class="table-ttd" style="margin-top: 2rem;">
             <tr>
                 <th style="font-weight: 500; width: 50%;"><br>DEBITUR</th>
-                <th style="font-weight: 500; width: 50%;">PT. Bank Perkreditan Rakyat Jawa Timur <br>Cabang {{ $dataCabang->cabang }}</th>
+                <th style="font-weight: 500; width: 50%;">PT. BPR JATIM <br>Kantor Cabang {{ $dataCabang->cabang }}</th>
             </tr>
             <tr>
                 <td style="text-align: center; padding-top: 100px">
-                    <table style="width: 80%; text-align: center;">
+                    <table style="width: 100%; text-align: center;">
                         <tr>
                             <td>({{ strtoupper($dataNasabah->nama) }})</td>
                         </tr>

@@ -207,7 +207,7 @@
                                         <br>
                                         <span class="text-color-soft">({{$nama_pemroses}})</span>
                                     @else
-                                        <span>Selesai</span>
+                                        <span>Disetujui</span>
                                     @endif
                                 </td>
                                 <td>
