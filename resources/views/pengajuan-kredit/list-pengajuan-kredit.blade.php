@@ -227,7 +227,7 @@
                                         <br>
                                         <span class="text-color-soft">({{$nama_pemroses}})</span>
                                     @else
-                                        @if ($item->posisi == 'Disetujui')
+                                        @if ($item->posisi == 'Selesai')
                                             <span>Disetujui</span>
                                         @else
                                             <span>Ditolak</span>

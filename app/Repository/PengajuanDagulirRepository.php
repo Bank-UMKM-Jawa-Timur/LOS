@@ -244,15 +244,10 @@ class PengajuanDagulirRepository
     {
         $roles = [];
         $idRoles = [];
-        $users = [];
-        $cekRolePBO = User::where('id_cabang', $model->id_cabang)
-            ->where('role', 'PBO')
-            ->count('id');
-        $cekRolePBP = User::where('id_cabang', $model->id_cabang)
-            ->where('role', 'PBP')
-            ->count('id');
 
-        if ($cekRolePBO > 0 && $cekRolePBP > 0) {
+        $pengajuan = PengajuanModel::select('id_staf', 'id_penyelia', 'id_pbo', 'id_pbp', 'id_pincab')->where('id', $model->id)->first();
+
+        if ($pengajuan->id_pbo != null && $pengajuan->id_pbp != null) {
             $roles = [
                 'Staf Analis Kredit',
                 'Penyelia Kredit',
@@ -267,7 +262,7 @@ class PengajuanDagulirRepository
                 'id_pbp',
                 'id_pincab'
             ];
-        } else if ($cekRolePBO > 0 && $cekRolePBP < 1) {
+        } else if ($pengajuan->id_pbo != null && $pengajuan->id_pbp == null) {
             $roles = [
                 'Staf Analis Kredit',
                 'Penyelia Kredit',
@@ -280,7 +275,7 @@ class PengajuanDagulirRepository
                 'id_pbo',
                 'id_pincab'
             ];
-        } else if ($cekRolePBO < 1 && $cekRolePBO > 0) {
+        } else if ($pengajuan->id_pbo == null < 1 && $pengajuan->id_pbp != null) {
             $roles = [
                 'Staf Analis Kredit',
                 'Penyelia Kredit',

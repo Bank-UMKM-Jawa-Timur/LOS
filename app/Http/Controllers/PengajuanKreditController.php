@@ -2962,8 +2962,9 @@ class PengajuanKreditController extends Controller
         $param['dataKabupaten'] = Kabupaten::find($param['dataNasabah']->id_kabupaten);
         $param['dataDesa'] = Desa::find($param['dataNasabah']->id_desa);
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp', 'pengajuan.id_pbo', 'pengajuan.id_pbp')
-            ->find($id);
+        $dataUmum =  PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp', 'pengajuan.id_pbo', 'pengajuan.id_pbp')
+        ->find($id);
+        $param['dataUmum'] = $dataUmum;
 
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
 
@@ -3028,8 +3029,7 @@ class PengajuanKreditController extends Controller
         }
         // dd($log[0]['tgl']);
         $param['logPengajuan'] = $log;
-        $param['rolesPemroses'] = $this->repo->getDataPemroses($param['dataNasabah']);
-
+        $param['rolesPemroses'] = $this->repo->getDataPemroses($dataUmum);
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }
     public function checkPincabStatusDetailPost($id, Request $request)
