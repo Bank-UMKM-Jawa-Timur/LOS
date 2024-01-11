@@ -178,6 +178,8 @@
                                 <td class="text-center text-sm">
                                     @if ($item->pk && $item->posisi == 'Selesai')
                                        Disetujui
+                                    @elseif ($item->posisi == 'Ditolak')
+                                       Ditolak
                                     @else
                                         {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
                                     @endif
