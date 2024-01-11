@@ -318,14 +318,14 @@
                                 </td>
                                 <td>
                                     @if ($item->posisi == 'Selesai')
-                                        <font class="text-green-500">Selesai</font>
+                                        <font class="text-green-500">Disetujui</font>
                                     @elseif ($item->posisi == 'Ditolak')
                                         <font class="text-red-500">Ditolak</font>
                                     @else
                                         <font class="text-yellow-500">On Progress</font>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="flex justify-center">
                                 <div class="dropdown-tb">
                                 @php
                                     $userPBO = \App\Models\User::select('id')
@@ -359,20 +359,20 @@
                                                 </li>
                                             </a>
                                             @if ($userPBO)
-                                            <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
                                                 <li class="item-tb-dropdown">
                                                 Lanjut ke PBO
                                                 </li>
                                             </a>
                                             @else
                                                 @if ($userPBP)
-                                                <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
+                                                <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
                                                     <li class="item-tb-dropdown">
                                                         Lanjut ke PBP
                                                     </li>
                                                 </a>
                                                 @else
-                                                <a class="w-full cursor-pointer review-pincab" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                     <li class="item-tb-dropdown">
                                                         Lanjut ke Pincab
                                                     </li>
@@ -403,13 +403,13 @@
                                                 </li>
                                             </a>
                                             @if ($userPBO)
-                                            <a class="w-full cursor-pointer" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
                                                 <li class="item-tb-dropdown">
                                                     Lanjut ke PBO
                                                 </li>
                                             </a>
                                             @else
-                                            <a class="w-full cursor-pointer review-pincab" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                 <li class="item-tb-dropdown">
                                                     Lanjut ke Pincab
                                                 </li>

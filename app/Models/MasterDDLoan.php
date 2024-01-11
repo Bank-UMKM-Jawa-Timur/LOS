@@ -19,6 +19,6 @@ class MasterDDLoan extends Model
     ];
 
     public function angsuran() {
-        return $this->belongsTo(MasterDDAngsuran::class,'id_dd_loan');
+        return $this->belongsTo(MasterDDAngsuran::class,'no_loan');
     }
 }

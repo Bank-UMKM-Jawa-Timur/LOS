@@ -720,7 +720,7 @@
                                             @if ($item->opsi_jawaban != 'option')
                                                 @if (!$item->is_hide)
                                                     @php
-                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
                                                             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                                             ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                                             ->where('jawaban_text.id_jawaban', $item->id)
@@ -728,6 +728,19 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextDua)
                                                             @if ($item->opsi_jawaban == 'file')
+                                                                <b class="m-2">{{ $item->nama }} : </b>
+                                                                    @php
+                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                                    @endphp
+                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                            <iframe
+                                                                                class="border-4 border-gray-800 m-2"
+                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                                width="100%" height="800px"></iframe>
+                                                                    @else
+                                                                        <img class="m-2" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                            alt="" width="800px">
+                                                                    @endif
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                             @else
                                                                 @if ($item->id == 136 || $item->id == 138 || $item->id == 140 || $item->id == 143)
@@ -763,6 +776,16 @@
                                                             ->where('jawaban_text.id_jawaban', $item->id)
                                                             ->get();
                                                     @endphp
+                                                    @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
+                                                        <div class="field-review">
+                                                            <div class="field-name">
+                                                                <label for="">Ijin Usaha</label>
+                                                            </div>
+                                                            <div class="field-answer">
+                                                                <p> Tidak ada legalitas usaha </p>
+                                                            </div>
+                                                        </div>
+                                                    @else
                                                     @foreach ($dataDetailJawabanText as $itemTextDua)
                                                         <div class="row
                                                                 {{ $itemTextDua->opsi_text === 'nib' ? 'hidden' : '' }}
@@ -850,6 +873,7 @@
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
                                                         <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
                                                     @endforeach
+                                                    @endif
                                                 @endif
                                             @endif
                                             @php
@@ -893,7 +917,6 @@
                                                                         <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
                                                                         <h4 class="font-bold">Tidak ada legalitas usaha</h4>
                                                                     </div>
-
                                                                 @endif
                                                             </div>
                                                         @endif
@@ -1591,87 +1614,87 @@
                                                 @endif
                                             @endforeach
                                         @endforeach
-                                    {{-- @foreach ($dataLevelDua as $item)
-                                        @if ($item->opsi_jawaban != 'option')
-                                            @if (!$item->is_hide)
-                                                @php
-                                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                        ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                                        ->where('jawaban_text.id_jawaban', $item->id)
-                                                        ->get();
-                                                @endphp
-                                                @foreach ($dataDetailJawabanText as $itemTextDua)
-                                                    <div class="row">
-                                                    <div class="col-md-12">
-                                                            @if ($item->opsi_jawaban == 'file')
-                                                                <b>{{ $item->nama }} 9999 :</b>
-                                                                @php
-                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                                                @endphp
-                                                                @if ($file_parts['extension'] == 'pdf')
-                                                                        <iframe
-                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                            width="100%" height="800px"></iframe>
+                                        {{-- @foreach ($dataLevelDua as $item)
+                                            @if ($item->opsi_jawaban != 'option')
+                                                @if (!$item->is_hide)
+                                                    @php
+                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                            ->where('jawaban_text.id_jawaban', $item->id)
+                                                            ->get();
+                                                    @endphp
+                                                    @foreach ($dataDetailJawabanText as $itemTextDua)
+                                                        <div class="row">
+                                                        <div class="col-md-12">
+                                                                @if ($item->opsi_jawaban == 'file')
+                                                                    <b>{{ $item->nama }} 9999 :</b>
+                                                                    @php
+                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                                    @endphp
+                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                            <iframe
+                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                                width="100%" height="800px"></iframe>
+                                                                    @else
+                                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                            alt="" width="800px">
+                                                                    @endif
+                                                                @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
+                                                                        <div class="field-review">
+                                                                            <div class="field-name">
+                                                                                <label for="">{{ $item->nama }}</label>
+                                                                            </div>
+                                                                            <div class="field-answer">
+                                                                                <p>{{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    @if ($itemTextDua->is_commentable)
+                                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                                        @if (Auth::user()->role != 'Pincab')
+                                                                            <div class="input-k-bottom">
+                                                                                <input type="text" class="form-input komentar"
+                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                            </div>
+                                                                        @endif
+                                                                    @endif
                                                                 @else
-                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                        alt="" width="800px">
-                                                                @endif
-                                                            @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                                     <div class="field-review">
                                                                         <div class="field-name">
-                                                                            <label for="">{{ $item->nama }}</label>
+                                                                            <label for="">{{ $item->nama }} 7777</label>
                                                                         </div>
                                                                         <div class="field-answer">
-                                                                            <p>{{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                            @if ($item->id == 79)
+                                                                                <p>{{$itemTextDua->opsi_text}}</p>
+                                                                            @else
+                                                                                <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                            @endif
                                                                         </div>
                                                                     </div>
-                                                                @if ($itemTextDua->is_commentable)
-                                                                    <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                    @if (Auth::user()->role != 'Pincab')
-                                                                        <div class="input-k-bottom">
-                                                                            <input type="text" class="form-input komentar"
-                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                        </div>
-                                                                    @endif
-                                                                @endif
-                                                            @else
-                                                                <div class="field-review">
-                                                                    <div class="field-name">
-                                                                        <label for="">{{ $item->nama }} 7777</label>
-                                                                    </div>
-                                                                    <div class="field-answer">
-                                                                        @if ($item->id == 79)
-                                                                            <p>{{$itemTextDua->opsi_text}}</p>
-                                                                        @else
-                                                                            <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+
+                                                                    @if ($itemTextDua->is_commentable)
+                                                                        @if (Auth::user()->role != 'Pincab')
+                                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                                            <div class="input-k-bottom">
+                                                                                <input type="text" class="form-input komentar"
+                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                            </div>
                                                                         @endif
-                                                                    </div>
-                                                                </div>
-
-                                                                @if ($itemTextDua->is_commentable)
-                                                                    @if (Auth::user()->role != 'Pincab')
-                                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                        <div class="input-k-bottom">
-                                                                            <input type="text" class="form-input komentar"
-                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                        </div>
                                                                     @endif
                                                                 @endif
-                                                            @endif
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
-                                                        name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
-                                                    <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
-                                                        name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
-                                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
-                                                    <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
-                                                @endforeach
+                                                        <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
+                                                            name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
+                                                        <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
+                                                            name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
+                                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                                                        <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
+                                                    @endforeach
+                                                @endif
                                             @endif
-                                        @endif
-                                    @endforeach --}}
+                                        @endforeach --}}
                                     </div>
                                     @if (Auth::user()->role == 'PBP')
                                         @php
@@ -1704,9 +1727,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1 ">
-                                            <h4 class="font-semibold text-base" for="">Penyelia Kredit</h4>
-                                            <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
@@ -1744,9 +1773,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1">
-                                            <h4 class="font-semibold text-base" for=""> Penyelia Kredit</h4>
-                                            <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     @elseif (Auth::user()->role == 'Pincab')
                                         @php
@@ -1765,9 +1800,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1">
-                                            <label for="">Penyelia Kredit</label>
-                                            <p class="border-b p-2">{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
@@ -1917,14 +1958,14 @@
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
+                                                <input type="text" class="form-input" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}" readonly disabled>
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                                <input type="text" class="form-input" value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}" readonly disabled>
                                             </div>
                                         </div>
-                                        <div class="form-group-2">
+                                        {{-- <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
                                                 <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="">
@@ -1933,7 +1974,7 @@
                                                 <label for="">Jangka Waktu Usulan PBO</label>
                                                 <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="">
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan PBO</label>
                                             <textarea name="komentar_pbo_keseluruhan"
@@ -1983,14 +2024,14 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}" readonly disabled>
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    <div class="form-group-2">
+                                    {{-- <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBO</label>
                                             <input type="text" class="form-input rupiah" value="{{ $plafonUsulan?->plafon_usulan_pbo ?? '-' }}" readonly disabled>
@@ -2009,7 +2050,7 @@
                                             <label for="">Jangka Waktu Usulan PBP</label>
                                             <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group-1 pl-3">
                                         <label for="">Pendapat dan Usulan PBP</label>
                                         <textarea name="komentar_pbp_keseluruhan"
@@ -2071,14 +2112,14 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}" readonly disabled>
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            <input type="text" class="form-input" value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    @if ($dataUmumNasabah->id_pbo)
+                                    {{-- @if ($dataUmumNasabah->id_pbo)
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
@@ -2101,7 +2142,7 @@
                                                 <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ?? '-' }}" readonly disabled>
                                             </div>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Pincab</label>

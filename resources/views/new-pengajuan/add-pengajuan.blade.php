@@ -313,11 +313,11 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp, .pdf)</small>
-                                                            <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
+                                                            <input type="hidden" name="id_item_file[{{ $item->id }}][]" value="{{ $item->id }}"
                                                                 id="">
-                                                            <input type="file" name="upload_file[{{ $item->id }}] image-pdf" id="{{ $idLevelDua }}"
+                                                            <input type="file" name="upload_file[{{ $item->id }}][]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size {{$item->only_accept}}"
+                                                                class="form-input limit-size image-pdf {{$item->only_accept}}"
                                                                 >
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
@@ -845,7 +845,13 @@ $dataIndex = match ($skema) {
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
+    $("input[name='no_ktp']").keyup(function(e){
+        if($(this).val().length < 16) {
+            $('.no_ktp_pesan').html(`No KTP Harus 16`);
+        }else{
+            $('.no_ktp_pesan').html(``);
+        }
+    });
     // Start Validation
     @if (count($errors->all()))
         Swal.fire({
@@ -1603,7 +1609,6 @@ $dataIndex = match ($skema) {
         parent.remove()
     })
     $(".btn-simpan-data").on('click', function(e) {
-        console.log(nullValue);
         if ($('#komentar_staff').val() == '') {
             Swal.fire({
                 icon: 'error',
@@ -1614,9 +1619,11 @@ $dataIndex = match ($skema) {
         }
         else {
             const ijinUsaha = $("#ijin_usaha").val();
-            if (nullValue.length > 0 ) {
+            const value = 'aspek keuangan';
+            dataValue = nullValue.filter(item => item !== value)
+            if (dataValue.length > 0 ) {
                 let message = "";
-                $.each(nullValue, (i, v) => {
+                $.each(dataValue, (i, v) => {
                     var item = v;
                     if (v == 'dataLevelDua')
                         item = 'slik';
@@ -1626,9 +1633,9 @@ $dataIndex = match ($skema) {
 
                     if (v == 'itemByKategori'){
                         if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
-                            for(var j = 0; j < nullValue.length; j++){
-                                while(nullValue[j] == v){
-                                    nullValue.splice(j, 1)
+                            for(var j = 0; j < dataValue.length; j++){
+                                while(dataValue[j] == v){
+                                    dataValue.splice(j, 1)
                                 }
                             }
                         } else {
@@ -1640,9 +1647,9 @@ $dataIndex = match ($skema) {
                         if (v == 'nib text' || v == 'nib_text') {
                             var nibText = $("#nib_text").val()
                             if (nibText == null || nibText == '') {
-                                for(var j = 0; j < nullValue.length; j++){
-                                    while(nullValue[j] == v){
-                                        nullValue.splice(j, 1)
+                                for(var j = 0; j < dataValue.length; j++){
+                                    while(dataValue[j] == v){
+                                        dataValue.splice(j, 1)
                                     }
                                 }
                             }
@@ -1654,12 +1661,13 @@ $dataIndex = match ($skema) {
 
                     message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
                 })
+                console.log(message);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
-                console.log(nullValue);
+                // console.log(nullValue);
                 e.preventDefault()
             } else {
                 $("#preload-data").removeClass("hidden");
@@ -1778,10 +1786,10 @@ $dataIndex = match ($skema) {
 
         //get item by kategori
         let kategoriJaminanUtama = $(this).val();
-
+        let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 // jika kategori bukan stock dan piutang
@@ -1902,6 +1910,7 @@ $dataIndex = match ($skema) {
 
     //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
     $('#kategori_jaminan_tambahan').change(function(e) {
+
         //clear item
         $('#select_kategori_jaminan_tambahan').empty();
 
@@ -1910,10 +1919,10 @@ $dataIndex = match ($skema) {
 
         //get item by kategori
         let kategoriJaminan = $(this).val();
-
+        let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {

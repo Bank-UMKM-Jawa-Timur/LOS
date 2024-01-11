@@ -1,5 +1,12 @@
 @push('script-inject')
     <script>
+        $("input[name='nik_nasabah']").keyup(function(e){
+            if($(this).val().length < 16) {
+                $('.no_ktp_pesan').html(`No KTP Harus 16`);
+            }else{
+                $('.no_ktp_pesan').html(``);
+            }
+        });
         $('#jangka_waktu').on('change', function() {
             limitJangkaWaktu()
         })
@@ -158,17 +165,14 @@
                 @enderror
             </div>
             <div class="input-box">
-                <label for="">{{ $itemSP->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
-                    placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <label for="">No Telp</label>
+                <input type="text" name="no_telp" id="nama" class="form-input @error('no_telp') is-invalid @enderror"
+                    placeholder="No Telp" value="" required maxlength="255">
+                @error('no_telp')
                 <div class="invalid-feedback">
-                    {{ $errors->first('dataLevelDua.' . $key) }}
+                    {{ $message }}
                 </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
+                @enderror
             </div>
         </div>
         <div class="form-group-3">
@@ -211,18 +215,8 @@
             </div>
         </div>
         <div class="input-box">
-            <label for="">No Telp</label>
-            <input type="text" name="no_telp" id="nama" class="form-input @error('no_telp') is-invalid @enderror"
-                placeholder="No Telp" value="" required maxlength="255">
-            @error('no_telp')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
-        </div>
-        <div class="input-box">
             <label for="">Alamat Rumah</label>
-            <textarea name="alamat_rumah" class="form-input @error('alamat_rumah') is-invalid @enderror"
+            <textarea name="alamat_rumah" class="form-textarea @error('alamat_rumah') is-invalid @enderror"
                 maxlength="255" id="alamat_rumah" cols="30" rows="4"
                 placeholder="Alamat Rumah disesuaikan dengan KTP"></textarea>
             @error('alamat_rumah')
@@ -231,16 +225,6 @@
             </div>
             @enderror
             <hr>
-        </div>
-        <div class="input-box">
-            <label for="">Alamat Usaha</label>
-            <textarea name="alamat_usaha" class="form-input @error('alamat_usaha') is-invalid @enderror"
-                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha"></textarea>
-            @error('alamat_usaha')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
         </div>
         <div class="form-group-3">
             <div class="input-box">
@@ -286,8 +270,9 @@
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 onkeydown="return event.keyCode !== 69" name="no_ktp" class="form-input @error('no_ktp') is-invalid @enderror"
                 id="no_ktp" placeholder="Masukkan 16 digit No. KTP" value="">
+            <span class="text-sm text-red-500 no_ktp_pesan mt-2"></span>
             @error('no_ktp')
-            <div class="invalid-feedback">
+            <div class="invalid-feedback text-sm">
                 {{ $message }}
             </div>
             @enderror
@@ -298,22 +283,14 @@
         </div>
         <div class="input-box" id="foto-ktp-nasabah">
         </div>
-        <div class="form-group-3">
-            <div class="input-box ">
-                <label for="">Sektor Kredit</label>
-                <select name="sektor_kredit" id="sektor_kredit"
-                    class="form-select @error('sektor_kredit') is-invalid @enderror select2">
-                    <option value=""> --Pilih Sektor Kredit -- </option>
-                    @foreach ($sectors as $sector)
-                    <option value="{{ $sector }}">{{ ucfirst($sector) }}</option>
-                    @endforeach
-                </select>
-                @error('sektor_kredit')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-                @enderror
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Slik :
+                </h2>
             </div>
+        </div>
+        <div class="form-group-2">
             <div class="input-box">
                 <label for="">{{ $itemSlik->nama }}</label>
                 <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select select2"
@@ -337,8 +314,8 @@
                 <label for="">{{ $itemP->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
-                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" accept="application/pdf" class="form-input limit-size-slik only-pdf">
+                <span class="invalid-tooltip text-red-500 m-0 text-sm" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -348,9 +325,16 @@
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
         </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Data Usaha :
+                </h2>
+            </div>
+        </div>
         <div class="input-box ">
             <label for="">Jenis Usaha</label>
-            <textarea name="jenis_usaha" class="form-input @error('jenis_usaha') is-invalid @enderror"
+            <textarea name="jenis_usaha" class="form-textarea @error('jenis_usaha') is-invalid @enderror"
                 maxlength="255" id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik"></textarea>
             @error('jenis_usaha')
             <div class="invalid-feedback">
@@ -358,10 +342,57 @@
             </div>
             @enderror
         </div>
+        <div class="input-box">
+            <label for="">Alamat Usaha</label>
+            <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror"
+                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha"></textarea>
+            @error('alamat_usaha')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+                <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Data Pengajuan :
+                </h2>
+            </div>
+        </div>
+        <div class="form-group-2">
+            <div class="input-box">
+                <label for="">{{ $itemSP->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
+                    placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+                <span class="filename" style="display: inline;"></span>
+            </div>
+            <div class="input-box ">
+                <label for="">Sektor Kredit</label>
+                <select name="sektor_kredit" id="sektor_kredit"
+                    class="form-select @error('sektor_kredit') is-invalid @enderror select2">
+                    <option value=""> --Pilih Sektor Kredit -- </option>
+                    @foreach ($sectors as $sector)
+                    <option value="{{ $sector }}">{{ ucfirst($sector) }}</option>
+                    @endforeach
+                </select>
+                @error('sektor_kredit')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+        </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Jumlah Kredit yang diminta</label>
-                <input type="text" name="jumlah_kredit" id="jumlah_kredit" class="form-input rupiah" value="">
+                <input type="text" name="jumlah_kredit" placeholder="Jumlah Kredit yang diminta" id="jumlah_kredit" class="form-input rupiah" value="">
 
                 @error('jumlah_kredit')
                 <div class="invalid-feedback">
@@ -375,7 +406,7 @@
                     <div class="flex-1">
                         <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
                             class="form-input only-number @error('tenor_yang_diminta') is-invalid @enderror"
-                            aria-describedby="addon_tenor_yang_diminta" required maxlength="3" />
+                            aria-describedby="addon_tenor_yang_diminta" required maxlength="3" placeholder="Tenor Yang Diminta" />
                     </div>
                     <div class="flex-shrink-0 mt-2.5rem">
                         <span class="form-input bg-gray-100">Bulan</span>
@@ -390,7 +421,7 @@
         </div>
         <div class="input-box">
             <label for="">Tujuan Kredit</label>
-            <textarea name="tujuan_kredit" class="form-input @error('tujuan_kredit') is-invalid @enderror"
+            <textarea name="tujuan_kredit" class="form-textarea @error('tujuan_kredit') is-invalid @enderror"
                 maxlength="255" id="tujuan_kredit" cols="30" rows="4" placeholder="Tujuan Kredit"></textarea>
             @error('tujuan_kredit')
             <div class="invalid-feedback">
@@ -400,7 +431,7 @@
         </div>
         <div class="input-box">
             <label for="">Jaminan yang disediakan</label>
-            <textarea name="jaminan" class="form-input @error('jaminan') is-invalid @enderror" maxlength="255"
+            <textarea name="jaminan" class="form-textarea @error('jaminan') is-invalid @enderror" maxlength="255"
                 id="" cols="30" rows="4" placeholder="Jaminan yang disediakan"></textarea>
             @error('jaminan')
             <div class="invalid-feedback">
@@ -410,7 +441,7 @@
         </div>
         <div class="input-box">
             <label for="">Hubungan Bank</label>
-            <textarea name="hubungan_bank" class="form-input @error('hubungan_bank') is-invalid @enderror"
+            <textarea name="hubungan_bank" class="form-textarea @error('hubungan_bank') is-invalid @enderror"
                 maxlength="255" id="hubungan_bank" cols="30" rows="4" placeholder="Hubungan dengan Bank"></textarea>
             @error('hubungan_bank')
             <div class="invalid-feedback">
@@ -420,7 +451,7 @@
         </div>
         <div class="input-box">
             <label for="">Hasil Verifikasi</label>
-            <textarea name="hasil_verifikasi" class="form-input @error('hasil_verifikasi') is-invalid @enderror"
+            <textarea name="hasil_verifikasi" class="form-textarea @error('hasil_verifikasi') is-invalid @enderror"
                 maxlength="255" id="hasil_verivikasi" cols="30" rows="4"
                 placeholder="Hasil Verifikasi Karakter Umum"></textarea>
             @error('hasil_verifikasi')

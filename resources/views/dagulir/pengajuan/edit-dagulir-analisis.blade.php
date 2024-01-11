@@ -10,7 +10,7 @@
         </h2>
     </div>
     <div
-        class="p-5 w-full space-y-5 "
+        class="p-5 w-full space-y-5"
         id="data-umum"
     >
         <!-- data umum -->
@@ -23,8 +23,8 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="form-group-2">
+        <div class="row space-y-5">
+            <div class="form-group-1">
                 <input type="hidden" name="id_nasabah" id="" value="{{ $dataUmum->id }}">
                 <div class="input-box col-md-6">
                     <label for="">Nama Lengkap</label>
@@ -37,34 +37,7 @@
                         </div>
                     @enderror
                 </div>
-                <div class="input-box col-md-6">
-                    <label for="">{{ $itemSP->nama }}</label>
-                    @php
-                        $jawabanFotoSP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id_pengajuan)
-                            ->where('id_jawaban', 145)
-                            ->first();
-                        // dd($pengajuan);
-                    @endphp
-                    <input type="hidden" name="id_file_text[]" value="{{ $itemSP->id }}">
-                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP?->opsi_text }}</label>
-                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                        data-title="{{ $itemSP->nama }}"
-                        data-type="image"
-                        data-filepath="{{ asset("../upload/{$pengajuan->id}/{$jawabanFotoSP->id_jawaban}/{$jawabanFotoSP->opsi_text}") }}">
-                        Preview
-                    </a>
-                    <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}"
-                        id="surat_permohonan" placeholder="Masukkan informasi {{ $itemSP?->nama }}"
-                        class="form-input limit-size">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP?->id }}">
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    {{-- <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span> --}}
-                </div>
+
             </div>
             <div class="form-group-3">
                 <div class="input-box col-md-4">
@@ -138,16 +111,7 @@
                     @enderror
                     <hr>
                 </div>
-                <div class="input-box col-md-12">
-                    <label for="">Alamat Usaha</label>
-                    <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror" maxlength="255"
-                        id="" cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmum->alamat_usaha) }}</textarea>
-                    @error('alamat_usaha')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+
                 <div class="input-box col-md-12">
                     <label for="">No. KTP</label>
                     <input type="text" name="no_ktp" maxlength="255"
@@ -327,28 +291,14 @@
                     @enderror
                 </div>
             </div>
-            <div class="form-group-1">
-                <div class="input-box col-md-12">
-                    <label for="">Sektor Kredit</label>
-                    <select name="sektor_kredit" id=""
-                        class="form-select @error('sektor_kredit') is-invalid @enderror select2">
-                        <option value=""> --Pilih Sektor Kredit -- </option>
-                        <option value="perdagangan"
-                            {{ old('sektor_kredit', $dataUmum->sektor_kredit) == 'perdagangan' ? 'selected' : '' }}>
-                            Perdagangan</option>
-                        <option value="perindustrian"
-                            {{ old('sektor_kredit', $dataUmum->sektor_kredit) == 'perindustrian' ? 'selected' : '' }}>
-                            Perindustrian</option>
-                        <option value="dll"
-                            {{ old('sektor_kredit', $dataUmum->sektor_kredit) == 'dll' ? 'selected' : '' }}>dll</option>
-                    </select>
-                    @error('sektor_kredit')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Slik :
+                    </h2>
                 </div>
             </div>
+
             <div class="form-group-2">
                 <div class="input-box col-md-6">
                     <label for="">{{ $itemSlik->nama }}</label>
@@ -413,6 +363,13 @@
                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
             </div>
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Usaha :
+                    </h2>
+                </div>
+            </div>
             <div class="form-group-1">
                 <div class="input-box col-md-12">
                     <label for="">Jenis Usaha</label>
@@ -425,7 +382,72 @@
                     @enderror
                 </div>
             </div>
+            <div class="input-box col-md-12">
+                <label for="">Alamat Usaha</label>
+                <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror" maxlength="255"
+                    id="" cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmum->alamat_usaha) }}</textarea>
+                @error('alamat_usaha')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Pengajuan :
+                    </h2>
+                </div>
+            </div>
             <div class="form-group-2">
+                <div class="input-box col-md-6">
+                    <label for="">{{ $itemSP->nama }}</label>
+                    @php
+                        $jawabanFotoSP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id_pengajuan)
+                            ->where('id_jawaban', 145)
+                            ->first();
+                        // dd($pengajuan);
+                    @endphp
+                    <input type="hidden" name="id_file_text[]" value="{{ $itemSP->id }}">
+                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP?->opsi_text }}</label>
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                        data-title="{{ $itemSP->nama }}"
+                        data-type="image"
+                        data-filepath="{{ asset("../upload/{$pengajuan->id}/{$jawabanFotoSP->id_jawaban}/{$jawabanFotoSP->opsi_text}") }}">
+                        Preview
+                    </a>
+                    <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}"
+                        id="surat_permohonan" placeholder="Masukkan informasi {{ $itemSP?->nama }}"
+                        class="form-input limit-size">
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP?->id }}">
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    {{-- <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span> --}}
+                </div>
+                <div class="input-box col-md-12">
+                    <label for="">Sektor Kredit</label>
+                    <select name="sektor_kredit" id=""
+                        class="form-select @error('sektor_kredit') is-invalid @enderror select2">
+                        <option value=""> --Pilih Sektor Kredit -- </option>
+                        <option value="perdagangan"
+                            {{ old('sektor_kredit', $dataUmum->sektor_kredit) == 'perdagangan' ? 'selected' : '' }}>
+                            Perdagangan</option>
+                        <option value="perindustrian"
+                            {{ old('sektor_kredit', $dataUmum->sektor_kredit) == 'perindustrian' ? 'selected' : '' }}>
+                            Perindustrian</option>
+                        <option value="dll"
+                            {{ old('sektor_kredit', $dataUmum->sektor_kredit) == 'dll' ? 'selected' : '' }}>dll</option>
+                    </select>
+                    @error('sektor_kredit')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
                 <div class="input-box col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
                     <input type="text" name="jumlah_kredit"

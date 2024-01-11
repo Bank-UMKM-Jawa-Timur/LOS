@@ -176,7 +176,7 @@
                                 <td>{{ $item->nama }}</td>
                                 <td class="text-center text-sm">
                                     @if ($item->pk && $item->posisi == 'Selesai')
-                                        {{$item->posisi}}
+                                       Disetujui
                                     @else
                                         {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
                                     @endif
@@ -272,7 +272,7 @@
                                 </td>
                                 <td>
                                     @if ($item->posisi == 'Selesai')
-                                        <font class="text-green-500">Selesai</font>
+                                        <font class="text-green-500">Disetujui</font>
                                     @elseif ($item->posisi == 'Ditolak')
                                         <font class="text-red-500">Ditolak</font>
                                     @else
@@ -293,7 +293,7 @@
                                             ->whereNotNull('nip')
                                             ->first();
                                     @endphp
-                                    <div class="flex">
+                                    <div class="flex justify-center">
                                         <div class="dropdown-tb">
                                             <button
                                             type="button"
@@ -319,6 +319,12 @@
                                                                     Tindak lanjut Review Penyelia
                                                                 </li>
                                                             </a>
+                                                        @else
+                                                            <a href="#" onclick="showTindakLanjut({{ $item->id }},'penyelia kredit')" class="w-full cursor-pointer">
+                                                                <li class="item-tb-dropdown">
+                                                                    Tindak lanjut Review Penyelia
+                                                                </li>
+                                                            </a>
                                                         @endif
                                                     @else
                                                         <a href="{{route('dagulir.pengajuan.create')}}?dagulir={{$item->id}}" class="w-full cursor-pointer">
@@ -336,9 +342,9 @@
                                                     @endphp
 
                                                     @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer">
+                                                        <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-sppk">
                                                             <li class="item-tb-dropdown">
-                                                                Cetak SPPK
+                                                                Download SPPK
                                                             </li>
                                                         </a>
                                                     @elseif (!$item->sppk && $tglCetak->tgl_cetak_sppk)
@@ -348,15 +354,15 @@
                                                             </li>
                                                         </a>
                                                     @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer">
+                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-pk">
                                                             <li class="item-tb-dropdown">
-                                                                Cetak PK
+                                                                Download PK
                                                             </li>
                                                         </a>
                                                     @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->sppk)
                                                         <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->id }}">
                                                             <li class="item-tb-dropdown">
-                                                                Upload PK
+                                                                Realisasi Kredit
                                                             </li>
                                                         </a>
                                                     @endif
@@ -528,6 +534,18 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+    $('#download-pk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
+    $('#download-sppk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
     if (document.getElementById('modalConfirmPincab')) {
         document.getElementById('modalConfirmPincab').addEventListener('click', function () {
             document.getElementById('confirmationModal').classList.remove('hidden');

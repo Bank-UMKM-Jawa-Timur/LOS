@@ -298,14 +298,14 @@
                                 </td>
                                 <td>
                                     @if ($item->posisi == 'Selesai')
-                                        <font class="text-green-500">Selesai</font>
+                                        <font class="text-green-500">Disetujui</font>
                                     @elseif ($item->posisi == 'Ditolak')
                                         <font class="text-red-500">Ditolak</font>
                                     @else
                                         <font class="text-yellow-500">On Progress</font>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="flex justify-center">
                                 <div class="dropdown-tb">
                                     @php
                                     $userPBP = \App\Models\User::select('id')

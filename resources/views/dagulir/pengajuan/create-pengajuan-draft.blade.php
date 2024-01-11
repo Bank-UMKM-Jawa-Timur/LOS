@@ -148,7 +148,7 @@
         </div>
         <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema != null) value="{{ $skema ?? '' }}"
         @elseif($duTemp->skema_kredit != null) value="{{ $duTemp->skema_kredit ?? '' }}" @endif>
-        <div class="form-group-2">
+        <div class="form-group-1">
             <div class="input-box">
                 <label for="">Nama Lengkap</label>
                 <input type="text" name="name" id="nama" class="form-input @error('name') is-invalid @enderror"
@@ -159,19 +159,7 @@
                 </div>
                 @enderror
             </div>
-            <div class="input-box">
-                <label for="">{{ $itemSP->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
-                    placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                <div class="invalid-feedback">
-                    {{ $errors->first('dataLevelDua.' . $key) }}
-                </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
-            </div>
+
         </div>
         <div class="form-group-3">
             <div class="input-box">
@@ -225,7 +213,7 @@
         </div>
         <div class="input-box">
             <label for="">Alamat Rumah</label>
-            <textarea name="alamat_rumah" class="form-input @error('alamat_rumah') is-invalid @enderror"
+            <textarea name="alamat_rumah" class="form-textarea  @error('alamat_rumah') is-invalid @enderror"
                 maxlength="255" id="alamat_rumah" cols="30" rows="4"
                 placeholder="Alamat Rumah disesuaikan dengan KTP">{{ $duTemp?->alamat_rumah ?? '' }}</textarea>
             @error('alamat_rumah')
@@ -235,16 +223,7 @@
             @enderror
             <hr>
         </div>
-        <div class="input-box">
-            <label for="">Alamat Usaha</label>
-            <textarea name="alamat_usaha" class="form-input @error('alamat_usaha') is-invalid @enderror"
-                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
-            @error('alamat_usaha')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
-        </div>
+
         <div class="form-group-3">
             <div class="input-box">
                 <label for="">Tempat Lahir</label>
@@ -302,24 +281,14 @@
         </div>
         <div class="input-box" id="foto-ktp-nasabah">
         </div>
-        <div class="form-group-3">
-            <div class="input-box ">
-                <label for="">Sektor Kredit</label>
-                <select name="sektor_kredit" id="sektor_kredit"
-                    class="form-select @error('sektor_kredit') is-invalid @enderror select2">
-                    <option value=""> --Pilih Sektor Kredit -- </option>
-                    @foreach ($sectors as $sector)
-                    <option value="{{ $sector }}" {{ $sector==$duTemp?->sektor_kredit ?? '' ? 'selected' : '' }}>{{
-                        ucfirst($sector) }}
-                    </option>
-                    @endforeach
-                </select>
-                @error('sektor_kredit')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-                @enderror
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Slik :
+                </h2>
             </div>
+        </div>
+        <div class="form-group-3">
             <div class="input-box">
                 <label for="">{{ $itemSlik->nama }}</label>
                 <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select select2"
@@ -354,9 +323,16 @@
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
         </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Data usaha :
+                </h2>
+            </div>
+        </div>
         <div class="input-box ">
             <label for="">Jenis Usaha</label>
-            <textarea name="jenis_usaha" class="form-input @error('jenis_usaha') is-invalid @enderror"
+            <textarea name="jenis_usaha" class="form-textarea  @error('jenis_usaha') is-invalid @enderror"
                 maxlength="255" id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ $duTemp?->jenis_usaha ?? '' }}</textarea>
             @error('jenis_usaha')
             <div class="invalid-feedback">
@@ -364,7 +340,55 @@
             </div>
             @enderror
         </div>
+        <div class="input-box">
+            <label for="">Alamat Usaha</label>
+            <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror"
+                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
+            @error('alamat_usaha')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Data pengajuan :
+                </h2>
+            </div>
+        </div>
         <div class="form-group-2">
+            <div class="input-box">
+                <label for="">{{ $itemSP->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
+                    placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+                <span class="filename" style="display: inline;"></span>
+            </div>
+            <div class="input-box ">
+                <label for="">Sektor Kredit</label>
+                <select name="sektor_kredit" id="sektor_kredit"
+                    class="form-select @error('sektor_kredit') is-invalid @enderror select2">
+                    <option value=""> --Pilih Sektor Kredit -- </option>
+                    @foreach ($sectors as $sector)
+                    <option value="{{ $sector }}" {{ $sector==$duTemp?->sektor_kredit ?? '' ? 'selected' : '' }}>{{
+                        ucfirst($sector) }}
+                    </option>
+                    @endforeach
+                </select>
+                @error('sektor_kredit')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+
             <div class="input-box">
                 <label for="">Jumlah Kredit yang diminta</label>
                 <input type="text" name="jumlah_kredit" id="jumlah_kredit" class="form-input rupiah" value="{{ rupiah($duTemp?->jumlah_kredit) ?? '' }}">
@@ -396,7 +420,7 @@
         </div>
         <div class="input-box">
             <label for="">Tujuan Kredit</label>
-            <textarea name="tujuan_kredit" class="form-input @error('tujuan_kredit') is-invalid @enderror"
+            <textarea name="tujuan_kredit" class="form-textarea  @error('tujuan_kredit') is-invalid @enderror"
                 maxlength="255" id="tujuan_kredit" cols="30" rows="4" placeholder="Tujuan Kredit">{{ $duTemp?->tujuan_kredit ?? '' }}</textarea>
             @error('tujuan_kredit')
             <div class="invalid-feedback">
@@ -406,7 +430,7 @@
         </div>
         <div class="input-box">
             <label for="">Jaminan yang disediakan</label>
-            <textarea name="jaminan" class="form-input @error('jaminan') is-invalid @enderror" maxlength="255"
+            <textarea name="jaminan" class="form-textarea  @error('jaminan') is-invalid @enderror" maxlength="255"
                 id="" cols="30" rows="4" placeholder="Jaminan yang disediakan">{{ $duTemp?->jaminan_kredit }}</textarea>
             @error('jaminan')
             <div class="invalid-feedback">
@@ -416,7 +440,7 @@
         </div>
         <div class="input-box">
             <label for="">Hubungan Bank</label>
-            <textarea name="hubungan_bank" class="form-input @error('hubungan_bank') is-invalid @enderror"
+            <textarea name="hubungan_bank" class="form-textarea  @error('hubungan_bank') is-invalid @enderror"
                 maxlength="255" id="hubungan_bank" cols="30" rows="4" placeholder="Hubungan dengan Bank">{{ $duTemp?->hubungan_bank }}</textarea>
             @error('hubungan_bank')
             <div class="invalid-feedback">
@@ -426,7 +450,7 @@
         </div>
         <div class="input-box">
             <label for="">Hasil Verifikasi</label>
-            <textarea name="hasil_verifikasi" class="form-input @error('hasil_verifikasi') is-invalid @enderror"
+            <textarea name="hasil_verifikasi" class="form-textarea  @error('hasil_verifikasi') is-invalid @enderror"
                 maxlength="255" id="hasil_verivikasi" cols="30" rows="4"
                 placeholder="Hasil Verifikasi Karakter Umum">{{ $duTemp?->verifikasi_umum }}</textarea>
             @error('hasil_verifikasi')
@@ -441,7 +465,7 @@
                 <button type="button"
                     class="px-5 py-2 border rounded bg-white text-gray-500">
                     Kembali
-                </button>
+                </button>   
             </a>
             <button type="button"
             class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"

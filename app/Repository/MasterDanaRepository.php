@@ -32,7 +32,7 @@ class MasterDanaRepository
             if ($value->loan) {
                 $loan = $value->loan;
                 foreach ($loan as $l) {
-                    $angsuran = MasterDDAngsuran::where('id_dd_loan', $l->no_loan)->sum('pokok_angsuran');
+                    $angsuran = MasterDDAngsuran::where('no_loan', $l->no_loan)->sum('pokok_pembayaran');
                     $total_angsuran += $angsuran;
                 }
             }
@@ -62,7 +62,7 @@ class MasterDanaRepository
                 $loan = $value->loan;
 
                 foreach ($loan as $l) {
-                    $angsuran = MasterDDAngsuran::where('id_dd_loan', $l->no_loan)->sum('pokok_angsuran');
+                    $angsuran = MasterDDAngsuran::where('no_loan', $l->no_loan)->sum('pokok_pembayaran');
                     $total_angsuran += $angsuran;
                 }
             }
@@ -101,7 +101,7 @@ class MasterDanaRepository
                     $loan = $value->loan;
                     $loan->user = 'pincab';
                     foreach ($loan as $l) {
-                        $angsuran = MasterDDAngsuran::where('id_dd_loan', $l->no_loan)->sum('pokok_angsuran');
+                        $angsuran = MasterDDAngsuran::where('no_loan', $l->no_loan)->sum('pokok_pembayaran');
                         $total_angsuran += $angsuran;
                     }
                 }

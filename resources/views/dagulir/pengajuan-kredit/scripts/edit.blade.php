@@ -185,6 +185,7 @@
 
         //get item by kategori
         let kategoriJaminanUtama = $(this).val();
+        console.log(kategoriJaminanUtama);
 
         $.ajax({
             type: "get",
@@ -316,10 +317,13 @@
 
         //get item by kategori
         let kategoriJaminan = $(this).val();
+        let id_dagulir_temp = $('#id_dagulir_temp').val();
+        let id_nasabah = $('#id_nasabah').val()
+        let skema = $('#skema_kredit').val()
 
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
@@ -371,6 +375,12 @@
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group file-wrapper item-${valItem.id}">
                                         <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                            data-title="{{$itemNIB->nama}}"
+                                            data-type="image"
+                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id_jawaban}/{$file}") }}"
+                                            >Preview
+                                        </a>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"
@@ -472,12 +482,14 @@
 
         //get item by kategori
         let kategoriJaminan = $('#kategori_jaminan_tambahan').val();
-
+        let id_dagulir_temp = $('#id_dagulir_temp').val()
+        let skema = $('#skema').val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}&skema=`,
             dataType: "json",
             success: function(response) {
+                console.log(response);
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
                     $("#select_kategori_jaminan_tambahan").show()
                     $("#jaminan_tambahan").show()
@@ -497,7 +509,7 @@
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // //console.log(valOption.skor);
+                        console.log(response.dataSelect);
                         $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
@@ -523,16 +535,28 @@
                         } else {
                             var name_lowercase = valItem.nama.toLowerCase();
                             name_lowercase = name_lowercase.replaceAll(' ', '_')
+                            var linkElement = $(".open-modal");
+
+                            // Assuming you have the correct values for the variables
+                            var itemId = `{{ $pengajuan?->id }}`; // Replace with the actual value
+                            var itemNIBId = valItem.id; // Replace with the actual value
+                            var file = response.dataJawaban[i]; // Replace with the actual value
+
+                            // Construct the new filepath URL
+                            var newFilepath = "{{asset('../upload')}}/" + itemId + "/" + itemNIBId + "/" + file;
+
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group file-wrapper item-${valItem.id}">
                                         <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                data-title="${valItem.nama}" data-filepath="${newFilepath}">Preview</a>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"
                                                     value="${valItem.id}" id="">
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
-                                                    name="upload_file[${valItem.id}][]" data-id=""
+                                                    name="upload_file[${valItem.id}][]" value="${response.dataJawaban[i]}" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
                                                 <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
@@ -549,14 +573,16 @@
                                     </div>
                                 `);
                             } else {
-                                if (response.dataJawaban[i] != null && response.dataJawaban[
-                                        i] != "") {
+                                if (response.dataDetailJawabanText[i] != null && response.dataJawaban[i] != "") {
                                     if (kategoriJaminan != 'Kendaraan Bermotor') {
-                                        isCheck =
-                                            "<input type='checkbox' class='checkKategori' checked>"
+                                        isCheck = "<input type='checkbox' class='checkKategori' checked>"
                                         isDisabled = ""
                                     }
+                                }else{
+                                    isCheck = "<input type='checkbox' class='checkKategori'>"
+                                    isDisabled = "disabled"
                                 }
+                                console.log(typeof(response.dataJawaban[i]));
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group aspek_jaminan_kategori">
                                         <label>${isCheck} ${valItem.nama}</label>
@@ -626,7 +652,7 @@
     $('#npwp_id').attr('disabled', true);
     $('#npwp_text').attr('disabled', true);
     $('#npwp_file').attr('disabled', true);
-    $('#npwp_text').val('');
+    // $('#npwp_text').val('');
     $('#npwp_opsi_jawaban').attr('disabled', true);
 
     $('#docNPWP').hide();
@@ -765,8 +791,33 @@
         }
     });
     // end milih ijin usaha
-
     // Cek Npwp
+    if ($("#isNpwp").is(":checked")) {
+        $('#npwp').show();
+        $('#npwp_id').removeAttr('disabled');
+        $('#npwp_text').removeAttr('disabled');
+        $('#npwp_file').removeAttr('disabled');
+        $('#npwp_opsi_jawaban').removeAttr('disabled');
+
+        $('#docNPWP').show();
+        $('#docNPWP_id').removeAttr('disabled');
+        $('#docNPWP_text').removeAttr('disabled');
+        $('#docNPWP_text').val('');
+        $('#docNPWP_upload_file').removeAttr('disabled');
+    } else {
+        $('#npwp').hide();
+        $('#npwp_id').attr('disabled', true);
+        $('#npwp_text').attr('disabled', true);
+        $('#npwp_file').attr('disabled', true);
+        $('#npwp_text').val('');
+        $('#npwp_opsi_jawaban').attr('disabled', true);
+
+        $('#docNPWP').hide();
+        $('#docNPWP_id').attr('disabled', true);
+        $('#docNPWP_text').attr('disabled', true);
+        $('#docNPWP_text').val('');
+        $('#docNPWP_upload_file').attr('disabled', true);
+    }
     $('#isNpwp').change(function() {
         if ($(this).is(':checked')) {
             $('#npwp').show();
@@ -785,7 +836,6 @@
             $('#npwp_id').attr('disabled', true);
             $('#npwp_text').attr('disabled', true);
             $('#npwp_file').attr('disabled', true);
-            $('#npwp_text').val('');
             $('#npwp_opsi_jawaban').attr('disabled', true);
 
             $('#docNPWP').hide();
@@ -796,16 +846,16 @@
         }
     });
 
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
-        }
-    }
-    // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
-        $(this).val(formatNpwp(input))
-    })
+    // function formatNpwp(value) {
+    //     if (typeof value === 'string') {
+    //         return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+    //     }
+    // }
+    // // NPWP format
+    // $(document).on('keyup', '#npwp_text', function() {
+    //     var input = $(this).val()
+    //     $(this).val(formatNpwp(input))
+    // })
 
     //triger hitung ratio coverage
     $('#thls').change(function(e) {
@@ -1862,10 +1912,39 @@
             return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
         }
     }
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [
+                    match[1],
+                    match[2] ? ".": "",
+                    match[2],
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+
+        } catch(err) {
+            return "";
+        }
+    }
+    var npwp = $('#npwp_text').val();
+    const NPWP = document.getElementById("npwp_text")
+
+    NPWP.oninput = (e) => {
+        e.target.value = autoFormatNPWP(e.target.value);
+    }
+    $('#npwp_text').val(autoFormatNPWP(npwp))
+    // console.log($('#npwp_text').val().replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6'));
     // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
-        $(this).val(formatNpwp(input))
-    })
+    // $(document).on('keyup', '#npwp_text', function() {
+    //     var input = $(this).val()
+    //     $(this).val(formatNpwp(input))
+    // })
 </script>
 <script src="{{ asset('') }}js/custom.js"></script>

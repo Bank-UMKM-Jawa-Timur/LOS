@@ -1,5 +1,12 @@
 @push('script-inject')
     <script>
+        $("input[name='nik_nasabah']").keyup(function(e){
+            if($(this).val().length < 16) {
+                $('.no_ktp_pesan').html(`No KTP Harus 16`);
+            }else{
+                $('.no_ktp_pesan').html(``);
+            }
+        });
         $('#jangka_waktu').on('change', function() {
             limitJangkaWaktu()
         })
@@ -215,12 +222,14 @@
                     oninput="validateNIK(this)"
                     value="{{ old('nik') }}"
                 />
+                <span class="text-sm text-red-500 no_ktp_pesan mt-2"></span>
             </div>
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_nasabah" class="form-input limit-size-2 only-image" accept="image/png, image/gif, image/jpeg" />
                 </div>
+
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>

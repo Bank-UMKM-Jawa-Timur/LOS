@@ -310,11 +310,11 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp, .pdf)</small>
-                                                            <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
+                                                            <input type="hidden" name="id_item_file[{{ $item->id }}][]" value="{{ $item->id }}"
                                                                 id="">
-                                                            <input type="file" name="upload_file[{{ $item->id }}] image-pdf" id="{{ $idLevelDua }}"
+                                                            <input type="file" name="upload_file[{{ $item->id }}][]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size {{$item->only_accept}}"
+                                                                class="form-input limit-size {{$item->only_accept}} image-pdf"
                                                                 >
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
@@ -1595,9 +1595,11 @@ $dataIndex = match ($skema) {
         }
         else {
             const ijinUsaha = $("#ijin_usaha").val();
-            if (nullValue.length > 0 ) {
+            const value = 'aspek keuangan';
+            dataValue = nullValue.filter(item => item !== value)
+            if (dataValue.length > 0 ) {
                 let message = "";
-                $.each(nullValue, (i, v) => {
+                $.each(dataValue, (i, v) => {
                     var item = v;
                     if (v == 'dataLevelDua')
                         item = 'slik';
@@ -1607,9 +1609,9 @@ $dataIndex = match ($skema) {
 
                     if (v == 'itemByKategori'){
                         if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
-                            for(var j = 0; j < nullValue.length; j++){
-                                while(nullValue[j] == v){
-                                    nullValue.splice(j, 1)
+                            for(var j = 0; j < dataValue.length; j++){
+                                while(dataValue[j] == v){
+                                    dataValue.splice(j, 1)
                                 }
                             }
                         } else {
@@ -1621,9 +1623,9 @@ $dataIndex = match ($skema) {
                         if (v == 'nib text' || v == 'nib_text') {
                             var nibText = $("#nib_text").val()
                             if (nibText == null || nibText == '') {
-                                for(var j = 0; j < nullValue.length; j++){
-                                    while(nullValue[j] == v){
-                                        nullValue.splice(j, 1)
+                                for(var j = 0; j < dataValue.length; j++){
+                                    while(dataValue[j] == v){
+                                        dataValue.splice(j, 1)
                                     }
                                 }
                             }
@@ -1640,7 +1642,6 @@ $dataIndex = match ($skema) {
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
-                console.log(nullValue);
                 e.preventDefault()
             } else {
                 $("#preload-data").removeClass("hidden");
@@ -1760,9 +1761,11 @@ $dataIndex = match ($skema) {
         //get item by kategori
         let kategoriJaminanUtama = $(this).val();
 
+        let id = $("#id_dagulir_temp").val();
+
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 // jika kategori bukan stock dan piutang
@@ -1892,9 +1895,11 @@ $dataIndex = match ($skema) {
         //get item by kategori
         let kategoriJaminan = $(this).val();
 
+        let id = $("#id_dagulir_temp").val();
+
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {

@@ -8,6 +8,7 @@ use App\Http\Controllers\LogPengajuanController;
 use App\Models\AlasanPengembalianData;
 use App\Models\CalonNasabah;
 use App\Models\CalonNasabahTemp;
+use App\Models\DanaCabang;
 use App\Models\Desa;
 use App\Models\DetailKomentarModel;
 use App\Models\ItemModel;
@@ -296,7 +297,7 @@ class NewDagulirController extends Controller
                 $request->validate([
                     'nama_lengkap' => 'required',
                     'email' => 'required|unique:pengajuan_dagulir,email',
-                    'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik',
+                    'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik|max:16',
                     'tempat_lahir' => 'required',
                     'tanggal_lahir' => 'required',
                     'telp' => 'required',
@@ -329,7 +330,7 @@ class NewDagulirController extends Controller
                 'name' => 'required',
                 'alamat_rumah' => 'required',
                 'alamat_usaha' => 'required',
-                'no_ktp' => 'required',
+                'no_ktp' => 'required|max:16',
                 'kabupaten' => 'required|not_in:0',
                 'kec' => 'required|not_in:0',
                 'desa' => 'required|not_in:0',
@@ -753,9 +754,20 @@ class NewDagulirController extends Controller
             // Log Pengajuan Baru
             $namaNasabah = $request->skema_kredit == 'Dagulir' ? $pengajuan->nama : CalonNasabah::find($addData->id)->nama;
             // Delete data Draft
-            JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
-            JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
-            PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
+            if ($request->skema_kredit == 'Dagulir') {
+                JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+                JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+                PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
+            } else {
+                JawabanTemp::where('id_temporary_calon_nasabah', $request->id_dagulir_temp)->delete();
+                JawabanTempModel::where('id_temporary_calon_nasabah', $request->id_dagulir_temp)->delete();
+                CalonNasabahTemp::find($request->id_dagulir_temp)->delete();
+                DB::table('temporary_usulan_dan_pendapat')
+                    ->where('id_temp', $request->id_dagulir_temp)
+                    ->delete();
+                DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->id_dagulir_temp)->delete();
+            }
+
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
@@ -1341,7 +1353,7 @@ class NewDagulirController extends Controller
             // return $param['dataKecamatanDom'];
             $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
-            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
+            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp', 'pengajuan.id_pbo', 'pengajuan.id_pbp')
                 ->find($id);
             $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
 
@@ -1398,7 +1410,6 @@ class NewDagulirController extends Controller
             }
             $param['logPengajuan'] = $log;
             $param['rolesPemroses'] = $this->repo->getDataPemroses($nasabah);
-
             return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
 
         } else {
@@ -2216,7 +2227,7 @@ class NewDagulirController extends Controller
             ]);
         }
 
-        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        $dataUmum = PengajuanModel::select('pengajuan.id', 'pengajuan.skema_kredit', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
         ->find($id);
         $param['dataUmum'] = $dataUmum;
 
@@ -2293,10 +2304,10 @@ class NewDagulirController extends Controller
                 ]);
         }
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')->find($id);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'skema_kredit')->find($id);
 
         if ($param['dataUmum']->skema_kredit == 'Dagulir') {
-            $dataUmum = DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+            $dataUmum = DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
                         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
                         ->where('pengajuan.id', $id)
                         ->first();
@@ -2489,18 +2500,28 @@ class NewDagulirController extends Controller
                                             // insert to dd loan
                                             $repo = new MasterDanaRepository;
                                             $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
-                                            if ($data->dana_idle != 0) {
-                                                if ($pengajuan && $plafon) {
-                                                    $loan = new MasterDDLoan;
-                                                    $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
-                                                    $loan->no_loan = $request->get('no_loan');
-                                                    $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
-                                                    $loan->plafon = $plafon->plafon_usulan_pincab;
-                                                    $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
-                                                    $loan->baki_debet = $plafon->plafon_usulan_pincab;
-                                                    $loan->save();
+                                            if ($pengajuan && $plafon) {
+                                                if ($data->dana_idle >= $plafon->plafon_usulan_pincab) {
+                                                    $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                                    $current = $dana_cabang->dana_modal - $plafon->plafon_usulan_pincab;
+                                                    if ($current > 0) {
+                                                        $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                                        $update_cabang->dana_idle = $current;
+                                                        $update_cabang->update();
+
+                                                        $loan = new MasterDDLoan;
+                                                        $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
+                                                        $loan->no_loan = $request->get('no_loan');
+                                                        $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
+                                                        $loan->plafon = $plafon->plafon_usulan_pincab;
+                                                        $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
+                                                        $loan->baki_debet = $plafon->plafon_usulan_pincab;
+                                                        $loan->save();
+                                                    }
                                                 }
+
                                             }
+
                                             DB::commit();
                                             Alert::success('success', $message);
                                             return redirect()->route('dagulir.pengajuan.index');

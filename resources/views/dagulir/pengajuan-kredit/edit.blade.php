@@ -56,6 +56,7 @@ $dataIndex = match ($skema) {
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp" value="{{ $pengajuan?->id }}">
+                <input type="hidden" name="skema_kredit" id="skema_kredit" value="{{ $pengajuan?->skema_kredit }}">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         @if ($pengajuan->skema_kredit != 'Dagulir')
@@ -135,7 +136,7 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" id="space_nib"></div>
+                                            {{-- <div class="form-group" id="space_nib"></div> --}}
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
@@ -198,7 +199,7 @@ $dataIndex = match ($skema) {
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                             data-title="Dokumen Surat Keterangan Usaha"
                                                             data-type="image"
-                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemSKU->id_jawaban}/{$file}") }}"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemSKU->id}/{$file}") }}"
                                                             >Preview
                                                         </a>
                                                     @endif
@@ -354,14 +355,14 @@ $dataIndex = match ($skema) {
                                                     <div class="input-box">
                                                         <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp, .pdf)</small>
                                                         @php
-                                                            $file = edit_text_dagulir($pengajuan->id, $itemNIB->id)?->opsi_text;
+                                                            $file = edit_text_dagulir($pengajuan->id, $item->id)?->opsi_text;
                                                             $is_multiple = $item->is_multiple;
                                                             $files = edit_text_dagulir($pengajuan->id, $item->id, $is_multiple);
                                                         @endphp
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                             data-title="{{$item->nama}}"
                                                             data-type="image"
-                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id}/{$file}") }}"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$item->id}/{$file}") }}"
                                                             >Preview
                                                         </a>
                                                         {{-- @if ($file)
@@ -372,6 +373,7 @@ $dataIndex = match ($skema) {
                                                             id="">
                                                         <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                             data-id="{{ edit_text_dagulir($pengajuan->id, $item->id)?->id }}" placeholder="Masukkan informasi {{ $item->nama }}"
+                                                            value="{{ $file }}"
                                                             class="form-input limit-size">
                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                             MB</span>
