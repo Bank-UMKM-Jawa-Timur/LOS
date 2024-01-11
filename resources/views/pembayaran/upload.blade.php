@@ -229,13 +229,13 @@
                 </div>
 
                 <div class="flex justify-end my-5 py-4">
-                    @if ($data != null)
+                    {{-- @if ($data != null)
                         <form action="{{ route('pembayaran.proses') }}" method="POST">
                             @csrf
                             <input type="hidden" name="data" value="{{ json_encode($data) }}">
                             <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white" id="prosesData">Proses Pembayaran</button>
                         </form>
-                    @endif
+                    @endif --}}
                     <form id="fileUploadForm" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" method="POST">
                         @csrf
                         <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white" id="checkFile" style="display:none;">Cek Pembayaran</button>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cabang;
 use App\Models\DanaCabang;
 use App\Models\MasterDDAngsuran;
 use App\Models\MasterDDLoan;
@@ -264,23 +265,33 @@ class PembayaranController extends Controller
         DB::beginTransaction();
         try {
             DB::commit();
-            $data = MasterDDAngsuran::where('created_at',Carbon::now())->get();
-            foreach ($data as $key => $value) {
-                if ($value != null) {
-                    // current master anggsuran
-                    $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-                    $kode = $loan->kode_pendaftaran;
-                    // update sipde
-                    if ($value['no_loan'] == $loan->no_loan) {
-                        $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
-                        $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-                        $update->baki_debet = $total_angsuran;
-                        $update->update();
-                        $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$total_angsuran,$value['kolek']);
-                        if ($response != 200) {
-                            DB::rollBack();
-                            alert()->error('Error','Terjadi Kesalahan.');
-                            return redirect()->route('pembayaran.index');
+            $date_yesterday = Carbon::yesterday()->setTime(05, 00, 00)->toDateTimeString();
+            $data_yesterday = MasterDDLoan::whereDate('created_at', '>=',$date_yesterday)->get();
+            return $data_yesterday;
+            return $data_yesterday;
+            if ($data_yesterday) {
+                return 'qw';
+            }
+            return 'asd';
+            $data = MasterDDAngsuran::whereDate('created_at',Carbon::now())->get();
+            if ($data) {
+                foreach ($data as $key => $value) {
+                    if ($value != null) {
+                        // current master anggsuran
+                        $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                        $kode = $loan->kode_pendaftaran;
+                        // update sipde
+                        if ($value['no_loan'] == $loan->no_loan) {
+                            $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
+                            $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                            $update->baki_debet = $total_angsuran;
+                            $update->update();
+                            $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$total_angsuran,$value['kolek']);
+                            if ($response != 200) {
+                                DB::rollBack();
+                                alert()->error('Error','Terjadi Kesalahan.');
+                                return redirect()->route('pembayaran.index');
+                            }
                         }
                     }
                 }
