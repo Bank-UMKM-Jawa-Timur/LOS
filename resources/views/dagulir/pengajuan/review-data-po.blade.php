@@ -9,11 +9,11 @@
         <p class="font-semibold text-gray-400">Edit Pengajuan</p>
     </div>
     <div class="self-start bg-white w-full border">
-        <div class="p-5 border-b">
+        {{-- <div class="p-5 border-b">
             <h2 class="font-bold text-lg tracking-tighter">
                 Data PO
             </h2>
-        </div>
+        </div> --}}
 
         <div class="p-5 w-full space-y-5"
             id="data-po"

@@ -6,6 +6,7 @@
     @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
     {{-- @include('dagulir.modal.konfirmSendToPinca') --}}
     @include('dagulir.modal.cetak-file-sppk')
+    @include('dagulir.modal.cetak-file-po')
     @include('dagulir.modal.cetak-file-pk')
     @include('dagulir.modal.approval')
     @include('dagulir.modal.approvalSipde')
@@ -340,31 +341,70 @@
                                                             ->where('id_pengajuan', $item->id)
                                                             ->first();
                                                     @endphp
-
-                                                    @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer">
-                                                            <li class="item-tb-dropdown">
-                                                                Download SPPK
-                                                            </li>
-                                                        </a>
-                                                    @elseif (!$item->sppk && $tglCetak->tgl_cetak_sppk)
-                                                        <a href="#" class="w-full cursor-pointer show-upload-sppk" data-toggle="modal" data-target="uploadSPPKModal" data-id="{{ $item->id }}">
-                                                            <li class="item-tb-dropdown">
-                                                                Upload File SPPK
-                                                            </li>
-                                                        </a>
-                                                    @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer">
-                                                            <li class="item-tb-dropdown">
-                                                                Download PK
-                                                            </li>
-                                                        </a>
-                                                    @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->sppk)
-                                                        <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->id }}">
-                                                            <li class="item-tb-dropdown">
-                                                                Realisasi Kredit
-                                                            </li>
-                                                        </a>
+                                                    @if ($item->skema_kredit == 'KKB')
+                                                        @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-sppk">
+                                                                <li class="item-tb-dropdown">
+                                                                    Download SPPK
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$item->sppk && $tglCetak->tgl_cetak_sppk)
+                                                            <a href="#" class="w-full cursor-pointer show-upload-sppk" data-toggle="modal" data-target="uploadSPPKModal" data-id="{{ $item->id }}">
+                                                                <li class="item-tb-dropdown">
+                                                                    Upload File SPPK
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$tglCetak->tgl_cetak_po && $item->sppk && $tglCetak->tgl_cetak_sppk )
+                                                            <a target="_blank" href="{{ route('cetak-po', $item->id) }}" class="w-full cursor-pointer" id="download-pk">
+                                                                <li class="item-tb-dropdown">
+                                                                    Download PO
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$item->po && $tglCetak->tgl_cetak_po && $item->sppk)
+                                                            <a href="#" class="w-full cursor-pointer show-upload-po" data-toggle="modal" data-target="uploadPOModal" data-skema="{{$item->skema_kredit}}" data-id="{{ $item->id }}">
+                                                                <li class="item-tb-dropdown">
+                                                                    Upload File PO
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$tglCetak->tgl_cetak_pk && $item->po && $tglCetak->tgl_cetak_po )
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-pk">
+                                                                <li class="item-tb-dropdown">
+                                                                    Download PK
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->po)
+                                                            <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-skema="{{$item->skema_kredit}}" data-id="{{ $item->id }}">
+                                                                <li class="item-tb-dropdown">
+                                                                    Realisasi Kredit
+                                                                </li>
+                                                            </a>
+                                                        @endif
+                                                    @else
+                                                        @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-sppk">
+                                                                <li class="item-tb-dropdown">
+                                                                    Download SPPK
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$item->sppk && $tglCetak->tgl_cetak_sppk)
+                                                            <a href="#" class="w-full cursor-pointer show-upload-sppk" data-toggle="modal" data-target="uploadSPPKModal" data-id="{{ $item->id }}">
+                                                                <li class="item-tb-dropdown">
+                                                                    Upload File SPPK
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer" id="download-pk">
+                                                                <li class="item-tb-dropdown">
+                                                                    Download PK
+                                                                </li>
+                                                            </a>
+                                                        @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->sppk)
+                                                            <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-skema="{{$item->skema_kredit}}" data-id="{{ $item->id }}">
+                                                                <li class="item-tb-dropdown">
+                                                                    Realisasi Kredit
+                                                                </li>
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                 @endif
                                                 @if ((Auth()->user()->role == 'Penyelia Kredit'))
@@ -534,6 +574,18 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+    $('#download-pk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
+    $('#download-sppk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
     if (document.getElementById('modalConfirmPincab')) {
         document.getElementById('modalConfirmPincab').addEventListener('click', function () {
             document.getElementById('confirmationModal').classList.remove('hidden');
@@ -594,6 +646,18 @@
         $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
         $(`#${target}`).removeClass('hidden');
     })
+    $('.show-upload-po').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const url_form = "{{url('/post-file')}}/"+id
+        const url_cetak = "{{url('/cetak-po')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-po`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target}`).removeClass('hidden');
+    })
 
     $('.simpan-sppk').on('click', function(){
         $("#uploadSPPKModal").addClass("hidden");
@@ -603,19 +667,31 @@
         $("#uploadPKModal").addClass("hidden");
         $("#preload-data").removeClass("hidden");
     })
+    $('.simpan-po').on('click', function(){
+        $("#uploadPOModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
 
     $('.show-upload-pk').on('click', function() {
         const target = $(this).data('target')
         const id = $(this).data('id')
         const kode_pendaftaran = $(this).data('kode_pendaftaran')
+        const skema = $(this).data('skema')
         const url_form = "{{url('/dagulir/post-file')}}/"+id
         const url_cetak = "{{url('/dagulir/cetak-pk')}}/"+id
         var token = generateCsrfToken()
+
+        if (skema == 'Dagulir') {
+            $(`#${target} #div_no_loan`).removeClass('hidden')
+        } else {
+            $(`#${target} #div_no_loan`).addClass('hidden')
+        }
 
         $(`#${target} #form-pk`).attr('action', url_form)
         $(`#${target} #token`).val(token)
         $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
         $(`#${target} #kode_pendaftaran`).val(kode_pendaftaran)
+        $(`#${target} #skema`).val(skema)
         $(`#${target}`).removeClass('hidden');
     })
     $(".tab-table-wrapper .tab-button").click(function(e) {
