@@ -875,7 +875,6 @@ class NewDagulirController extends Controller
                 }
             }
             $updateData->update();
-            return $updateData;
             DB::commit();
             event(new EventMonitoring('store pengajuan'));
 
@@ -908,7 +907,6 @@ class NewDagulirController extends Controller
     }
 
     public function checkPenyeliaKredit(Request $request) {
-        return $request;
         DB::beginTransaction();
         try {
             $statusPenyelia = PengajuanModel::find($request->id_pengajuan);
@@ -950,7 +948,6 @@ class NewDagulirController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        return $request;
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') {
             DB::beginTransaction();
