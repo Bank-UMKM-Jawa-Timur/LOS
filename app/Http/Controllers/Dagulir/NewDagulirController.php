@@ -776,9 +776,7 @@ class NewDagulirController extends Controller
                 $updateData->status_by_sistem = $status;
                 $updateData->average_by_sistem = $avgResult;
             } else {
-                $updateData->posisi = 'Ditolak';
-                $updateData->status_by_sistem = "merah";
-                $updateData->average_by_sistem = "1.0";
+
                 if ($request->skema_kredit == 'Dagulir') {
                     $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id_pengajuan);
                     $lampiran_analisa = null;
@@ -870,10 +868,13 @@ class NewDagulirController extends Controller
                         alert()->error('Peringatan(API)', $storeSIPDE);
                         return redirect()->back();
                     }
+                }else{
+                    $updateData->posisi = 'Ditolak';
+                    $updateData->status_by_sistem = "merah";
+                    $updateData->average_by_sistem = "1.0";
                 }
             }
             $updateData->update();
-
             DB::commit();
             event(new EventMonitoring('store pengajuan'));
 
@@ -947,7 +948,6 @@ class NewDagulirController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        // return $request;
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') {
             DB::beginTransaction();
@@ -2871,29 +2871,29 @@ class NewDagulirController extends Controller
                 // ktp nasabah
                 $update_pengajuan->update();
             } else {
-                // $request->validate([
-                //     'name' => 'required',
-                //     'alamat_rumah' => 'required',
-                //     'alamat_usaha' => 'required',
-                //     'no_ktp' => 'required|max:16',
-                //     'no_telp' => 'required|max:13',
-                //     'kabupaten' => 'required|not_in:0',
-                //     'kec' => 'required|not_in:0',
-                //     'desa' => 'required|not_in:0',
-                //     'tempat_lahir' => 'required',
-                //     'tanggal_lahir' => 'required',
-                //     'status' => 'required',
-                //     'sektor_kredit' => 'required',
-                //     'jenis_usaha' => 'required',
-                //     'jumlah_kredit' => 'required',
-                //     'tujuan_kredit' => 'required',
-                //     'jaminan' => 'required',
-                //     'hubungan_bank' => 'required',
-                //     'hasil_verifikasi' => 'required',
-                // ], [
-                //     'required' => 'data harus terisi.',
-                //     'not_in' => 'kolom harus dipilih.',
-                // ]);
+                $request->validate([
+                    'name' => 'required',
+                    'alamat_rumah' => 'required',
+                    'alamat_usaha' => 'required',
+                    'no_ktp' => 'required|max:16',
+                    'no_telp' => 'required|max:13',
+                    'kabupaten' => 'required|not_in:0',
+                    'kec' => 'required|not_in:0',
+                    'desa' => 'required|not_in:0',
+                    'tempat_lahir' => 'required',
+                    'tanggal_lahir' => 'required',
+                    'status' => 'required',
+                    'sektor_kredit' => 'required',
+                    'jenis_usaha' => 'required',
+                    'jumlah_kredit' => 'required',
+                    'tujuan_kredit' => 'required',
+                    'jaminan' => 'required',
+                    'hubungan_bank' => 'required',
+                    'hasil_verifikasi' => 'required',
+                ], [
+                    'required' => 'data harus terisi.',
+                    'not_in' => 'kolom harus dipilih.',
+                ]);
 
                 $updateData = CalonNasabah::find($request->id_nasabah);
                 $updateData->nama = $request->name;
@@ -3393,98 +3393,105 @@ class NewDagulirController extends Controller
                 $updateData->status_by_sistem = $status;
                 $updateData->average_by_sistem = $avgResult;
             } else {
-                $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id_pengajuan);
-                $lampiran_analisa = null;
-                if ($cetak_lampiran_analisa['status'] == 'success') {
-                    $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
-                }
-
-                $updateData->posisi = 'Ditolak';
-                $updateData->status_by_sistem = "merah";
-                $updateData->average_by_sistem = "1.0";
-
-                if ($pengajuan->kode_pendaftaran) {
-                    $kode_pendaftaran = $pengajuan->kode_pendaftaran;
-                    $storeSIPDE = 'success';
-                }
-                else {
-                    // HIT Pengajuan endpoint dagulir
-                    $storeSIPDE = $this->storeSipde($id_pengajuan);
-                    if (is_array($storeSIPDE)) {
-                        $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
-                    }
-                }
-                $delay = 1500000; // 1.5 sec
-
-                if ($kode_pendaftaran) {
-                    // HIT update status survei endpoint dagulir
-                    if ($pengajuan->status != 1) {
-                        $survei = $this->updateStatus($kode_pendaftaran, 1);
-                        if (is_array($survei)) {
-                            // Fail block
-                            if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
-                                DB::rollBack();
-                                alert()->error('Peringatan(API)', $survei);
-                                return redirect()->back();
-                            }
-                        }
-                        else {
-                            if ($survei != 200) {
-                                DB::rollBack();
-                                alert()->error('Peringatan(API)', $survei);
-                                return redirect()->back()->withError($survei);
-                            }
-                        }
-                        usleep($delay);
+                if ($pengajuanModel->skema_kredit == 'Dagulir') {
+                    $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id_pengajuan);
+                    $lampiran_analisa = null;
+                    if ($cetak_lampiran_analisa['status'] == 'success') {
+                        $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
                     }
 
-                    // HIT update status analisa endpoint dagulir
-                    if ($pengajuan->status != 2) {
-                        $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
-                        if (is_array($analisa)) {
-                            // Fail block
-                            DB::rollBack();
-                            alert()->error('Peringatan(API)', $analisa);
-                            return redirect()->back();
-                        }
-                        else {
-                            if ($analisa != 200 || $analisa != '200') {
-                                DB::rollBack();
-                                alert()->error('Peringatan(API)', $analisa);
-                                return redirect()->back();
-                            }
-                        }
-                        usleep($delay);
+                    $updateData->posisi = 'Ditolak';
+                    $updateData->status_by_sistem = "merah";
+                    $updateData->average_by_sistem = "1.0";
+
+                    if ($pengajuan->kode_pendaftaran) {
+                        $kode_pendaftaran = $pengajuan->kode_pendaftaran;
+                        $storeSIPDE = 'success';
                     }
+                    else {
 
-                    // HIT update status ditolak endpoint dagulir
-                    if ($pengajuan->status != 3) {
-                        $ditolak = $this->updateStatus($kode_pendaftaran, 4);
-                        if (is_array($ditolak)) {
-                            // Fail block
-                            DB::rollBack();
-                            alert()->error('Peringatan(API)', $ditolak);
-                            return redirect()->back();
-                        }
-                        else {
-                            if ($ditolak != 200) {
-                                DB::rollBack();
-                                alert()->error('Peringatan(API)', $ditolak);
-                                return redirect()->back();
+                            // HIT Pengajuan endpoint dagulir
+                            $storeSIPDE = $this->storeSipde($id_pengajuan);
+                            if (is_array($storeSIPDE)) {
+                                $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
                             }
-                        }
+
                     }
+                        $delay = 1500000; // 1.5 sec
+                        if ($kode_pendaftaran) {
+                            // HIT update status survei endpoint dagulir
+                            if ($pengajuan->status != 1) {
+                                $survei = $this->updateStatus($kode_pendaftaran, 1);
+                                if (is_array($survei)) {
+                                    // Fail block
+                                    if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $survei);
+                                        return redirect()->back();
+                                    }
+                                }
+                                else {
+                                    if ($survei != 200) {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $survei);
+                                        return redirect()->back()->withError($survei);
+                                    }
+                                }
+                                usleep($delay);
+                            }
 
-                    $namaNasabah = 'undifined';
-                    if ($pengajuan)
-                        $namaNasabah = $pengajuan->nama;
+                            // HIT update status analisa endpoint dagulir
+                            if ($pengajuan->status != 2) {
+                                $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
+                                if (is_array($analisa)) {
+                                    // Fail block
+                                    DB::rollBack();
+                                    alert()->error('Peringatan(API)', $analisa);
+                                    return redirect()->back();
+                                }
+                                else {
+                                    if ($analisa != 200 || $analisa != '200') {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $analisa);
+                                        return redirect()->back();
+                                    }
+                                }
+                                usleep($delay);
+                            }
 
-                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
-                }
-                else {
-                    DB::rollBack();
-                    alert()->error('Peringatan(API)', $storeSIPDE);
-                    return redirect()->back();
+                            // HIT update status ditolak endpoint dagulir
+                            if ($pengajuan->status != 3) {
+                                $ditolak = $this->updateStatus($kode_pendaftaran, 4);
+                                if (is_array($ditolak)) {
+                                    // Fail block
+                                    DB::rollBack();
+                                    alert()->error('Peringatan(API)', $ditolak);
+                                    return redirect()->back();
+                                }
+                                else {
+                                    if ($ditolak != 200) {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $ditolak);
+                                        return redirect()->back();
+                                    }
+                                }
+                            }
+
+                            $namaNasabah = 'undifined';
+                            if ($pengajuan)
+                                $namaNasabah = $pengajuan->nama;
+
+                            $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
+                        }
+                    else {
+                        DB::rollBack();
+                        alert()->error('Peringatan(API)', $storeSIPDE);
+                        return redirect()->back();
+                    }
+                }else{
+                    $updateData->posisi = 'Ditolak';
+                    $updateData->status_by_sistem = "merah";
+                    $updateData->average_by_sistem = "1.0";
                 }
             }
             $updateData->update();
