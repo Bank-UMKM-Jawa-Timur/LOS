@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('pembayaran:cron')
-                ->dailyAt('00:00')
+                ->daily()
                 ->appendOutputTo(storage_path('logs/console.log'));
     }
 

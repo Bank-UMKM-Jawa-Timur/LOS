@@ -45,41 +45,40 @@ class PembayaranCron extends Command
     public function handle()
     {
 
-        // $date_yesterday = Carbon::yesterday()->setTime(5, 0, 0)->toDateTimeString();
-        // $data_yesterday = MasterDDLoan::with('angsuran')->whereDate('created_at', '>=', $date_yesterday)->get();
+        $date_yesterday = Carbon::yesterday()->setTime(5, 0, 0)->toDateTimeString();
+        $data_yesterday = MasterDDLoan::with('angsuran')
+            ->whereDate('created_at', '>=', $date_yesterday)
+            ->whereDate('created_at', '<', Carbon::now()->setTime(5, 0, 0))
+            ->get();
 
-        // if ($data_yesterday->isNotEmpty()) {
-        //     $this->info('Cek data realisasi sebelumnya');
 
-        //     foreach ($data_yesterday as $loan) {
-        //         $this->processLoan($loan);
-        //     }
-        // } else {
-        //     $this->info('tidak ada data.');
-        // }
+        if ($data_yesterday->isNotEmpty()) {
 
-        $data_today = MasterDDAngsuran::whereDate('created_at', Carbon::now())->get();
-
-        if ($data_today->isNotEmpty()) {
-            foreach ($data_today as $value) {
-                $loan = MasterDDLoan::where('no_loan', $value['no_loan'])->whereDate('updated_at',Carbon::now())->first();
-                if ($loan) {
-                    $this->updateBakiDebetAndCallAPI($loan, $value);
-                }
+            foreach ($data_yesterday as $loan) {
+                $this->processLoan($loan);
             }
+        } else {
+            $this->info('tidak ada data.');
         }
+
 
     }
 
     private function processLoan($loan)
     {
+        $date_to_process = Carbon::now()->addDay()->setTime(5, 0, 0);
+
         foreach ($loan as $key => $value) {
-            $kode = $loan->kode_pendaftaran;
-            $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
-            $update = MasterDDLoan::where('no_loan',$value['no_loan'])->whereDate('updated_at',Carbon::now())->first();
-            $update->baki_debet = $total_angsuran;
-            $update->update();
-            $response = $this->kumulatif_debitur($kode, $value['pokok_pembayaran'], $total_angsuran, $value['kolek']);
+            $kumulatif = new PembayaranController;
+            $pokok_pembayaran = MasterDDAngsuran::where('no_loan', $value['no_loan'])
+                                ->whereDate('updated_at', $date_to_process)
+                                ->first();
+            if ($pokok_pembayaran) {
+                $response = $kumulatif->kumulatif_debitur($value['kode_pendaftaran'], $pokok_pembayaran->pokok_pembayaran, $value['baki_debet'], $value['kolek']);
+            }else{
+                $response = $kumulatif->kumulatif_debitur($value['kode_pendaftaran'], 0, $value['baki_debet'],1);
+
+            }
             info($response);
         }
     }
