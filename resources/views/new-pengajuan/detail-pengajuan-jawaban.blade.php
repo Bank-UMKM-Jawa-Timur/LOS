@@ -744,16 +744,14 @@
                                                                 @else
                                                                     @if ($item->id == 136 || $item->id == 138 || $item->id == 140 || $item->id == 143)
                                                                     @else
-                                                                        @if ($item->nama == 'Ijin Usaha' && $item->opsi_text != 'tidak_ada_legalitas_usaha')
+                                                                        @if ($item->nama == "Ijin Usaha" && $item->opsi_text != "tidak_ada_legalitas_usaha")
                                                                         @else
                                                                             <div class="field-review">
                                                                                 <div class="field-name">
                                                                                     <label for="">{{ $item->nama }}</label>
                                                                                 </div>
                                                                                 <div class="field-answer">
-                                                                                    @if ($item->id == 79)
-                                                                                        <p class="npwp">{{$dataUmumNasabah->npwp}}</p>
-                                                                                    @elseif($item->is_rupiah)
+                                                                                    @if($item->is_rupiah)
                                                                                         <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
                                                                                     @else
                                                                                         <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
