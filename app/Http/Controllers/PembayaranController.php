@@ -127,11 +127,12 @@ class PembayaranController extends Controller
                 $result_data_loan [] = $array1Obj;
             }
         }
-        return $result_data_loan;
         foreach ($result_data_loan as $key => $value) {
-            if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
-                alert()->error('Error', 'Data is incomplete.');
-                return redirect()->route('pembayaran.index');
+            if ($value != null) {
+                if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
+                    alert()->error('Error', 'Data is incomplete.');
+                    return redirect()->route('pembayaran.index');
+                }
             }
 
             // current master anggsuran
