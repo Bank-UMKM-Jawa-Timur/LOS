@@ -4,6 +4,7 @@
     @include('pengajuan-kredit.modal.new-modal-filter')
     @include('components.new.modal.loading')
     @include('pengajuan-kredit.modal.modal-kembalikan-new')
+    @include('pengajuan-kredit.modal.confirm-pincab')
 @endsection
 
 @section('content')
@@ -344,10 +345,9 @@
                                                                 </li>
                                                             </a>
                                                         @endif
-                                                        <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
-                                                            class="dropdown-item w-full cursor-pointer">
+                                                        <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                             <li class="item-tb-dropdown">
-                                                                Tindak lanjut Pincab
+                                                                Lanjut ke Pincab
                                                             </li>
                                                         </a>
                                                         <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
@@ -376,9 +376,9 @@
                                                                         </li>
                                                                     </a>
                                                                 @else
-                                                                <a class="w-full cursor-pointer review-pbo-pbp" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                               <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                                     <li class="item-tb-dropdown">
-                                                                        Tindak Lanjut ke Pincab
+                                                                        Lanjut ke Pincab
                                                                     </li>
                                                                 </a>
                                                                 @endif
@@ -449,6 +449,21 @@
         $(`${target} #id_pengajuan`).val(id)
         $(`${target} #text_backto`).html(backto)
         $(`${target}`).removeClass('hidden')
+    })
+
+    $('.pengajuan-next-pincab').on('click', function(){
+        const target = '#confirmPincab';
+        const id = $(this).data('id');
+        const next = $(this).data('next');
+        const href = $(this).data('href');
+
+        $(`${target} .btn-lanjutkan-pengajuan`).prop("href", href)
+        $(`${target}`).removeClass('hidden')
+    })
+
+    $('#confirmPincab .btn-lanjutkan-pengajuan').on('click', function(){
+        $("#confirmPincab").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
     })
 </script>
 @endpush

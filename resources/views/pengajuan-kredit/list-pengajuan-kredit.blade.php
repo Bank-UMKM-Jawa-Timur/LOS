@@ -3,6 +3,8 @@
 @section('modal')
     @include('pengajuan-kredit.modal.new-modal-filter')
     @include('components.new.modal.loading')
+    @include('pengajuan-kredit.modal.confirm-pbo')
+    @include('pengajuan-kredit.modal.confirm-pincab')
     @include('pengajuan-kredit.modal.modal-kembalikan-new')
 @endsection
 
@@ -363,7 +365,12 @@
                                                 </li>
                                             </a>
                                             @if ($userPBO)
-                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                            {{-- <a class="w-full cursor-pointer review-penyelia" data-id="$item->id_pengajuan" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                                <li class="item-tb-dropdown">
+                                                Lanjut ke PBO
+                                                </li>
+                                            </a> --}}
+                                            <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pbo" data-id="{{$item->id_pengajuan}}" data-next="pbo" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
                                                 <li class="item-tb-dropdown">
                                                 Lanjut ke PBO
                                                 </li>
@@ -376,9 +383,14 @@
                                                     </li>
                                                 </a>
                                                 @else
-                                                <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                {{-- <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                     <li class="item-tb-dropdown">
                                                         Lanjut ke Pincab
+                                                    </li>
+                                                </a> --}}
+                                                <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                    <li class="item-tb-dropdown">
+                                                    Lanjut ke Pincab
                                                     </li>
                                                 </a>
                                                 @endif
@@ -407,13 +419,13 @@
                                                 </li>
                                             </a>
                                             @if ($userPBO)
-                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
+                                            <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pbo" data-id="{{$item->id_pengajuan}}" data-next="pbo" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">
                                                 <li class="item-tb-dropdown">
                                                     Lanjut ke PBO
                                                 </li>
                                             </a>
                                             @else
-                                            <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                            <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                 <li class="item-tb-dropdown">
                                                     Lanjut ke Pincab
                                                 </li>
@@ -428,39 +440,39 @@
                                         </ul>
                                     @endif
                                 @else
-                                <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
-                                    <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
-                                    </iconify-icon>
-                                </button>
-                                <ul class="dropdown-tb-menu hidden">
-                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                        class="w-full cursor-pointer">
-                                        <li class="item-tb-dropdown">
-                                            Cetak
-                                        </li>
-                                    </a>
-                                    {{-- @if ($item->posisi == "PBP")
-                                        @if ($item->id_pbo != null)
+                                    <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
+                                        <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
+                                        </iconify-icon>
+                                    </button>
+                                    <ul class="dropdown-tb-menu hidden">
+                                        <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                            class="w-full cursor-pointer">
+                                            <li class="item-tb-dropdown">
+                                                Cetak
+                                            </li>
+                                        </a>
+                                        {{-- @if ($item->posisi == "PBP")
+                                            @if ($item->id_pbo != null)
+                                                <a class="w-full cursor-pointer" href="#">
+                                                        <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
+                                                        Kembalikan ke PBO
+                                                    </li>
+                                                </a>
+                                            @else
                                             <a class="w-full cursor-pointer" href="#">
-                                                    <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
-                                                    Kembalikan ke PBO
+                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
+                                                    Kembalikan ke Penyelia
                                                 </li>
                                             </a>
-                                        @else
+                                            @endif
+                                        @elseif ($item->posisi == "PBO")
                                         <a class="w-full cursor-pointer" href="#">
                                             <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
                                                 Kembalikan ke Penyelia
                                             </li>
                                         </a>
-                                        @endif
-                                    @elseif ($item->posisi == "PBO")
-                                    <a class="w-full cursor-pointer" href="#">
-                                        <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
-                                            Kembalikan ke Penyelia
-                                        </li>
-                                    </a>
-                                    @endif --}}
-                                </ul>
+                                        @endif --}}
+                                    </ul>
                                 @endif
                             </div>
                             </td>
@@ -508,11 +520,40 @@
         const target = '#modalKembalikan';
         const id = $(this).data('id');
         const backto = $(this).data('backto')
-        console.log(backto);
 
         $(`${target} #id_pengajuan`).val(id)
         $(`${target} #text_backto`).html(backto)
         $(`${target}`).removeClass('hidden')
+    })
+
+    $('.pengajuan-next-pbo').on('click', function(){
+        const target = '#confirmPBO';
+        const id = $(this).data('id');
+        const next = $(this).data('next');
+        const href = $(this).data('href');
+
+        $(`${target} .btn-lanjutkan-pengajuan`).prop("href", href)
+        $(`${target}`).removeClass('hidden')
+    })
+
+    $('#confirmPBO .btn-lanjutkan-pengajuan').on('click', function(){
+        $("#confirmPBO").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $('.pengajuan-next-pincab').on('click', function(){
+        const target = '#confirmPincab';
+        const id = $(this).data('id');
+        const next = $(this).data('next');
+        const href = $(this).data('href');
+
+        $(`${target} .btn-lanjutkan-pengajuan`).prop("href", href)
+        $(`${target}`).removeClass('hidden')
+    })
+
+    $('#confirmPincab .btn-lanjutkan-pengajuan').on('click', function(){
+        $("#confirmPincab").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
     })
 </script>
 @endpush

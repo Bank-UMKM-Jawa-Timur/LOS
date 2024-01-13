@@ -238,12 +238,17 @@
                                                 ->where('detail_komentar.id_item', $itemTextDua->id_item)
                                                 ->get();
                                         @endphp
-                                        @if ($itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
+                                        @if ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
+                                        @else
                                             <div class="form-group-1">
                                                 <div class="field-review">
                                                     <div class="field-name">
-                                                        <label for="">{{ $item->nama }}</label>
+                                                        @if ($item->nama == 'Ijin Usaha' && $item->opsi_text != 'tidak_ada_legalitas_usaha')
+                                                        @else
+                                                            <label for="">{{ $item->nama }}</label>
+                                                        @endif
                                                     </div>
+
                                                     <div class="field-answer">
                                                         @if ($item->opsi_jawaban == 'file')
                                                             @php

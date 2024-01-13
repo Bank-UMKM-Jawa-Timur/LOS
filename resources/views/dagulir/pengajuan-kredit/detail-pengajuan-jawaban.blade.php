@@ -733,7 +733,7 @@
                                                                 @if ($item->id == 136 || $item->id == 138 || $item->id == 140 || $item->id == 143)
                                                                     <div class="field-review pl-0">
                                                                         <div class="field-name">
-                                                                            <label for="">{{ $item->nama }} </label>
+                                                                            <label for="">{{ $item->nama }}</label>
                                                                         </div>
                                                                         <div class="field-answer">
                                                                             @if ($item->id == 79)
@@ -825,33 +825,20 @@
                                                                 @else
                                                                     @if ($item->id == 136 || $item->id == 138 || $item->id == 140 || $item->id == 143)
                                                                     @else
-                                                                        @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
-                                                                            <div class="field-review">
-                                                                                <div class="field-name">
-                                                                                    <label for="">Ijin Usaha</label>
-                                                                                </div>
-                                                                                <div class="field-answer">
-                                                                                    <p> Tidak ada legalitas usaha </p>
-                                                                                </div>
+                                                                        <div class="field-review">
+                                                                            <div class="field-name">
+                                                                                <label for="">{{ $item->nama }}</label>
                                                                             </div>
-                                                                        @elseif ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text != 'tidak_ada_legalitas_usaha')
-                                                                        @else
-                                                                            <div class="field-review">
-                                                                                <div class="field-name">
-                                                                                    {{-- <p>Ijin usaha disini</p> --}}
-                                                                                    <label for="">{{ $item->nama }}</label>
-                                                                                </div>
-                                                                                <div class="field-answer">
-                                                                                    @if ($item->id == 79)
-                                                                                        <p class="npwp">{{$dataUmumNasabah->npwp}}</p>
-                                                                                    @elseif($item->is_rupiah)
-                                                                                        <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
-                                                                                    @else
-                                                                                        <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
-                                                                                    @endif
-                                                                                </div>
+                                                                            <div class="field-answer">
+                                                                                @if ($item->id == 79)
+                                                                                    <p class="npwp">{{$dataUmumNasabah->npwp}}</p>
+                                                                                @elseif($item->is_rupiah)
+                                                                                    <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
+                                                                                @else
+                                                                                    <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                @endif
                                                                             </div>
-                                                                        @endif
+                                                                        </div>
                                                                     @endif
                                                                     @if ($itemTextDua->is_commentable)
                                                                         @if (Auth::user()->role != 'Pincab')
@@ -1132,26 +1119,16 @@
                                                                                 @if ($itemTextTiga->opsi_text == "Tanah" || $itemTextTiga->opsi_text == "Kendaraan Bermotor" || $itemTextTiga->opsi_text == "Tanah dan Bangunan")
                                                                                 @else
                                                                                     <div class="field-review">
-                                                                                        {{-- <p>Surat Keterangan Usaha disini</p> --}}
-                                                                                        @if ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text != 'tidak_ada_legalitas_usaha')
-                                                                                            <div class="field-name">
-                                                                                                <label for="">{{$itemTextTiga->nama}}</label>
-                                                                                            </div>
-                                                                                            <div class="field-answer">
-                                                                                                <p>{{ $itemTextTiga->opsi_text }}</p>
-                                                                                            </div>
-                                                                                        @else
-                                                                                            <div class="field-name">
-                                                                                                <label for="">{{ $itemTextTiga->nama }}</label>
-                                                                                            </div>
-                                                                                            <div class="field-answer">
-                                                                                                @if ($itemTiga->is_rupiah == 1)
-                                                                                                    <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
-                                                                                                @else
-                                                                                                    <p>{{ $itemTiga->opsi_jawaban == 'persen' ?  round(floatval($itemTextTiga->opsi_text),2) : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
-                                                                                                @endif
-                                                                                            </div>
-                                                                                        @endif
+                                                                                        <div class="field-name">
+                                                                                            <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                                        </div>
+                                                                                        <div class="field-answer">
+                                                                                            @if ($itemTiga->is_rupiah == 1)
+                                                                                                <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
+                                                                                            @else
+                                                                                                <p>{{ $itemTiga->opsi_jawaban == 'persen' ?  round(floatval($itemTextTiga->opsi_text),2) : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                            @endif
+                                                                                        </div>
                                                                                     </div>
                                                                                 @endif
                                                                                 @if ($item->is_commentable == 'Ya')
