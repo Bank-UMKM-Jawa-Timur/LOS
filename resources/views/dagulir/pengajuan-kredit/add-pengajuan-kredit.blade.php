@@ -98,9 +98,9 @@ $dataIndex = match ($skema) {
                                                     <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                     <select name="ijin_usaha" id="ijin_usaha" class="form-input" >
                                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                                        <option value="nib">NIB</option>
-                                                        <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
-                                                        <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                                                        <option value="nib" {{old('ijin_usaha', 'nib' ? 'selected' : '' )}}>NIB</option>
+                                                        <option value="surat_keterangan_usaha" {{old('ijin_usaha', 'surat_keterangan_usaha' ? 'selected' : '' )}}>Surat Keterangan Usaha</option>
+                                                        <option value="tidak_ada_legalitas_usaha" {{old('ijin_usaha', 'tidak_ada_legalitas_usaha' ? 'selected' : '' )}}>Tidak Ada Legalitas Usaha</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -129,7 +129,7 @@ $dataIndex = match ($skema) {
                                                     <label for="">NIB</label>
                                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
-                                                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
+                                                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text" value="{{old('informasi[77]')}}"
                                                         placeholder="Masukkan informasi" class="form-input bg-white" disabled>
 
                                                 </div>

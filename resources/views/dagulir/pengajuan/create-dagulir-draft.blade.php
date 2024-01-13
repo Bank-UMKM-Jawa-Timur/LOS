@@ -34,7 +34,7 @@
 @endpush
 <div class="pb-10 space-y-3">
     <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Dagulir</h2>
-    <p class="font-semibold text-gray-400">Tambah Pengajuan</p>
+    <p class="font-semibold text-gray-400">Draft</p>
 </div>
 <div class="self-start bg-white w-full border">
 
@@ -44,11 +44,33 @@
         </h2>
     </div>
     <!-- data umum -->
-    <div
-        class="p-5 w-full space-y-5 "
-        id="data-umum"
-    >
+    <div class="p-5 w-full space-y-5 " id="data-umum">
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                Tipe Pengajuan :
+                </h2>
+            </div>
+        </div>
+        <div class="input-box">
+            <label for="">Tipe Pengajuan</label>
+            <select name="tipe_pengajuan" id="tipe" class="form-select">
+                <option value="0">Tipe Pengajuan</option>
+                @foreach ($tipe as $key => $value)
+                <option value="{{ $key }}" {{ $key == $duTemp?->tipe ?? null ? 'selected' : '' }}>{{ $value }}</option>
+                @endforeach
+            </select>
+        </div>
         <input type="hidden" name="skema_kredit" id="skema_kredit" value="Dagulir">
+        <div class="form-group-1 col-span-2">
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Diri :
+                    </h2>
+                </div>
+            </div>
+        </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Nama Lengkap</label>
@@ -71,7 +93,7 @@
                 />
             </div>
         </div>
-        <div class="form-group-2">
+        <div class="form-group-3">
             <div class="input-box">
                 <label for="">Tempat lahir</label>
                 <input
@@ -183,6 +205,89 @@
                     size is 2 MB</span>
             </div>
         </div>
+        <div class="form-group-3">
+                <div class="input-box">
+                    <label for="">Kota / Kabupaten KTP</label>
+                    <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
+                        id="kabupaten">
+                        <option value="0"> --- Pilih Kabupaten --- </option>
+                        @foreach ($dataKabupaten as $item)
+                            <option value="{{ $item->id }}" {{ $item->id == $duTemp?->kotakab_ktp ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="">Kecamatan KTP</label>
+                    <select name="kecamatan_sesuai_ktp" id="kecamatan" class="form-select @error('kec') is-invalid @enderror select2">
+                        <option value="0"> --- Pilih Kecamatan --- </option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="">Desa KTP</label>
+                    <select name="desa" id="desa" class="form-select @error('desa') is-invalid @enderror select2">
+                        <option value="0"> --- Pilih Desa --- </option>
+                    </select>
+                </div>
+        </div>
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">Alamat KTP</label>
+                <textarea
+                    name="alamat_sesuai_ktp"
+                    class="form-textarea"
+                    placeholder="Alamat KTP"
+                    id=""
+                >{{ $duTemp?->alamat_ktp }}</textarea>
+            </div>
+        </div>
+        <div class="form-group-1 col-span-2">
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Domisili :
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="form-group-2">
+            <div class="input-box">
+                <label for="">Kota / Kabupaten Domisili</label>
+                <select name="kode_kotakab_domisili" class="form-select @error('kabupaten_domisili') is-invalid @enderror select2"
+                    id="kabupaten_domisili">
+                    <option value="0"> --- Pilih Kabupaten --- </option>
+                    @foreach ($dataKabupaten as $item)
+                        <option value="{{ $item->id }}" {{ $item->id == $duTemp?->kotakab_dom ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="input-box">
+                <label for="">Kecamatan Domisili</label>
+                <select name="kecamatan_domisili" id="kecamatan_domisili" class="form-select @error('kecamatan_domisili') is-invalid @enderror select2">
+                    <option value="0"> --- Pilih Kecamatan --- </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">Alamat Domisili</label>
+                <textarea
+                    name="alamat_domisili"
+                    class="form-textarea"
+                    placeholder="Alamat Domisili"
+                    id=""
+                >{{ $duTemp?->alamat_dom ?? null }}</textarea>
+            </div>
+
+        </div>
+        <div class="form-group-1 col-span-2">
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        File Slik :
+                    </h2>
+                </div>
+            </div>
+        </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">{{ $itemSlik->nama }}</label>
@@ -231,70 +336,14 @@
             <span class="text-red-500 m-0" style="display: none">Maximum upload file
                 size is 10 MB</span>
         </div>
-        <div class="form-group-3">
-                <div class="input-box">
-                    <label for="">Kota / Kabupaten KTP</label>
-                    <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
-                        id="kabupaten">
-                        <option value="0"> --- Pilih Kabupaten --- </option>
-                        @foreach ($dataKabupaten as $item)
-                            <option value="{{ $item->id }}" {{ $item->id == $duTemp?->kotakab_ktp ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
-                        @endforeach
-                    </select>
+        <div class="form-group-1 col-span-2">
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Usaha :
+                    </h2>
                 </div>
-                <div class="input-box">
-                    <label for="">Kecamatan KTP</label>
-                    <select name="kecamatan_sesuai_ktp" id="kecamatan" class="form-select @error('kec') is-invalid @enderror select2">
-                        <option value="0"> --- Pilih Kecamatan --- </option>
-                    </select>
-                </div>
-                <div class="input-box">
-                    <label for="">Desa KTP</label>
-                    <select name="desa" id="desa" class="form-select @error('desa') is-invalid @enderror select2">
-                        <option value="0"> --- Pilih Desa --- </option>
-                    </select>
-                </div>
-        </div>
-        <div class="form-group-1">
-            <div class="input-box">
-                <label for="">Alamat KTP</label>
-                <textarea
-                    name="alamat_sesuai_ktp"
-                    class="form-textarea"
-                    placeholder="Alamat KTP"
-                    id=""
-                >{{ $duTemp?->alamat_ktp }}</textarea>
             </div>
-        </div>
-        <div class="form-group-2">
-            <div class="input-box">
-                <label for="">Kota / Kabupaten Domisili</label>
-                <select name="kode_kotakab_domisili" class="form-select @error('kabupaten_domisili') is-invalid @enderror select2"
-                    id="kabupaten_domisili">
-                    <option value="0"> --- Pilih Kabupaten --- </option>
-                    @foreach ($dataKabupaten as $item)
-                        <option value="{{ $item->id }}" {{ $item->id == $duTemp?->kotakab_dom ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="input-box">
-                <label for="">Kecamatan Domisili</label>
-                <select name="kecamatan_domisili" id="kecamatan_domisili" class="form-select @error('kecamatan_domisili') is-invalid @enderror select2">
-                    <option value="0"> --- Pilih Kecamatan --- </option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group-1">
-            <div class="input-box">
-                <label for="">Alamat Domisili</label>
-                <textarea
-                    name="alamat_domisili"
-                    class="form-textarea"
-                    placeholder="Alamat Domisili"
-                    id=""
-                >{{ $duTemp?->alamat_dom ?? null }}</textarea>
-            </div>
-
         </div>
         <div class="form-group-2">
             <div class="input-box">
@@ -325,7 +374,15 @@
                 >{{ $duTemp?->alamat_usaha ?? null }}</textarea>
             </div>
         </div>
-
+        <div class="form-group-1 col-span-2">
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Pengajuan :
+                    </h2>
+                </div>
+            </div>
+        </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Plafon</label>
@@ -384,15 +441,6 @@
         </div>
 
         <div class="form-group-2" id="form_tipe_pengajuan">
-            <div class="input-box">
-                <label for="">Tipe Pengajuan</label>
-                <select name="tipe_pengajuan" id="tipe" class="form-select">
-                    <option value="0">Tipe Pengajuan</option>
-                    @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}" {{ $key == $duTemp?->tipe ?? null ? 'selected' : '' }}>{{ $value }}</option>
-                    @endforeach
-                </select>
-            </div>
             <div class="input-box">
                 <label for="">Jenis badan hukum</label>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
