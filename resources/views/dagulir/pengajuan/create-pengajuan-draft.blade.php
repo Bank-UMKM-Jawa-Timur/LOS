@@ -1,5 +1,6 @@
 @push('script-inject')
     <script>
+        cekStatusNikah()
         $('#jangka_waktu').on('change', function() {
             limitJangkaWaktu()
         })
@@ -51,6 +52,74 @@
                 $('.jangka_waktu_error').addClass('hidden')
                 $('.jangka_waktu_error').html('')
             }
+        }
+        function cekStatusNikah() {
+            let value = $("#status").val();
+            console.log(value);
+            $("#foto-ktp-istri").empty();
+            $("#foto-ktp-suami").empty();
+            $("#foto-ktp-nasabah").empty();
+            $("#foto-ktp-istri").removeClass('form-group col-md-6');
+            $("#foto-ktp-suami").removeClass('form-group col-md-6');
+            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+
+            if (value == "menikah") {
+                $("#foto-ktp-istri").addClass('form-group col-md-6')
+                $("#foto-ktp-suami").addClass('form-group col-md-6')
+                $("#foto-ktp-istri").append(`
+                    <label for="">{{ $itemKTPIs->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;"></span>
+                `)
+                $("#foto-ktp-suami").append(`
+                        <label for="">{{ $itemKTPSu->nama }}</label>
+                        <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+                        <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size" id="foto_ktp_suami">
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('dataLevelDua.' . $key) }}
+                            </div>
+                        @endif
+                        <span class="filename" style="display: inline;"></span>
+                `);
+            } else {
+                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+                $("#foto-ktp-nasabah").append(`
+                    @isset($itemKTPNas)
+                    <label for="">{{ $itemKTPNas->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;"></span>
+                    @endisset
+                `)
+            }
+            $('.limit-size').on('change', function() {
+                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+                if (size > 5) {
+                    $(this).next().css({
+                        "display": "block"
+                    });
+                    this.value = ''
+                } else {
+                    $(this).next().css({
+                        "display": "none"
+                    });
+                }
+            })
         }
         $("#status").change(function() {
             let value = $(this).val();
@@ -123,7 +192,7 @@
 @endpush
 <div class="pb-10 space-y-3">
     <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Data Umum</h2>
-    <p class="font-semibold text-gray-400">Tambah Pengajuan</p>
+    <p class="font-semibold text-gray-400">Draft Pengajuan</p>
 </div>
 <div class="self-start bg-white w-full border">
 
@@ -239,7 +308,8 @@
             <div class="input-box">
                 <label for="">Tanggal Lahir</label>
                 <input type="date" name="tanggal_lahir" id="tanggal_lahir"
-                    class="form-input @error('tanggal_lahir') is-invalid @enderror"
+                    class="form-input @error(
+                    'tanggal_lahir') is-invalid @enderror"
                     placeholder="dd-mm-yyyy" value="{{ $duTemp?->tanggal_lahir ?? '' }}">
                 @error('tanggal_lahir')
                 <div class="invalid-feedback">
@@ -284,11 +354,38 @@
         <div>
             <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
                 <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                    Data usaha :
+                </h2>
+            </div>
+        </div>
+        <div class="input-box ">
+            <label for="">Jenis Usaha</label>
+            <textarea name="jenis_usaha" class="form-textarea  @error('jenis_usaha') is-invalid @enderror"
+                maxlength="255" id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ $duTemp?->jenis_usaha ?? '' }}</textarea>
+            @error('jenis_usaha')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="input-box">
+            <label for="">Alamat Usaha</label>
+            <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror"
+                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
+            @error('alamat_usaha')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                     Slik :
                 </h2>
             </div>
         </div>
-        <div class="form-group-3">
+        <div class="form-group-2">
             <div class="input-box">
                 <label for="">{{ $itemSlik->nama }}</label>
                 <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select select2"
@@ -322,33 +419,6 @@
                 <span class="filename" style="display: inline;"></span>
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
-        </div>
-        <div>
-            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
-                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
-                    Data usaha :
-                </h2>
-            </div>
-        </div>
-        <div class="input-box ">
-            <label for="">Jenis Usaha</label>
-            <textarea name="jenis_usaha" class="form-textarea  @error('jenis_usaha') is-invalid @enderror"
-                maxlength="255" id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ $duTemp?->jenis_usaha ?? '' }}</textarea>
-            @error('jenis_usaha')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
-        </div>
-        <div class="input-box">
-            <label for="">Alamat Usaha</label>
-            <textarea name="alamat_usaha" class="form-textarea @error('alamat_usaha') is-invalid @enderror"
-                maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
-            @error('alamat_usaha')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-            @enderror
         </div>
         <div>
             <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
@@ -465,7 +535,7 @@
                 <button type="button"
                     class="px-5 py-2 border rounded bg-white text-gray-500">
                     Kembali
-                </button>   
+                </button>
             </a>
             <button type="button"
             class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"

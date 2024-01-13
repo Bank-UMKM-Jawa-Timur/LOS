@@ -1411,7 +1411,7 @@ class NewDagulirController extends Controller
             }
             $param['logPengajuan'] = $log;
             $param['rolesPemroses'] = $this->repo->getDataPemroses($dataUmum);
-            
+
             return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
 
         } else {
