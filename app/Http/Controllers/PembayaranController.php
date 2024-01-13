@@ -61,7 +61,7 @@ class PembayaranController extends Controller
         // end process file_dic
         //start file_nomi
         $filename = 'nomi.xlsx';
-        $theArrayNomi = Excel::toCollection([],storage_path('app/file-nomi/').$filename);
+        $theArrayNomi = Excel::toCollection([],storage_path('app/file_nomi/').$filename);
         // proses array
         $fieldPositions = [];
         $fieldPositionsNomi = [];
