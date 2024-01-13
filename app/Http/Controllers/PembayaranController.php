@@ -133,25 +133,25 @@ class PembayaranController extends Controller
                     alert()->error('Error', 'Data is incomplete.');
                     return redirect()->route('pembayaran.index');
                 }
+                // current master anggsuran
+                $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
+                    ->where('no_loan', $value['HLLNNO'])
+                    ->count();
+
+
+                // Insert data only if no existing records
+                if ($existing_loan === 0) {
+                    $pembayaran = new MasterDDAngsuran;
+                    $pembayaran->squence = $value['HLSEQN'];
+                    $pembayaran->no_loan = $value['HLLNNO'];
+                    $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
+                    $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
+                    $pembayaran->kolek = $value['kolek'];
+                    $pembayaran->keterangan = $value['HLDESC'];
+                    $pembayaran->save();
+                }
             }
 
-            // current master anggsuran
-            $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
-                ->where('no_loan', $value['HLLNNO'])
-                ->count();
-
-
-            // Insert data only if no existing records
-            if ($existing_loan === 0) {
-                $pembayaran = new MasterDDAngsuran;
-                $pembayaran->squence = $value['HLSEQN'];
-                $pembayaran->no_loan = $value['HLLNNO'];
-                $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
-                $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
-                $pembayaran->kolek = $value['kolek'];
-                $pembayaran->keterangan = $value['HLDESC'];
-                $pembayaran->save();
-            }
         }
         $inserted_data = MasterDDAngsuran::whereDate('created_at', Carbon::now())
                                         ->get();
