@@ -922,6 +922,7 @@
         </tr>
     </table>
     <br>
+    @if ($dataUmum->posisi == 'Selesai')
     <table style="border-spacing:10px;">
         <tr>
             <td>
@@ -929,8 +930,6 @@
             </td>
         </tr>
     </table>
-    @if ($dataUmum == 'Selesai' || $dataUmum == 'Ditolak')
-
     @endif
     @php
         $dataKtpNasabah = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')

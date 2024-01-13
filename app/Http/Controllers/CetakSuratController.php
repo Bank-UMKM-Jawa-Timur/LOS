@@ -147,6 +147,7 @@ class CetakSuratController extends Controller
         //         $pdf->setPage($pageNumber)->saveImage($imagePath);
         //     }
         // }
+        // return $dataUmum;
 
         return view('cetak.cetak-surat-kusuma', $param);
         // if ($dataUmum->skema_kredit == "Kusuma") {

@@ -2,6 +2,7 @@
 
 @section('modal')
     @include('dagulir.pengajuan-kredit.modal.modal-photo')
+    @include('components.new.modal.loading')
 @endsection
 @php
     $dataIndex = match ($dataUmum->skema_kredit) {
@@ -720,7 +721,7 @@
                                             @if ($item->opsi_jawaban != 'option')
                                                 @if (!$item->is_hide)
                                                     @php
-                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
+                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
                                                             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                                             ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                                             ->where('jawaban_text.id_jawaban', $item->id)
@@ -728,19 +729,6 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextDua)
                                                             @if ($item->opsi_jawaban == 'file')
-                                                                <b class="m-2">{{ $item->nama }} : </b>
-                                                                    @php
-                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                                                    @endphp
-                                                                    @if ($file_parts['extension'] == 'pdf')
-                                                                            <iframe
-                                                                                class="border-4 border-gray-800 m-2"
-                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                                width="100%" height="800px"></iframe>
-                                                                    @else
-                                                                        <img class="m-2" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                            alt="" width="800px">
-                                                                    @endif
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                             @else
                                                                 @if ($item->id == 136 || $item->id == 138 || $item->id == 140 || $item->id == 143)
@@ -1727,15 +1715,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-2">
-                                            <div class="field-review">
-                                                <div class="field-name">
-                                                    <label for="">Penyelia</label>
-                                                </div>
-                                                <div class="field-answer">
-                                                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
-                                                </div>
-                                            </div>
+                                        <div class="form-group-1 ">
+                                            <h4 class="font-semibold text-base" for="">Penyelia Kredit</h4>
+                                            <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
@@ -1776,19 +1758,25 @@
                                         <div class="form-group-2">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <label for="">Penyelia</label>
+                                                    <label for="">Penyelia Kredit</label>
                                                 </div>
                                                 <div class="field-answer">
                                                     <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
                                                 </div>
                                             </div>
                                         </div>
+                                        {{-- <div class="form-group-2"> --}}
+                                            {{-- <h4 class="font-semibold text-base" for=""> Penyelia Kredit</h4>
+                                            <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p> --}}
+                                        {{-- </div>  --}}
                                     @elseif (Auth::user()->role == 'Pincab')
                                         @php
                                             $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
                                                 ->where('id_aspek', $value->id)
                                                 ->where('id_pbp', Auth::user()->id)
                                                 ->first();
+
+                                            $plafon_usulan = DB::table('plafon_usulan')->where('id_pengajuan', $dataUmum->id)->first();
                                         @endphp
                                         <div class="form-group-2">
                                             <div class="field-review">
@@ -1800,15 +1788,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-2">
-                                            <div class="field-review">
-                                                <div class="field-name">
-                                                    <label for="">Penyelia</label>
-                                                </div>
-                                                <div class="field-answer">
-                                                    <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
-                                                </div>
-                                            </div>
+                                        <div class="form-group-1">
+                                            <label for="">Penyelia Kredit</label>
+                                            <p class="border-b p-2">{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
@@ -2244,6 +2226,7 @@
                         e.preventDefault()
                     }
                     else {
+                        console.log('masuk');
                         if (nullValue.length > 0) {
                             let message = "";
                             $.each(nullValue, (i, v) => {
@@ -2255,6 +2238,9 @@
                                 text: "Field " + message + " harus diisi terlebih dahulu"
                             })
                             e.preventDefault()
+                        }else {
+
+                            $("#preload-data").removeClass("hidden");
                         }
                     }
                 }
@@ -2283,6 +2269,8 @@
                             text: "Field " + message + " harus diisi terlebih dahulu"
                         })
                         e.preventDefault()
+                    }  else {
+                        $("#preload-data").removeClass("hidden");
                     }
                 }
             }
@@ -2307,6 +2295,8 @@
                             text: "Field " + message + " harus diisi terlebih dahulu"
                         })
                         e.preventDefault()
+                    }else {
+                        $("#preload-data").removeClass("hidden");
                     }
                 }
             }
@@ -2459,6 +2449,8 @@
         });
     @endif
 
+
+
     $(".btn-simpan").on('click', function(e) {
         if ($('#pendapat_usulan').val() == '') {
             Swal.fire({
@@ -2467,6 +2459,9 @@
                 text: "Field Pendapat dan usulan harus diisi"
             })
             e.preventDefault()
+        }
+        else {
+            $("#preload-data").removeClass("hidden");
         }
     })
     // End Validation

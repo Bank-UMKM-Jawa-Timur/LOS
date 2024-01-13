@@ -14,6 +14,8 @@
 @include('pengajuan-kredit.modal.modal-kembalikan-new')
 @include('components.new.modal.loading')
 @include('dagulir.modal.lanjutkan-penyelia')
+@include('pengajuan-kredit.modal.confirm-pbo')
+@include('pengajuan-kredit.modal.confirm-pincab')
 @endsection
 
 @push('script-inject')
@@ -435,9 +437,9 @@
                                                                     </li>
                                                                 </a>
                                                                 @if ($userPBO)
-                                                                <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
+                                                                <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pbo" data-id="{{$item->id_pengajuan}}" data-next="pbo" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
                                                                     <li class="item-tb-dropdown">
-                                                                    Lanjut ke PBO
+                                                                        Lanjut ke PBO
                                                                     </li>
                                                                 </a>
                                                                 @else
@@ -448,9 +450,9 @@
                                                                         </li>
                                                                     </a>
                                                                     @else
-                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                    <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->pengajuan->id}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab">
                                                                         <li class="item-tb-dropdown">
-                                                                            Lanjutkan Ke Pincab
+                                                                        Lanjut ke Pincab
                                                                         </li>
                                                                     </a>
                                                                     @endif
@@ -467,7 +469,7 @@
                                                                     </li>
                                                                 </a>
                                                                 @if ($userPBO)
-                                                                <a class="w-full cursor-pointer review-penyelia" href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
+                                                                <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pbo" data-id="{{$item->id_pengajuan}}" data-next="pbo" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo">
                                                                     <li class="item-tb-dropdown">
                                                                         Lanjut ke PBO
                                                                     </li>
@@ -507,9 +509,9 @@
                                                                 </li>
                                                             </a>
                                                             @else
-                                                            <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer ">
+                                                            <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->pengajuan->id}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab">
                                                                 <li class="item-tb-dropdown">
-                                                                    Lanjutkan Ke Pincab
+                                                                Lanjut ke Pincab
                                                                 </li>
                                                             </a>
                                                             @endif
@@ -527,9 +529,11 @@
                                                                 <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                                     class="cursor-pointer">Review</a>
                                                             </li>
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown review-pincab">Lanjutkan Ke Pincab</a>
-                                                            </li>
+                                                            <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->pengajuan->id}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab">
+                                                                <li class="item-tb-dropdown">
+                                                                Lanjut ke Pincab
+                                                                </li>
+                                                            </a>
                                                             <li class="item-tb-dropdown kembalikan-modal" cursor-pointer>
                                                                 <a href="#"
                                                                     data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbo ? 'pbo' : 'penyelia'}}">Kembalikan ke {{$item->pengajuan->id_pbo ? 'PBO' : 'Penyelia'}}</a>
@@ -544,12 +548,39 @@
                                                                         Review
                                                                     </li>
                                                                 </a>
-                                                                <a href="#" class="w-full cursor-pointer">
-                                                                    <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
-                                                                        data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbp ? 'pbp' : 'penyelia'}}">
-                                                                    Kembalikan ke {{$item->pengajuan->id_pbp ? 'PBP' : 'Penyelia'}}
-                                                                    </li>
-                                                                </a>
+                                                                @php
+                                                                $userPBO = \App\Models\User::select('id')
+                                                                    ->where('id_cabang', $item->pengajuan->id_cabang)
+                                                                    ->where('role', 'PBO')
+                                                                    ->whereNotNull('nip')
+                                                                    ->first();
+
+                                                                $userPBP = \App\Models\User::select('id')
+                                                                    ->where('id_cabang', $item->pengajuan->id_cabang)
+                                                                    ->where('role', 'PBP')
+                                                                    ->whereNotNull('nip')
+                                                                    ->first();
+                                                                @endphp
+                                                                    @if ($userPBP)
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBP" data-target="modalKembalikan">
+                                                                            <li class="item-tb-dropdown open-modal">
+                                                                                Kembalikan ke PBP
+                                                                            </li>
+                                                                        </a>
+                                                                    @elseif ($userPBO)
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBO" data-target="modalKembalikan">
+                                                                            <li class="item-tb-dropdown open-modal">
+                                                                                Kembalikan ke PBO
+                                                                            </li>
+                                                                        </a>
+                                                                    @else
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan">
+                                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
+                                                                                data-id="{{ $item->id }}" data-backto="Penyelia">
+                                                                                Kembalikan ke Penyelia
+                                                                            </li>
+                                                                        </a>
+                                                                    @endif
                                                             @endif
                                                         @endif
                                                     @else
@@ -673,13 +704,13 @@
                                 @forelse ($data_sipde as $item)
                                     @php
                                         $userPBO = \App\Models\User::select('id')
-                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('id_cabang', $item->pengajuan->id_cabang)
                                             ->where('role', 'PBO')
                                             ->whereNotNull('nip')
                                             ->first();
 
                                         $userPBP = \App\Models\User::select('id')
-                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('id_cabang', $item->pengajuan->id_cabang)
                                             ->where('role', 'PBP')
                                             ->whereNotNull('nip')
                                             ->first();
@@ -1106,6 +1137,36 @@
         $("#preload-data").removeClass("hidden");
     })
     $('.edit-pengajuan').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $('.pengajuan-next-pbo').on('click', function(){
+        const target = '#confirmPBO';
+        const id = $(this).data('id');
+        const next = $(this).data('next');
+        const href = $(this).data('href');
+
+        $(`${target} .btn-lanjutkan-pengajuan`).prop("href", href)
+        $(`${target}`).removeClass('hidden')
+    })
+
+    $('#confirmPBO .btn-lanjutkan-pengajuan').on('click', function(){
+        $("#confirmPBO").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $('.pengajuan-next-pincab').on('click', function(){
+        const target = '#confirmPincab';
+        const id = $(this).data('id');
+        const next = $(this).data('next');
+        const href = $(this).data('href');
+
+        $(`${target} .btn-lanjutkan-pengajuan`).prop("href", href)
+        $(`${target}`).removeClass('hidden')
+    })
+
+    $('#confirmPincab .btn-lanjutkan-pengajuan').on('click', function(){
+        $("#confirmPincab").addClass("hidden");
         $("#preload-data").removeClass("hidden");
     })
 

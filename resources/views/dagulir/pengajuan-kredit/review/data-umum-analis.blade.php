@@ -142,38 +142,34 @@
     <div class="form-group-2">
         <div class="field-review">
             <div class="field-name">
-                <label for=""> {{$dataNasabah->status_pernikahan == '2' ? 'Foto KTP Suami' : 'Foto KTP' }} </label>
+                <label for=""> {{$dataNasabah->status == 'menikah' ? 'Foto KTP Suami' : 'Foto KTP' }} </label>
             </div>
             <div class="field-answer">
+                @if ($dataNasabah->status == 'menikah')
+                <a href="{{ $ktpSuami ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpSuami->id_jawaban.'/'.$ktpSuami->opsi_text : asset('img/no-image.png') }}" data-lightbox="{{ $dataNasabah->id }}" data-title="Foto KTP Nasabah : {{ $dataNasabah->nama }}">
+                    <img src="{{ $ktpSuami ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpSuami->id_jawaban.'/'.$ktpSuami->opsi_text : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
+                </a>
+                @else
                 <a href="{{ $ktpNasabah ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpNasabah->id_jawaban.'/'.$ktpNasabah->opsi_text : asset('img/no-image.png') }}" data-lightbox="{{ $dataNasabah->id }}" data-title="Foto KTP Nasabah : {{ $dataNasabah->nama }}">
                     <img src="{{ $ktpNasabah ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpNasabah->id_jawaban.'/'.$ktpNasabah->opsi_text : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
                 </a>
+                @endif
             </div>
         </div>
+        @if ($dataNasabah->status == 'menikah')
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Foto KTP Istri</label>
+            </div>
+            <div class="field-answer">
+                <a href="{{ $ktpIstri ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpIstri->id_jawaban.'/'.$ktpIstri->opsi_text : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
+                    <img src="{{ $ktpIstri ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpIstri->id_jawaban.'/'.$ktpIstri->opsi_text : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
+                </a>
+            </div>
+        </div>
+        @endif
     </div>
-    @if ($dataNasabah->status_pernikahan == '2')
-        <hr>
-        <div class="form-group-2">
-            <div class="field-review">
-                <div class="field-name">
-                    <label for="">Foto KTP Istri</label>
-                </div>
-                <div class="field-answer">
-                    <a href="{{ $ktpIstri ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpIstri->id_jawaban.'/'.$ktpIstri->opsi_text : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
-                        <img src="{{ $ktpIstri ? asset('..').'/upload/'.$dataUmum->id.'/'.$ktpIstri->id_jawaban.'/'.$ktpIstri->opsi_text : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
-                    </a>
-                </div>
-            </div>
-            <div class="field-review">
-                <div class="field-name">
-                    <label for="">NIK Pasangan</label>
-                </div>
-                <div class="field-answer">
-                    <p>{{ $dataNasabah->nik_pasangan ? $dataNasabah->nik_pasangan : '-' }}</p>
-                </div>
-            </div>
-        </div>
-    @endif
+
 
 
     {{-- Slik --}}

@@ -483,40 +483,40 @@ class DashboardRepository
             if($role == 'Staf Analis Kredit'){
                 if($item->posisi == 'Proses Input Data'){
                     $total_belum_ditindak_lanjuti++;
-                }else if($item->posisi == 'Selesai'){
-                }else if($item->posisi == 'Ditolak'){
+                // }else if($item->posisi == 'Selesai'){
+                // }else if($item->posisi == 'Ditolak'){
                 }else{
                     $total_sudah_ditindak_lanjuti++;
                 }
             } else if($role == 'Penyelia Kredit'){
                 if($item->posisi == 'Review Penyelia'){
                     $total_belum_ditindak_lanjuti++;
-                }else if($item->posisi == 'Selesai'){
-                }else if($item->posisi == 'Ditolak'){
+                // }else if($item->posisi == 'Selesai'){
+                // }else if($item->posisi == 'Ditolak'){
                 }else{
                     $total_sudah_ditindak_lanjuti++;
                 }
             } else if($role == 'PBO'){
                 if($item->posisi == 'PBO'){
                     $total_belum_ditindak_lanjuti++;
-                }else if($item->posisi == 'Selesai'){
-                }else if($item->posisi == 'Ditolak'){
+                // }else if($item->posisi == 'Selesai'){
+                // }else if($item->posisi == 'Ditolak'){
                 }else{
                     $total_sudah_ditindak_lanjuti++;
                 }
             } else if($role == 'PBP'){
                 if($item->posisi == 'PBP'){
                     $total_belum_ditindak_lanjuti++;
-                }else if($item->posisi == 'Selesai'){
-                }else if($item->posisi == 'Ditolak'){
+                // }else if($item->posisi == 'Selesai'){
+                // }else if($item->posisi == 'Ditolak'){
                 }else{
                     $total_sudah_ditindak_lanjuti++;
                 }
             } else if($role == 'Pincab'){
                 if($item->posisi == 'Pincab'){
                     $total_belum_ditindak_lanjuti++;
-                }else if($item->posisi == 'Selesai'){
-                }else if($item->posisi == 'Ditolak'){
+                // }else if($item->posisi == 'Selesai'){
+                // }else if($item->posisi == 'Ditolak'){
                 }else{
                     $total_sudah_ditindak_lanjuti++;
                 }

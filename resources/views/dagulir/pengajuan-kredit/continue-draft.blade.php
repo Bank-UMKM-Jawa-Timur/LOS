@@ -935,6 +935,8 @@ $dataIndex = match ($skema) {
             $('.jangka_waktu_error').html('')
         }
     }
+
+    cekStatusNikah()
 </script>
 <script>
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
@@ -968,6 +970,72 @@ $dataIndex = match ($skema) {
 
     var x = 1;
 
+    function cekStatusNikah() {
+        let value = $("#status").val();
+        $("#foto-ktp-istri").empty();
+        $("#foto-ktp-suami").empty();
+        $("#foto-ktp-nasabah").empty();
+        $("#foto-ktp-istri").removeClass('form-group col-md-6');
+        $("#foto-ktp-suami").removeClass('form-group col-md-6');
+        $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+
+        if (value == "menikah") {
+            $("#foto-ktp-istri").addClass('form-group col-md-6')
+            $("#foto-ktp-suami").addClass('form-group col-md-6')
+            $("#foto-ktp-istri").append(`
+        <label for="">{{ $itemKTPIs->nama }}</label>
+            <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+            <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+            @endif
+            <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
+        `)
+            $("#foto-ktp-suami").append(`
+        <label for="">{{ $itemKTPSu->nama }}</label>
+            <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+            <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+            @endif
+            <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
+        `);
+        } else {
+            $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+            $("#foto-ktp-nasabah").append(`
+            <label for="">{{ $itemKTPNas->nama }}</label>
+            <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+            <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+            @endif
+            <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
+        `)
+        }
+        // Limit Upload
+        $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 5) {
+                $(this).next().css({
+                    "display": "block"
+                });
+                this.value = ''
+            } else {
+                $(this).next().css({
+                    "display": "none"
+                });
+            }
+        })
+    }
     $("#status").change(function() {
         let value = $(this).val();
         $("#foto-ktp-istri").empty();
