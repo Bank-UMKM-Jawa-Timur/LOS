@@ -43,7 +43,7 @@ class PembayaranController extends Controller
         if ($request->has('file_nomi')) {
             $file_nomi = $request->file('file_nomi');
             $filename = 'nomi'.'.'.$file_nomi->extension();
-            $file_nomi->storeAs('file-nomi/',$filename);
+            $file_nomi->storeAs('file_nomi/',$filename);
         }
 
         return response()->json(['success' => true]);
