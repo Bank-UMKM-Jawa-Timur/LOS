@@ -2,6 +2,7 @@
 
 @section('modal')
     @include('dagulir.pengajuan-kredit.modal.modal-photo')
+    @include('components.new.modal.loading')
 @endsection
 @php
     $dataIndex = match ($dataUmum->skema_kredit) {
@@ -2225,6 +2226,7 @@
                         e.preventDefault()
                     }
                     else {
+                        console.log('masuk');
                         if (nullValue.length > 0) {
                             let message = "";
                             $.each(nullValue, (i, v) => {
@@ -2236,6 +2238,9 @@
                                 text: "Field " + message + " harus diisi terlebih dahulu"
                             })
                             e.preventDefault()
+                        }else {
+
+                            $("#preload-data").removeClass("hidden");
                         }
                     }
                 }
@@ -2264,6 +2269,8 @@
                             text: "Field " + message + " harus diisi terlebih dahulu"
                         })
                         e.preventDefault()
+                    }  else {
+                        $("#preload-data").removeClass("hidden");
                     }
                 }
             }
@@ -2288,6 +2295,8 @@
                             text: "Field " + message + " harus diisi terlebih dahulu"
                         })
                         e.preventDefault()
+                    }else {
+                        $("#preload-data").removeClass("hidden");
                     }
                 }
             }
@@ -2440,6 +2449,8 @@
         });
     @endif
 
+
+
     $(".btn-simpan").on('click', function(e) {
         if ($('#pendapat_usulan').val() == '') {
             Swal.fire({
@@ -2448,6 +2459,9 @@
                 text: "Field Pendapat dan usulan harus diisi"
             })
             e.preventDefault()
+        }
+        else {
+            $("#preload-data").removeClass("hidden");
         }
     })
     // End Validation

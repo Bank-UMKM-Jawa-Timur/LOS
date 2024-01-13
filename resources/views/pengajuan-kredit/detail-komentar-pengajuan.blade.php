@@ -232,130 +232,6 @@
                                             ->where('jawaban_text.id_jawaban', $item->id)
                                             ->get();
                                     @endphp
-                                    @foreach ($dataDetailJawabanText as $itemTextDua)
-                                        @php
-                                            $getKomentar = \App\Models\DetailKomentarModel::select('detail_komentar.id', 'detail_komentar.id_komentar', 'detail_komentar.id_user', 'detail_komentar.id_item', 'detail_komentar.komentar')
-                                                ->where('detail_komentar.id_item', $itemTextDua->id_item)
-                                                ->get();
-                                        @endphp
-                                        @if ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
-                                        @else
-                                            <div class="form-group-1">
-                                                <div class="field-review">
-                                                    <div class="field-name">
-                                                        @if ($item->nama == 'Ijin Usaha' && $item->opsi_text != 'tidak_ada_legalitas_usaha')
-                                                        @else
-                                                            <label for="">{{ $item->nama }}</label>
-                                                        @endif
-                                                    </div>
-
-                                                    <div class="field-answer">
-                                                        @if ($item->opsi_jawaban == 'file')
-                                                            @php
-                                                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                                            @endphp
-                                                            @if ($file_parts['extension'] == 'pdf')
-                                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
-                                                            @else
-                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
-                                                            @endif
-                                                            @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                            <p class="">
-                                                                @if ($item->is_rupiah == 1)
-                                                                    Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}
-                                                                @else
-                                                                    {{ $itemTextDua->opsi_text }}
-                                                                @endif
-                                                            </p>
-                                                        @else
-                                                            @if ($item->opsi_jawaban == "persen")
-                                                                <p>{{ round(floatval($itemTextDua->opsi_text),2) }}</p>
-                                                            @elseif($item->is_rupiah == 1)
-                                                                <p>Rp. {{ number_format($itemTextDua->opsi_text, 0, '.', '.') }}</p>
-                                                            @else
-                                                                <p>{{ $itemTextDua->opsi_text }}</p>
-
-                                                                {{-- @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
-                                                                    <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
-                                                                @else
-                                                                    <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format((int) $itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }} {{$itemTextDua->opsi_jawaban == 'persen' ? '%' : ''}}</p>
-                                                                @endif --}}
-                                                            @endif
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                        @if ($itemTextDua->status_skor == 1)
-                                            <div class="form-group-1">
-                                                <div class="field-review">
-                                                    <div class="field-name">
-                                                        <label for="">{{ $item->nama }}</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="p-3">
-                                                <div class="row form-group sub pl-4">
-                                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                                    <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                                        <div class="d-flex justify-content-end">
-                                                            <div style="width: 20px">
-
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                    <div class="col">
-                                                        <div class="form-group row">
-                                                            <label for="slik" class="col-sm-4 col-form-label">Skor</label>
-                                                            <label for="slik" class="col-sm-1 col-form-label px-0">
-                                                                <div class="d-flex justify-content-end">
-                                                                    <div style="width: 20px">
-                                                                        :
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <div class="col">
-                                                                <p class="badge badge-info text-lg"><b>
-                                                                {{ $itemTextDua->skor_penyelia }}</b></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @if ($itemTextDua->is_commentable != null)
-                                                    @foreach ($getKomentar as $itemKomentar)
-                                                        <div class="row form-group sub pl-4">
-                                                            <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                                                <div class="d-flex justify-content-end">
-                                                                    <div style="width: 20px">
-
-                                                                    </div>
-                                                                </div>
-                                                            </label>
-                                                            <div class="col">
-                                                                <div class="d-flex">
-                                                                    <div style="width: 15%">
-                                                                        <p class="p-0 m-0"><strong>Komentar : </strong>
-                                                                        </p>
-                                                                    </div>
-                                                                    <h6 class="font-italic">{{ $itemKomentar->komentar ?? '' }}
-                                                                    </h6>
-                                                                    {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                            </div>
-                                        @endif
-                                        @if ($item->nama == 'Repayment Capacity')
-                                        @else
-                                            @if ($itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
-                                                <hr>
-                                            @endif
-                                        @endif
-                                    @endforeach
                                     @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
                                         <div class="form-group-1">
                                             <div class="field-review">
@@ -363,10 +239,132 @@
                                                     <label for="">Ijin Usaha</label>
                                                 </div>
                                                 <div class="field-answer">
-                                                    <p>Tidak ada legalitas usaha</p>
+                                                   <p> Tidak ada legalitas usaha </p>
                                                 </div>
                                             </div>
                                         </div>
+                                    @else
+                                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                                            @php
+                                                $getKomentar = \App\Models\DetailKomentarModel::select('detail_komentar.id', 'detail_komentar.id_komentar', 'detail_komentar.id_user', 'detail_komentar.id_item', 'detail_komentar.komentar')
+                                                    ->where('detail_komentar.id_item', $itemTextDua->id_item)
+                                                    ->get();
+                                            @endphp
+                                            @if ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text == 'nib' || $item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text == 'surat_keterangan_usaha')
+                                            @else
+                                                <div class="form-group-1">
+                                                    <div class="field-review">
+                                                        <div class="field-name">
+                                                        <label for="">{{ $item->nama }}</label>
+                                                        </div>
+
+                                                        <div class="field-answer">
+                                                            @if ($item->opsi_jawaban == 'file')
+                                                                @php
+                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                                @endphp
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
+                                                                @else
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
+                                                                @endif
+                                                                @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
+                                                                <p class="">
+                                                                    @if ($item->is_rupiah == 1)
+                                                                        Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}
+                                                                    @else
+                                                                        {{ $itemTextDua->opsi_text }}
+                                                                    @endif
+                                                                </p>
+                                                            @else
+                                                                @if ($item->opsi_jawaban == "persen")
+                                                                    <p>{{ round(floatval($itemTextDua->opsi_text),2) }}</p>
+                                                                @elseif($item->is_rupiah == 1)
+                                                                    <p>Rp. {{ number_format($itemTextDua->opsi_text, 0, '.', '.') }}</p>
+                                                                @else
+                                                                    <p>{{ $itemTextDua->opsi_text }}</p>
+
+                                                                    {{-- @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
+                                                                        <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
+                                                                    @else
+                                                                        <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format((int) $itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }} {{$itemTextDua->opsi_jawaban == 'persen' ? '%' : ''}}</p>
+                                                                    @endif --}}
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            @if ($itemTextDua->status_skor == 1)
+                                                <div class="form-group-1">
+                                                    <div class="field-review">
+                                                        <div class="field-name">
+                                                            <label for="">{{ $item->nama }}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="p-3">
+                                                    <div class="row form-group sub pl-4">
+                                                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                            <div class="d-flex justify-content-end">
+                                                                <div style="width: 20px">
+
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                        <div class="col">
+                                                            <div class="form-group row">
+                                                                <label for="slik" class="col-sm-4 col-form-label">Skor</label>
+                                                                <label for="slik" class="col-sm-1 col-form-label px-0">
+                                                                    <div class="d-flex justify-content-end">
+                                                                        <div style="width: 20px">
+                                                                            :
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                                <div class="col">
+                                                                    <p class="badge badge-info text-lg"><b>
+                                                                    {{ $itemTextDua->skor_penyelia }}</b></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @if ($itemTextDua->is_commentable != null)
+                                                        @foreach ($getKomentar as $itemKomentar)
+                                                            <div class="row form-group sub pl-4">
+                                                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                                    <div class="d-flex justify-content-end">
+                                                                        <div style="width: 20px">
+
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                                <div class="col">
+                                                                    <div class="d-flex">
+                                                                        <div style="width: 15%">
+                                                                            <p class="p-0 m-0"><strong>Komentar : </strong>
+                                                                            </p>
+                                                                        </div>
+                                                                        <h6 class="font-italic">{{ $itemKomentar->komentar ?? '' }}
+                                                                        </h6>
+                                                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            @endif
+                                            @if ($item->nama == 'Repayment Capacity')
+                                            @else
+                                                @if ($itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
+                                                    <hr>
+                                                @endif
+                                            @endif
+                                        @endforeach
                                     @endif
                                 @endif
                                 @php
