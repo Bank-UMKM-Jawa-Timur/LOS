@@ -51,6 +51,7 @@ Route::get('/', function () {
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
 
+
 Route::get('/coming-soon', function(){
     return view('under-construction.index');
 })->name('coming-soon');
@@ -310,6 +311,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('pembayaran/upload-data',[PembayaranController::class,'upload_data'])->name('pembayaran.upload-data');
     Route::post('pembayaran/check-data',[PembayaranController::class,'store'])->name('pembayaran.store');
     Route::post('pembayaran/proses-data',[PembayaranController::class,'proses_data'])->name('pembayaran.proses');
+
+
 });
+Route::get('test',[PembayaranController::class,'checkPembayaran']);
 
 require __DIR__ . '/auth.php';
