@@ -43,7 +43,7 @@ class PembayaranController extends Controller
         if ($request->has('file_nomi')) {
             $file_nomi = $request->file('file_nomi');
             $filename = 'nomi'.'.'.$file_nomi->extension();
-            $file_nomi->storeAs('file-nomi/',$filename);
+            $file_nomi->storeAs('file_nomi/',$filename);
         }
 
         return response()->json(['success' => true]);
@@ -61,7 +61,7 @@ class PembayaranController extends Controller
         // end process file_dic
         //start file_nomi
         $filename = 'nomi.xlsx';
-        $theArrayNomi = Excel::toCollection([],storage_path('app/file-nomi/').$filename);
+        $theArrayNomi = Excel::toCollection([],storage_path('app/file_nomi/').$filename);
         // proses array
         $fieldPositions = [];
         $fieldPositionsNomi = [];
@@ -128,28 +128,30 @@ class PembayaranController extends Controller
             }
         }
         foreach ($result_data_loan as $key => $value) {
-            if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
-                alert()->error('Error', 'Data is incomplete.');
-                return redirect()->route('pembayaran.index');
+            if ($value != null) {
+                if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
+                    alert()->error('Error', 'Data is incomplete.');
+                    return redirect()->route('pembayaran.index');
+                }
+                // current master anggsuran
+                $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
+                    ->where('no_loan', $value['HLLNNO'])
+                    ->count();
+
+
+                // Insert data only if no existing records
+                if ($existing_loan === 0) {
+                    $pembayaran = new MasterDDAngsuran;
+                    $pembayaran->squence = $value['HLSEQN'];
+                    $pembayaran->no_loan = $value['HLLNNO'];
+                    $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
+                    $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
+                    $pembayaran->kolek = $value['kolek'];
+                    $pembayaran->keterangan = $value['HLDESC'];
+                    $pembayaran->save();
+                }
             }
 
-            // current master anggsuran
-            $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
-                ->where('no_loan', $value['HLLNNO'])
-                ->count();
-
-
-            // Insert data only if no existing records
-            if ($existing_loan === 0) {
-                $pembayaran = new MasterDDAngsuran;
-                $pembayaran->squence = $value['HLSEQN'];
-                $pembayaran->no_loan = $value['HLLNNO'];
-                $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
-                $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
-                $pembayaran->kolek = $value['kolek'];
-                $pembayaran->keterangan = $value['HLDESC'];
-                $pembayaran->save();
-            }
         }
         $inserted_data = MasterDDAngsuran::whereDate('created_at', Carbon::now())
                                         ->get();
