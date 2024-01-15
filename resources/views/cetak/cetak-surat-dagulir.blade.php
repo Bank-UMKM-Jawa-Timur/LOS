@@ -53,17 +53,35 @@
                 <label>Nama</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
+            <td>
                 {{ $dataNasabah->nama }}
             </td>
         </tr>
         <tr>
-            <td style="width: 40%" >
-                <label>Alamat Rumah</label>
+            <td style="width: 40%;" >
+                <label>Email</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
-                {{ $dataNasabah->alamat_rumah }}
+            <td>
+                {{ $dataNasabah->email }}
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 40%" >
+                <label>Alamat KTP</label>
+            </td>
+            <td>:</td>
+            <td>
+                {{ $dataNasabah->alamat_ktp }}
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 40%" >
+                <label>Alamat Domisili</label>
+            </td>
+            <td>:</td>
+            <td>
+                {{ $dataNasabah->alamat_dom }}
             </td>
         </tr>
         <tr>
@@ -71,35 +89,39 @@
                 <label>Alamat Usaha</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
+            <td>
                 {{ $dataNasabah->alamat_usaha }}
             </td>
         </tr>
         <tr>
             <td style="width: 40%" >
-                <label>NO. Ktp</label>
+                <label>NIK</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
-                {{ $dataNasabah->no_ktp }}
+            <td>
+                {{ $dataNasabah->nik }}
             </td>
         </tr>
+        @php
+        $stp = "";
+            if ($dataNasabah->status_pernikahan == 1) {
+                $stp = "Belum Menikah";
+            } else if ($dataNasabah->status_pernikahan == 2) {
+                $stp = "Menikah";
+            } else if ($dataNasabah->status_pernikahan == 3) {
+                $stp = "Duda";
+            } else if ($dataNasabah->status_pernikahan == 4) {
+                $stp = "Janda";
+            }
+
+        @endphp
         <tr>
             <td style="width: 40%" >
                 <label>Tempat, Tanggal Lahir / Status</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
-                {{ ucfirst($dataNasabah->tempat_lahir) }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ ucfirst($dataNasabah->status) }}</span>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 40%" >
-                <label>Sektor Kredit</label>
-            </td>
-            <td>:</td>
-            <td style="padding-left: 19px;">
-                {{$dataUmum->skema_kredit}}
+            <td>
+                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $stp }}</span>
             </td>
         </tr>
         <tr>
@@ -107,8 +129,19 @@
                 <label>Jenis Usaha</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
-                {{$dataNasabah->jenis_usaha}}
+            <td>
+                @foreach ($jenis_usaha as $key => $value)
+                    @php
+                        $isSelected = ($dataNasabah->jenis_usaha == $key) ? 'selected' : '';
+                        if ($isSelected) {
+                            $textJenisUsaha = $value;
+                            $valueJenisUsaha = $key;
+                        }
+                    @endphp
+                    @if ($isSelected)
+                        {{ $dataNasabah->jenis_usaha ? $value : 'Tidak ditemukan' }}
+                    @endif
+                @endforeach
             </td>
         </tr>
         <tr>
@@ -116,8 +149,8 @@
                 <label>Jumlah Kredit Yang Diminta</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
-                {{ "Rp " . number_format($dataNasabah->jumlah_kredit,2,',','.') }}
+            <td>
+                {{ "Rp " . number_format($dataNasabah->nominal,2,',','.') }}
             </td>
         </tr>
         <tr>
@@ -125,8 +158,8 @@
                 <label>Tujuan Kredit</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
-                {{ $dataNasabah->tujuan_kredit }}
+            <td>
+                {{ $dataNasabah->tujuan_penggunaan }}
             </td>
         </tr>
         <tr>
@@ -134,16 +167,16 @@
                 <label>Jaminan Yang Disediakan</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 19px;">
-                {{ strtoupper($dataNasabah->jaminan_kredit) }}
+            <td>
+                {{ strtoupper($dataNasabah->ket_agunan) }}
             </td>
         </tr>
         <tr>
-            <td >
+            <td>
                 <label>Hubungan Dengan Bank</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td style="padding-left: 19px;">
+            <td>
                 {{ $dataNasabah->hubungan_bank }}
             </td>
         </tr>
@@ -152,8 +185,8 @@
                 <label>Hasil Verifikasi Karakter Umum</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td style="padding-left: 19px;">
-                {{ $dataNasabah->verifikasi_umum }}
+            <td>
+                {{ $dataNasabah->hasil_verifikasi }}
             </td>
         </tr>
     </table>
@@ -904,73 +937,15 @@
         </tr>
     </table>
     @endif
-    @php
-        $dataKtpNasabah = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-            ->where('level', 2)
-            ->where('id_parent', $itemSP->id)
-            ->where('nama', 'Foto KTP Nasabah')
-            ->get();
-        $dataFotoNasabah = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-            ->where('level', 2)
-            ->where('id_parent', $itemSP->id)
-            ->where('nama', 'Foto KTP Suami')
-            ->get();
+    <div class="">
+        <p>Foto Nasabah</p>
+        <img src="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="100%" height="400" alt>
+    </div>
+    <div class="">
+        <p>Foto KTP Nasabah</p>
+        <img src="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="100%" height="400" alt="">
+    </div>
 
-        $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-            ->where('level', 2)
-            ->where('id_parent', $itemSP->id)
-            ->where('nama', 'Laporan SLIK')
-            ->get();
-    @endphp
-
-    <div class="page-break"></div>
-        <table style="border-spacing:10px;">
-            @foreach ($dataFotoNasabah as $item)
-                @if ($item->opsi_jawaban == 'file')
-                    @php
-                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                            ->where('jawaban_text.id_jawaban', $item->id)
-                            ->get();
-                    @endphp
-                    @foreach ($dataDetailJawabanText as $itemTextDua)
-                        @php
-                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                        @endphp
-                            <tr>
-                                <td style="width: 100%;" ><span>{{$item->nama}}</span></td>
-                                {{-- <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">{{$item->nama}}</td> --}}
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top">
-                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="">
-                                </td>
-                            </tr>
-                        </div>
-                    @endforeach
-                @endif
-            @endforeach
-            @foreach ($dataKtpNasabah as $item)
-                @if ($item->opsi_jawaban == 'file')
-                    @php
-                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                            ->where('jawaban_text.id_jawaban', $item->id)
-                            ->get();
-                    @endphp
-                    @foreach ($dataDetailJawabanText as $itemTextDua)
-                        @php
-                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                        @endphp
-                                <p>{{$item->nama}}</p>
-                                <img style="width: 100%;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="">
-                        </div>
-                    @endforeach
-                @endif
-            @endforeach
-        </table>
     <div class="page-break"></div>
     @php
         // check level 2

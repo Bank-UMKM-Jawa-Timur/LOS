@@ -2608,17 +2608,25 @@ class NewDagulirController extends Controller
         $itemSP = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
         $param['itemSP'] = $itemSP;
         $pdf = Pdf::loadview('dagulir.cetak.cetak-surat',$param);
-
-        $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
-        $filePath = public_path() . '/cetak_surat';
+        $fileName = 'Surat-Analisa-'. $dataNasabah->nama. '.pdf' ;
+        $filePath = public_path() . '/upload/cetak_surat/'. $param['dataUmum']->id;
         if (!File::isDirectory($filePath)) {
             File::makeDirectory($filePath, 493, true);
         }
         $pdf->save($filePath.'/'.$fileName);
 
+        $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+        ->where('level', 2)
+        ->where('id_parent', $itemSP->id)
+        ->where('nama', 'Laporan SLIK')
+        ->get();
+
+        $param['dataLS'] = $dataLS;
+
         // return $param['dataUmum'];
-            $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
-            return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
+        return view('cetak.cetak-surat-dagulir', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
+        return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
 
     }
 
