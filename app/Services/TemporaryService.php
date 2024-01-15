@@ -31,7 +31,7 @@ class TemporaryService
 
         if($nasData = CalonNasabahTemp::find($tempId)) {
             $controller = new PengajuanKreditController;
-            $nasData->tanggal_lahir = $controller->formatDate($nasData->tanggal_lahir);
+            // $nasData->tanggal_lahir = $controller->formatDate($nasData->tanggal_lahir);
             return $nasData;
         };
 

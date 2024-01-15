@@ -78,6 +78,7 @@ $dataIndex = match ($skema) {
                             // check level 2
                             $dataLevelDua = \App\Models\ItemModel::where('level', 2)
                             ->where('id_parent', $value->id)
+                            ->orderBy('sequence')
                             ->get();
                             // check level 4
                             $dataLevelEmpat = \App\Models\ItemModel::where('level', 4)

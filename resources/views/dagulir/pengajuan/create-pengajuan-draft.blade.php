@@ -95,8 +95,10 @@
                 $("#foto-ktp-nasabah").append(`
                     @isset($itemKTPNas)
                     <label for="">{{ $itemKTPNas->nama }}</label>
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                data-title="Foto KTP Nasabah" data-filepath="{{asset('../upload/temp')}}/{{$itemKTPNas->id}}/{{temporary($duTemp->id, $itemKTPNas->id)?->opsi_text}}">Preview</a>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
+                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" value="{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -136,7 +138,7 @@
                 $("#foto-ktp-istri").append(`
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -163,7 +165,7 @@
                     @isset($itemKTPNas)
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
+                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" value="{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -298,7 +300,7 @@
                 <label for="">Tempat Lahir</label>
                 <input type="text" maxlength="255" name="tempat_lahir" id="tempat_lahir"
                     class="form-input @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir"
-                    value="">
+                    value="{{ $duTemp?->tempat_lahir ?? '' }}">
                 @error('tempat_lahir')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -310,7 +312,7 @@
                 <input type="date" name="tanggal_lahir" id="tanggal_lahir"
                     class="form-input @error(
                     'tanggal_lahir') is-invalid @enderror"
-                    placeholder="dd-mm-yyyy" value="{{ $duTemp?->tanggal_lahir ?? '' }}">
+                    placeholder="dd-mm-yyyy" value="{{ $duTemp->tanggal_lahir }}">
                 @error('tanggal_lahir')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -392,7 +394,8 @@
                     data-id_item={{ $itemSlik->id }}>
                     <option value=""> --Pilih Data -- </option>
                     @foreach ($itemSlik->option as $itemJawaban)
-                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
+                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}" {{ temporary_select($itemSlik->id,
+                        $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
                         {{ $itemJawaban->option }}</option>
                     @endforeach
                 </select>
@@ -407,6 +410,18 @@
             </div>
             <div class="input-box">
                 <label for="">{{ $itemP->nama }}</label>
+                @php
+                    $fileLapSlik = "";
+                @endphp
+                @if ($jawabanLaporanSlik)
+                    @if ($jawabanLaporanSlik->opsi_text)
+                        @php
+                            $fileLapSlik = $jawabanLaporanSlik->opsi_text;
+                        @endphp
+                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                            data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload/temp')}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}" data-extension="{{ explode('.', $jawabanLaporanSlik->opsi_text)[1] }}">Preview</a>
+                    @endif
+                @endif
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">

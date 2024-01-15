@@ -54,7 +54,7 @@
             contentType: false,
             success: (res) => {
                 //inputData.val('');
-                // console.log(res);
+                console.log(res);
                 inputData.siblings('.filename').html(res.data.filename);
                 inputData.attr('data-id', res.data.file_id);
                 fillTempFile(inputFile + `input[data-id="${res.data.file_id}"]`);

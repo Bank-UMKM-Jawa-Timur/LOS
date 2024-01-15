@@ -880,7 +880,6 @@ class PengajuanKreditController extends Controller
                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                 ->where('id_parent', 114)
                 ->get();
-
             $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
                 ->whereIn('id_jawaban', [147, 148, 149])
                 ->select('id_jawaban')
@@ -910,7 +909,7 @@ class PengajuanKreditController extends Controller
                 }
 
                 if ($id_nasabah)
-                    $dataSelect = edit_select($detailJawabanOption->first()->id_jawaban, $pengajuan->id)?->id_jawaban;
+                    $dataSelect = edit_select($detailJawabanOption->first()->id_jawaban, $request->id)?->id_jawaban;
             } else {
 
                 foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {

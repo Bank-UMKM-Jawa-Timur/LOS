@@ -3607,15 +3607,20 @@ class NewDagulirController extends Controller
         $param['tipe'] = config('dagulir.tipe_pengajuan');
         if ($request->skema_kredit == null) {
             $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+            $param['jawabanLaporanSlik'] =  JawabanTemp::
+                                        where('temporary_dagulir_id', $request->tempId)
+                                        ->where('id_jawaban', 146)
+                                        ->first();
         }else{
             // $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
             $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
             $param['dataPO'] = DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->tempId)->first();
+            $param['jawabanLaporanSlik'] =JawabanTemp::
+                                                where('id_temporary_calon_nasabah', $request->tempId)
+                                                // where('temporary_dagulir_id', $request->tempId)
+                                                ->where('id_jawaban', 146)
+                                                ->first();
         }
-        $param['jawabanLaporanSlik'] =JawabanTemp::where('temporary_dagulir_id', $request->tempId)
-                                            ->where('id_jawaban', 146)
-                                            ->first();
-
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
         $param['skema'] = $request->skema_kredit ?? $param['duTemp']?->skema_kredit;
         return view('dagulir.pengajuan-kredit.continue-draft', $param);
@@ -3686,7 +3691,7 @@ class NewDagulirController extends Controller
 
             try {
                 foreach ($request->dataLevelDua as $key => $value) {
-                    $dataSlik = $this->getDataLevel($value);
+                    $dataSlik = getDataLevel($value);
                     $cek = DB::table('jawaban_temp')
                         ->where('id_temporary_calon_nasabah', $request->id_dagulir_temp ?? $nasabah->id)
                         ->where('id_jawaban', $dataSlik[1])
@@ -3711,7 +3716,10 @@ class NewDagulirController extends Controller
                             ]);
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
+                return $e;
+            } catch (QueryException $e){
+                return $e;
             }
 
             return response()->json([
@@ -4261,7 +4269,7 @@ class NewDagulirController extends Controller
                 }
                 else {
                     $data = [
-                        'filename' => $temp->opsi_jawaban,
+                        'filename' => $temp->opsi_text,
                         'file_id' => $temp->id,
                     ];
                 }
@@ -4304,7 +4312,7 @@ class NewDagulirController extends Controller
                         }
                         else {
                             $data = [
-                                'filename' => $temp->opsi_jawaban,
+                                'filename' => $temp->opsi_text,
                                 'file_id' => $temp->id,
                             ];
                         }
