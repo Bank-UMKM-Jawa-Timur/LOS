@@ -84,26 +84,13 @@
                 {{ $dataNasabah->no_ktp }}
             </td>
         </tr>
-        @php
-        $stp = "";
-            if ($dataNasabah->status == 1) {
-                $stp = "Belum Menikah";
-            } else if ($dataNasabah->status == 2) {
-                $stp = "Menikah";
-            } else if ($dataNasabah->status == 3) {
-                $stp = "Duda";
-            } else if ($dataNasabah->status == 4) {
-                $stp = "Janda";
-            }
-
-        @endphp
         <tr>
             <td style="width: 40%" >
                 <label>Tempat, Tanggal Lahir / Status</label>
             </td>
             <td>:</td>
             <td style="padding-left: 19px;">
-                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $stp }}</span>
+                {{ ucfirst($dataNasabah->tempat_lahir) }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ ucfirst($dataNasabah->status) }}</span>
             </td>
         </tr>
         <tr>
@@ -214,19 +201,7 @@
                             @elseif($item->opsi_jawaban == 'input text' && $item->is_rupiah == 1)
                                 @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
                                     <tr>
-                                        <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan)</td>
-                                        <td>:</td>
-                                        <td>
-                                            @if (is_numeric($itemTextDua->opsi_text))
-                                                {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
-                                            @else
-                                                Rp 0
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @else
-                                    <tr>
-                                        <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
+                                        <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan) 1</td>
                                         <td>:</td>
                                         <td>
                                             @if (is_numeric($itemTextDua->opsi_text))
@@ -244,7 +219,7 @@
                                         <td></td>
                                         <td>{{$item->nama}} No. {{ $itemTextDua->opsi_text }}</td>
                                     </tr>
-                                @elseif ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
+                                @elseif ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment' )
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan)</td>
                                         <td>:</td>
@@ -256,8 +231,7 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @else
-                                    @if ($item->is_rupiah == 1)
+                                @elseif ($item->nama == 'Kebutuhan Kredit')
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                         <td>:</td>
@@ -269,13 +243,12 @@
                                             @endif
                                         </td>
                                     </tr>
-                                    @else
+                                @else
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                         <td>:</td>
                                         <td>{{ $itemTextDua->opsi_text }}</td>
                                     </tr>
-                                    @endif
                                 @endif
                             @endif
                         @endforeach
@@ -951,7 +924,7 @@
     @endphp
 
     <div class="page-break"></div>
-        <table style="width: 100%">
+        <table style="border-spacing:10px;">
             @foreach ($dataFotoNasabah as $item)
                 @if ($item->opsi_jawaban == 'file')
                     @php
@@ -966,9 +939,11 @@
                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                         @endphp
                             <tr>
-                                <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">{{$item->nama}}</td>
-                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
-                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">
+                                <td style="width: 100%;" ><span>{{$item->nama}}</span></td>
+                                {{-- <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">{{$item->nama}}</td> --}}
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top">
                                     <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="">
                                 </td>
                             </tr>
@@ -989,13 +964,8 @@
                         @php
                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                         @endphp
-                            <tr>
-                                <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">{{$item->nama}}</td>
-                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
-                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">
-                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="">
-                                </td>
-                            </tr>
+                                <p>{{$item->nama}}</p>
+                                <img style="width: 100%;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="">
                         </div>
                     @endforeach
                 @endif
@@ -1018,12 +988,15 @@
                 @php
                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                 @endphp
-                        <label for="">{{ $item->nama }}</label>
-                        <div class="field-answer">
-                                <iframe
-                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                    width="100%" height="800px"></iframe>
-                        </div>
+
+                            <p>{{$item->nama}}</p>
+                            <iframe
+                                id="dynamicIframe"
+                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}#toolbar=0&navpanes=0"
+                                width="100%"
+                                style="border: none; overflow: hidden;"
+                                onload="adjustIframeHeight(this);"
+                            ></iframe>
                     </div>
                 </div>
             @endforeach
@@ -1031,6 +1004,12 @@
     @endforeach
 </body>
 </html>
+<script>
+    function adjustIframeHeight(iframe) {
+        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframe.style.height = (innerDoc.body.scrollHeight + 23000) + 'px';
+    }
+</script>
 @if (isset($_GET['pdf']))
     @php
         $name = 'Laporan Kas ' . date('d-m-Y', strtotime($_GET['start'])).' s/d '.date('d-m-Y', strtotime($_GET['end'])).'.pdf';

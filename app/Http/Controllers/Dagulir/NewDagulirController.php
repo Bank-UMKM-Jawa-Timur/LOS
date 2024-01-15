@@ -2605,6 +2605,8 @@ class NewDagulirController extends Controller
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
+        $itemSP = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+        $param['itemSP'] = $itemSP;
         $pdf = Pdf::loadview('dagulir.cetak.cetak-surat',$param);
 
         $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
@@ -2615,14 +2617,8 @@ class NewDagulirController extends Controller
         $pdf->save($filePath.'/'.$fileName);
 
         // return $param['dataUmum'];
-        if ($dataUmum->skema_kredit == "Kusuma") {
-            // return view('dagulir.cetak.cetak-surat-kusuma', $param);
-            $pdf = PDF::loadView('dagulir.cetak.cetak-surat-kusumasurat', $param);
-        } else {
-            // return view('dagulir.cetak.cetak-surat', $param);
             $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
-        }
-        return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
+            return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
 
     }
 

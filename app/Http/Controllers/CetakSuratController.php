@@ -134,20 +134,20 @@ class CetakSuratController extends Controller
             }
         }
 
-        // $pdf = new PdftoImage($pdfPath);
 
-        // $outputImagePath = public_path('file_lainnya/' . $dataUmum->id);
+        // $pdfImage = new \Spatie\PdfToImage\Pdf($pdfPath);
+
+        // $outputImagePath = public_path('file_image_slik/' . $dataUmum->id);
         // if (!file_exists($outputImagePath)) {
         //     mkdir($outputImagePath, 0777, true);
         // }
 
-        // foreach (range(1, $pdf->getNumberOfPages()) as $pageNumber) {
+        // foreach (range(1, $pdfImage->getNumberOfPages()) as $pageNumber) {
         //     $imagePath = $outputImagePath . '/slik_image_' . $pageNumber . '.png';
         //     if (!file_exists($imagePath)) {
-        //         $pdf->setPage($pageNumber)->saveImage($imagePath);
+        //         $pdfImage->setPage($pageNumber)->saveImage($imagePath);
         //     }
         // }
-        // return $dataUmum;
 
         return view('cetak.cetak-surat-kusuma', $param);
         // if ($dataUmum->skema_kredit == "Kusuma") {
