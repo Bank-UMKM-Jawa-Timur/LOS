@@ -243,7 +243,24 @@
                                                     @php
                                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                     @endphp
-                                                    <div class="form-group">
+                                                     <div class="form-group-1">
+                                                        <div class="field-review">
+                                                            <div class="field-name">
+                                                                <label for="">{{ $item->nama }}</label>
+                                                            </div>
+                                                            <div class="field-answer">
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe
+                                                                        src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        width="100%" height="400px"></iframe>
+                                                                @else
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        alt="" width="400px">
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <div class="form-group">
                                                         <label for="">{{ $item->nama }}</label>
                                                         <div class="form-group-1">
                                                             <b>Jawaban:</b>
@@ -258,7 +275,7 @@
                                                                 @endif
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                 @endforeach
                                             @endif
                                         @endforeach
@@ -282,7 +299,24 @@
                                                     @php
                                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                     @endphp
-                                                    {{-- <div class="form-group-1">
+                                                    <div class="form-group-1">
+                                                        <div class="field-review">
+                                                            <div class="field-name">
+                                                                <label for="">{{ $item->nama }}</label>
+                                                            </div>
+                                                            <div class="field-answer">
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe
+                                                                        src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        width="100%" height="400px"></iframe>
+                                                                @else
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        alt="" width="400px">
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <div class="form-group">
                                                         <label for="">{{ $item->nama }}</label>
                                                         <div class="form-group-1">
                                                             <b>Jawaban:</b>
@@ -298,22 +332,6 @@
                                                             </div>
                                                         </div>
                                                     </div> --}}
-                                                    <div class="form-group">
-                                                        <label for="">{{ $item->nama }}</label>
-                                                        <div class="form-group-1">
-                                                            <b>Jawaban:</b>
-                                                            <div class="mt-2">
-                                                                @if ($file_parts['extension'] == 'pdf')
-                                                                    <iframe
-                                                                        src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                        width="100%" height="400px"></iframe>
-                                                                @else
-                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                        alt="" width="400px">
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 @endforeach
                                             @endif
                                         @endforeach
@@ -339,6 +357,23 @@
                                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                     @endphp
                                                     <div class="form-group-1">
+                                                        <div class="field-review">
+                                                            <div class="field-name">
+                                                                <label for="">{{ $item->nama }}</label>
+                                                            </div>
+                                                            <div class="field-answer">
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe
+                                                                        src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        width="100%" height="400px"></iframe>
+                                                                @else
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        alt="" width="400px">
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <div class="form-group-1">
                                                         <label for="">{{ $item->nama }}</label>
                                                         <div class="form-group-1">
                                                             <b>Jawaban:</b>
@@ -353,7 +388,7 @@
                                                                 @endif
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                 @endforeach
                                             @endif
                                         @endforeach
@@ -747,7 +782,7 @@
                                                                             @if ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text == 'nib' || $item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text == 'surat_keterangan_usaha')
                                                                             @else
                                                                                 <div class="field-review">
-                                                                                    <div class="field-name">
+                                                                                    <div class="field-name ">
                                                                                         <label for="">{{ $item->nama }}</label>
                                                                                     </div>
                                                                                     <div class="field-answer">
@@ -1038,7 +1073,37 @@
                                                                             @else
                                                                                 @if ($itemTextTiga->opsi_text == "Tanah" || $itemTextTiga->opsi_text == "Kendaraan Bermotor" || $itemTextTiga->opsi_text == "Tanah dan Bangunan")
                                                                                 @else
-                                                                                    @if ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
+                                                                                    @if ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text == 'nib')
+                                                                                        @if ($itemTextTiga->nama === "NIB")
+                                                                                            <div class="field-review">
+                                                                                                <div class="field-name">
+                                                                                                    <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                                                </div>
+                                                                                                <div class="field-answer">
+                                                                                                    @if ($itemTiga->is_rupiah == 1)
+                                                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
+                                                                                                    @else
+                                                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ?  round(floatval($itemTextTiga->opsi_text),2) : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                                    @endif
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        @endif
+                                                                                    @elseif ($item->nama == 'Ijin Usaha' && $itemTextDua->opsi_text == 'surat_keterangan_usaha')
+                                                                                        @if ($itemTextTiga->nama === "Surat Keterangan Usaha")
+                                                                                            <div class="field-review">
+                                                                                                <div class="field-name">
+                                                                                                    <label for="">{{ $itemTextTiga->nama }} test</label>
+                                                                                                </div>
+                                                                                                <div class="field-answer">
+                                                                                                    @if ($itemTiga->is_rupiah == 1)
+                                                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
+                                                                                                    @else
+                                                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ?  round(floatval($itemTextTiga->opsi_text),2) : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                                    @endif
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        @endif
+                                                                                    @else
                                                                                         <div class="field-review">
                                                                                             <div class="field-name">
                                                                                                 <label for="">{{ $itemTextTiga->nama }}</label>
@@ -1523,87 +1588,6 @@
                                                 @endif
                                             @endforeach
                                         @endforeach
-                                        {{-- @foreach ($dataLevelDua as $item)
-                                            @if ($item->opsi_jawaban != 'option')
-                                                @if (!$item->is_hide)
-                                                    @php
-                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                                            ->where('jawaban_text.id_jawaban', $item->id)
-                                                            ->get();
-                                                    @endphp
-                                                    @foreach ($dataDetailJawabanText as $itemTextDua)
-                                                        <div class="row">
-                                                        <div class="col-md-12">
-                                                                @if ($item->opsi_jawaban == 'file')
-                                                                    <b>{{ $item->nama }} 9999 :</b>
-                                                                    @php
-                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                                                    @endphp
-                                                                    @if ($file_parts['extension'] == 'pdf')
-                                                                            <iframe
-                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                                width="100%" height="800px"></iframe>
-                                                                    @else
-                                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                            alt="" width="800px">
-                                                                    @endif
-                                                                @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                                        <div class="field-review">
-                                                                            <div class="field-name">
-                                                                                <label for="">{{ $item->nama }}</label>
-                                                                            </div>
-                                                                            <div class="field-answer">
-                                                                                <p>{{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    @if ($itemTextDua->is_commentable)
-                                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                            <div class="input-k-bottom">
-                                                                                <input type="text" class="form-input komentar"
-                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                            </div>
-                                                                        @endif
-                                                                    @endif
-                                                                @else
-                                                                    <div class="field-review">
-                                                                        <div class="field-name">
-                                                                            <label for="">{{ $item->nama }} 7777</label>
-                                                                        </div>
-                                                                        <div class="field-answer">
-                                                                            @if ($item->id == 79)
-                                                                                <p>{{$itemTextDua->opsi_text}}</p>
-                                                                            @else
-                                                                                <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
-                                                                            @endif
-                                                                        </div>
-                                                                    </div>
-
-                                                                    @if ($itemTextDua->is_commentable)
-                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                            <div class="input-k-bottom">
-                                                                                <input type="text" class="form-input komentar"
-                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                            </div>
-                                                                        @endif
-                                                                    @endif
-                                                                @endif
-                                                            </div>
-                                                        </div>
-
-                                                        <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
-                                                            name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
-                                                        <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
-                                                            name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
-                                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
-                                                        <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
-                                                    @endforeach
-                                                @endif
-                                            @endif
-                                        @endforeach --}}
                                     </div>
                                     @if (Auth::user()->role == 'PBP')
                                         @php

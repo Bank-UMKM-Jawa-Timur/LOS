@@ -1133,6 +1133,19 @@
                                                                                                 @endif
                                                                                             </div>
                                                                                         </div>
+                                                                                    @else
+                                                                                        <div class="field-review">
+                                                                                            <div class="field-name">
+                                                                                                <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                                            </div>
+                                                                                            <div class="field-answer">
+                                                                                                @if ($itemTiga->is_rupiah == 1)
+                                                                                                    <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
+                                                                                                @else
+                                                                                                    <p>{{ $itemTiga->opsi_jawaban == 'persen' ?  round(floatval($itemTextTiga->opsi_text),2) : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                                @endif
+                                                                                            </div>
+                                                                                        </div>
                                                                                     @endif
                                                                                 @endif
                                                                                 @if ($item->is_commentable == 'Ya')
