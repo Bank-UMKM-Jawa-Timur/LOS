@@ -2605,23 +2605,27 @@ class NewDagulirController extends Controller
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
+        $itemSP = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+        $param['itemSP'] = $itemSP;
         $pdf = Pdf::loadview('dagulir.cetak.cetak-surat',$param);
-
-        $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
-        $filePath = public_path() . '/cetak_surat';
+        $fileName = 'Surat-Analisa-'. $dataNasabah->nama. '.pdf' ;
+        $filePath = public_path() . '/upload/cetak_surat/'. $param['dataUmum']->id;
         if (!File::isDirectory($filePath)) {
             File::makeDirectory($filePath, 493, true);
         }
         $pdf->save($filePath.'/'.$fileName);
 
+        $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+        ->where('level', 2)
+        ->where('id_parent', $itemSP->id)
+        ->where('nama', 'Laporan SLIK')
+        ->get();
+
+        $param['dataLS'] = $dataLS;
+
         // return $param['dataUmum'];
-        if ($dataUmum->skema_kredit == "Kusuma") {
-            // return view('dagulir.cetak.cetak-surat-kusuma', $param);
-            $pdf = PDF::loadView('dagulir.cetak.cetak-surat-kusumasurat', $param);
-        } else {
-            // return view('dagulir.cetak.cetak-surat', $param);
-            $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
-        }
+        return view('cetak.cetak-surat-dagulir', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
         return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
 
     }
@@ -2920,6 +2924,21 @@ class NewDagulirController extends Controller
                 $updateData->id_kabupaten = $request->kabupaten;
                 $updateData->tenor_yang_diminta = $request->tenor_yang_diminta;
                 $updateData->save();
+
+                if ($request->skema_kredit == 'KKB') {
+                    // $dataPO = DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)->first();
+                    // return $dataPO;
+                    DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)
+                        ->update([
+                            'tahun_kendaraan' => $request->tahun,
+                            'merk' => $request->merk,
+                            'tipe' => $request->tipe_kendaraan,
+                            'warna' => $request->warna,
+                            'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                            'jumlah' => $request->sejumlah,
+                            'harga' => str_replace($find, '', $request->harga)
+                        ]);
+                }
             }
             $oldAnswer = JawabanTextModel::select('jawaban_text.*')
                                         ->join('item', 'item.id', 'jawaban_text.id_jawaban')
@@ -3603,15 +3622,20 @@ class NewDagulirController extends Controller
         $param['tipe'] = config('dagulir.tipe_pengajuan');
         if ($request->skema_kredit == null) {
             $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+            $param['jawabanLaporanSlik'] =  JawabanTemp::
+                                        where('temporary_dagulir_id', $request->tempId)
+                                        ->where('id_jawaban', 146)
+                                        ->first();
         }else{
             // $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
             $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
             $param['dataPO'] = DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->tempId)->first();
+            $param['jawabanLaporanSlik'] =JawabanTemp::
+                                                where('id_temporary_calon_nasabah', $request->tempId)
+                                                // where('temporary_dagulir_id', $request->tempId)
+                                                ->where('id_jawaban', 146)
+                                                ->first();
         }
-        $param['jawabanLaporanSlik'] =JawabanTemp::where('temporary_dagulir_id', $request->tempId)
-                                            ->where('id_jawaban', 146)
-                                            ->first();
-
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
         $param['skema'] = $request->skema_kredit ?? $param['duTemp']?->skema_kredit;
         return view('dagulir.pengajuan-kredit.continue-draft', $param);
@@ -3682,7 +3706,7 @@ class NewDagulirController extends Controller
 
             try {
                 foreach ($request->dataLevelDua as $key => $value) {
-                    $dataSlik = $this->getDataLevel($value);
+                    $dataSlik = getDataLevel($value);
                     $cek = DB::table('jawaban_temp')
                         ->where('id_temporary_calon_nasabah', $request->id_dagulir_temp ?? $nasabah->id)
                         ->where('id_jawaban', $dataSlik[1])
@@ -3707,7 +3731,10 @@ class NewDagulirController extends Controller
                             ]);
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
+                return $e;
+            } catch (QueryException $e){
+                return $e;
             }
 
             return response()->json([
@@ -4257,7 +4284,7 @@ class NewDagulirController extends Controller
                 }
                 else {
                     $data = [
-                        'filename' => $temp->opsi_jawaban,
+                        'filename' => $temp->opsi_text,
                         'file_id' => $temp->id,
                     ];
                 }
@@ -4300,7 +4327,7 @@ class NewDagulirController extends Controller
                         }
                         else {
                             $data = [
-                                'filename' => $temp->opsi_jawaban,
+                                'filename' => $temp->opsi_text,
                                 'file_id' => $temp->id,
                             ];
                         }

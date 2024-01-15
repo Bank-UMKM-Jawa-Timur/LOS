@@ -11,7 +11,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
+// use Facade\FlareClient\Stacktrace\File;
 use Spatie\PdfToImage\Pdf as PdfToImage;
+use File;
 
 class CetakSuratController extends Controller
 {
@@ -134,26 +136,17 @@ class CetakSuratController extends Controller
             }
         }
 
-        // $pdf = new PdftoImage($pdfPath);
-
-        // $outputImagePath = public_path('file_lainnya/' . $dataUmum->id);
-        // if (!file_exists($outputImagePath)) {
-        //     mkdir($outputImagePath, 0777, true);
+        // $fileName = 'Surat Analisa.' . 'pdf';
+        // $filePath = public_path() . '/upload/cetak_surat/' . $param['dataUmum']->id;
+        // if (!File::isDirectory($filePath)) {
+        //     File::makeDirectory($filePath, 493, true);
         // }
+        // $pdf = PDF::loadView('cetak.cetak-surat-kusuma', $param);
+        // $pdf->save($filePath . '/' . $fileName);
 
-        // foreach (range(1, $pdf->getNumberOfPages()) as $pageNumber) {
-        //     $imagePath = $outputImagePath . '/slik_image_' . $pageNumber . '.png';
-        //     if (!file_exists($imagePath)) {
-        //         $pdf->setPage($pageNumber)->saveImage($imagePath);
-        //     }
-        // }
-        // return $dataUmum;
 
         return view('cetak.cetak-surat-kusuma', $param);
-        // if ($dataUmum->skema_kredit == "Kusuma") {
-        // } else {
-            // return view('cetak.cetak-surat', $param);
-        // }
+
     }
 
     public function cetakSPPk($id)

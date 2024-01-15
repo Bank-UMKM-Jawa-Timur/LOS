@@ -1789,7 +1789,7 @@ $dataIndex = match ($skema) {
         let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}&id=${id}`,
+            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}&id=`,
             dataType: "json",
             success: function(response) {
                 // jika kategori bukan stock dan piutang
@@ -1922,7 +1922,7 @@ $dataIndex = match ($skema) {
         let id = $("#id_dagulir_temp").val();
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
