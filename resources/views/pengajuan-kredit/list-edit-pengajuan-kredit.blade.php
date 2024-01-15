@@ -310,7 +310,7 @@
                                             <ul class="dropdown-tb-menu hidden">
                                                 @if (Auth::user()->role == 'Staf Analis Kredit' && $item->posisi == 'Proses Input Data')
                                                     <a href="{{ route('dagulir.pengajuan.edit', $item->id_pengajuan) }}"
-                                                        class="w-full cursor-pointer">
+                                                        class="w-full cursor-pointer review-penyelia">
                                                         <li class="item-tb-dropdown">
                                                             Edit data
                                                         </li>

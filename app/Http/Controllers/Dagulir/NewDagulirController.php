@@ -2924,6 +2924,21 @@ class NewDagulirController extends Controller
                 $updateData->id_kabupaten = $request->kabupaten;
                 $updateData->tenor_yang_diminta = $request->tenor_yang_diminta;
                 $updateData->save();
+
+                if ($request->skema_kredit == 'KKB') {
+                    // $dataPO = DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)->first();
+                    // return $dataPO;
+                    DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)
+                        ->update([
+                            'tahun_kendaraan' => $request->tahun,
+                            'merk' => $request->merk,
+                            'tipe' => $request->tipe_kendaraan,
+                            'warna' => $request->warna,
+                            'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                            'jumlah' => $request->sejumlah,
+                            'harga' => str_replace($find, '', $request->harga)
+                        ]);
+                }
             }
             $oldAnswer = JawabanTextModel::select('jawaban_text.*')
                                         ->join('item', 'item.id', 'jawaban_text.id_jawaban')

@@ -36,21 +36,22 @@
     let dataAspekArr;
     const ijin_usaha = $('#ijin_usaha').val()
     if (ijin_usaha == 'nib') {
-        $('#docSKU').hide();
-        $('#surat_keterangan_usaha').hide();
+        $('#docSKU').addClass('hidden');
+        $('#surat_keterangan_usaha').addClass('hidden');
+        $('#npwpsku').addClass('hidden');
 
-        $('#nib').show();
-        $('#npwp').show();
-        $('#docNIB').show();
-        $('#docNPWP').show();
+        $('#nib').removeClass('hidden');
+        $('#npwp').removeClass('hidden');
+        $('#docNIB').removeClass('hidden');
+        $('#docNPWP').removeClass('hidden');
     }
 
     if (ijin_usaha == 'tidak_ada_legalitas_usaha') {
-        $('#nib').hide();
-        $('#docNIB').hide();
-        $('#surat_keterangan_usaha').hide();
-        $('#docSKU').hide();
-        $('#docNPWP').hide();
+        $('#nib').addClass('hidden');
+        $('#docNIB').addClass('hidden');
+        $('#surat_keterangan_usaha').addClass('hidden');
+        $('#docSKU').addClass('hidden');
+        $('#docNPWP').addClass('hidden');
     }
 
     if (ijin_usaha == 'surat_keterangan_usaha') {
@@ -671,7 +672,7 @@
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_file').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').val("");
+            // $('#surat_keterangan_usaha_text').val("");
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
             $('#docSKU').hide();
@@ -712,7 +713,7 @@
             $('#nib_file').attr('disabled', true);
             $('#file_nib').attr('disabled', true);
             $('#docNIB_file').attr('disabled', true);
-            $('#nib_text').val('');
+            // $('#nib_text').val('');
             $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#docNIB').hide();
@@ -724,7 +725,7 @@
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
             $('#surat_keterangan_usaha_file').removeAttr('disabled');
-            $('#surat_keterangan_usaha_text').val('');
+            // $('#surat_keterangan_usaha_text').val('');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
 
             $('#docSKU').show();
@@ -736,13 +737,13 @@
             $('#npwp_id').attr('disabled', true);
             $('#npwp_text').attr('disabled', true);
             $('#npwp_file').attr('disabled', true);
-            $('#npwp_text').val('');
+            // $('#npwp_text').val('');
             $('#npwp_opsi_jawaban').attr('disabled', true);
 
             $('#docNPWP').hide();
             $('#docNPWP_id').attr('disabled', true);
             $('#docNPWP_text').attr('disabled', true);
-            $('#docNPWP_text').val('');
+            // $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else {
             $('#space_nib').hide();
@@ -751,14 +752,14 @@
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
             $('#file_nib').attr('disabled', true);
-            $('#nib_text').val('');
+            // $('#nib_text').val('');
             $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIB_text').attr('disabled', true);
             $('#docNIB_file').attr('disabled', true);
-            $('#docNIB_text').val('');
+            // $('#docNIB_text').val('');
             $('#docNIB_upload_file').attr('disabled', true);
 
             $('#docSKU').hide();
@@ -773,19 +774,19 @@
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
             $('#docSKU_text').attr('disabled', true);
-            $('#docSKU_text').val('');
+            // $('#docSKU_text').val('');
             $('#docSKU_upload_file').attr('disabled', true);
 
             $('#npwp').hide();
             $('#npwp_id').attr('disabled', true);
             $('#npwp_text').attr('disabled', true);
             $('#npwp_file').attr('disabled', true);
-            $('#npwp_text').val('');
+            // $('#npwp_text').val('');
             $('#npwp_opsi_jawaban').attr('disabled', true);
 
             $('#docNPWP').hide();
             $('#docNPWP_id').attr('disabled', true);
-            $('#docNPWP_text').attr('disabled', true);
+            // $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         }
@@ -802,14 +803,14 @@
         $('#docNPWP').show();
         $('#docNPWP_id').removeAttr('disabled');
         $('#docNPWP_text').removeAttr('disabled');
-        $('#docNPWP_text').val('');
+        // $('#docNPWP_text').val('');
         $('#docNPWP_upload_file').removeAttr('disabled');
     } else {
         $('#npwp').hide();
         $('#npwp_id').attr('disabled', true);
         $('#npwp_text').attr('disabled', true);
         $('#npwp_file').attr('disabled', true);
-        $('#npwp_text').val('');
+        // $('#npwp_text').val('');
         $('#npwp_opsi_jawaban').attr('disabled', true);
 
         $('#docNPWP').hide();
@@ -829,7 +830,7 @@
             $('#docNPWP').show();
             $('#docNPWP_id').removeAttr('disabled');
             $('#docNPWP_text').removeAttr('disabled');
-            $('#docNPWP_text').val('');
+            // $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').removeAttr('disabled');
         } else {
             $('#npwp').hide();
@@ -841,7 +842,7 @@
             $('#docNPWP').hide();
             $('#docNPWP_id').attr('disabled', true);
             $('#docNPWP_text').attr('disabled', true);
-            $('#docNPWP_text').val('');
+            // $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         }
     });

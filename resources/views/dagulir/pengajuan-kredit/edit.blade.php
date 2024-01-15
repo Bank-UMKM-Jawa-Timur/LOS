@@ -77,6 +77,7 @@ $dataIndex = match ($skema) {
                             // check level 2
                             $dataLevelDua = \App\Models\ItemModel::where('level', 2)
                             ->where('id_parent', $value->id)
+                            ->orderBy('sequence')
                             ->get();
                             // check level 4
                             $dataLevelEmpat = \App\Models\ItemModel::where('level', 4)
@@ -114,8 +115,8 @@ $dataIndex = match ($skema) {
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="form-group" id="npwpsku" style="{{ strlen($npwp) == 0 ? 'display: none' : '' }}" >
-                                                <div class="input-box">
+                                            <div class="form-group"  >
+                                                <div class="input-box" id="npwpsku">
                                                     <label for="">NPWP</label>
                                                     <br>
                                                     <div class="flex gap-2 rounded p-2 w-full">
@@ -157,7 +158,7 @@ $dataIndex = match ($skema) {
                                                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                             data-title="{{$itemNIB->nama}}"
                                                             data-type="image"
-                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id_jawaban}/{$file}") }}"
+                                                            data-filepath="{{ asset("../upload/{$pengajuan->id}/{$itemNIB->id}/{$file}") }}"
                                                             >Preview
                                                         </a>
                                                     @endif

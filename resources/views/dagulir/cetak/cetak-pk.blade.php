@@ -588,7 +588,7 @@
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">1. </td>
-                <td colspan="2">
+                <td colspan="2" style="text-align: justify;">
                     Untuk lebih menjamin pembayaran kembali dengan tertib dan sebagaimana mestinya hutang “Peminjam” kepada Bank  berdasarkan perjanjian ini, “Peminjam” dengan ini menyatakan telah memberikan dan menyerahkan hak milik secara kepercayaan (Fiduciare Eigendom Overdract)/ SKMHT/APHT yang dianggap cukup dan dapat diterima kepada Bank berupa :
                 </td>
             </tr>
@@ -744,11 +744,11 @@
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">2. </td>
-                <td>Apabila menurut pendapat Bank nilai dari jaminan tidak lagi cukup untuk menjamin hutang “Peminjam” kepada Bank, maka atas permintaan pertama kali Bank, “Peminjam” wajib menambah jaminan lainnya yang disetujui oleh Bank.</td>
+                <td style="text-align: justify;" colspan="2">Apabila menurut pendapat Bank nilai dari jaminan tidak lagi cukup untuk menjamin hutang “Peminjam” kepada Bank, maka atas permintaan pertama kali Bank, “Peminjam” wajib menambah jaminan lainnya yang disetujui oleh Bank.</td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">3. </td>
-                <td>Untuk kepentingan pelaksanaan ketentuan pasal ini, “Peminjam” memberikan kuasa penuh yang tidak dapat dicabut kembali kepada Bank untuk melakukan tindakan - tindakan yang dipandang perlu sesuai ketentuan peraturan perundang-undangan.</td>
+                <td style="text-align: justify;" colspan="2">Untuk kepentingan pelaksanaan ketentuan pasal ini, “Peminjam” memberikan kuasa penuh yang tidak dapat dicabut kembali kepada Bank untuk melakukan tindakan - tindakan yang dipandang perlu sesuai ketentuan peraturan perundang-undangan.</td>
             </tr>
         </table>
 
@@ -761,13 +761,13 @@
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">1. </td>
-                <td>
+                <td style="text-align: justify;">
                     Bank berhak dengan seketika menagih pinjaman-nya dan “Peminjam” diwajibkan tanpa menunda-menunda lagi membayar seluruh pinjaman-nya berupa pokok, bunga, denda, biaya-biaya dan kewajiban lainnya yang mungkin timbul dengan seketika dan sekaligus lunas.
                 </td>
             </tr>
             <tr>
                 <td style="vertical-align: top; width: 3%;">2. </td>
-                <td>
+                <td style="text-align: justify;">
                     Bank akan melakukan penyelesaian pinjaman termasuk namun tidak terbatas pada upaya penjualan agunan baik secara di bawah tangan maupun melalui pelelangan umum, sell down, maupun melalui saluran hukum.
                 </td>
             </tr>
@@ -1058,7 +1058,7 @@
             </tr>
         </table>
 
-        <table class="table-pasal-13">
+        <table class="table-pasal-13" style="text-align: justify;">
             <tr>
                 <td>
                     Demikian perjanjian kredit dan pengakuan hutang ini dibuat untuk para pihak dalam rangkap 2 (dua) masing-masing sama bunyinya diatas kertas bermaterai cukup, serta mempunyai kekuatan hukum yang sama pada hari dan tanggal sebagaimana tersebut pada awal perjanjian ini dan berlaku sejak tanggal ditandatangani.
@@ -1077,7 +1077,7 @@
             </tr>
             <tr>
                 <td style="text-align: center">
-                    <table style="width: 80%; text-align: center;">
+                    <table style="width: 100%; text-align: center;">
                         <tr>
                             <td>({{ getKaryawan($dataPincab[0]['nip']) }})</td>
                             <td>({{ getKaryawan($dataPenyelia[0]['nip']) }})</td>
@@ -1086,7 +1086,7 @@
                             <td style="text-align: center;">
                                 Pemimpin Cabang
                             </td>
-                            <td style="text-align: center; margin-top: 12px;">
+                            <td style="text-align: center;">
                                 Penyelia Kredit
                             </td>
                         </tr>
