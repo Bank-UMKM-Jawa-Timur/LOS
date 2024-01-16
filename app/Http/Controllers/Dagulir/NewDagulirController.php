@@ -2427,33 +2427,6 @@ class NewDagulirController extends Controller
 
     public function postFileDagulir(Request $request, $id)
     {
-        $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
-        $pengajuan = PengajuanModel::with('dagulir')->find($id);
-        $repo = new MasterDanaRepository;
-        $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
-        if ($pengajuan && $plafon) {
-            return $data->dana_idle.'-'.$plafon->plafon_usulan_pincab;
-            if ($data->dana_idle >= $plafon->plafon_usulan_pincab) {
-                $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
-                $current = $dana_cabang->dana_modal - $plafon->plafon_usulan_pincab;
-                if ($current > 0) {
-                    $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
-                    $update_cabang->dana_idle = $current;
-                    $update_cabang->update();
-
-                    $loan = new MasterDDLoan;
-                    $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
-                    $loan->no_loan = $request->get('no_loan');
-                    $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
-                    $loan->plafon = $plafon->plafon_usulan_pincab;
-                    $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
-                    $loan->baki_debet = $plafon->plafon_usulan_pincab;
-                    $loan->save();
-                }
-            }
-
-        }
-        return 'test';
         DB::beginTransaction();
         try {
             $message = null;
@@ -2550,6 +2523,7 @@ class NewDagulirController extends Controller
 
                                     if (!is_array($update_selesai)) {
                                         if ($update_selesai == 200) {
+                                            DB::commit();
                                             // insert to dd loan
                                             $repo = new MasterDanaRepository;
                                             $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
@@ -2575,7 +2549,7 @@ class NewDagulirController extends Controller
 
                                             }
 
-                                            DB::commit();
+
                                             Alert::success('success', $message);
                                             return redirect()->route('dagulir.pengajuan.index');
                                         }
