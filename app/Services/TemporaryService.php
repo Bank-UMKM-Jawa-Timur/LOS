@@ -102,7 +102,7 @@ class TemporaryService
             'no_ktp' => $request->no_ktp,
             'no_telp' => $request->no_telp,
             'tempat_lahir' => $request->tempat_lahir,
-            'tanggal_lahir' => $controller->formatDate($request->tanggal_lahir),
+            'tanggal_lahir' => $request->tanggal_lahir,
             'status' => $request->status,
             'sektor_kredit' => $request->sektor_kredit,
             'jenis_usaha' => $request->jenis_usaha,

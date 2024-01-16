@@ -101,6 +101,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                                $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                                $i = $page == 1 ? 1 : $start;
+                                $status = config('dagulir.status');
+                                $status_color = config('dagulir.status_color');
+                                $jenis_usaha = config('dagulir.jenis_usaha');
+                                $tipe_pengajuan = config('dagulir.tipe_pengajuan');
+                            @endphp
                             @forelse ($data_pengajuan as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -410,19 +421,11 @@
                 </div>
                 <div class="footer-table p-4">
                     <div class="flex justify-between">
-                        <div class="mt-3 mr-5 text-sm font-medium text-gray-500">
-                            <p>
-                                {{ $data_pengajuan->links() }}
-                                Menampilkan
-                                {{ $data_pengajuan->firstItem() }}
-                                -
-                                {{ $data_pengajuan->lastItem() }}
-                                dari
-                                {{ $data_pengajuan->total() }}
-                                Data
-                            </p>
+                        <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
+                        <p>Showing {{ $start }} - {{ $end }} from {{ $data_pengajuan->total() }} entries</p>
                         </div>
                         {{ $data_pengajuan->links('pagination::tailwind') }}
+
                     </div>
                 </div>
             </div>

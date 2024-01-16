@@ -493,7 +493,7 @@ class NewDagulirController extends Controller
                 $addData->alamat_rumah = $request->alamat_rumah;
                 $addData->alamat_usaha = $request->alamat_usaha;
                 $addData->no_ktp = $request->no_ktp;
-                $addData->telp = $request->get('no_telp');
+                $addData->no_telp = $request->get('no_telp');
                 $addData->tempat_lahir = $request->tempat_lahir;
                 $addData->tanggal_lahir = $request->tanggal_lahir;
                 $addData->status = $request->status;
@@ -1590,8 +1590,7 @@ class NewDagulirController extends Controller
 
     public function  updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
         $data = sipde_token();
-        $body = $this->getStatusBody($kode_pendaftaran, $status, $lampiran_analisa, $jangka_waktu = null, $realisasi_dana = null);
-
+        $body = $this->getStatusBody($kode_pendaftaran, $status, $lampiran_analisa, $jangka_waktu = null, $realisasi_dana);
         if (!empty($body)) {
             $host = config('dagulir.host');
             DB::beginTransaction();
@@ -1618,14 +1617,18 @@ class NewDagulirController extends Controller
                                 return $response['status_code'];
                             }
                             else {
+                                DB::commit();
                                 return array_key_exists('message', $response) ? $response['message'] : 'failed';
                             }
                         }
+                        DB::commit();
                         return $response;
                     }
+                    DB::commit();
                     return $pengajuan_dagulir;
                 }
                 else {
+                    DB::commit();
                     return $pengajuan_dagulir;
                 }
             } catch (\Exception $e) {
@@ -2019,7 +2022,7 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $filename =  public_path() . "/cetak_surat/$id.pdf";
+                                $filename =  public_path() . "/upload/cetak_surat/$id.pdf";
                                 $lampiran_analisa = lampiranAnalisa($filename);
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
@@ -2148,7 +2151,7 @@ class NewDagulirController extends Controller
 
                         // HIT update status analisa endpoint dagulir
                         if ($nasabah->status != 2) {
-                            $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                            $filename = public_path('upload/cetak_surat/'.$pengajuan->id.'.'.'pdf');
                             $lampiran_analisa = lampiranAnalisa($filename);
                             $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                             if (is_array($analisa)) {
@@ -2424,7 +2427,6 @@ class NewDagulirController extends Controller
 
     public function postFileDagulir(Request $request, $id)
     {
-        // return $request;
         DB::beginTransaction();
         try {
             $message = null;
@@ -2570,9 +2572,9 @@ class NewDagulirController extends Controller
                             }
                         }
                         else {
-                            DB::rollBack();
+                            DB::commit();
                             alert()->error('Terjadi Kesalahan', $realisasi);
-                            return redirect()->back();
+                            return redirect()->route('dagulir.pengajuan.index');
                         }
                     }
                     break;
@@ -2623,7 +2625,6 @@ class NewDagulirController extends Controller
 
         $param['dataLS'] = $dataLS;
 
-        // return $param['dataUmum'];
         return view('cetak.cetak-surat-dagulir', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
         return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
@@ -2652,7 +2653,7 @@ class NewDagulirController extends Controller
             $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
 
             $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
-            $filePath = public_path('cetak_surat');
+            $filePath = public_path('upload/cetak_surat');
             if (!File::isDirectory($filePath)) {
                 File::makeDirectory($filePath, 493, true);
             }
@@ -2766,7 +2767,7 @@ class NewDagulirController extends Controller
                     $pengajuan->nik = $request->get('nik_nasabah');
                     $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
                     $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
-                    $pengajuan->telp = $request->get('telp');
+                    $pengajuan->no_telp = $request->get('telp');
                     $pengajuan->jenis_usaha = $request->get('jenis_usaha');
                     $pengajuan->ket_agunan = $request->get('ket_agunan');
                     $pengajuan->nominal = formatNumber($request->get('nominal_pengajuan'));
@@ -2906,7 +2907,7 @@ class NewDagulirController extends Controller
                 $updateData->alamat_rumah = $request->alamat_rumah;
                 $updateData->alamat_usaha = $request->alamat_usaha;
                 $updateData->no_ktp = $request->no_ktp;
-                $updateData->telp = $request->no_telp;
+                $updateData->no_telp = $request->no_telp;
                 $updateData->tempat_lahir = $request->tempat_lahir;
                 $updateData->tanggal_lahir = $request->tanggal_lahir;
                 $updateData->status = $request->status;

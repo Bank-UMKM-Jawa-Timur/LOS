@@ -16,6 +16,7 @@ class CalonNasabahTemp extends Model
         'alamat_rumah',
         'alamat_usaha',
         'no_ktp',
+        'no_telp',
         'tempat_lahir',
         'tanggal_lahir',
         'status',
