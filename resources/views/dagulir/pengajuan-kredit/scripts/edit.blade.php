@@ -51,6 +51,7 @@
         $('#docNIB').addClass('hidden');
         $('#surat_keterangan_usaha').addClass('hidden');
         $('#docSKU').addClass('hidden');
+        $('#npwpsku').addClass('hidden');
         $('#docNPWP').addClass('hidden');
     }
 
@@ -746,20 +747,21 @@
             // $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else {
+            console.log('rqwqr');
             $('#space_nib').hide();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
             $('#file_nib').attr('disabled', true);
-            // $('#nib_text').val('');
+            $('#nib_text').val('');
             $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIB_text').attr('disabled', true);
             $('#docNIB_file').attr('disabled', true);
-            // $('#docNIB_text').val('');
+            $('#docNIB_text').val('');
             $('#docNIB_upload_file').attr('disabled', true);
 
             $('#docSKU').hide();

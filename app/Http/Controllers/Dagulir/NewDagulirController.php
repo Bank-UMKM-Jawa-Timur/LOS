@@ -2747,7 +2747,6 @@ class NewDagulirController extends Controller
 
     public function update(Request $request, $id)
     {
-        // return $request;
         $statusSlik = false;
         $find = array('Rp ', '.', ',');
 
@@ -2956,6 +2955,31 @@ class NewDagulirController extends Controller
                                         ->toArray();
 
             // jawaban ijin usaha
+            if ($request->ijin_usaha == 'tidak_ada_legalitas_usaha') {
+                $dokumenUsaha = DB::table('item')
+                    ->where('nama', 'LIKE', '%NIB%')
+                    ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach ($dokumenUsaha as $idDoc) {
+                    DB::table('jawaban_text')
+                        ->where('id_pengajuan', $id_pengajuan)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
+            if ($request->isNpwp == "0") {
+                return 'qwq';
+                $dokumenUsaha = DB::table('item')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach ($dokumenUsaha as $idDoc) {
+                    DB::table('jawaban_text')
+                        ->where('id_pengajuan', $id_pengajuan)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
             if ($request->has('ijin_usaha')) {
                 $answer = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
                                         ->where('id_jawaban', 76)
