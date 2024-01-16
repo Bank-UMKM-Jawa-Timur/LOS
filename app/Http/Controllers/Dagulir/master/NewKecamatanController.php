@@ -45,6 +45,7 @@ class NewKecamatanController extends Controller
             }
 
             $this->param['data'] = $getKecamatan->paginate($limit);
+            // return $this->param['data'];
             $this->param['allKab'] = Kabupaten::all();
             // return $this->param['allKab'];
         } catch (\Illuminate\Database\QueryException $e) {

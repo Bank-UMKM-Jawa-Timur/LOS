@@ -16,7 +16,7 @@
                 <div class="form-group-2 mb-4">
                     <div class="input-box">
                         <label for="">NIP User</label>
-                        <input type="text" name="nip" class="form-input" value="{{ old('nip') }}" />
+                        <input type="text" name="nip" class="form-input" value="{{ old('nip') }}" placeholder="Nip User" />
                         @error('nip')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -25,7 +25,7 @@
                     </div>
                     <div class="input-box">
                         <label for="">Nama User</label>
-                        <input type="text" name="name" class="form-input" value="{{ old('name') }}" />
+                        <input type="text" name="name" class="form-input" value="{{ old('name') }}" placeholder="Nama User" />
                         @error('name')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -36,8 +36,24 @@
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Email User</label>
-                        <input type="text" name="email" class="form-input" value="{{ old('email') }}" />
+                        <input type="text" name="email" class="form-input" value="{{ old('email') }}" placeholder="Email User" />
                         @error('email')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group-2 mb-4" id="form-group-create">
+                    <div class="input-box" id="cabang">
+                        <label for="">Kantor Cabang</label>
+                        <select name="id_cabang" id="cabang" class="form-input @error('cabang') is-invalid @enderror">
+                            <option value="">Pilih cabang</option>
+                            @foreach ($allCab as $item)
+                                <option value="{{$item->id}}">{{$item->cabang}}</option>
+                            @endforeach
+                        </select>
+                        @error('cabang')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -72,7 +88,9 @@
                             </div>
                         @enderror
                     </div>
-                    <div class="input-box">
+                </div>
+                <div class="form-group-1">
+                    <div class="input-box" id="is_dagulir">
                         <div class="flex items-center">
                             <input checked id="checked-checkbox" type="checkbox" name="is_dagulir" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="checked-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 mx-2">Is Dagulir</label>

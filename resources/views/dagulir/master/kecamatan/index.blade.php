@@ -12,7 +12,7 @@
         $('.show-edit').off('click').on('click', function() {
             const target = $(this).data('target');
             const id = $(this).data('id');
-            const id_kab = $(this).data('kab') 
+            const id_kab = $(this).data('kab')
             const nama = $(this).data('nama');
             // set value
             $(`#${target} #id`).val(id);
@@ -123,7 +123,7 @@
                                     $end = $page == 1 ? $page_length : $start + $page_length - 1;
                                     $i = $page == 1 ? 1 : $start;
                                 @endphp
-                                @foreach ($data as $item)
+                                @forelse ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->kecamatan }}</td>
@@ -150,7 +150,11 @@
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-primary">Tidak ada data.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

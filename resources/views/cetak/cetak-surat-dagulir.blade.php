@@ -1018,10 +1018,10 @@
                 var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
                 iframe.style.height = (innerDoc.body.scrollHeight + 20) + 'px'; // Adjust the value as needed
             }
-        });
+        //});
 
                 window.print();
-        // }, 5000);
+         }, 5000);
     </script>
 @endif
 </html>

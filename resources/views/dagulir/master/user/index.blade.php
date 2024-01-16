@@ -100,7 +100,7 @@
                                     <td>{{ $item->role }}</td>
                                     <td>{{ $item->id == 1 ? '-' : $item->cabang->cabang }}</td>
                                     <td>
-                                        @if ($item->id == 1)
+                                        @if ($item->role == 'Administrator')
                                             -
                                         @else
                                             @if ($item->user_dagulir == 1)
@@ -131,7 +131,9 @@
                                                         data-email="{{$item->email}}"
                                                         data-role="{{$item->role}}"
                                                         data-user_dagulir="{{ $item->user_dagulir }}"
-                                                        data-cabang="{{$item->cabang->cabang}}">
+                                                        data-cabang="{{$item->cabang->cabang}}"
+                                                        data-id_cabang="{{$item->cabang->id}}"
+                                                        >
                                                         <li class="item-tb-dropdown">
                                                             Edit
                                                         </li>
@@ -185,12 +187,15 @@
         const role = $(this).data("role");
         const user_dagulir = $(this).data('user_dagulir');
         const cabang = $(this).data("cabang");
+        const id_cabang = $(this).data("id_cabang");
         const target = $(this).data("target");
 
         $(`#${target} .id-user`).val(id_user);
         $(`#${target} .nip-edit`).val(nip);
         $(`#${target} .name-edit`).val(nama);
         $(`#${target} .email-edit`).val(email);
+        $(`#${target} #cabang`).val(id_cabang);
+        $(`#${target} #role`).val(role);
         if (user_dagulir == 0) {
             $(`#${target} .checked-checkbox-dagulir`).prop('checked', true);
         } else {
@@ -199,6 +204,20 @@
         }
 
         $(`#${target}`).removeClass('hidden')
+    });
+
+    $(`#modal-add-user #role`).on('change', function(){
+        const role = $(this).val();
+        const cabangInputGroup = $('#modal-add-user #cabang');
+        const formGroupCreate = $('#modal-add-user #form-group-create');
+        const isDagulir = $('#modal-add-user #is_dagulir');
+        if (role == 'Staf Analis Kredit' || role == 'Penyelia Kredit' || role === 'Pincab' || role === 'PBO' || role === 'PBP') {
+            cabangInputGroup.removeClass('hidden');
+            formGroupCreate.removeClass('form-group-1').addClass('form-group-2');
+        } else {
+            cabangInputGroup.addClass('hidden');
+            formGroupCreate.removeClass('form-group-2').addClass('form-group-1');
+        }
     });
 
     $('.reset-password').on('click', function(){

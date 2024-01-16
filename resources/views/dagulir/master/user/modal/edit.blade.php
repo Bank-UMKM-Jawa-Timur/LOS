@@ -35,11 +35,27 @@
                         @enderror
                     </div>
                 </div>
-                <div class="form-group-2 mb-4">
+                <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Email User</label>
                         <input type="text" name="email" class="form-input email-edit" />
                         @error('email')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group-2">
+                    <div class="input-box" id="cabang">
+                        <label for="">Kantor Cabang</label>
+                        <select name="cabang" id="cabang" class="form-input @error('cabang') is-invalid @enderror">
+                            <option value="">Pilih cabang</option>
+                            @foreach ($allCab as $item)
+                                <option value="{{$item->id}}">{{$item->cabang}}</option>
+                            @endforeach
+                        </select>
+                        @error('cabang')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -75,22 +91,6 @@
                             </div>
                         @enderror
                     </div>
-                </div>
-                <div class="form-group-1">
-                    <div class="input-box">
-                        <label for="">Kantor Cabang</label>
-                        <select name="cabang" id="cabang" class="form-input @error('cabang') is-invalid @enderror">
-                            <option value="">Pilih cabang</option>
-                            @foreach ($allCab as $item)
-                                <option value="{{$item->cabang}}">{{$item->cabang}}</option>
-                            @endforeach
-                        </select>
-                        @error('cabang')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
                     <div class="input-box">
                         <div class="flex items-center">
                             <input id="checked-checkbox-dagulir" type="checkbox" name="is_dagulir" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-end">
-                <button class="btn-cancel" data-dismiss-id="modal-edit-user">
+                <button type="button" class="btn-cancel" data-dismiss-id="modal-edit-user">
                     Batal
                 </button>
                 <button type="submit" class="btn-submit">Simpan</button>
