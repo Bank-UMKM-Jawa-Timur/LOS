@@ -45,7 +45,7 @@
                 <div class="right-button gap-2 flex lg:justify-end">
                     @if (Request()->query() != null)
                     <a href="{{ url()->current() }}"
-                        class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
+                        class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white btn-reset">
                         <span class="mt-1 mr-3">
                             <iconify-icon icon="pajamas:repeat"></iconify-icon>
                         </span>
@@ -833,6 +833,14 @@
         $("#preload-data").removeClass("hidden");
 
     })
+    $('.btn-reset').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $(`#modal-filter .btn-submit`).on('click', function () {
+        $("#preload-data").removeClass("hidden");
+        $('#form-filter').submit();
+    })
 
     $('.kembalikan_pengajuan').on('click', function(){
         const target = '#modalKembalikan';
@@ -899,10 +907,6 @@
 <script>
     $('#page_length').on('change', function() {
         $('#form').submit()
-    })
-
-    $('#btn_filter').on('click', function () {
-        $('#form-filter').submit()
     })
 
     var token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
