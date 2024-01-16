@@ -104,7 +104,7 @@
                                     $end = $page == 1 ? $page_length : $start + $page_length - 1;
                                     $i = $page == 1 ? 1 : $start;
                                 @endphp
-                                @foreach ($data as $item)
+                                @forelse ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->kabupaten }}</td>
@@ -127,7 +127,11 @@
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-primary text-center">Tidak ada data.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

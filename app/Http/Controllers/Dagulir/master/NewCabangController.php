@@ -115,13 +115,13 @@ class NewCabangController extends Controller
             $cabang->email = $request->email;
             $cabang->alamat = $request->alamat;
             $cabang->save();
+            alert()->success('Success', 'Berhasil menambahkan data.');
+            return redirect()->route('dagulir.master.cabang.index');
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
-        alert()->success('Success', 'Berhasil menambahkan data.');
-        return redirect()->route('dagulir.master.cabang.index');
     }
 
     /**

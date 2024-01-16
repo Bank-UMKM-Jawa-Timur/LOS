@@ -103,7 +103,7 @@ class NewDesaController extends Controller
         if ($validatedData->fails()) {
             $html = "<ul style='list-style: none;'>";
             foreach($validatedData->errors()->getMessages() as $error) {
-                $html .= "<li>$error[0]</li>";
+                $html += "<li>$error[0]</li>";
             }
             $html .= "</ul>";
 
@@ -121,10 +121,10 @@ class NewDesaController extends Controller
                 return back()->withError('Terjadi kesalahan.');
             }
 
-            $desa = new desa;
-            $desa->id_kabupaten = $validated['id_kabupaten'];
-            $desa->id_kecamatan = $validated['id_kecamatan'];
-            $desa->desa = $validated['desa'];
+            $desa = new Desa;
+            $desa->id_kabupaten = $validatedData->validated()['id_kabupaten'];
+            $desa->id_kecamatan = $validatedData->validated()['id_kecamatan'];
+            $desa->desa = $validatedData->validated()['desa'];
             $desa->save();
 
         } catch (Exception $e) {
