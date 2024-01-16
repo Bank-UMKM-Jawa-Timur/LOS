@@ -395,9 +395,9 @@
                                                     @endif
                                                     @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
                                                         @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
-                                                            <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full">
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full" id="download-sppk">
                                                                 <li class="item-tb-dropdown">
-                                                                    Cetak SPPK
+                                                                    Download SPPK
                                                                 </li>
                                                             </a>
                                                         @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
@@ -409,9 +409,9 @@
                                                                 </li>
                                                             </a>
                                                         @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
-                                                            <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full">
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full" id="download-pk">
                                                                 <li class="item-tb-dropdown">
-                                                                    Cetak PK
+                                                                    Download PK
                                                                 </li>
                                                             </a>
                                                         @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
@@ -1082,6 +1082,18 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+     $('#download-pk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
+    $('#download-sppk').on('click',function(e) {
+        // Refresh the page after a delay (adjust as needed)
+        setTimeout(function() {
+                location.reload();
+            }, 2000);
+    })
     if (document.getElementById('modalConfirmPincab')) {
         document.getElementById('modalConfirmPincab').addEventListener('click', function () {
             document.getElementById('confirmationModal').classList.remove('hidden');

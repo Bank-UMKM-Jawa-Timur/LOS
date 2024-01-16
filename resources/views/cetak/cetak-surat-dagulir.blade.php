@@ -15,6 +15,17 @@
         .page-break {
             page-break-after: always;
         }
+        @media print {
+            .dynamicIframe {
+                max-height: none; /* Override max-height for printing */
+            }
+            iframe {
+                /* width: 1200px; */
+                height: 9999px;
+                overflow: hidden;
+                border: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -967,11 +978,16 @@
 
                                 <p>{{$item->nama}}</p>
                                 <iframe
-                                    id="dynamicIframe"
+                                    {{-- id="dynamicIframe" --}}
                                     src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}#toolbar=0&navpanes=0"
-                                    width="100%"
-                                    style="border: none; overflow: hidden;"
-                                    onload="adjustIframeHeight(this);"
+                                    {{-- class="dynamicIframe" --}}
+                                    {{-- id="dynamicIframe" --}}
+                                    scrolling="no"
+                                    width="960px"
+                                    {{-- style="border: none; overflow: hidden; width: 100%; height: auto; max-height: 800px;" --}}
+
+                                    {{-- style="border: none; overflow: hidden;" --}}
+                                    {{-- onload="adjustIframeHeight(this);" --}}
                                 ></iframe>
                         </div>
                     </div>
@@ -988,21 +1004,24 @@
     @endphp
 @else
     <script>
-        function adjustIframeHeight(iframe) {
-            var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-            iframe.style.height = (innerDoc.body.scrollHeight + 23000) + 'px';
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var pdfContainers = document.querySelectorAll('.pdf-container');
 
-        setTimeout(function() {
-            var preloadData = document.getElementById('preload-data');
-            if (preloadData) {
-                preloadData.classList.remove('hidden');
+            pdfContainers.forEach(function (container) {
+                var iframe = container.querySelector('.dynamicIframe');
+                iframe.onload = function () {
+                    adjustIframeHeight(iframe);
+                };
+            });
+
+            function adjustIframeHeight(iframe) {
+                var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframe.style.height = (innerDoc.body.scrollHeight + 20) + 'px'; // Adjust the value as needed
             }
-            var focusElement = document.getElementById('focus');
-                focusElement.focus();
+        });
 
                 window.print();
-        }, 5000);
+        // }, 5000);
     </script>
 @endif
 </html>

@@ -93,7 +93,7 @@
                 <div class="input-box col-md-12">
                     <label for="">No Telp</label>
                     <input type="text" name="no_telp" id="no_telp" class="form-input @error('no_telp') is-invalid @enderror"
-                        placeholder="No Telp" value="{{$dataUmum->telp}}" maxlength="255">
+                        placeholder="No Telp" value="{{$dataUmum->no_telp}}" maxlength="255">
                     @error('no_telp')
                     <div class="invalid-feedback">
                         {{ $message }}

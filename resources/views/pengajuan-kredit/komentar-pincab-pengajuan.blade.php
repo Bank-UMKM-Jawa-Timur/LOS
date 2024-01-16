@@ -140,6 +140,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                        $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                                        $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                                        $i = $page == 1 ? 1 : $start;
+                                        $status = config('dagulir.status');
+                                        $status_color = config('dagulir.status_color');
+                                        $jenis_usaha = config('dagulir.jenis_usaha');
+                                        $tipe_pengajuan = config('dagulir.tipe_pengajuan');
+                                    @endphp
                                     @forelse ($data_pengajuan as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
@@ -522,7 +533,7 @@
                                                             @endif
                                                         @else
 
-                                                        <a href="{{ route('dagulir.cetak-surat', $item->id) }}"
+                                                        <a href="{{ route('cetak', $item->id_pengajuan) }}"
                                                             class="cursor-pointer w-full" target="_blank">
                                                             <li class="item-tb-dropdown">
                                                                 Cetak
@@ -554,19 +565,11 @@
                             </table>
                         </div>
                         <div class="footer-table p-4">
-                            <div class="flex justify-between">
-                                <div class="mt-3 mr-5 text-sm font-medium text-gray-500">
-                                    <p>
-                                        Menampilkan
-                                        {{ $data_pengajuan->firstItem() }}
-                                        -
-                                        {{ $data_pengajuan->lastItem() }}
-                                        dari
-                                        {{ $data_pengajuan->total() }}
-                                        Data
-                                    </p>
+                            <div class="flex justify-between pb-3">
+                                <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
+                                <p>Showing {{ $start }} - {{ $end }} from {{ $data_pengajuan->total() }} entries</p>
                                 </div>
-                                {{ $data_pengajuan  ->links('pagination::tailwind') }}
+                                {{ $data_pengajuan->links('pagination::tailwind') }}
                             </div>
                         </div>
                     </div>

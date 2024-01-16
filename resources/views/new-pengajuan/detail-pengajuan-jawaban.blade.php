@@ -149,7 +149,7 @@
                                             <label for="">Telp</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->telp ? $dataUmumNasabah->telp : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->no_telp ? $dataUmumNasabah->no_telp : '-' }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">

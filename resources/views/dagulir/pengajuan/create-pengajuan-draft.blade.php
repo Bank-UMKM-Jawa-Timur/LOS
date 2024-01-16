@@ -275,7 +275,7 @@
         <div class="input-box">
             <label for="">No Telp</label>
             <input type="text" name="no_telp" id="nama" class="form-input @error('no_telp') is-invalid @enderror"
-                placeholder="No Telp" value="{{ $duTemp?->telp ?? '' }}"  maxlength="255">
+                placeholder="No Telp" value="{{ $duTemp?->no_telp ?? '' }}"  maxlength="255">
             @error('no_telp')
             <div class="invalid-feedback">
                 {{ $message }}
@@ -424,7 +424,7 @@
                 @endif
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
-                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik" value="{{ $jawabanLaporanSlik->opsi_text }}">
                 <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
@@ -445,8 +445,21 @@
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">{{ $itemSP->nama }}</label>
+                @php
+                    $fileLapPemohonan = "";
+                @endphp
+                @if ($itemSP)
+                    @if (temporary($duTemp->id, $itemSP->id)?->opsi_text)
+                        @php
+                            $fileLapPemohonan = temporary($duTemp->id, $itemSP->id)?->opsi_text;
+                        @endphp
+                            <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload/temp')}}/{{$itemSP->id}}/{{temporary($duTemp->id, $itemSP->id)?->opsi_text}}" >Preview</a>
+                    @endif
+                @endif
                 <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
+                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}"
+                    value="{{ temporary($duTemp->id, $itemSP->id)?->opsi_text }}"
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
                 <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
