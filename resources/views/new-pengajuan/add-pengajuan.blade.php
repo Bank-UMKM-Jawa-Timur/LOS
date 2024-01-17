@@ -769,7 +769,7 @@ $dataIndex = match ($skema) {
                                         @enderror
                                     </div>
                                     <div class="flex justify-between">
-                                        <a href="{{route('dagulir.pengajuan.index')}}">
+                                        <a href="{{route('pengajuan-kredit.index')}}">
                                             <button type="button"
                                                 class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali"
                                                 >

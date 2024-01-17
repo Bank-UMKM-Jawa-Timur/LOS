@@ -23,7 +23,7 @@
                 <div class="left-button gap-2 flex lg:justify-end">
                     @if (Request()->query() != null)
                     <a href="{{ url()->current() }}"
-                        class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
+                        class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white btn-reset">
                         <span class="mt-1 mr-3">
                             <iconify-icon icon="pajamas:repeat"></iconify-icon>
                         </span>
@@ -516,6 +516,15 @@
         $("#modalKembalikan").addClass("hidden");
         $("#preload-data").removeClass("hidden");
 
+    })
+
+    $('.btn-reset').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $(`#form-filter .btn-submit`).on('click', function () {
+        $("#preload-data").removeClass("hidden");
+        $('#form-filter').submit();
     })
 
     $('.kembalikan_pengajuan').on('click', function(){

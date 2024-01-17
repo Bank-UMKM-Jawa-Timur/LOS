@@ -611,10 +611,10 @@
 
                                 <hr>
                                 <div class="flex justify-between">
-                                    <button type="button"
+                                    <a href="{{route('pengajuan-kredit.index')}}"
                                         class="px-5 py-2 border rounded bg-white text-gray-500">
                                         Kembali
-                                    </button>
+                                    </a>
                                     <button type="button"
                                         class="px-5 py-2 next-tab border rounded bg-theme-primary text-white">
                                         Selanjutnya
@@ -1092,7 +1092,7 @@
                                                                                         @if ($itemTextTiga->nama === "Surat Keterangan Usaha")
                                                                                             <div class="field-review">
                                                                                                 <div class="field-name">
-                                                                                                    <label for="">{{ $itemTextTiga->nama }} test</label>
+                                                                                                    <label for="">{{ $itemTextTiga->nama }}</label>
                                                                                                 </div>
                                                                                                 <div class="field-answer">
                                                                                                     @if ($itemTiga->is_rupiah == 1)
@@ -1734,11 +1734,11 @@
                                         </div>
                                     @endif
                                     <div class="flex justify-between">
-                                        <button type="button"
+                                        <a href="{{route('pengajuan-kredit.index')}}"
                                           class="px-5 py-2 border rounded bg-white text-gray-500"
                                         >
                                           Kembali
-                                        </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
@@ -2054,9 +2054,9 @@
                                 </div>
                                 @endif
                                 <div class="flex justify-between">
-                                    <button class="px-5 py-2 border rounded bg-white text-gray-500">
+                                    <a href="{{route('pengajuan-kredit.index')}}" class="px-5 py-2 border rounded bg-white text-gray-500">
                                         Kembali
-                                    </button>
+                                    </a>
                                     <div>
                                         <button class="px-5 py-2 border rounded bg-theme-secondary text-white">
                                             Sebelumnya

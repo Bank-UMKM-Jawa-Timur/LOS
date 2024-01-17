@@ -58,6 +58,15 @@
               </div>
         </div>
         <div class="right-button gap-2 flex lg:justify-start">
+        @if (Request()->query() != null)
+        <a href="{{ url()->current() }}"
+            class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white btn-reset">
+            <span class="mt-1 mr-3">
+                <iconify-icon icon="pajamas:repeat"></iconify-icon>
+            </span>
+            <span class="ml-1 text-sm"> Reset </span>
+        </a>
+        @endif
         <a
             data-modal-id="modal-filter"
             class="open-modal px-7 cursor-pointer py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary"
@@ -1150,6 +1159,15 @@
     })
     $('.edit-pengajuan').on('click', function(){
         $("#preload-data").removeClass("hidden");
+    })
+
+    $('.btn-reset').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $(`#modal-filter .btn-submit`).on('click', function () {
+        $("#preload-data").removeClass("hidden");
+        $('#form-filter').submit();
     })
 
     $('.pengajuan-next-pbo').on('click', function(){
