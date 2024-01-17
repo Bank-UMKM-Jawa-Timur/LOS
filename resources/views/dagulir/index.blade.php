@@ -5,7 +5,6 @@
 @include('dagulir.modal.filter')
 
 @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
-@include('dagulir.modal.konfirmSendToPinca')
 @include('dagulir.modal.cetak-file-sppk')
 @include('dagulir.modal.cetak-file-pk')
 @include('dagulir.modal.approval')
