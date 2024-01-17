@@ -2767,7 +2767,7 @@ class NewDagulirController extends Controller
                     $pengajuan->nik = $request->get('nik_nasabah');
                     $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
                     $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
-                    $pengajuan->no_telp = $request->get('telp');
+                    $pengajuan->telp = $request->get('telp');
                     $pengajuan->jenis_usaha = $request->get('jenis_usaha');
                     $pengajuan->ket_agunan = $request->get('ket_agunan');
                     $pengajuan->nominal = formatNumber($request->get('nominal_pengajuan'));
