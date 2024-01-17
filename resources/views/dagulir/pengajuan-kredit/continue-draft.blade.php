@@ -102,7 +102,6 @@ $dataIndex = match ($skema) {
                                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
                                         @endphp
                                         {{-- item ijin usaha --}}
-
                                         @if ($item->nama == 'Ijin Usaha')
                                             <div class="form-group">
                                                 <div class="input-box">
@@ -384,7 +383,6 @@ $dataIndex = match ($skema) {
                                                     ->where('id_parent', $item->id)
                                                     ->get();
                                             @endphp
-
                                             @foreach ($dataOption as $itemOption)
                                                 @if ($itemOption->option == '-')
                                                     <div class="form-group-1 col-span-2">
@@ -398,7 +396,6 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 @endif
                                             @endforeach
-
                                             @if (count($dataJawaban) != 0)
                                                 <div
                                                     class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group' }}">
@@ -887,7 +884,7 @@ $dataIndex = match ($skema) {
                                         <button class="px-5 py-2 border rounded bg-theme-secondary text-white">
                                             Sebelumnya
                                         </button>
-                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white" type="submit">
+                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" type="submit">
                                             Simpan
                                         </button>
                                     </div>
@@ -941,7 +938,6 @@ $dataIndex = match ($skema) {
 </script>
 <script>
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
-    let dataAspekArr;
     $('#docSKU').hide();
     $('#surat_keterangan_usaha').hide();
     $('#nib').hide();
@@ -2372,14 +2368,17 @@ $dataIndex = match ($skema) {
 
     function formPercentage(tabId) {
         var form = `#${tabId}`;
+        // var form = `#aspek-keuangan-tab`;
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
         var inputDate = $(form + " input[type=date]")
+        var InputEmail = $(form + " input[type=email]")
         var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
         var totalInput = 0;
+        var totalInputChecked = 0;
         var totalInputNull = 0;
         var totalInputFilled = 0;
         var totalInputHidden = 0;
@@ -2390,13 +2389,57 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || $.trim(v.value) == '' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
+            }
+        })
+
+        $.each(InputEmail, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || $.trim(v.value) == '' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+                totalInputNull++;
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+                totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
             }
         })
 
@@ -2404,8 +2447,18 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var formGroup = inputBox.parent();
+            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputHidden++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -2413,13 +2466,27 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            // var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -2427,13 +2494,26 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0') && !$(this).prop('readonly')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '') && !$(this).prop('readonly') && !$(this).prop('hidden')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -2441,13 +2521,26 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -2455,13 +2548,31 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    var val = $(this).attr('id').toString()
+                    if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi") {
+                        //console.log(val)
+                        nullValue.push(val.replaceAll("_", " "))
+                    }
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -2469,17 +2580,35 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    let val =  $(this).attr('id').toString().replaceAll("_", " ");
+                    if (val != 'komentar staff') {
+                        nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+
+                    }
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
-        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        var totalReadHidden = (totalInputHidden + totalInputReadOnly);
+        var total = totalInput + totalInputChecked;
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
 
         return parseInt(percent)
@@ -2669,6 +2798,71 @@ $dataIndex = match ($skema) {
     $(document).on('keyup', '#npwp_text', function() {
         var input = $(this).val()
         $(this).val(formatNpwp(input))
+    })
+    $(".btn-simpan-data").on('click', function(e) {
+        console.log(nullValue);
+        if ($('#komentar_staff').val() == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "Field Pendapat dan usulan harus diisi"
+            })
+            e.preventDefault()
+        }
+        else {
+            const ijinUsaha = $("#ijin_usaha").val();
+            const value = 'aspek keuangan';
+            dataValue = nullValue.filter(item => item !== value)
+            if (dataValue.length > 0 ) {
+                let message = "";
+                $.each(dataValue, (i, v) => {
+                    var item = v;
+                    if (v == 'dataLevelDua')
+                        item = 'slik';
+
+                    if (v == 'itemByKategori')
+                        item = 'jaminan tambahan';
+
+                    if (v == 'itemByKategori'){
+                        if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
+                            for(var j = 0; j < dataValue.length; j++){
+                                while(dataValue[j] == v){
+                                    dataValue.splice(j, 1)
+                                }
+                            }
+                        } else {
+                            item = "jaminan Tambahan"
+                        }
+                    }
+
+                    if (ijinUsaha == 'nib') {
+                        if (v == 'nib text' || v == 'nib_text') {
+                            var nibText = $("#nib_text").val()
+                            if (nibText == null || nibText == '') {
+                                for(var j = 0; j < dataValue.length; j++){
+                                    while(dataValue[j] == v){
+                                        dataValue.splice(j, 1)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (item.includes('text'))
+                        item = item.replaceAll('text', '');
+
+                    message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
+                })
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: '<ul>'+message+'</ul>'
+                })
+                e.preventDefault()
+            } else {
+                $("#preload-data").removeClass("hidden");
+            }
+        }
     })
 </script>
 <script src="{{ asset('') }}js/custom.js"></script>

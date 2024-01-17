@@ -4118,7 +4118,7 @@ class NewDagulirController extends Controller
                     $data = $request->dataLevelDua;
                     foreach ($data as $key => $value) {
                         if ($value != null) {
-                            $data_level_dua = $this->getDataLevel($value);
+                            $data_level_dua = getDataLevel($value);
                             $skor[$key] = $data_level_dua[0];
                             $id_jawaban[$key] = $data_level_dua[1];
                             //jika skor nya tidak kosong
@@ -4155,7 +4155,7 @@ class NewDagulirController extends Controller
                     $dataLevelTiga = $request->dataLevelTiga;
                     foreach ($dataLevelTiga as $key => $value) {
                         if ($value != null) {
-                            $data_level_tiga = $this->getDataLevel($value);
+                            $data_level_tiga = getDataLevel($value);
                             $skor[$key] = $data_level_tiga[0];
                             $id_jawaban[$key] = $data_level_tiga[1];
                             //jika skor nya tidak kosong
@@ -4187,7 +4187,7 @@ class NewDagulirController extends Controller
                     $dataLevelEmpat = $request->dataLevelEmpat;
                     foreach ($dataLevelEmpat as $key => $value) {
                         if ($value != null) {
-                            $data_level_empat = $this->getDataLevel($value);
+                            $data_level_empat = getDataLevel($value);
                             $skor[$key] = $data_level_empat[0];
                             $id_jawaban[$key] = $data_level_empat[1];
                             //jika skor nya tidak kosong
