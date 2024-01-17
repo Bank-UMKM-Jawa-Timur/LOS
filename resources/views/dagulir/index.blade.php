@@ -936,9 +936,9 @@
                                                                             </li>
                                                                         </a>
                                                                         @else
-                                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                        <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->pengajuan->id}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab">
                                                                             <li class="item-tb-dropdown">
-                                                                                Lanjutkan Ke Pincab
+                                                                            Lanjut ke Pincab
                                                                             </li>
                                                                         </a>
                                                                         @endif
@@ -1002,9 +1002,9 @@
                                                             @endif
                                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_pbo
                                                                 && $item->pengajuan->id_pbo)
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->pengajuan->id}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab">
                                                                     <li class="item-tb-dropdown">
-                                                                        Lanjutkan Ke Pincab
+                                                                    Lanjut ke Pincab
                                                                     </li>
                                                                 </a>
                                                             @endif
@@ -1025,9 +1025,9 @@
                                                             @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_penyelia
                                                                 && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
                                                                 && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
-                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                    <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->pengajuan->id}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab">
                                                                         <li class="item-tb-dropdown">
-                                                                            Lanjutkan Ke Pincab
+                                                                        Lanjut ke Pincab
                                                                         </li>
                                                                     </a>
                                                             @endif
