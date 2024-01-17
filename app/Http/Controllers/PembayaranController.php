@@ -182,18 +182,6 @@ class PembayaranController extends Controller
         }
         alert()->success('Sukses','Pembayaran Berhasil dilakukan');
         return redirect()->route('pembayaran.index');
-
-        // return view('pembayaran.upload', ['data' => $inserted_data]);
-
-         // Check if any required value is null
-
-        // return view('pembayaran.upload',['data' => $pembayaran['data']]);
-        // } catch (\Exception $e) {
-        //     return $e;
-        //     // return redirect(route('users.index'));
-        // } catch ( QueryException $e){
-        //     return $e;
-        // }
     }
 
     function upload_data(Request $request) {
@@ -212,8 +200,7 @@ class PembayaranController extends Controller
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
-            // return $this->saveFile($save->getFile());
-             // Process file_txt
+            // Process file_txt
             $file = $save->getFile(); // get file
             $extension = $file->getClientOriginalExtension();
             if ($extension == 'txt' && $request->data == 'file_txt') {
@@ -222,11 +209,9 @@ class PembayaranController extends Controller
                 $file->storeAs('file/',$fileName);
                 unlink($file->getPathname());
             }
-
             if ($extension == 'xlsx' && $request->data == 'file_dic') {
                 $fileName = 'dictionary'.'.' . $extension; // a unique file name
                 $file->storeAs('dictionary/',$fileName);
-
                 unlink($file->getPathname());
 
             }
@@ -244,7 +229,6 @@ class PembayaranController extends Controller
             ]);
 
         }
-
         // we are in chunk mode, lets send the current progress
         $handler = $save->handler();
 
@@ -252,55 +236,6 @@ class PembayaranController extends Controller
             "done" => $handler->getPercentageDone(),
             'status' => true
         ]);
-    }
-
-    function proses_data(Request $request) {
-        DB::beginTransaction();
-        try {
-            DB::commit();
-            $data = json_decode($request->get('data'),true);
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            return $e;
-        }
-    }
-
-    function checkPembayaran() {
-        DB::beginTransaction();
-        try {
-            DB::commit();
-
-            $date_yesterday = Carbon::yesterday()->setTime(5, 0, 0)->toDateTimeString();
-            $data_yesterday = MasterDDLoan::with('angsuran')->whereDate('created_at', '>=', $date_yesterday)->get();
-            return $data_yesterday;
-            // if ($data) {
-            //     foreach ($data as $key => $value) {
-            //         if ($value != null) {
-            //             // current master anggsuran
-            //             $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-            //             $kode = $loan->kode_pendaftaran;
-            //             // update sipde
-            //             if ($value['no_loan'] == $loan->no_loan) {
-            //                 $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
-            //                 $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-            //                 $update->baki_debet = $total_angsuran;
-            //                 $update->update();
-            //                 $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$total_angsuran,$value['kolek']);
-            //                 if ($response != 200) {
-            //                     DB::rollBack();
-            //                     alert()->error('Error','Terjadi Kesalahan.');
-            //                     return redirect()->route('pembayaran.index');
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-            return 'berhasil';
-        } catch (Exception $e) {
-            DB::rollBack();
-            return $e;
-        }
     }
 
     function kumulatif_debitur($kode, $pokok_angsuran, $kolek, $status) {
@@ -329,7 +264,6 @@ class PembayaranController extends Controller
                 DB::commit();
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pembayaran_kumulatif)) $message .= ' '.$pembayaran_kumulatif['error'];
-
                 return $message;
             }
 
