@@ -1806,6 +1806,12 @@ class NewDagulirController extends Controller
         } elseif ($role == 'Penyelia Kredit') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user, $allFilter, 'sipde');
+        } elseif (auth()->user()->role == 'PBO') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'PBO', $id_user,$allFilter);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'PBO', $id_user, $allFilter, 'sipde');
+        } elseif (auth()->user()->role == 'PBP') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'PBP', $id_user,$allFilter);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'PBP', $id_user, $allFilter, 'sipde');
         } elseif ($role == 'Pincab') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Pincab', $id_user, $allFilter, 'sipde');

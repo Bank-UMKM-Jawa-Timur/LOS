@@ -5,7 +5,6 @@
 @include('dagulir.modal.filter')
 
 @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
-@include('dagulir.modal.konfirmSendToPinca')
 @include('dagulir.modal.cetak-file-sppk')
 @include('dagulir.modal.cetak-file-pk')
 @include('dagulir.modal.approval')
@@ -1025,9 +1024,9 @@
                                                             @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_penyelia
                                                                 && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
                                                                 && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
-                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer review-pincab">
+                                                                    <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                                         <li class="item-tb-dropdown">
-                                                                            Lanjutkan Ke Pincab
+                                                                        Lanjut ke Pincab
                                                                         </li>
                                                                     </a>
                                                             @endif
