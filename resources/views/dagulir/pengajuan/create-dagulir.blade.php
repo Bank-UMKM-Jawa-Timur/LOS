@@ -499,18 +499,6 @@
                 </select>
             </div>
         </div>
-        <div class="form-group-3 hidden" id="tempat_berdiri">
-            <div id="nama_pj" class="input-box">
-                <label for="" id="label_pj"></label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Masukkan disini .."
-                    name="nama_pj"
-                    value="{{ old('nama_pj') }}"
-                />
-            </div>
-        </div>
         <div class="form-group-1">
             <div class="input-box">
                 <label for="">Hubungan Bank</label><small class="text-red-500 font-bold">*</small>
