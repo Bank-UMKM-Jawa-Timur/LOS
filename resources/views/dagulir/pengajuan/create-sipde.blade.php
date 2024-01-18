@@ -179,7 +179,7 @@
         <div class="form-group-3">
             <div class="input-box">
                 <label for="">Kota / Kabupaten KTP</label><small class="text-red-500 font-bold">*</small>
-                <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
+                <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror"
                     id="kabupaten" disabled>
                     <option value="0"> --- Pilih Kabupaten --- </option>
                     @foreach ($dataKabupaten as $item)
@@ -407,6 +407,11 @@
             </div>
         </div>
 
+        @php
+            $tujuanPenggunaan = $dataUmumNasabah->tujuan_penggunaan ? $dataUmumNasabah->tujuan_penggunaan : '' ;
+            $tujuanPenggunaanFormatted = ucwords(str_replace('_', ' ', $tujuanPenggunaan));
+        @endphp
+
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Tujuan Penggunaan</label><small class="text-red-500 font-bold">*</small>
@@ -415,7 +420,8 @@
                     class="form-input"
                     placeholder="Masukan Tujuan Penggunaan"
                     name="tujuan_penggunaan"
-                    value="{{ old('tujuan_penggunaan', $dataUmumNasabah->tujuan_penggunaan) }}"
+                    {{-- value="{{ old('tujuan_penggunaan', $dataUmumNasabah->tujuan_penggunaan) }}" --}}
+                    value="{{ $tujuanPenggunaanFormatted }}"
                     disabled
                 />
             </div>
@@ -423,10 +429,11 @@
                 <label for="">Jaminan yang disediakan</label><small class="text-red-500 font-bold">*</small>
                 <select name="ket_agunan" id="" class="form-select" disabled>
                     <option value="0" >Pilih Jaminan</option>
-                    <option value="shm" {{ old('ket_agunan', $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '') == 'shm' ? 'selected' : '' }}>SHM</option>
-                    <option value="bpkb" {{ old('ket_agunan', $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '') == 'bpkb' ? 'selected' : '' }}>BPKB</option>
-                    <option value="shgb" {{ old('ket_agunan', $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '') == 'shgb' ? 'selected' : '' }}>SHGB</option>
-                    <option value="lainnya" {{ old('ket_agunan', $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                    {{-- <option value="shm" {{ old('ket_agunan', $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '') == 'like %shm%' ? 'selected' : '' }}>SHM</option> --}}
+                    <option value="shm" {{ strtolower($dataUmumNasabah->ket_agunan) == 'shm' ? 'selected' : '' }}>SHM</option>
+                    <option value="bpkb" {{ strtolower($dataUmumNasabah->ket_agunan) == 'bpkb' ? 'selected' : '' }}>BPKB</option>
+                    <option value="shgb" {{ strtolower($dataUmumNasabah->ket_agunan) == 'shgb' ? 'selected' : '' }}>SHGB</option>
+                    <option value="lainnya" {{ strtolower($dataUmumNasabah->ket_agunan) == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                 </select>
             </div>
             <div class="input-box">
