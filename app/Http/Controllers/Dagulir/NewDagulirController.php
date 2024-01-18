@@ -2511,10 +2511,46 @@ class NewDagulirController extends Controller
                     }
                     $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
                     $pengajuan = PengajuanModel::with('dagulir')->find($id);
-                    $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
+                    // insert to dd loan
+                    $repo = new MasterDanaRepository;
+                    $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
+                    if ($pengajuan && $plafon) {
+                        if ($data->dana_idle >= $plafon->plafon_usulan_pincab) {
+                            $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                            $current = $dana_cabang->dana_modal - $plafon->plafon_usulan_pincab;
+                            if ($current > 0) {
+                                $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
+                                $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                $update_cabang->dana_idle = $current;
+                                $update_cabang->update();
+
+                                $loan = new MasterDDLoan;
+                                $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
+                                $loan->no_loan = $request->get('no_loan');
+                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
+                                $loan->plafon = $plafon->plafon_usulan_pincab;
+                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
+                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
+                                $loan->save();
+                            }
+                        }
+                        else{
+                            alert()->error('Terjadi Kesalahan', 'Dana tidak cukup.');
+                            return redirect()->back();
+                        }
+                    }else{
+                        alert()->error('Terjadi Kesalahan', 'Pengajuan atau dana cabang tidak ditemukan.');
+                        return redirect()->back();
+                    }
 
                     if (is_array($realisasi)) {
-                        DB::rollBack();
+                        DB::commit();
+                        $loan = MasterDDLoan::where('kode_pendaftaran',$kode_pendaftaran)->first();
+                        $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                        $current = $dana_cabang->dana_modal + $plafon->plafon_usulan_pincab;
+                        $update_cabang->dana_idle = $current;
+                        $update_cabang->update();
+                        $loan->delete();
                         alert()->error('Terjadi Kesalahan', json_encode($realisasi));
                         return redirect()->back();
                     }
@@ -2524,49 +2560,21 @@ class NewDagulirController extends Controller
                             $upload = $this->syaratDokumen($kode_pendaftaran, $file_pk_base64);
                             if (!is_array($upload)) {
                                 if ($upload == 200) {
-                                    // insert to dd loan
-                                    $repo = new MasterDanaRepository;
-                                    $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
-                                    if ($pengajuan && $plafon) {
-                                        if ($data->dana_idle >= $plafon->plafon_usulan_pincab) {
-                                            $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
-                                            $current = $dana_cabang->dana_modal - $plafon->plafon_usulan_pincab;
-                                            if ($current > 0) {
-                                                // Update to SELESAI
-                                                $update_selesai = $this->updateStatus($kode_pendaftaran, 6);
-                                                $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
-                                                $update_cabang->dana_idle = $current;
-                                                $update_cabang->update();
+                                    // Update to SELESAI
+                                    $update_selesai = $this->updateStatus($kode_pendaftaran, 6);
 
-                                                $loan = new MasterDDLoan;
-                                                $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
-                                                $loan->no_loan = $request->get('no_loan');
-                                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
-                                                $loan->plafon = $plafon->plafon_usulan_pincab;
-                                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
-                                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
-                                                $loan->save();
-                                                if (!is_array($update_selesai)) {
-                                                    if ($update_selesai == 200) {
-                                                        DB::commit();
-                                                        Alert::success('success', $message);
-                                                        return redirect()->route('dagulir.pengajuan.index');
-                                                    }
-                                                }
-                                                else {
-                                                    DB::rollBack();
-                                                    alert()->error('Terjadi Kesalahan', $update_selesai);
-                                                    return redirect()->back();
-                                                }
-                                            }
-                                        }else{
+                                    if (!is_array($update_selesai)) {
+                                        if ($update_selesai == 200) {
                                             DB::commit();
-                                            Alert::success('success', 'Dana tidak mencukupi.');
+                                            Alert::success('success', $message);
                                             return redirect()->route('dagulir.pengajuan.index');
                                         }
-
                                     }
-
+                                    else {
+                                        DB::rollBack();
+                                        alert()->error('Terjadi Kesalahan', $update_selesai);
+                                        return redirect()->back();
+                                    }
                                 }
                                 else {
                                     DB::rollBack();
@@ -2575,12 +2583,25 @@ class NewDagulirController extends Controller
                                 }
                             }
                             else {
-                                DB::rollBack();
+                                DB::commit();
+                                $loan = MasterDDLoan::where('kode_pendaftaran',$kode_pendaftaran)->first();
+                                $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                $current = $dana_cabang->dana_modal + $plafon->plafon_usulan_pincab;
+                                $update_cabang->dana_idle = $current;
+                                $update_cabang->update();
+                                $loan->delete();
                                 alert()->error('Terjadi Kesalahan', $upload);
                                 return redirect()->back();
                             }
                         }
                         else {
+                            DB::commit();
+                            $loan = MasterDDLoan::where('kode_pendaftaran',$kode_pendaftaran)->first();
+                            $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                            $current = $dana_cabang->dana_modal + $plafon->plafon_usulan_pincab;
+                            $update_cabang->dana_idle = $current;
+                            $update_cabang->update();
+                            $loan->delete();
                             DB::commit();
                             alert()->error('Terjadi Kesalahan', $realisasi);
                             return redirect()->route('dagulir.pengajuan.index');
