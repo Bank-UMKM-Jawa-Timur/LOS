@@ -77,7 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
 
 
-    Route::prefix('dagulir')->name('dagulir.')->group(function () {
+    Route::prefix('pengajuan-dagulir')->name('dagulir.')->group(function () {
         Route::get('/', [DagulirController::class, 'index'])->name('index');
         // edit
         Route::get('edit/{id}',[NewDagulirController::class,'edit'])->name('edit');
