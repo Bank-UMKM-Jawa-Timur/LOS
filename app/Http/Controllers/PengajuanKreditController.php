@@ -325,7 +325,7 @@ class PengajuanKreditController extends Controller
                         return $query->where('pengajuan.posisi', '<>', 'Selesai')
                             ->where('pengajuan.posisi', '<>', 'Ditolak');
                     }
-                })
+               })
                 ->when($request->score, function ($query, $score) {
                     return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
                         ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
@@ -885,7 +885,7 @@ class PengajuanKreditController extends Controller
                 ->select('id_jawaban')
                 ->orderBy('id', 'DESC');
 
-            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto', 'Alamat', 'No Rangka', 'No Mesin', 'No Polis', 'Warna', 'Tahun', 'Merk / Type'])->orderBy('sequence');
             $blm = array();
             foreach ($dataDetailJawabanText as $key => $val) {
                 array_push($blm, $val->id_item);
@@ -893,7 +893,7 @@ class PengajuanKreditController extends Controller
 
             $belum = ItemModel::whereNotIn('id', $blm)
                 ->orderBy('id', 'ASC')
-                ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto'])
+                ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto', 'Alamat', 'No Rangka', 'No Mesin', 'No Polis', 'Warna', 'Tahun', 'Merk / Type'])
                 ->where('id_parent', 114)
                 ->get();
         }

@@ -1159,6 +1159,7 @@
                                                         $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide', 'is_rupiah')
                                                             ->where('level', 4)
                                                             ->where('id_parent', $itemTiga->id)
+                                                            ->orderBy('sequence')
                                                             ->get();
                                                         // check jawaban kelayakan
                                                         $checkJawabanKelayakan = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')

@@ -580,6 +580,7 @@
                                                 // check level empat
                                                 $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                                     ->where('level', 4)
+                                                    ->orderBy('sequence')
                                                     ->where('id_parent', $itemTiga->id)
                                                     ->get();
                                                 // $dataLevelEmpat2 = \App\Models\JawabanTextModel::select('jawaban_text.*','item.*')

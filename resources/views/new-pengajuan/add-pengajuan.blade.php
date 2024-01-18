@@ -1944,7 +1944,6 @@ $dataIndex = match ($skema) {
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // //console.log(valOption.skor);
                         $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
@@ -1995,14 +1994,114 @@ $dataIndex = match ($skema) {
                                         </div>
                                     </div>
                                 `);
-                            } else {
-                                if (response.dataJawaban[i] != null && response.dataJawaban[
-                                        i] != "") {
+                            }
+                            else if(valItem.nama == 'Alamat'){
+                                console.log(valItem.id);
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <textarea id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-textarea"
+                                                placeholder="Masukkan Informasi"></textarea>
+                                        </div
+                                    </div>
+                                `);
+                            }
+                            else if(valItem.nama == 'Tahun'){
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${isCheck} ${valItem.nama} Kendaraan</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="number" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-input"
+                                                placeholder="Masukkan Informasi" value="" min="2000">
+                                        </div
+                                    </div>
+                                `);
+                            }
+                            else if(valItem.nama == 'No Mesin'){
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text " id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-input"
+                                                placeholder="Masukkan Informasi" value="" >
+                                        </div
+                                    </div>
+                                `);
+                            }
+                            else if(valItem.nama == 'No Rangka'){
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-input"
+                                                placeholder="Masukkan Informasi" value="" >
+                                        </div
+                                    </div>
+                                `);
+                            }
+                            else if(valItem.nama == 'No Polis'){
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-input"
+                                                placeholder="Masukkan Informasi" value="" >
+                                        </div
+                                    </div>
+                                `);
+                            }
+                            else if(valItem.nama == 'Warna'){
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-input"
+                                                placeholder="Masukkan Informasi" value="" >
+                                        </div
+                                    </div>
+                                `);
+                            }
+                            else if(valItem.nama == 'Merk / Type'){
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-input"
+                                                placeholder="Masukkan Informasi" value="" >
+                                        </div
+                                    </div>
+                                `);
+                            }
+                            else {
+                                if (response.dataJawaban[i] != null && response.dataJawaban[i] != "") {
                                     if (kategoriJaminan != 'Kendaraan Bermotor') {
                                         isCheck =
                                             "<input type='checkbox' class='checkKategori'>"
                                         isDisabled = ""
                                     }
+
                                     if (valItem.nama != 'BPKB No') {
                                         isDisabled = "disabled"
                                     }

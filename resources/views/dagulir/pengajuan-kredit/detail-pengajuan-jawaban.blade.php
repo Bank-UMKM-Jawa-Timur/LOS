@@ -1188,6 +1188,7 @@
                                                         // check level empat
                                                         $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide', 'is_rupiah')
                                                             ->where('level', 4)
+                                                            ->orderBy('sequence')
                                                             ->where('id_parent', $itemTiga->id)
                                                             ->get();
                                                         // check jawaban kelayakan
