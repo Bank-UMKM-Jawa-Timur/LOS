@@ -2517,7 +2517,7 @@ class NewDagulirController extends Controller
                     if ($pengajuan && $plafon) {
                         if ($data->dana_idle >= $plafon->plafon_usulan_pincab) {
                             $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
-                            $current = $dana_cabang->dana_modal - $plafon->plafon_usulan_pincab;
+                            $current = $dana_cabang->dana_idle - $plafon->plafon_usulan_pincab;
                             if ($current > 0) {
                                 $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
                                 $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
