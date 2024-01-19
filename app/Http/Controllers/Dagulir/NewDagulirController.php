@@ -2291,8 +2291,51 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
-        // return $dataNasabah;
-        // return view('dagulir.cetak.cetak-pk', $param);
+        $dataEmpatSatu = ItemModel::select('id')->where('level', 4)
+                        ->whereIn('nama', ['BPKB No', 'Atas Nama', 'No Rangka', 'No Mesin', 'No Polis', 'Warna', 'Tahun', 'Merk / Type', 'Alamat'])
+                        // ->whereIn('nama', ['BPKB No', 'No Rangka', 'No Mesin', 'No Polis', 'Warna', 'Merk / Type'])
+                        ->where('id_parent', 114)
+                        ->get()->toArray();
+
+        $jawabanSatu = JawabanTextModel::select(
+            'jawaban_text.id',
+            'jawaban_text.id_pengajuan',
+            'jawaban_text.id_jawaban',
+            'jawaban_text.opsi_text',
+            'item.id as id_item',
+            'item.nama'
+        )
+            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+            ->where('jawaban_text.id_pengajuan', '=', $dataUmum->id)
+            ->whereIn('jawaban_text.id_jawaban', $dataEmpatSatu)
+            ->get();
+
+        $param['jaminanDetailMotorSatu'] = $jawabanSatu;
+
+        $dataEmpatDua = ItemModel::select('id')->where('level', 4)
+                        // ->whereIn('nama', ['BPKB No', 'Atas Nama', 'No Rangka', 'No Mesin', 'No Polis', 'Warna', 'Tahun', 'Merk / Type', 'Alamat'])
+                        ->whereIn('nama', ['Atas Nama', 'Tahun', 'Alamat'])
+                        ->where('id_parent', 114)
+                        ->get()->toArray();
+
+        $jawabanDua = JawabanTextModel::select(
+            'jawaban_text.id',
+            'jawaban_text.id_pengajuan',
+            'jawaban_text.id_jawaban',
+            'jawaban_text.opsi_text',
+            'item.id as id_item',
+            'item.nama'
+        )
+            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+            ->where('jawaban_text.id_pengajuan', '=', $dataUmum->id)
+            ->whereIn('jawaban_text.id_jawaban', $dataEmpatDua)
+            ->get();
+
+        $param['jaminanDetailMotorDua'] = $jawabanDua;
+        $param['jaminan'] = JawabanTextModel::select('opsi_text')->where('id_pengajuan', $dataUmum->id)->where('id_jawaban', 110)->first();
+
+
+        return view('dagulir.cetak.cetak-pk', $param);
         $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
         return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
         return redirect()->back();

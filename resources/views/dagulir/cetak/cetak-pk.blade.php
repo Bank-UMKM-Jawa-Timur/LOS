@@ -592,156 +592,165 @@
                     Untuk lebih menjamin pembayaran kembali dengan tertib dan sebagaimana mestinya hutang “Peminjam” kepada Bank  berdasarkan perjanjian ini, “Peminjam” dengan ini menyatakan telah memberikan dan menyerahkan hak milik secara kepercayaan (Fiduciare Eigendom Overdract)/ SKMHT/APHT yang dianggap cukup dan dapat diterima kepada Bank berupa :
                 </td>
             </tr>
-            <tr>
-                <td style="vertical-align: top; width: 3%;"></td>
-                <td>
-                    <table style="width: 100%; text-align: justify;">
-                        <tr>
-                            <td style="vertical-align: top; width: 3%;">a. </td>
-                            <td>
-                                Jenis Kendaraan roda 2 / roda 4 :
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; width: 3%;"></td>
-                <td>
-                    <table style="width: 100%; text-align: justify;">
-                        <tr>
-                            <td style="vertical-align: top; width: 3%;"></td>
-                            <td>
-                                <table style="width: 100%; text-align: justify;">
-                                    <tr>
-                                        <td>Merek/Type</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                        <td>Tahun</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. BPKB</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                        <td>Atas Nama</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. Rangka</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                        <td>Alamat</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. Mesin</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No. Polis</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Warna</td>
-                                        <td>:</td>
-                                        <td>..........................</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; width: 3%;"></td>
-                <td>
-                    <table style="width: 100%; text-align: justify;">
-                        <tr>
-                            <td style="vertical-align: top; width: 3%;"></td>
-                            <td>
-                                Dengan kewajiban bahwa “Peminjam” harus menyerahkan asli surat bukti kepemilikan yang sah kepada Bank.
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; width: 3%;"></td>
-                <td>
-                    <table style="width: 100%; text-align: justify;">
-                        <tr>
-                            <td style="vertical-align: top; width: 3%;">b. </td>
-                            <td>
-                                Kuasa mendebet rekening tabungan/deposito nomor . . . . . . . .
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; width: 3%;"></td>
-                <td>
-                    <table style="width: 100%; text-align: justify;">
-                        <tr>
-                            <td style="vertical-align: top; width: 3%;">c. </td>
-                            <td>
-                                Sebidang tanah dan bangunan/pekarangan/sawah SHM/SHGB nomor . . . . . . . . . Nama Pemilik . . . . . . . . . . Luas tanah . . . . . . . . . . Alamat Pemilik . . . . . . . . . . Alamat Jaminan . . . . . . . . . . Terletak di Desa/Kelurahan . . . . . . . . . . Kecamatan . . . . . . . . . . Kabupaten/Kota . . . . . . . . . . Propinsi . . . . . . . . . . Dengan batas-batas:
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="vertical-align: top; width: 3%;"></td>
-                <td>
-                    <table style="width: 100%; text-align: justify;">
-                        <tr>
-                            <td>
-                                <table style="width: 100%; text-align: justify;">
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>Utara</td>
-                                        <td>:</td>
-                                        <td>. . . . . . . . .</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>Timur</td>
-                                        <td>:</td>
-                                        <td>. . . . . . . . .</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>Selatan</td>
-                                        <td>:</td>
-                                        <td>. . . . . . . . .</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>Barat</td>
-                                        <td>:</td>
-                                        <td>. . . . . . . . .</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+            @if ($jaminan->opsi_text == 'Kendaraan Bermotor')
+                <tr>
+                    <td style="vertical-align: top; width: 3%;"></td>
+                    <td>
+                        <table style="width: 100%; text-align: justify;">
+                            <tr>
+                                <td style="vertical-align: top; width: 3%;">a. </td>
+                                <td>
+                                    Jenis Kendaraan roda 2 / roda 4 :
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; width: 3%;"></td>
+                    <td>
+                        <table style="width: 100%; text-align: justify;">
+                            <tr>
+                                <td style="vertical-align: top; width: 3%;"></td>
+                                <td>
+                                    <table style="width: 100%; text-align: justify;">
+                                        @foreach ($jaminanDetailMotorSatu as $item)
+                                        <tr>
+                                                <td>{{$item->nama}}</td>
+                                                <td>:</td>
+                                                <td>{{$item->opsi_text}}</td>
+                                        </tr>
+                                        @endforeach
+                                        {{-- @foreach ($jaminanDetailMotorDua as $itemDua)
+                                        <tr></tr>
+                                            <td>{{$itemDua->nama}}</td>
+                                            <td>:</td>
+                                            <td>{{$itemDua->opsi_text}}</td>
+                                        </tr>
+                                        @endforeach --}}
+                                        {{-- <tr>
+                                            <td>No. BPKB</td>
+                                            <td>:</td>
+                                            <td>..........................</td>
+                                            <td>Atas Nama</td>
+                                            <td>:</td>
+                                            <td>..........................</td>
+                                        </tr>
+                                        <tr>
+                                            <td>No. Rangka</td>
+                                            <td>:</td>
+                                            <td>..........................</td>
+                                            <td>Alamat</td>
+                                            <td>:</td>
+                                            <td>..........................</td>
+                                        </tr>
+                                        <tr>
+                                            <td>No. Mesin</td>
+                                            <td>:</td>
+                                            <td>..........................</td>
+                                        </tr>
+                                        <tr>
+                                            <td>No. Polis</td>
+                                            <td>:</td>
+                                            <td>..........................</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Warna</td>
+                                            <td>:</td>
+                                            <td>..........................</td>
+                                        </tr> --}}
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; width: 3%;"></td>
+                    <td>
+                        <table style="width: 100%; text-align: justify;">
+                            <tr>
+                                <td style="vertical-align: top; width: 3%;"></td>
+                                <td>
+                                    Dengan kewajiban bahwa “Peminjam” harus menyerahkan asli surat bukti kepemilikan yang sah kepada Bank.
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            @else
+                <tr>
+                    <td style="vertical-align: top; width: 3%;"></td>
+                    <td>
+                        <table style="width: 100%; text-align: justify;">
+                            <tr>
+                                <td style="vertical-align: top; width: 3%;">b. </td>
+                                <td>
+                                    Kuasa mendebet rekening tabungan/deposito nomor . . . . . . . .
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; width: 3%;"></td>
+                    <td>
+                        <table style="width: 100%; text-align: justify;">
+                            <tr>
+                                <td style="vertical-align: top; width: 3%;">c. </td>
+                                <td>
+                                    Sebidang tanah dan bangunan/pekarangan/sawah SHM/SHGB nomor . . . . . . . . . Nama Pemilik . . . . . . . . . . Luas tanah . . . . . . . . . . Alamat Pemilik . . . . . . . . . . Alamat Jaminan . . . . . . . . . . Terletak di Desa/Kelurahan . . . . . . . . . . Kecamatan . . . . . . . . . . Kabupaten/Kota . . . . . . . . . . Propinsi . . . . . . . . . . Dengan batas-batas:
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; width: 3%;"></td>
+                    <td>
+                        <table style="width: 100%; text-align: justify;">
+                            <tr>
+                                <td>
+                                    <table style="width: 100%; text-align: justify;">
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>-</td>
+                                            <td>Utara</td>
+                                            <td>:</td>
+                                            <td>. . . . . . . . .</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>-</td>
+                                            <td>Timur</td>
+                                            <td>:</td>
+                                            <td>. . . . . . . . .</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>-</td>
+                                            <td>Selatan</td>
+                                            <td>:</td>
+                                            <td>. . . . . . . . .</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>-</td>
+                                            <td>Barat</td>
+                                            <td>:</td>
+                                            <td>. . . . . . . . .</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            @endif
             <tr>
                 <td style="vertical-align: top; width: 3%;">2. </td>
                 <td style="text-align: justify;" colspan="2">Apabila menurut pendapat Bank nilai dari jaminan tidak lagi cukup untuk menjamin hutang “Peminjam” kepada Bank, maka atas permintaan pertama kali Bank, “Peminjam” wajib menambah jaminan lainnya yang disetujui oleh Bank.</td>
@@ -1086,7 +1095,7 @@
                             <td style="text-align: center;">
                                 Pemimpin Cabang
                             </td>
-                            <td style="text-align: center;">
+                            <td style="text-align: center;  ">
                                 Penyelia Kredit
                             </td>
                         </tr>
