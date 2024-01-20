@@ -851,7 +851,7 @@ class PengajuanKreditController extends Controller
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                 ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
+                ->whereIn('nama', ['Utara', 'Timur', 'Selatan', 'Barat', 'SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
                 ->where('id_parent', 114)
                 ->get();
 
@@ -867,11 +867,11 @@ class PengajuanKreditController extends Controller
 
             $belum = ItemModel::whereNotIn('id', $blm)
                 ->orderBy('id', 'ASC')
-                ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
+                ->whereIn('nama', ['Utara','Timur','Selatan','Barat','SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
                 ->where('id_parent', 114)
                 ->get();
 
-            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
+            $itemBuktiPemilikan->whereIn('nama', ['Utara','Timur','Selatan','Barat','SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
         } else {
 
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
@@ -942,6 +942,7 @@ class PengajuanKreditController extends Controller
 
 
         $data = [
+            'kategori' => $kategori,
             'detailJawabanOption' => $detailJawabanOption->first(),
             'dataDetailJawabanText' => $dataDetailJawabanText,
             'item' => $item,
@@ -2382,6 +2383,7 @@ class PengajuanKreditController extends Controller
                 ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
                 ->orWhere('nama', 'LIKE', '%NPWP%')
                 ->get('id');
+
             $countDoc = 0;
             foreach ($dokumenUsaha as $idDoc) {
                 $count = DB::table('jawaban_text')

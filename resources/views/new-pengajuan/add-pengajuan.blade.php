@@ -216,7 +216,6 @@ $dataIndex = match ($skema) {
                                                     <span class="filename" style="display: inline;"></span>
                                                 </div>
                                             </div>
-
                                         @else
                                                 @if ($item->opsi_jawaban == 'input text')
                                                     <div class="form-group">
@@ -337,7 +336,6 @@ $dataIndex = match ($skema) {
                                                         </div>
                                                     </div>
                                                 @endif
-
                                             @php
                                                 $dataJawaban = \App\Models\OptionModel::where('option', '!=', '-')
                                                     ->where('id_item', $item->id)
@@ -348,6 +346,7 @@ $dataIndex = match ($skema) {
                                                 // check level 3
                                                 $dataLevelTiga = \App\Models\ItemModel::where('level', 3)
                                                     ->where('id_parent', $item->id)
+                                                    ->orderBy('sequence')
                                                     ->get();
                                             @endphp
 
@@ -423,6 +422,19 @@ $dataIndex = match ($skema) {
                                                         <div id="bukti_pemilikan_jaminan_tambahan" class="form-group-1 row col-span-2 grid grid-cols-2">
 
                                                         </div>
+                                                    @elseif ($itemTiga->nama == 'Batas batas')
+                                                    <div class="form-group-1 col-span-2 hidden" id="batas_batas">
+                                                        <div>
+                                                            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                                                                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                                                                    {{$itemTiga->nama}} Tanah :
+                                                                </h2>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="bukti_pemilikan_jaminan_tambahan_batas_batas" class="form-group-1 row col-span-2 grid grid-cols-2">
+
+                                                    </div>
                                                     @else
                                                         @if ($itemTiga->opsi_jawaban == 'input text')
                                                             <div class="form-group">
@@ -1910,11 +1922,12 @@ $dataIndex = match ($skema) {
 
     //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
     $('#kategori_jaminan_tambahan').change(function(e) {
-
+        $('#batas_batas').addClass('hidden');
         //clear item
         $('#select_kategori_jaminan_tambahan').empty();
 
         // clear bukti pemilikan
+        $('#bukti_pemilikan_jaminan_tambahan_batas_batas').empty();
         $('#bukti_pemilikan_jaminan_tambahan').empty();
 
         //get item by kategori
@@ -1925,6 +1938,7 @@ $dataIndex = match ($skema) {
             url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=`,
             dataType: "json",
             success: function(response) {
+                console.log(response);
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
                     $("#select_kategori_jaminan_tambahan").show()
                     $("#jaminan_tambahan").show()
@@ -1955,6 +1969,27 @@ $dataIndex = match ($skema) {
                         "<input type='checkbox' class='checkKategori'>" : ""
                     var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
                     $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        console.log(valItem.nama);
+                        if (kategoriJaminan == "Kendaraan Bermotor") {
+                            $('#batas_batas').addClass('hidden');
+                        } else {
+                            $('#batas_batas').removeClass('hidden');
+                            if(valItem.nama == 'Utara' || valItem.nama == 'Timur' || valItem.nama == 'Selatan' || valItem.nama == 'Barat'){
+                                $('#bukti_pemilikan_jaminan_tambahan_batas_batas').append(`
+                                    <div class="form-group-1  aspek_jaminan_kategori">
+                                        <div class="input-box">
+                                            <label>${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text " id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" class="form-input"
+                                                placeholder="Masukkan Informasi" value="" >
+                                        </div
+                                    </div>
+                                `);
+                            }
+                        }
+
                         if (valItem.nama == 'Atas Nama') {
                             $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group input-box aspek_jaminan_kategori">
@@ -1996,7 +2031,6 @@ $dataIndex = match ($skema) {
                                 `);
                             }
                             else if(valItem.nama == 'Alamat'){
-                                console.log(valItem.id);
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group-1  aspek_jaminan_kategori">
                                         <div class="input-box">
@@ -2106,16 +2140,20 @@ $dataIndex = match ($skema) {
                                         isDisabled = "disabled"
                                     }
                                 }
-                                $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group input-box aspek_jaminan_kategori">
-                                        <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                            class="form-input input" ${isDisabled} value="">
-                                    </div>
-                                `);
+                                if(valItem.nama == 'Utara' || valItem.nama == 'Timur' || valItem.nama == 'Selatan' || valItem.nama == 'Barat'){
+
+                                } else {
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                        <div class="form-group input-box aspek_jaminan_kategori">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                                class="form-input input" ${isDisabled} value="">
+                                        </div>
+                                    `);
+                                }
                             }
                         }
                     });
