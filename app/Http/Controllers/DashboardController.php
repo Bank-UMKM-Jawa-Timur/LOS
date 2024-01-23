@@ -112,7 +112,9 @@ class DashboardController extends Controller
 
     public function cetak(Request $request)
     {
-
+        if (!$request->has('tAwal') || !$request->has('tAkhir') || !$request->has('cabang') || !$request->has('export') || !$request->has('k_tanggal')) {
+            return redirect()->route('dashboard.index')->withError('Terjadi Kesalahan');
+        }
         $param['tAwal'] = $request->tAwal;
         $param['tAkhir'] = $request->tAkhir;
         $pilCabang = $request->cabang;

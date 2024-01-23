@@ -40,8 +40,8 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
 
@@ -143,7 +143,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-merk-kendaraan', [PengajuanKreditController::class, 'getMerkKendaraan'])->name('get-merk-kendaraan');
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
-    
+
     Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [PengajuanKreditController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
 });
 
