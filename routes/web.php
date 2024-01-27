@@ -74,8 +74,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/detail/chart-posisi-two', [DashboardDetailController::class, 'detailPieChartPosisiTwo'])->name('dashboard-detail-chart-posisi-two');
     Route::get('/dashboard/detail/chart-skema-two', [DashboardDetailController::class, 'detailPieChartSkemaTwo'])->name('dashboard-detail-chart-Skema-two');
 
-    Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
-
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
 
 
