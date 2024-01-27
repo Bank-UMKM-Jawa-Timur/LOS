@@ -2,15 +2,38 @@
     <div class="modal modal-sm bg-white" role="document">
         <form action="" >
             <div class="modal-content">
-                <div class="modal-head">
-                    <div class="title">
-                      <h2 class="font-bold text-lg tracking-tighter text-theme-text">
-                        Skema Kredit
-                      </h2>
-                    </div>
-                    <button type="button" data-dismiss-id="modal-filter">
-                      <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
-                    </button>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">PRODUK & SKEMA KREDIT</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="produk">Pilih Produk Kredit</label>
+                    <select class="form-control" id="produk" name="produk">
+                        <option value="">- Pilih Produk Kredit -</option>
+                        @foreach ($produkKredit as $item)
+                            <option value="{{$item->id}}" {{$produk == $item->name ? 'selected' : ''}}>{{$item->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="skema">Pilih Skema Kredit</label>
+                    <select class="form-control" id="skema" name="skema">
+                        <option value="">- Pilih Skema Kredit -</option>
+                        @foreach ($skemaKredit as $item)
+                            <option value="{{$item->id}}" {{$skema == $item->name ? 'selected' : ''}}>{{$item->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="limit">Pilih Limit</label>
+                    <select class="form-control" id="limit" name="limit">
+                        <option value="">- Pilih Limit -</option>
+                        @foreach ($limitKredit as $item)
+                            <option value="{{$item->id}}">{{number_format($item->from,0,',','.')}} {{$item->operator}} {{number_format($item->to,0,',','.')}}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="modal-body">
                     <div class="form-group-1">

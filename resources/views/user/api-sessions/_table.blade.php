@@ -48,16 +48,16 @@
                             ->first();
                         $cabang = $dataCabang->cabang;
                     }
-                
+
                     // Waktu login pengguna
                     $startTime = new DateTime($item->created_at);
-                
+
                     // Waktu saat ini
                     $endTime = new DateTime('now');
-                
+
                     // Hitung perbedaan waktu
                     $interval = $endTime->diff($startTime);
-                
+
                     // Format waktu
                     $hours = $interval->h;
                     $minutes = $interval->i;
@@ -86,24 +86,24 @@
                                 let mm = parseInt(m);
                                 let ss = parseInt(s);
                                 ss++;
-                    
+
                                 if (ss > 59) {
                                     mm++;
                                     ss = 0;
                                 }
-                    
+
                                 if (mm > 59) {
                                     hh++;
                                     mm = 0;
                                 }
-                    
+
                                 hh = (hh < 10) ? "0" + hh : hh;
                                 mm = (mm < 10) ? "0" + mm : mm;
                                 ss = (ss < 10) ? "0" + ss : ss;
-                    
+
                                 let time = hh + ":" + mm + ":" + ss;
                                 document.querySelector(`.${widget_id}`).innerHTML = time;
-                                var t = setTimeout(function(){ currentTime(hh, mm, ss, `${widget_id}`) }, 1000); 
+                                var t = setTimeout(function(){ currentTime(hh, mm, ss, `${widget_id}`) }, 1000);
                             }
                         </script>
                     </td>
