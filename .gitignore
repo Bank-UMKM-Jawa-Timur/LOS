@@ -16,4 +16,4 @@ yarn-error.log
 /.vscode
 config/app.php
 /config/app.php
-/storage/debugbar
+/storage/debugbar/

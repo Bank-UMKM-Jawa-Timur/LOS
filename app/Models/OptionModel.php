@@ -20,4 +20,9 @@ class OptionModel extends Model
         return $this->belongsTo('App\Models\ItemModel', 'id_item');
     }
 
+    public function jawaban()
+    {
+        return $this->hasMany(JawabanModel::class);
+    }
+
 }

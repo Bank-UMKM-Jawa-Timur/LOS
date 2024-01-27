@@ -1,17 +1,11 @@
 @if (session('status'))
-    <div class="alert alert-primary background-success">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <i class="icofont icofont-close-line-circled text-white"></i>
-        </button>
-        <strong>{{ session('status') }}</strong>
-    </div>
+<div class="border border-green-500 bg-green-500/5 p-5">
+    <strong class="text-green-500">{{ session('status') }}</strong>
+</div>
 @endif
 
 @if (session('error'))
-    <div class="alert alert-danger background-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <i class="icofont icofont-close-line-circled text-white"></i>
-        </button>
-        <strong>{{ session('error') }}</strong>
-    </div>
+<div class="border border-theme-primary bg-theme-primary/5 p-5">
+    <strong class="text-theme-primary">{{ session('error') }}</strong>
+</div>
 @endif

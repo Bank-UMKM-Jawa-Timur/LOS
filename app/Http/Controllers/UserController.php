@@ -205,15 +205,18 @@ class UserController extends Controller
 
     public function updatePassword(Request $request, $id)
     {
+        // return $request;
         $user = User::findOrFail($id);;
         $old = $request->old_pass;
         $new = $request->password;
 
-        if (!\Hash::check($old, $user->password))
+        if (!\Hash::check($old, $user->password)){
             return back()->withError('Password lama tidak cocok.');
+        }
 
-        if (\Hash::check($new, $user->password))
+        if (\Hash::check($new, $user->password)){
             return back()->withError('Password baru tidak boleh sama dengan password lama.');
+        }
 
         $validatedData = $request->validate(
             [
@@ -243,7 +246,8 @@ class UserController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        return back()->withStatus('Password berhasil diperbarui.');
+        alert()->success('Berhasil', 'Password berhasil diperbarui.');
+        return redirect()->route('dashboard')->withStatus('Password berhasil diperbarui.');
     }
 
     function resetPassword($id)
@@ -259,6 +263,7 @@ class UserController extends Controller
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         }
 
+        alert()->success('Berhasil', 'Password berhasil di-reset.');
         return back()->withStatus('Password berhasil di-reset.');
     }
 

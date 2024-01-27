@@ -93,7 +93,7 @@
 
     </div>
     <hr>
-    <div id="opsi">
+    <div id="opsi" class="w-full">
         <p><strong>Opsi atau Jawaban</strong></p>
         <table class="table opsi-jawaban">
             <thead>

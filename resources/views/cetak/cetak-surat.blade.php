@@ -163,7 +163,7 @@
     </table>
     <table style="width: 100%">
         @foreach ($dataAspek as $itemAspek)
-            @if ($itemAspek->nama != 'Data Umum')    
+            @if ($itemAspek->nama != 'Data Umum')
                 @php
                     // check level 2
                     $dataLevelDua = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',2)->where('id_parent',$itemAspek->id)->get();
@@ -181,14 +181,14 @@
                         @endphp
                         @foreach ($dataDetailJawabanText as $itemTextDua)
                             @if ($item->opsi_jawaban == 'number')
-                                @if ($item->nama == 'Repayment Capacity')    
+                                @if ($item->nama == 'Repayment Capacity')
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                         <td>:</td>
                                         <td>{{ (is_numeric($itemTextDua->opsi_text)) ? round($itemTextDua->opsi_text,2) : $itemTextDua->opsi_text }}</td>
                                     </tr>
                                 @else
-                                    @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')    
+                                    @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
                                         <tr>
                                             <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan)</td>
                                             <td>:</td>
@@ -196,7 +196,7 @@
                                                 @if (is_numeric($itemTextDua->opsi_text))
                                                     {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
                                                 @else
-                                                    Rp 0 
+                                                    Rp 0
                                                 @endif
                                             </td>
                                         </tr>
@@ -208,11 +208,11 @@
                                                 @if (is_numeric($itemTextDua->opsi_text))
                                                     {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
                                                 @else
-                                                    Rp 0 
+                                                    Rp 0
                                                 @endif
                                             </td>
                                         </tr>
-                                    @endif    
+                                    @endif
                                 @endif
                             @elseif ($item->opsi_jawaban == 'persen')
                                 <tr>
@@ -220,14 +220,14 @@
                                     <td>:</td>
                                     <td>{{ $itemTextDua->opsi_text }}%</td>
                                 </tr>
-                            @else    
+                            @else
                                 @if ($item->nama == 'NPWP')
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px"></td>
                                         <td></td>
                                         <td>{{$item->nama}} No. {{ $itemTextDua->opsi_text }}</td>
                                     </tr>
-                                @else    
+                                @else
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                         <td>:</td>
@@ -235,7 +235,7 @@
                                     </tr>
                                 @endif
                             @endif
-                        @endforeach    
+                        @endforeach
                     @endif
                     @php
                         $dataJawaban = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$item->id)->get();
@@ -245,7 +245,7 @@
                         $dataLevelTiga = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
                     @endphp
                     @if (count($dataJawaban) != 0)
-                        @if ($item->nama == 'Badan Usaha')    
+                        @if ($item->nama == 'Badan Usaha')
                             <tr>
                                 <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                 <td>:</td>
@@ -274,7 +274,7 @@
                                                                                                 ->where('jawaban_text.id_pengajuan',$dataUmum->id)->get();
                                     @endphp
                                     <table style="width: 100%">
-                                        @foreach ($dataDetailJawabanModal as $itemModal)    
+                                        @foreach ($dataDetailJawabanModal as $itemModal)
                                             <tr>
                                                 <td style="width: 40%; vertical-align: top">{{$itemModal->nama}}</td>
                                                 <td>:</td>
@@ -311,7 +311,7 @@
                                     @endif
                                 @endforeach
                                 </tr>
-                            @endif    
+                            @endif
                         @endif
                     @endif
                     @if ($item->nama == 'Jaminan Utama')
@@ -334,7 +334,7 @@
                             @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                                 @php
                                     $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
-                                @endphp                               
+                                @endphp
                                 @if ($itemTiga->nama == 'Kategori Jaminan Utama')
                                     <tr>
                                         <td style="width: 40%; padding-left: 50px">Barang Jaminan</td>
@@ -365,7 +365,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endif
-                                                    @else    
+                                                    @else
                                                         @php
                                                             $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
                                                         @endphp
@@ -425,7 +425,7 @@
                                                     @endif
                                                 @endif
                                             @endforeach
-                                        @endif  
+                                        @endif
                                     </tr>
                                 @endif
                             @endforeach
@@ -468,7 +468,7 @@
                                                             @endif
                                                         @endforeach
                                                     @endif
-                                                @else    
+                                                @else
                                                     @php
                                                         $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
                                                     @endphp
@@ -528,7 +528,7 @@
                                                 @endif
                                             @endif
                                         @endforeach
-                                    @endif  
+                                    @endif
                                 </tr>
                             @elseif ($itemTiga->nama == 'Taksiran Harga')
                                 <tr>
@@ -549,7 +549,7 @@
                                                                 @if (is_numeric($itemTextEmpat->opsi_text))
                                                                     {{ "Rp " . number_format($itemTextEmpat->opsi_text,2,',','.') }}
                                                                 @else
-                                                                    Rp 0 
+                                                                    Rp 0
                                                                 @endif
                                                             </td>
                                                             {{-- <td style="width: 5%; padding-top: 1px">{{ $itemTextEmpat->nama }}</td>
@@ -558,7 +558,7 @@
                                                                 @if (is_numeric($itemTextEmpat->opsi_text))
                                                                     {{ "Rp " . number_format($itemTextEmpat->opsi_text,2,',','.') }}
                                                                 @else
-                                                                    Rp 0 
+                                                                    Rp 0
                                                                 @endif
                                                             </td> --}}
                                                         </tr>
@@ -602,7 +602,7 @@
                                             @endphp
                                             @if (in_array($itemJawabanLevelTiga->id,$data))
                                                 @if (isset($data))
-                                                    <tr>                                                    
+                                                    <tr>
                                                         <td style="width: 40%; padding-left: 50px">{{$itemTiga->nama}}</td>
                                                         <td style="width: 5%; padding-top: 1px">:</td>
                                                         <td style="padding-left: 3px">{{ $itemJawabanLevelTiga->option }}</td>
@@ -610,14 +610,14 @@
                                                 @endif
                                             @endif
                                         @endforeach
-                                    @endif 
+                                    @endif
                                 @endif
                             @endforeach
                     @elseif ($item->nama == 'Sarana Penunjang')
                         <tr>
                             <td style="width: 40%; padding-left: 33px">{{ $item->nama }}</td>
                         </tr>
-                        @foreach ($dataLevelTiga as $keyTiga => $itemTiga)    
+                        @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                             @php
                                 $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemTiga->id)->get();
                             @endphp
@@ -661,7 +661,7 @@
                                         @endphp
                                         @if (in_array($itemJawabanLevelTiga->id,$data))
                                             @if (isset($data))
-                                                <tr>                                                    
+                                                <tr>
                                                     <td style="width: 40%; padding-left: 50px">{{$itemTiga->nama}}</td>
                                                     <td style="width: 5%; padding-top: 1px">:</td>
                                                     <td style="padding-left: 3px">{{ $itemJawabanLevelTiga->option }}</td>
@@ -669,10 +669,10 @@
                                             @endif
                                         @endif
                                     @endforeach
-                                @endif 
+                                @endif
                             @endif
                         @endforeach
-                    
+
                     @else
                     @php
                         $noTiga = 0;
@@ -692,9 +692,9 @@
                                                 <td>: </td>
                                                 <td>{{ $itemTiga->nama }} No. {{ $itemTextTiga->opsi_text }}</td>
                                             </tr>
-                                        @else    
+                                        @else
                                             <tr>
-                                                <td style="width: 40%; padding-left: 33px">asd</td>
+                                                <td style="width: 40%; padding-left: 33px">{{ $itemTiga->nama }}</td>
                                                 <td>: </td>
                                                 <td>{{ $itemTextTiga->opsi_text }}</td>
                                             </tr>
