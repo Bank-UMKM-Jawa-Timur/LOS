@@ -14,7 +14,7 @@ class ChangeTelpToNoTelpToCalonNasabahTable extends Migration
     public function up()
     {
         Schema::table('calon_nasabah', function (Blueprint $table) {
-            $table->renameColumn('telp', 'no_telp');
+            // $table->renameColumn('telp', 'no_telp');
         });
     }
 
