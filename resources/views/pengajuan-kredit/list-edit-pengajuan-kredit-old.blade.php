@@ -266,7 +266,7 @@
                                     else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
                                         $avgResult = $item->average_by_penyelia;
                                 }
-                                
+
                                 if ($avgResult > 0 && $avgResult <= 2) {
                                     $status = "merah";
                                 } elseif ($avgResult > 2 && $avgResult <= 3) {
@@ -339,7 +339,7 @@
                                                 class="dropdown-item">Cetak</a>
                                             @if ($item->posisi == 'Selesai')
                                                 @php
-                                                    $tglCetak = DB::table('log_cetak_kkb')
+                                                    $tglCetak = DB::table('log_cetak')
                                                         ->where('id_pengajuan', $item->id_pengajuan)
                                                         ->first();
                                                 @endphp
