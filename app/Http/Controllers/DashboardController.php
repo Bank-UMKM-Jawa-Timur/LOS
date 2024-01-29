@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Exports\DataNominatif;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Database\QueryException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
@@ -115,116 +118,126 @@ class DashboardController extends Controller
         if (!$request->has('tAwal') || !$request->has('tAkhir') || !$request->has('cabang') || !$request->has('export') || !$request->has('k_tanggal')) {
             return redirect()->route('dashboard.index')->withError('Terjadi Kesalahan');
         }
-        $param['tAwal'] = $request->tAwal;
-        $param['tAkhir'] = $request->tAkhir;
-        $pilCabang = $request->cabang;
-        $tAkhir = $request->tAkhir;
-        $tAwal = $request->tAwal;
-        $jExport = $request->export;
-        $type = $request->k_tanggal;
+        try {
+            $param['tAwal'] = $request->tAwal;
+            $param['tAkhir'] = $request->tAkhir;
+            $pilCabang = $request->cabang;
+            $tAkhir = Carbon::parse($request->tAkhir)->format('Y-m-d');
+            $tAwal = Carbon::parse($request->tAwal)->format('Y-m-d');
+            $jExport = $request->export;
+            $type = $request->k_tanggal;
 
-        // New code
-        $seluruh_data = DB::table('cabang AS c')
-                            ->select(
-                                'c.kode_cabang AS kodeC',
-                                'c.cabang',
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui") : \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak") : \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Pincab' GROUP BY id_cabang), 0) AS pincab") : \DB::raw("SUM(IF(p.posisi = 'Pincab', 1,0)) AS pincab"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBP' GROUP BY id_cabang), 0) AS pbp") : \DB::raw("SUM(IF(p.posisi = 'PBP', 1,0)) AS pbp"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBO' GROUP BY id_cabang), 0) AS pbo") : \DB::raw("SUM(IF(p.posisi = 'PBO', 1,0)) AS pbo"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Review Penyelia' GROUP BY id_cabang), 0) AS penyelia") : \DB::raw("SUM(IF(p.posisi = 'Review Penyelia', 1,0)) AS penyelia"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Proses Input Data' GROUP BY id_cabang), 0) AS staff") : \DB::raw("SUM(IF(p.posisi = 'Proses Input Data', 1,0)) AS staff"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses") : \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
-                                        SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
-                                        SUM(IF(p.posisi = 'PBO', 1,0))+
-                                        SUM(IF(p.posisi = 'PBP', 1,0))+
-                                        SUM(IF(p.posisi = 'Pincab', 1,0))+
-                                        SUM(IF(p.posisi = 'Selesai', 1,0))) AS diproses"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' GROUP BY id_cabang), 0) AS total") : \DB::raw("SUM(IF(p.id_cabang = c.id, 1, 0)) AS total"),
-                            )
-                            ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
-                            ->where('c.kode_cabang', '!=', 000)
-                            ->whereNull('p.deleted_at')
-                            ->groupBy('kodeC')
-                            ->orderBy('total', 'desc');
+            // New code
+            $seluruh_data = DB::table('cabang AS c')
+                                ->select(
+                                    'c.kode_cabang AS kodeC',
+                                    'c.cabang',
+                                    DB::raw("IFNULL(SUM(CASE WHEN p.posisi = 'Selesai' THEN 1 ELSE 0 END),0) AS disetujui"),
+                                    DB::raw("IFNULL(SUM(CASE WHEN p.posisi = 'Ditolak' THEN 1 ELSE 0 END),0) AS ditolak"),
+                                    DB::raw("IFNULL(SUM(CASE WHEN p.posisi = 'Pincab' THEN 1 ELSE 0 END),0) AS pincab"),
+                                    DB::raw("IFNULL(SUM(CASE WHEN p.posisi = 'PBP' THEN 1 ELSE 0 END),0) AS pbp"),
+                                    DB::raw("IFNULL(SUM(CASE WHEN p.posisi = 'PBO' THEN 1 ELSE 0 END),0) AS pbo"),
+                                    DB::raw("IFNULL(SUM(CASE WHEN p.posisi = 'Review Penyelia' THEN 1 ELSE 0 END),0) AS penyelia"),
+                                    DB::raw("IFNULL(SUM(CASE WHEN p.posisi = 'Proses Input Data' THEN 1 ELSE 0 END),0) AS staff"),
+                                    DB::raw("(IFNULL(SUM(CASE WHEN p.posisi IN ('Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab') THEN 1 ELSE 0 END),0)) AS diproses"),
+                                    DB::raw("SUM(1) AS total")
+                                )
+                                ->leftJoin('pengajuan AS p', function ($join) {
+                                    $join->on('c.id', '=', 'p.id_cabang')
+                                        ->whereNull('p.deleted_at');
+                                });
+                if ($type == 'kustom') {
+                    $seluruh_data->whereBetween('p.tanggal', [$tAwal, $tAkhir]);
+                }
+                $seluruh_data
+                    ->where('c.kode_cabang', '!=', 000)
+                    ->groupBy('kodeC')
+                    ->orderBy('total', 'desc');
 
-        $seluruh_data_proses = DB::table('cabang AS c')
-                            ->select(
-                                'c.kode_cabang AS kodeC',
-                                'c.cabang',
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui") : \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak") : \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses") : \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
-                                        SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
-                                        SUM(IF(p.posisi = 'PBO', 1,0))+
-                                        SUM(IF(p.posisi = 'PBP', 1,0))+
-                                        SUM(IF(p.posisi = 'Pincab', 1,0))) AS diproses"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' GROUP BY id_cabang), 0) AS total") : \DB::raw("(SUM(IF(p.posisi = 'Selesai', 1,0))+
-                                        SUM(IF(p.posisi = 'Ditolak', 1,0))+
-                                        (
-                                            SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+            $seluruh_data_proses = DB::table('cabang AS c')
+                                ->select(
+                                    'c.kode_cabang AS kodeC',
+                                    'c.cabang',
+                                    \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
+                                    \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
+                                    \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
                                             SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
                                             SUM(IF(p.posisi = 'PBO', 1,0))+
                                             SUM(IF(p.posisi = 'PBP', 1,0))+
-                                            SUM(IF(p.posisi = 'Pincab', 1,0))
-                                        )) AS total"),
-                            )
-                            ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
-                            ->where('c.kode_cabang', '!=', 000)
-                            ->whereNull('p.deleted_at')
-                            ->groupBy('kodeC')
-                            ->orderBy('total', 'desc');
+                                            SUM(IF(p.posisi = 'Pincab', 1,0))) AS diproses"),
+                                    \DB::raw("(SUM(IF(p.posisi = 'Selesai', 1,0))+
+                                            SUM(IF(p.posisi = 'Ditolak', 1,0))+
+                                            (
+                                                SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+                                                SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
+                                                SUM(IF(p.posisi = 'PBO', 1,0))+
+                                                SUM(IF(p.posisi = 'PBP', 1,0))+
+                                                SUM(IF(p.posisi = 'Pincab', 1,0))
+                                            )) AS total"),
+                                );
+                                if ($type == 'kustom') {
+                                    $seluruh_data_proses->whereBetween('p.tanggal', [$tAwal, $tAkhir]);
+                                }
+                                $seluruh_data_proses->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+                                ->where('c.kode_cabang', '!=', 000)
+                                ->whereNull('p.deleted_at')
+                                ->groupBy('kodeC')
+                                ->orderBy('total', 'desc');
+            if ($pilCabang != 'semua') {
+                $seluruh_data = $seluruh_data->where('c.id', $pilCabang);
+                $seluruh_data_proses = $seluruh_data_proses->where('c.id', $pilCabang);
+            }
 
-        if ($pilCabang != 'semua') {
-            $seluruh_data = $seluruh_data->where('c.id', $pilCabang);
-            $seluruh_data_proses = $seluruh_data_proses->where('c.id', $pilCabang);
-        }
+            $seluruh_data = $seluruh_data->get();
+            $seluruh_data_proses = $seluruh_data_proses->get();
+            // End new code
 
-        $seluruh_data = $seluruh_data->get();
-        $seluruh_data_proses = $seluruh_data_proses->get();
-        // End new code
+            if ($jExport == 'pdf') {
+                $param['data'] = $seluruh_data;
+                $param['data2'] = $seluruh_data_proses;
 
-        if ($jExport == 'pdf') {
-            $param['data'] = $seluruh_data;
-            $param['data2'] = $seluruh_data_proses;
-
-            $pdf = PDF::loadView('modal.DataNominatif', $param);
-            // return view('modal.DataNominatif', $param);
-            // Return hasil PDF untuk diunduh atau ditampilkan
-            if ($type != "kesuluruhan") {
-                // return "Tanggal";
-                if ($pilCabang == 'semua') {
-                    return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.pdf');
+                $pdf = PDF::loadView('modal.DataNominatif', $param);
+                // return view('modal.DataNominatif', $param);
+                // Return hasil PDF untuk diunduh atau ditampilkan
+                if ($type != "kesuluruhan") {
+                    if ($pilCabang == 'semua') {
+                        return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.pdf');
+                    } else {
+                        $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
+                        return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang . '.pdf');
+                    }
                 } else {
-                    $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
-                    return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang . '.pdf');
+                    if ($pilCabang == 'semua') {
+                        return $pdf->download('Kategori keseluruhan Semua Cabang' . '.pdf');
+                    } else {
+                        $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
+                        return $pdf->download('Kategori keseluruhan cabang ' . $name_cabang->cabang . '.pdf');
+                    }
                 }
             } else {
-                // return "Keseluruhan";
-                if ($pilCabang == 'semua') {
-                    return $pdf->download('Kategori keseluruhan Semua Cabang' . '.pdf');
+                if ($type != "kesuluruhan") {
+                    if ($pilCabang == 'semua') {
+                        return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.xlsx');
+                    } else {
+                        $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
+                        return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang .'.xlsx');
+                    }
                 } else {
-                    $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
-                    return $pdf->download('Kategori keseluruhan cabang ' . $name_cabang->cabang . '.pdf');
+                    return $seluruh_data;
+                    if ($pilCabang == 'semua') {
+                        return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori keseluruhan Semua Cabang' . '.xlsx');
+                    } else {
+                        $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
+                        return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori keseluruhan cabang ' . $name_cabang->cabang . '.xlsx');
+                    }
                 }
             }
-        } else
-            if ($type != "kesuluruhan") {
-                if ($pilCabang == 'semua') {
-                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.xlsx');
-                } else {
-                    $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
-                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang .'.xlsx');
-                }
-            } else {
-                if ($pilCabang == 'semua') {
-                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori keseluruhan Semua Cabang' . '.xlsx');
-                } else {
-                    $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
-                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori keseluruhan cabang ' . $name_cabang->cabang . '.xlsx');
-                }
-            }
+
+        } catch (Exception $th) {
+            return $th;
+        } catch (QueryException $th){
+            return $th;
         }
     }
 
+}
