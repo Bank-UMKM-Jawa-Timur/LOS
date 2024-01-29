@@ -518,7 +518,7 @@ null => 1,
         </div>
         @endif
         <div class="row">
-           
+
             @foreach ($dataLevelDua as $item)
             @php
             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
@@ -677,7 +677,7 @@ null => 1,
                                         $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                                                     ->where('level', 4)
                                                                                     ->where('parent_id', $item3->id)
-                                                                                    ->get(); 
+                                                                                    ->get();
                                         @endphp
                                             <tr>
                                                 <td width='57%'>{{ $item3->field }}</td>
@@ -686,7 +686,7 @@ null => 1,
                                     @endforeach
                                 </table>
                             </div>
-                            
+
                         @endforeach
                     @endforeach
                 </div>
@@ -699,7 +699,7 @@ null => 1,
                       ->where('level', 3)
                       ->whereNull('parent_id')
                       ->get();
-                      
+
                       $results = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) {
                                         $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
                                             ->where('perhitungan_kredit.temp_calon_nasabah_id', '=', '5652');
@@ -708,8 +708,8 @@ null => 1,
                                     ->where('mst_item_perhitungan_kredit.level', '=', '3')
                                     ->whereNull('mst_item_perhitungan_kredit.parent_id')
                                     ->whereNull('perhitungan_kredit.temp_calon_nasabah_id')
-                                    ->get();   
-                      
+                                    ->get();
+
                       @endphp
                         <table class="table table-bordered">
                             @foreach ($results as $item3NoParent)
@@ -734,7 +734,7 @@ null => 1,
                     $lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                                 ->where('level', 3)
                                                                 ->where('parent_id', $item2NoParent->id)
-                                                                ->get();            
+                                                                ->get();
                     @endphp
                         <div class="form-group col-md-6">
                             <table class="table table-bordered">
@@ -762,7 +762,7 @@ null => 1,
                 <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                     placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
             </div>
-            
+
             @else
             @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
                 @if ($value->nama != 'Aspek Keuangan')
@@ -802,7 +802,7 @@ null => 1,
                         </div>
                     </div>
                 </div>
-                
+
             @endif
             @elseif ($item->opsi_jawaban == 'file')
                 @if ($value->nama != 'Aspek Keuangan')
@@ -1187,7 +1187,7 @@ null => 1,
                     <div class="col"></div>
                 </div>
             @endif
-            
+
             <div class="form-group col-md-12">
                 <hr style="border: 0.2px solid #E3E6EA;">
                 <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
@@ -1263,7 +1263,7 @@ null => 1,
 <script>
 
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
-    let dataAspekArr;
+        let dataAspekArr;
         $(document).ready(function() {
             let valSkema = $("#skema_kredit").val();
             if (valSkema == null || valSkema == '') {
@@ -2476,7 +2476,7 @@ null => 1,
                 }
             }
         })
-        
+
 
         /*var fotoSp = document.getElementById("foto_sp");
         var selectedFile;
@@ -2546,8 +2546,8 @@ null => 1,
             }
 
         }
-        
-      
+
+
         // var docKebKre = document.getElementById("perhitungan_kebutuhan_kredit");
         // var selectedFile;
 
@@ -2613,7 +2613,7 @@ null => 1,
                     $("#skema").append(`<option value="">- Pilih Skema Kredit -</option>`)
                     $("#limit").empty();
                     $("#limit").append(`<option value="">- Pilih Limit -</option>`)
-                    
+
                     if(res){
                         $.each(res, function(i, v){
                             $("#skema").append(`<option value="${v.id}">${v.name}</option>`)
@@ -2877,7 +2877,7 @@ null => 1,
         selectValueElementBulan = $("#periode").val();
         selectElementTahun = $("#periode_tahun").find(":selected").text();
         var titlePeriode = ``;
-        
+
         if (indexBtnSimpan == 1) {
             $('#perhitungan_kredit_with_value').append(`
                 <br>
@@ -2951,7 +2951,7 @@ null => 1,
                     }
                 });
             });
-        }    
+        }
 
         async function getDataPerhitunganKreditLev1() {
             try {
@@ -3163,9 +3163,9 @@ null => 1,
                                                 <td style="text-align: center">:</td>
                                                 <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
                                                 <td class="text-${itemAspekKeuangan3.align}">`;
-    
+
                                         var isFirstNominalDisplayed = false;
-                                        
+
                                         res4.result.forEach(function(item) {
                                             if (item.field === fieldValue) {
                                                 if (isFirstNominalDisplayed) {
@@ -3175,12 +3175,12 @@ null => 1,
                                                 }
                                             }
                                         });
-    
+
                                         rowLevel3 += `
                                                 </td>
                                             </tr>
                                         `;
-    
+
                                         $('#lev1_count_dua').append(rowLevel3);
                                         fieldValues.push(fieldValue);
                                     }
@@ -3195,7 +3195,7 @@ null => 1,
                                                 ` : `
                                                     <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
                                                 `}
-                                                
+
                                             </tr>
                                         `);
                                     }else{

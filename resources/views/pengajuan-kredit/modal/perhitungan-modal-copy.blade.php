@@ -1,33 +1,53 @@
 {{--  Modal perhitungan aspek keuangan  --}}
 {{-- <!-- Modal --> --}}
 <style>
-  #loading-simpan-perhitungan {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
+    #loading-simpan-perhitungan {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ced4da;
+        height: calc(2.25rem + 2px);
+        padding: .375rem .75rem;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: inherit;
+        color: inherit;
+        padding: 0px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background: var(--colorPrimary);
+    }
 </style>
 @php
   $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->orderBy('sequence', 'asc')->get();
 @endphp
-<div class="modal fade" id="perhitunganModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+<div class="modal-layout hidden fade" id="perhitunganModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div id="loading-simpan-perhitungan" style="display: none;" class="text-center">
     <img src="{{ asset('img/loading3.gif') }}" alt="Loading..." style="width: 100px; height: 100px;">
   </div>
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-sm  -z-50 modal-dialog modal-lg" role="document">
       <div class="modal-content" id="perhitunganModalAfterLoading">
-          <div class="modal-header">
-              <h5 class="modal-title">Perhitungan</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
+          <div class="modal-head">
+            <div class="title">
+                <h5 class="modal-title">Perhitungan</h5>
+            </div>
+              <button data-dismiss-id="exampleModal">
+                <iconify-icon
+                    icon="iconamoon:close-bold"
+                    class="text-2xl"
+                ></iconify-icon>
+            </button>
           </div>
           <div class="modal-body">
               <!-- form -->
@@ -82,7 +102,7 @@
                     @foreach ($lev1 as $item)
                       <div class="card @if(!$item->is_card_show) border-0 p-0 @else mb-4 @endif">
                         @if ($item->is_card_show)
-                          <h4 class="card-header">{{ $item->field }}</h4>  
+                          <h4 class="card-header">{{ $item->field }}</h4>
                         @endif
                         <div class="card-body @if(!$item->is_card_show && !$item->is_two_columns) p-0 @endif">
                           @if ($item->is_two_columns)
@@ -108,7 +128,7 @@
                                           @foreach ($lev3 as $item3)
                                             @if (!$item3->is_hidden)
                                               <div class="form-group">
-                                                  <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
+                                                  <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
                                                   <div class="input-group">
                                                     <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                                       id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
@@ -219,7 +239,7 @@
                                                       ->where('parent_id', $item2->id)
                                                       ->where('is_label_hidden', 0)
                                                       ->get();
-                                                      
+
                                                 unset($levelTigaShow);
                                                 unset($levelTigaHidden);
                                                 unset($levelTigaLabelTotal);
@@ -232,7 +252,7 @@
                                                         array_push($levelTigaLabelTotal, $value->field == 'Total' ? ' ' . str_replace('Sebelum Kredit', '', $item2->field) : '');
                                                     }
                                                 }
-      
+
                                                 if (count($lev3Show) > 0) {
                                                     foreach ($lev3Show as $key3Show => $value) {
                                                         array_push($levelTigaShow, $value);
@@ -245,12 +265,12 @@
                                                   <td>
                                                     <input type="{{ $levelTigaHidden[$key]->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$levelTigaHidden[$key]->id}}" name="inpLevelTiga[{{$levelTigaHidden[$key]->id}}]"
                                                             id="inp_{{$levelTigaHidden[$key]->id}}" data-formula="{{$levelTigaHidden[$key]->formula}}" data-detail="{{$levelTigaHidden[$key]->have_detail}}"
-                                                            @if ($levelTigaHidden[$key]->readonly) readonly @endif onkeyup="calcForm()"/>  
+                                                            @if ($levelTigaHidden[$key]->readonly) readonly @endif onkeyup="calcForm()"/>
                                                   </td>
                                                   <td>
                                                     <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                                             id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                                            @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>  
+                                                            @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
                                                   </td>
                                                 </tr>
                                             @endforeach
@@ -304,12 +324,12 @@
                                           <td>
                                             <input type="{{ $levelTigaHidden[$key]->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$levelTigaHidden[$key]->id}}" name="inpLevelTiga[{{$levelTigaHidden[$key]->id}}]"
                                                     id="inp_{{$levelTigaHidden[$key]->id}}" data-formula="{{$levelTigaHidden[$key]->formula}}" data-detail="{{$levelTigaHidden[$key]->have_detail}}"
-                                                    @if ($levelTigaHidden[$key]->readonly) readonly @endif onkeyup="calcForm()"/>  
+                                                    @if ($levelTigaHidden[$key]->readonly) readonly @endif onkeyup="calcForm()"/>
                                           </td>
                                           <td>
                                             <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                                     id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                                    @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>  
+                                                    @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
                                           </td>
                                         </tr>
                                     @endforeach
@@ -343,7 +363,7 @@
                                             @if (!$item3->is_hidden)
                                                 <div class=" @if($item2->inline) col @elseif( !$item->is_card_show && count($lev3) > 1) col-md-6 @else col-md-12 @endif">
                                                   <div class="form-group">
-                                                      <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
+                                                      <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
                                                       <div class="input-group">
                                                         <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}} {{ str_replace(' ', '_', strtolower($item3->field)) }}" name="inpLevelTiga[{{$item3->id}}]"
                                                           id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
@@ -462,7 +482,7 @@
                                   @foreach ($lev3 as $item3)
                                     @if (!$item3->is_hidden)
                                       <div class="form-group">
-                                          <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
+                                          <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
                                           <div class="input-group">
                                             <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                               id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
@@ -723,7 +743,7 @@
               </td>
             `
           }
-          
+
       })
       content += `<td>
                               <button
@@ -818,7 +838,7 @@
     } else{
       $(".info_plafon_usulan").empty();
     }
-  } 
+  }
 
   function cekTenor(){
     var jangkaWaktuKredit = parseInt($(".jangka_waktu_kredit").val() != 0 ? $(".jangka_waktu_kredit").val() : 0);
@@ -847,9 +867,9 @@
 
   $(document).on('click', function(e) {
     var $navsearch = $('.collapse');
-    if(!$(e.target).closest($navsearch).length && $navsearch.is(':visible')) {
-        $navsearch.collapse('hide')
-    }        
+    // if(!$(e.target).closest($navsearch).length && $navsearch.is(':visible')) {
+    //     $navsearch.collapse('hide')
+    // }
 })
 </script>
 <style>

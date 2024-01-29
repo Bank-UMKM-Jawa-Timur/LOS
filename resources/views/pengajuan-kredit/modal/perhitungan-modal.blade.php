@@ -2,16 +2,20 @@
 {{-- <!-- Modal --> --}}
 <style>
   #loading-simpan-perhitungan {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    .select2 {
+        width: 100% !important;
+    }
+
 }
 </style>
 @php
@@ -105,7 +109,7 @@
                                       @foreach ($lev3 as $item3)
                                         @if (!$item3->is_hidden)
                                           <div class="form-group">
-                                              <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
+                                              <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
                                               <div class="input-group">
                                                 <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                                   id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
@@ -373,7 +377,7 @@
               </td>
             `
           }
-          
+
       })
       content += `<td>
                               <button

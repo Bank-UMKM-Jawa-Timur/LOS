@@ -1708,6 +1708,9 @@ video {
 .top-\[4rem\] {
   top: 4rem;
 }
+.-z-50 {
+  z-index: -50;
+}
 .z-0 {
   z-index: 0;
 }
@@ -1761,6 +1764,10 @@ video {
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .-ml-px {
   margin-left: -1px;
@@ -1965,6 +1972,9 @@ video {
 }
 .min-h-screen {
   min-height: 100vh;
+}
+.w-0 {
+  width: 0px;
 }
 .w-10 {
   width: 2.5rem;
