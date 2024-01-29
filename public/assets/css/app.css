@@ -1672,6 +1672,10 @@ video {
 .sticky {
   position: sticky;
 }
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
+}
 .-right-7 {
   right: -1.75rem;
 }
@@ -1705,11 +1709,11 @@ video {
 .top-3 {
   top: 0.75rem;
 }
+.top-\[10px\] {
+  top: 10px;
+}
 .top-\[4rem\] {
   top: 4rem;
-}
-.-z-50 {
-  z-index: -50;
 }
 .z-0 {
   z-index: 0;

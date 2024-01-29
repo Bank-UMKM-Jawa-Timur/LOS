@@ -2468,6 +2468,7 @@ $dataIndex = match ($skema) {
     // hitung Repayment Capacity
     function hitungRepaymentCapacity() {
         let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
+        console.log(omzetPenjualan);
         let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
         let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
         let installment = parseInt($('#installment').val().split('.').join(''));
