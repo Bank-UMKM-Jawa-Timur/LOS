@@ -158,7 +158,7 @@ class PengajuanKreditController extends Controller
     public function getKaryawanFromAPI($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -182,14 +182,12 @@ class PengajuanKreditController extends Controller
     public static function getKaryawanFromAPIStatic($nip)
     {
         // retrieve from api
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $apiURL = $host . '/api/karyawan';
-
         try {
-            $response = Http::timeout(3)->withOptions(['verify' => false])->get($apiURL, [
+            $response = Http::withOptions(['verify' => false])->get($apiURL, [
                 'nip' => $nip,
             ]);
-
             $statusCode = $response->status();
             $responseBody = json_decode($response->getBody(), true);
 
@@ -211,7 +209,7 @@ class PengajuanKreditController extends Controller
 
     private function getNameKaryawan($nip)
     {
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -3850,7 +3848,7 @@ class PengajuanKreditController extends Controller
         if ($data) {
             $data->restore();
             event(new EventMonitoring('restore pengajuan'));
-            
+
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama.' berhasil direstore.');
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
@@ -3868,7 +3866,7 @@ class PengajuanKreditController extends Controller
             if($dataPengajuan->posisi == 'Pincab'){
                 $dari = 'Pincab';
 
-                //If data pengajuan di pincab 
+                //If data pengajuan di pincab
                 if($dataPengajuan->id_pbp != null){
                     // If cabang ada pbp
                     $dataPengajuan->posisi = 'PBP';
@@ -3898,7 +3896,7 @@ class PengajuanKreditController extends Controller
             } else if($dataPengajuan->posisi == 'PBO'){
                 $dari = 'PBO';
                 $ke = 'Review Penyelia';
-                
+
                 // If data pengajuan di PBO
                 $dataPengajuan->posisi = 'Review Penyelia';
             } else{
