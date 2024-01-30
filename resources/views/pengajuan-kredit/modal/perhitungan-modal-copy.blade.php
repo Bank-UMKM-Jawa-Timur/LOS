@@ -662,13 +662,17 @@
                 <!-- end form -->
             </div>
             <!-- button wrapper -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    Batal
-                </button>
-                <button type="button" class="btn btn-danger" id="btnSimpanPerhitungan">
-                    Simpan
-                </button>
+            <div class="modal-footer flex justify-end">
+                <div>
+                    <button type="button" class="btn-cancel" data-dismiss-id="perhitunganModal">
+                        Batal
+                    </button>
+                </div>
+                <div>
+                    <button type="button" class="px-7 py-3 rounded font-semibold flex gap-3 bg-theme-primary border text-white btn btn-primary btn btn-danger" id="btnSimpanPerhitungan">
+                        Simpan
+                    </button>
+                </div>
             </div>
         </div>
     </div>
