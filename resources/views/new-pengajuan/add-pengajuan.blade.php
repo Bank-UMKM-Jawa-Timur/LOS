@@ -3043,7 +3043,8 @@ $dataIndex = match ($skema) {
                         resolve(res);
                         setTimeout(function(){
                             $('#loading-simpan-perhitungan').hide();
-                            $('.modal').modal('hide');
+                            $('.modal-layout').modal('hide');
+                            $('.modal-layout').addClass('hidden');
                         }, 1000);
                     },
                     error: function(err) {
@@ -3129,7 +3130,7 @@ $dataIndex = match ($skema) {
                                     <div class="card">
                                         <h5 class="card-header">${element.field}</h5>
                                         <div class="card-body">
-                                            <table class="table table-bordered" id="lev1_count_dua">
+                                            <table class="tables table table-bordered" id="lev1_count_dua">
                                             </table>
                                         </div>
                                     </div>
@@ -3184,7 +3185,7 @@ $dataIndex = match ($skema) {
                                             <div class="card">
                                                 <h5 class="card-header">${element2.field}</h5>
                                                 <div class="card-body">
-                                                    <table class="table table-bordered" id="${uniqueTableId2}">
+                                                    <table class="tables table table-bordered" id="${uniqueTableId2}">
                                                     </table>
                                                 </div>
                                             </div>
@@ -3198,7 +3199,7 @@ $dataIndex = match ($skema) {
                                                 <div class="card">
                                                     <h5 class="card-header">${element2.field}</h5>
                                                     <div class="card-body">
-                                                        <table class="table table-bordered" id="table_max_pembiayaan">
+                                                        <table class="tables table table-bordered" id="table_max_pembiayaan">
                                                         </table>
                                                     </div>
                                                 </div>
@@ -3210,7 +3211,7 @@ $dataIndex = match ($skema) {
                                                 <div class="card">
                                                     <h5 class="card-header">${element2.field}</h5>
                                                     <div class="card-body">
-                                                        <table class="table table-bordered" id="table_plafon">
+                                                        <table class="tables table table-bordered" id="table_plafon">
                                                         </table>
                                                     </div>
                                                 </div>
@@ -3222,7 +3223,7 @@ $dataIndex = match ($skema) {
                         }else{
                             $('#lev_count_satu').append(`
                                 <div class="form-group col-md-6">
-                                    <table class="table table-bordered" id="${uniqueTableId}">
+                                    <table class="tables table table-bordered" id="${uniqueTableId}">
                                         <tr>
                                             <th colspan="2">${element2.field}</th>
                                         </tr>
@@ -3235,7 +3236,7 @@ $dataIndex = match ($skema) {
                                             +
                                         </div>
                                     </div>
-                                    <table class="table table-bordered" id="total_lev1${element2.id}">
+                                    <table class="tables table table-bordered" id="total_lev1${element2.id}">
                                     </table>
                                 </div>
                             `);
@@ -3326,7 +3327,7 @@ $dataIndex = match ($skema) {
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    <table class="table table-bordered">
+                                                    <table class="tables table table-bordered">
                                                         <tr>
                                                             <td width="47%">${fieldValue}</td>
                                                             <td width="6%" style="text-align: center">:</td>
