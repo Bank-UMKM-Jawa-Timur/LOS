@@ -795,6 +795,25 @@ video {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
+    .card {
+  display: block;
+  max-width: 100%;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  padding: 1.5rem;
+}
+    .card-header {
+  margin-bottom: 0.75rem;
+  border-radius: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+  padding: 1rem;
+  font-weight: 700;
+}
     .form-input {
   width: 100%;
   border-radius: 0.25rem;
@@ -822,6 +841,53 @@ video {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+    .form-control {
+  width: 100%;
+  border-radius: 0.25rem;
+  border-width: 1px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
+}
+    .form-control:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
+    .form-control:focus {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+    input[readonly] {
+  width: 100%;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-left-width: 4px;
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
     .form-input-read-only {
   width: 100%;
@@ -1676,6 +1742,14 @@ video {
   top: 0px;
   bottom: 0px;
 }
+.inset-y-3 {
+  top: 0.75rem;
+  bottom: 0.75rem;
+}
+.inset-y-14 {
+  top: 3.5rem;
+  bottom: 3.5rem;
+}
 .-right-7 {
   right: -1.75rem;
 }
@@ -1709,11 +1783,11 @@ video {
 .top-3 {
   top: 0.75rem;
 }
-.top-\[10px\] {
-  top: 10px;
-}
 .top-\[4rem\] {
   top: 4rem;
+}
+.end-0 {
+  inset-inline-end: 0px;
 }
 .z-0 {
   z-index: 0;
@@ -1738,6 +1812,9 @@ video {
 }
 .col-span-2 {
   grid-column: span 2 / span 2;
+}
+.col-span-full {
+  grid-column: 1 / -1;
 }
 .m-0 {
   margin: 0px;
@@ -2138,6 +2215,9 @@ video {
 }
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.flex-row-reverse {
+  flex-direction: row-reverse;
 }
 .flex-col {
   flex-direction: column;
@@ -2609,6 +2689,12 @@ video {
 }
 .pt-8 {
   padding-top: 2rem;
+}
+.ps-3 {
+  padding-inline-start: 0.75rem;
+}
+.ps-3\.5 {
+  padding-inline-start: 0.875rem;
 }
 .text-left {
   text-align: left;

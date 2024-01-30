@@ -156,16 +156,6 @@ null => 1,
                 @enderror
             </div>
             <div class="form-group col-md-12">
-                <label for="">No Telp</label>
-                <input type="text" name="no_telp" id="nama" class="form-control @error('no_telp') is-invalid @enderror"
-                    placeholder="No Telp" value="" required maxlength="255">
-                @error('no_telp')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-                @enderror
-            </div>
-            <div class="form-group col-md-12">
                 <label for="">Alamat Rumah</label>
                 <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror"
                     maxlength="255" id="alamat_rumah" cols="30" rows="4"
@@ -1263,7 +1253,7 @@ null => 1,
 <script>
 
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
-        let dataAspekArr;
+    let dataAspekArr;
         $(document).ready(function() {
             let valSkema = $("#skema_kredit").val();
             if (valSkema == null || valSkema == '') {
@@ -3196,7 +3186,7 @@ null => 1,
                                                     <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
                                                 `}
 
-                                            </tr>
+                                          </tr>
                                         `);
                                     }else{
                                         if (element2.field == "Maksimal Pembiayaan") {
@@ -3294,8 +3284,8 @@ null => 1,
                 console.error(error);
                 $('#perhitunganModalAfterLoading').hide();
                 $('#loading-simpan-perhitungan').hide();
-                $('.modal').modal('hide');
-            }
+                  $('.modal').modal('hide');
+          }
         }
 
 
