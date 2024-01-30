@@ -30,6 +30,7 @@ use App\Models\MstSkemaKredit;
 use App\Models\MstSkemaLimit;
 use App\Models\PerhitunganKredit;
 use App\Models\PeriodeAspekKeuangan;
+use App\Models\PlafonUsulan;
 use App\Models\TipeModel;
 use App\Models\User;
 use App\Repository\PengajuanDagulirRepository;
