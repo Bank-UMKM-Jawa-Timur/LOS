@@ -198,12 +198,10 @@ class PengajuanKreditController extends Controller
         $konfiAPI = DB::table('api_configuration')->first();
         $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
-
         try {
-            $response = Http::timeout(3)->withOptions(['verify' => false])->get($apiURL, [
+            $response = Http::withOptions(['verify' => false])->get($apiURL, [
                 'nip' => $nip,
             ]);
-
             $statusCode = $response->status();
             $responseBody = json_decode($response->getBody(), true);
             if ($responseBody != null) {
