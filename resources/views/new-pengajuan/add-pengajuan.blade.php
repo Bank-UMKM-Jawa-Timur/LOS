@@ -1402,7 +1402,7 @@ $dataIndex = match ($skema) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {
                     var val = $(this).attr('id').toString()
-                    if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi") {
+                    if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi" && val != "repayment_capacity_opsi") {
                         //console.log(val)
                         nullValue.push(val.replaceAll("_", " "))
                     }
