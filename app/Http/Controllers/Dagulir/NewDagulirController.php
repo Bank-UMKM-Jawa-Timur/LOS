@@ -30,6 +30,7 @@ use App\Models\MasterDDLoan;
 use App\Models\MerkModel;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanDagulirTemp;
+use App\Models\PerhitunganKredit;
 use App\Models\PlafonUsulan;
 use App\Models\TipeModel;
 use App\Models\User;
@@ -759,6 +760,11 @@ class NewDagulirController extends Controller
                 JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
                 PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
             } else {
+                PerhitunganKredit::where('temp_calon_nasabah_id', $tempNasabah->id)
+                ->update([
+                    'pengajuan_id' => $id_pengajuan,
+                    'temp_calon_nasabah_id' => null
+                ]);
                 JawabanTemp::where('id_temporary_calon_nasabah', $request->id_dagulir_temp)->delete();
                 JawabanTempModel::where('id_temporary_calon_nasabah', $request->id_dagulir_temp)->delete();
                 CalonNasabahTemp::find($request->id_dagulir_temp)->delete();

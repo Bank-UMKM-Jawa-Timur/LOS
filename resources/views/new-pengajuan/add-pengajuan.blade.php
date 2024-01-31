@@ -2879,6 +2879,7 @@ $dataIndex = match ($skema) {
                                                 if(id_formula != 'inp_68'){
                                                     result = result < 0 ? `(${formatrupiah(parseInt(result).toString())})` : formatrupiah(parseInt(result).toString())
                                                 } else{
+                                                    result = isNaN(result) ? 0 : result;
                                                     $("#repayment_capacity").val(result)
                                                 }
                                                 $(`#${id_formula}`).val(result)
@@ -2963,13 +2964,13 @@ $dataIndex = match ($skema) {
         console.log('test');
         indexBtnSimpan += 1;
         let data = {
-            idCalonNasabah: $("id_nasabah").val()
+            idCalonNasabah: $("id_dagulir_temp").val()
         }
         $("#perhitunganModal input").each(function(){
             let input = $(this);
 
             data[input.attr("name")] = input.val();
-            data['idCalonNasabah'] = $("#id_nasabah").val();
+            data['idCalonNasabah'] = $("#id_dagulir_temp").val();
         });
 
         $('#peringatan-pengajuan').empty();

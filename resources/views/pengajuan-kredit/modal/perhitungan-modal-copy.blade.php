@@ -861,6 +861,7 @@
         var table = document.getElementById('collapseExample');
         if (table.classList.contains('hidden')) {
             table.classList.remove('hidden');
+            table.classList.add('block');
             table.classList.remove('collapse');
         } else {
             table.classList.add('hidden');
@@ -868,9 +869,9 @@
     });
     document.addEventListener('click', function(e) {
         var navsearch = document.querySelector('.collapse');
-        if (!navsearch.contains(e.target) && navsearch.classList.contains('show')) {
-            navsearch.classList.remove('show');
-        }
+        // if (!navsearch.contains(e.target) && navsearch.classList.contains('block')) {
+        //     navsearch.classList.removeClass('hidden');
+        // }
     });
     $("[data-dismiss-id]").on("click", function () {
         var dismissId = $(this).data("dismiss-id");
