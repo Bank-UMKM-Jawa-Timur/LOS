@@ -15,9 +15,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('pembayaran:cron')
-                ->daily()
-                ->appendOutputTo(storage_path('logs/console.log'));
+        // $schedule->command('pembayaran:cron')
+        //         ->daily()
+        //         ->appendOutputTo(storage_path('logs/console.log'));
+        // $schedule->command('backup:clean')->daily()->at('22:30')->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:run')->daily()->at('00:00')->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:clean')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:run')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        $schedule->command('backup:clean')->daily()->at('22:30')->appendOutputTo(storage_path('logs/laravel.log'));
+        $schedule->command('backup:run --only-db')->daily()->at('00:00')->appendOutputTo(storage_path('logs/laravel.log'));
+        $schedule->command('backup:monitor')->daily()->at('00:00')->appendOutputTo(storage_path('logs/laravel.log'));
     }
 
     /**
