@@ -2742,7 +2742,8 @@ $dataIndex = match ($skema) {
     })
 
 </script>
-@include('pengajuan-kredit.partials.create-save-script')
+{{-- @include('pengajuan-kredit.partials.create-save-script') --}}
+@include('dagulir.partials.create-save-temp')
 @include('pengajuan-kredit.modal.perhitungan-modal-copy')
 <script src="{{ asset('') }}js/custom.js"></script>
 <script>
