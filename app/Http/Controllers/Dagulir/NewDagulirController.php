@@ -760,7 +760,7 @@ class NewDagulirController extends Controller
                 JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
                 PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
             } else {
-                PerhitunganKredit::where('temp_calon_nasabah_id', $tempNasabah->id)
+                PerhitunganKredit::where('temp_calon_nasabah_id', $request->id_dagulir_temp)
                 ->update([
                     'pengajuan_id' => $id_pengajuan,
                     'temp_calon_nasabah_id' => null
