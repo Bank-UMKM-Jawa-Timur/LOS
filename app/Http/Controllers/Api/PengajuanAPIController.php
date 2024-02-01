@@ -24,7 +24,7 @@ class PengajuanAPIController extends Controller
         $apiURL = $host . '/api/karyawan';
 
         try {
-            $response = Http::timeout(3)->withOptions(['verify' => false])->get($apiURL, [
+            $response = Http::withOptions(['verify' => false])->get($apiURL, [
                 'nip' => $nip,
             ]);
 
