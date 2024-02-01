@@ -627,7 +627,6 @@ $dataIndex = match ($skema) {
                                                             @php
                                                                 $idLevelEmpat = str_replace(' ', '_', strtolower($itemEmpat->nama));
                                                             @endphp
-
                                                             @if ($itemEmpat->opsi_jawaban == 'input text')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
@@ -637,16 +636,19 @@ $dataIndex = match ($skema) {
                                                                         <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                                         @if ($itemEmpat->nama == 'Masa Berlaku Asuransi Penjaminan')
-                                                                            <div class="input-group">
-                                                                                <input type="text" maxlength="255"
-                                                                                    name="informasi[{{ $itemEmpat->id }}]"
-                                                                                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
-                                                                                    placeholder="Masukkan informasi"
-                                                                                    class="form-input only-number"
-                                                                                    >
-                                                                                <div class="input-group-append">
-                                                                                    <div class="input-group-text" id="addon_tenor_yang_diminta">
-                                                                                        Bulan</div>
+                                                                            <div class="flex items-center input-group">
+                                                                                <div class="flex-1">
+                                                                                    <input type="text" maxlength="255"
+                                                                                        name="informasi[{{ $itemEmpat->id }}]"
+                                                                                        id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
+                                                                                        placeholder="Masukkan informasi"
+                                                                                        class="form-input only-number"
+                                                                                        >
+                                                                                </div>
+                                                                                <div class="flex-shrink-0 mt-2.5rem input-group-append">
+                                                                                    <div class="form-input bg-gray-100 input-group-text" id="addon_tenor_yang_diminta">
+                                                                                        Bulan
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         @else
@@ -670,7 +672,7 @@ $dataIndex = match ($skema) {
                                                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                                                     id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                                    class="form-input only-number">
+                                                                                    class="form-input only-number {{$itemEmpat->is_rupiah ? 'rupiah' : ''}}">
                                                                             </div>
                                                                             @if ($itemEmpat->suffix)
                                                                                 <div class="flex-shrink-0 mt-2.5rem">
@@ -2468,7 +2470,7 @@ $dataIndex = match ($skema) {
     // hitung Repayment Capacity
     function hitungRepaymentCapacity() {
         let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
-        console.log(omzetPenjualan);
+        console.log($('#installment').val());
         let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
         let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
         let installment = parseInt($('#installment').val().split('.').join(''));
