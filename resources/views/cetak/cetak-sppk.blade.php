@@ -18,7 +18,7 @@
         }
         @media print {
             html, body {
-                height: 99%;    
+                height: 99%;
             }
         }
         .data-surat {
@@ -48,9 +48,9 @@
         }
 
         ul {
-            list-style-type: none; 
+            list-style-type: none;
             margin: 3px 3px 3px 3px;
-            padding-left: 0; 
+            padding-left: 0;
         }
 
         li {
@@ -60,7 +60,7 @@
         }
 
         li::before {
-            content: "- "; 
+            content: "- ";
         }
 
         p {
@@ -70,14 +70,14 @@
 </head>
 @php
     function rupiah($angka){
-	
+
         $hasil_rupiah = number_format($angka,0,',','.');
         return $hasil_rupiah;
     }
 
     function getKaryawan($nip){
         // from api
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $apiURL = $host . '/api/karyawan';
 
         $response = Http::get($apiURL, [
@@ -110,7 +110,7 @@
                 <td>Kepada</td>
             </tr>
         </table>
-    
+
         <table class="table-header-yth">
             <tr>
                 <td style="width: 10px">Yth</td>
@@ -118,7 +118,7 @@
                 <td>{{ $dataNasabah->nama }}</td>
             </tr>
         </table>
-    
+
         <table class="table-header-almt">
             <tr>
                 <td>Di -</td>
@@ -126,13 +126,13 @@
             <tr>
                 <td></td>
                 <td>
-                    Kab. {{ Str::title($dataNasabah->kabupaten) }}, Kec. {{ Str::title($dataNasabah->kecamatan) }}, Desa. {{ Str::title($dataNasabah->desa) }}, Alamat. 
+                    Kab. {{ Str::title($dataNasabah->kabupaten) }}, Kec. {{ Str::title($dataNasabah->kecamatan) }}, Desa. {{ Str::title($dataNasabah->desa) }}, Alamat.
                     {{ $dataNasabah->alamat_rumah }}</td>
             </tr>
         </table>
-    
+
         <br>
-    
+
         <table class="table-header-perihal">
             <tr>
                 <td style="width: 7%">Perihal</td>
@@ -140,10 +140,10 @@
                 <td><b><u>Surat Pemberitahuan Persetujuan Kredit</u></b></td>
             </tr>
         </table>
-    
-        <p>Dengan ini kami beritahukan, bahwa permohonan kredit saudara sesuai buku register nomor ............/{{ $dataCabang->kode_cabang }}/SPPK/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }} tanggal {{ $tgl }}, 
+
+        <p>Dengan ini kami beritahukan, bahwa permohonan kredit saudara sesuai buku register nomor ............/{{ $dataCabang->kode_cabang }}/SPPK/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }} tanggal {{ $tgl }},
            pada prinsipnya dapat kami setujui dengan ketentuan sebagai berikut:</p>
-    
+
         <table class="table-body">
             <tr>
                 <td>1.</td>
@@ -191,7 +191,7 @@
                 <td>8.</td>
                 <td style="width: 25%">Denda</td>
                 <td style="width: 2%">:</td>
-                <td >  
+                <td >
                     <ul>
                         <li>Terhadap kelambatan pembayaran angsuaran kredit lebih dari 7 (tujuh) hari sesudah tanggal angsuran yang telah ditentukan
                             dikenakan denda sebesar 1% (satu persen) perbulan dari jumlah angsuran pokok dan bunga yang harus dibayar dan dihitung secara harian.

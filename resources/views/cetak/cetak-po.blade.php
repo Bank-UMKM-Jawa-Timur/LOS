@@ -19,7 +19,7 @@
         }
         @media print {
             html, body {
-                height: 99%;    
+                height: 99%;
             }
         }
         .data-surat {
@@ -44,9 +44,9 @@
         }
 
         ul {
-            list-style-type: none; 
+            list-style-type: none;
             margin: 3px 3px 3px 3px;
-            padding-left: 0; 
+            padding-left: 0;
         }
 
         li {
@@ -56,7 +56,7 @@
         }
 
         li::before {
-            content: "- "; 
+            content: "- ";
         }
 
         p {
@@ -67,7 +67,7 @@
 @php
     function getKaryawan($nip){
         // from api
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $apiURL = $host . '/api/karyawan';
 
         $response = Http::get($apiURL, [
@@ -95,7 +95,7 @@
                 <td style="width: 0.5%">Kota, {{ $tgl }}</td>
             </tr>
         </table>
-    
+
         <table class="table-header-yth">
             <tr>
                 <td>Kepada Yth,</td>
@@ -107,7 +107,7 @@
                 <td>Melalui PT. BPR JATIM Kantor Cabang {{ $dataCabang->cabang }}</td>
             </tr>
         </table>
-    
+
         <table class="table-header-almt">
             <tr>
                 <td>{{ $dataCabang->alamat }}</td>
@@ -121,14 +121,14 @@
             <tr>
                 <td></td>
                 <td>
-                    Kab. {{ Str::title($dataNasabah->kabupaten) }}, Kec. {{ Str::title($dataNasabah->kecamatan) }}, Desa. {{ Str::title($dataNasabah->desa) }}, Alamat. 
+                    Kab. {{ Str::title($dataNasabah->kabupaten) }}, Kec. {{ Str::title($dataNasabah->kecamatan) }}, Desa. {{ Str::title($dataNasabah->desa) }}, Alamat.
                     {{ $dataNasabah->alamat_rumah }}
                 </td>
             </tr>
         </table>
-    
+
         <br>
-    
+
         <table class="table-header-perihal" style="margin-bottom: 10px">
             <tr>
                 <td style="width: 7%">Perihal</td>
@@ -141,10 +141,10 @@
                 </td>
             </tr>
         </table>
-        
+
         {{-- <p style="vertical-align: ">
         </p> --}}
-    
+
         <table>
             <tr>
                 <td>Jenis Kendaraan roda 2 :</td>

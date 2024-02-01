@@ -20,7 +20,7 @@ class PengajuanAPIController extends Controller
     }
     static function getKaryawan($nip){
         // retrieve from api
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $apiURL = $host . '/api/karyawan';
 
         try {
@@ -125,7 +125,7 @@ class PengajuanAPIController extends Controller
                     $now = new DateTime(date('Y-m-d H:i:s'));
                     $interval = $last_used->diff($now);
                     $diff_minutes = $interval->format("%i");
-                    
+
                     if (intval($diff_minutes) > 30) {
                         DB::table('personal_access_tokens')
                             ->where('tokenable_id', $user->id)
@@ -171,7 +171,7 @@ class PengajuanAPIController extends Controller
                         $now = new DateTime(date('Y-m-d H:i:s'));
                         $interval = $last_used->diff($now);
                         $diff_minutes = $interval->format("%i");
-                        
+
                         if (intval($diff_minutes) > 30) {
                             DB::table('personal_access_tokens')
                                 ->where('tokenable_id', $user->id)
@@ -217,7 +217,7 @@ class PengajuanAPIController extends Controller
                             $now = new DateTime(date('Y-m-d H:i:s'));
                             $interval = $last_used->diff($now);
                             $diff_minutes = $interval->format("%i");
-                            
+
                             if (intval($diff_minutes) > 30) {
                                 DB::table('personal_access_tokens')
                                     ->where('tokenable_id', $user->id)
@@ -902,7 +902,7 @@ class PengajuanAPIController extends Controller
         // tanggal di pilih cabang & skema tidak
         if ($tAwal != null && $tAkhir != null && $pilCabang == null && $skema == null) {
             $seluruh_data = DB::table('pengajuan')
-            ->selectRaw("cabang.kode_cabang as kodeC, cabang.cabang, 
+            ->selectRaw("cabang.kode_cabang as kodeC, cabang.cabang,
                  CAST(sum(posisi='pincab') AS UNSIGNED) as pincab,
                  CAST(sum(posisi='PBP') AS UNSIGNED) as pbp,
                  CAST(sum(posisi='PBO') AS UNSIGNED) as pbo,
@@ -915,7 +915,7 @@ class PengajuanAPIController extends Controller
             ->whereNull('pengajuan.deleted_at')
             ->groupBy('cabang.kode_cabang')
             ->get();
-        
+
 
             // $seluruh_data = DB::table('cabang AS c')
             // ->select(
@@ -975,7 +975,7 @@ class PengajuanAPIController extends Controller
         // tanggal dipilih skema dipilih cabang tidak
         elseif ($tAwal != null && $tAkhir != null && $pilCabang == null && $skema != null) {
             $seluruh_data = DB::table('pengajuan')
-            ->selectRaw("cabang.kode_cabang as kodeC, cabang.cabang, 
+            ->selectRaw("cabang.kode_cabang as kodeC, cabang.cabang,
                  CAST(sum(posisi='pincab') AS UNSIGNED) as pincab,
                  CAST(sum(posisi='PBP') AS UNSIGNED) as pbp,
                  CAST(sum(posisi='PBO') AS UNSIGNED) as pbo,
@@ -1278,7 +1278,7 @@ class PengajuanAPIController extends Controller
         if (request()->has('tAwal')) {
             $tAwal = Carbon::parse(request('tAwal'))->startOfYear();
         }
-        
+
         if (request()->has('tAkhir')) {
             $tAkhir = Carbon::parse(request('tAkhir'))->endOfYear();
         }
@@ -1484,7 +1484,7 @@ class PengajuanAPIController extends Controller
             ->orderByRaw('total DESC, cabang.kode_cabang ASC')
             ->limit(5)
             ->get();
-            
+
         $dataTerendah = DB::table('cabang')
             ->leftJoin('pengajuan', function ($join) use ($request) {
                 $join->on('cabang.id', '=', 'pengajuan.id_cabang')

@@ -38,7 +38,7 @@ if ($dataUmum->id_cabang == 1) {
 }
 
 function getKaryawan($nip){
-    $host = env('HCS_HOST');
+    $host = env('HCS_HOST','https://hcs.bankumkm.id');
     $curl = curl_init();
     curl_setopt_array($curl, [
         CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,

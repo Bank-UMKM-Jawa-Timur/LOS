@@ -10,7 +10,7 @@
     };
 
     function getKaryawan($nip){
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
@@ -814,7 +814,7 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                        </div> 
+                                        </div>
                                     @endif
                                 @endif
                             @endif
@@ -1266,7 +1266,7 @@
                                                     <div class="form-group col-md-12 mb-0">
                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                     </div>
-                                                </div> 
+                                                </div>
                                             @endif
                                         @endif
 
