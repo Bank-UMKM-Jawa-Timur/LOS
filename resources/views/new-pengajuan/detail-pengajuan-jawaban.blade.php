@@ -1403,9 +1403,17 @@
                                                                                 @endif
                                                                                 {{-- Rupiah data tiga --}}
                                                                             @elseif ($itemTiga->opsi_jawaban == 'number')
-                                                                                <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                    <h4 class="font-bold">Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</h4>
+                                                                                <div class="field-review">
+                                                                                    <div class="field-name ">
+                                                                                        <label for="">{{ $itemTiga->nama }}</label>
+                                                                                    </div>
+                                                                                    <div class="field-answer">
+                                                                                        @if($item->is_rupiah)
+                                                                                            <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
+                                                                                        @else
+                                                                                            <p> {{ str_replace('_', ' ', $itemTextTiga->opsi_text) }} {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                        @endif
+                                                                                    </div>
                                                                                 </div>
 
                                                                                 @if ($item->is_commentable == 'Ya')
@@ -1751,10 +1759,16 @@
                                                                                 @endif
                                                                             {{-- Rupiah data empat --}}
                                                                             @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
-                                                                                <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
-                                                                                        <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
+                                                                                <div class="field-review">
+                                                                                    <div class="field-name">
+                                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                                    </div>
+                                                                                    <div class="field-answer">
+                                                                                        @if ($itemEmpat->is_rupiah == 1)
+                                                                                            <p>Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</p>
+                                                                                        @else
+                                                                                            <p>{{ $itemTextEmpat->opsi_text }}</p>
+                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
                                                                                 @if ($itemTextEmpat->is_commentable == 'Ya')
@@ -1948,10 +1962,7 @@
                                         <div class="form-group-1 pl-3">
                                             <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                                            <textarea name="pendapat_per_aspek[]" class="form-textarea @error('pendapat_per_aspek') is-invalid @enderror"
-                                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">
-                                                {{ old('pendapat_per_aspek', isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '') }}
-                                            </textarea>
+                                            <textarea name="pendapat_per_aspek[]" class="form-textarea @error('pendapat_per_aspek') is-invalid @enderror" id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ old('pendapat_per_aspek', isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '') }}</textarea>
                                             @error('pendapat_per_aspek')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -1989,8 +2000,7 @@
                                         <div class="form-group-1">
                                             <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                                            <textarea name="pendapat_per_aspek[]" class="form-textarea @error('pendapat_per_aspek') is-invalid @enderror"
-                                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                                            <textarea name="pendapat_per_aspek[]" class="form-textarea @error('pendapat_per_aspek') is-invalid @enderror" id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                                             @error('pendapat_per_aspek')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -2062,8 +2072,7 @@
                                         <div class="form-group-1 pl-3">
                                             <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                                            <textarea name="pendapat_per_aspek[]" class="form-textarea @error('pendapat_per_aspek') is-invalid @enderror"
-                                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                                            <textarea name="pendapat_per_aspek[]" class="form-textarea @error('pendapat_per_aspek') is-invalid @enderror" id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                                             @error('pendapat_per_aspek')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -2159,9 +2168,7 @@
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Penyelia</label>
-                                            <textarea name="komentar_penyelia_keseluruhan"
-                                                class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar?->komentar_penyelia != null ? $dataKomentar?->komentar_penyelia : '' }}</textarea>
+                                            <textarea name="komentar_penyelia_keseluruhan" class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar?->komentar_penyelia != null ? $dataKomentar?->komentar_penyelia : '' }}</textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -2213,9 +2220,7 @@
                                         </div> --}}
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan PBO</label>
-                                            <textarea name="komentar_pbo_keseluruhan"
-                                                class="form-input @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ $dataKomentar->komentar_pbo ? $dataKomentar->komentar_pbo : '' }}</textarea>
+                                            <textarea name="komentar_pbo_keseluruhan" class="form-input @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ $dataKomentar->komentar_pbo ? $dataKomentar->komentar_pbo : '' }}</textarea>
                                             @error('komentar_pbo_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -2289,9 +2294,7 @@
                                     </div> --}}
                                     <div class="form-group-1 pl-3">
                                         <label for="">Pendapat dan Usulan PBP</label>
-                                        <textarea name="komentar_pbp_keseluruhan"
-                                            class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
-                                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ $dataKomentar->komentar_pbp ? $dataKomentar->komentar_pbp : '' }}</textarea>
+                                        <textarea name="komentar_pbp_keseluruhan" class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ $dataKomentar->komentar_pbp ? $dataKomentar->komentar_pbp : '' }}</textarea>
                                         @error('komentar_pbp_keseluruhan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -2391,9 +2394,7 @@
                                     </div>
                                     <div class="form-group-1 pt-4">
                                         <label for="">Pendapat dan Usulan Pincab</label>
-                                        <textarea name="komentar_pincab_keseluruhan"
-                                            class="form-textarea @error('komentar_pincab_keseluruhan') is-invalid @enderror" id="komentar_pincab_keseluruhan" cols="30"
-                                            rows="4" placeholder="Pendapat dan Usulan Pincab" >{{ isset($pendapatDanUsulanPincab->komentar_pincab) ? $pendapatDanUsulanPincab->komentar_pincab : '' }}</textarea>
+                                        <textarea name="komentar_pincab_keseluruhan" class="form-textarea @error('komentar_pincab_keseluruhan') is-invalid @enderror" id="komentar_pincab_keseluruhan" cols="30" rows="4" placeholder="Pendapat dan Usulan Pincab" >{{ isset($pendapatDanUsulanPincab->komentar_pincab) ? $pendapatDanUsulanPincab->komentar_pincab : '' }}</textarea>
                                         @error('komentar_pincab_keseluruhan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}

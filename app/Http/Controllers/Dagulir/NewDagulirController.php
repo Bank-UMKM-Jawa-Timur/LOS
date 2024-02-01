@@ -756,10 +756,12 @@ class NewDagulirController extends Controller
             $namaNasabah = $request->skema_kredit == 'Dagulir' ? $pengajuan->nama : CalonNasabah::find($addData->id)->nama;
             // Delete data Draft
             if ($request->skema_kredit == 'Dagulir') {
+                DB::commit();
                 JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
                 JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
                 PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
             } else {
+                DB::commit();
                 PerhitunganKredit::where('temp_calon_nasabah_id', $request->id_dagulir_temp)
                 ->update([
                     'pengajuan_id' => $id_pengajuan,
