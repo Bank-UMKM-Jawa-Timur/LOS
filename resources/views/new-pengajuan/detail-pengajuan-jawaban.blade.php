@@ -1054,9 +1054,17 @@
                                                                                 @endif
                                                                                 {{-- Rupiah data tiga --}}
                                                                             @elseif ($itemTiga->opsi_jawaban == 'number')
-                                                                                <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                    <h4 class="font-bold">Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</h4>
+                                                                                <div class="field-review">
+                                                                                    <div class="field-name ">
+                                                                                        <label for="">{{ $itemTiga->nama }}</label>
+                                                                                    </div>
+                                                                                    <div class="field-answer">
+                                                                                        @if($itemTiga->is_rupiah)
+                                                                                            <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
+                                                                                        @else
+                                                                                            <p> {{ str_replace('_', ' ', $itemTextTiga->opsi_text) }} {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                        @endif
+                                                                                    </div>
                                                                                 </div>
 
                                                                                 @if ($item->is_commentable == 'Ya')
@@ -1402,10 +1410,16 @@
                                                                                 @endif
                                                                             {{-- Rupiah data empat --}}
                                                                             @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
-                                                                                <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
-                                                                                        <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
+                                                                                <div class="field-review">
+                                                                                    <div class="field-name ">
+                                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                                    </div>
+                                                                                    <div class="field-answer">
+                                                                                        @if($itemEmpat->is_rupiah)
+                                                                                            <p>Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</p>
+                                                                                        @else
+                                                                                            <p> {{ str_replace('_', ' ', $itemTextEmpat->opsi_text) }} {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
                                                                                 @if ($itemTextEmpat->is_commentable == 'Ya')
