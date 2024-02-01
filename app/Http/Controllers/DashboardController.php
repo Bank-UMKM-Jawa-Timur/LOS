@@ -84,7 +84,7 @@ class DashboardController extends Controller
 
     public static function getKaryawan()
     {
-        $host = env('HCS_HOST');
+        $host = env('HCS_HOST','https://hcs.bankumkm.id');
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . auth()->user()->nip,
