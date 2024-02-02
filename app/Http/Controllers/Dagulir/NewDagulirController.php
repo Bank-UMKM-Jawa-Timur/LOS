@@ -3006,7 +3006,6 @@ class NewDagulirController extends Controller
                 }
             }
             if ($request->isNpwp == "0") {
-                return 'qwq';
                 $dokumenUsaha = DB::table('item')
                     ->orWhere('nama', 'LIKE', '%NPWP%')
                     ->get();

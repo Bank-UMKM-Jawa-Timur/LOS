@@ -93,7 +93,7 @@
                                                                         ->where('parent_id', $item->id)
                                                                         ->get();
                           @endphp
-                          <div class="row">
+                          <div class="row grid grid-cols-2">
                             @foreach ($lev2 as $item2)
                               @php
                                 $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)

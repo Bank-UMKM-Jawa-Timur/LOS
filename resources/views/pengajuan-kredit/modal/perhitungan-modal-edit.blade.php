@@ -16,20 +16,22 @@
   $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
   $arrayBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
   $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
-                                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
-                                                            ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
+                                                            ->where('perhitungan_kredit.pengajuan_id', $pengajuan->id)
+                                                            ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*')
                                                             ->get();
 @endphp
-<div class="modal fade" id="perhitunganModalEdit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+<div class="modal-layout hidden fade" id="perhitunganModalEdit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div id="loading-simpan-perhitungan" style="display: none;" class="text-center">
     <img src="{{ asset('img/loading3.gif') }}" alt="Loading..." style="width: 100px; height: 100px;">
   </div>
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal modal-sm bg-white modal-dialog modal-lg" role="document">
       <div class="modal-content" id="perhitunganModalAfterLoading">
-        <div class="modal-header">
-            <h5 class="modal-title">Perhitungan</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+        <div class="modal-head">
+            <div class="title">
+                <h5 class="modal-title font-bold">Perhitungan</h5>
+            </div>
+            <button data-dismiss-id="perhitunganModalEdit">
+                <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
         <div class="modal-body">
@@ -37,7 +39,7 @@
             <form id="form-perhitungan" method="" action="">
               {{--  <div class="row">  --}}
                 <!-- content -->
-                  <div class="row">
+                  <div class="grid grid-cols-2 gap-2 row">
                     <!-- pilih bulan -->
                     @php
                       function formatBulan($value){
@@ -68,9 +70,9 @@
                             echo "Desember";
                         }
                     }
-                    @endphp 
+                    @endphp
                     <div class="col-md-6">
-                      <div class="form-group mb-4">
+                      <div class="input-box form-group mb-4">
                         <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
                         <select name="" style="width: 100%; height: 40px" class="select-date" id="periode" onchange="calcForm()">
                           @if (count($getPeriode) > 0)
@@ -88,7 +90,7 @@
                     <!-- end pilih bulan -->
                     <!-- pilih tahun -->
                     <div class="col-md-6">
-                        <div class="form-group mb-4">
+                        <div class="input-box form-group mb-4">
                             @php
                                 $start_year = 2010;
                                 $end_year = date('Y');
@@ -131,7 +133,7 @@
                                                                           ->where('parent_id', $item->id)
                                                                           ->get();
                             @endphp
-                            <div class="row">
+                            <div class="row grid grid-cols-2 gap-2">
                               @foreach ($lev2 as $key2 => $item2)
                                 @php
                                   $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
@@ -142,16 +144,16 @@
                                 <div class="col-md-6 @if($key2 == 0 && !$item->is_card_show) pl-0 @elseif($key2 != 0 && !$item->is_card_show) pr-0 @endif">
                                   <div class="card mb-4">
                                       <h5 class="card-header">{{$item2->field}}</h5>
-                                      <div class="card-body">
+                                      <div class="input-box card-body">
                                         <!-- form bagian level 3 -->
                                         @foreach ($lev3 as $item3)
                                           @if (!$item3->is_hidden)
                                             <div class="form-group">
-                                                <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
-                                                <div class="input-group">
+                                                <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
+                                                <div class="relative input-group">
                                                   <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                                     id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                                    @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $item3->id) }}"/>
+                                                    @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $item3->id) }}"/>
                                                   @if ($item3->have_detail)
                                                     @php
                                                       $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
@@ -159,16 +161,16 @@
                                                                                                   ->where('parent_id', $item3->id)
                                                                                                   ->get();
                                                     @endphp
-                                                    <div class="input-group-prepend">
-                                                        <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                                                    <div class="absolute end-0 flex items-center ps-3.5 input-group-prepend" style="top: 0">
+                                                        <a class="px-5 py-2 border rounded bg-theme-primary text-white btn btn-danger toggleButton" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
                                                             aria-controls="collapseExample">
                                                             Tampilkan
                                                             <i class="bi bi-caret-down"></i>
                                                         </a>
                                                     </div>
-                                                    <div class="collapse mt-4" id="collapseExample">
+                                                    <div class="collapse mt-4 hidden" id="collapseExample">
                                                         <div class="table-responsive">
-                                                            <table class="table" id="table_item" style="box-sizing: border-box">
+                                                            <table class="tables table" id="table_item" style="box-sizing: border-box">
                                                                 <thead>
                                                                     <tr>
                                                                         @foreach ($lev4 as $item4)
@@ -184,8 +186,8 @@
                                                                       $rowLevelEmpat = [];
                                                                   @endphp
                                                                     @foreach ($lev4 as $i => $item4)
-                                                                      @php  
-                                                                        $item = edit_perhitungan($dataUmum?->id, $item4->id);
+                                                                      @php
+                                                                        $item = edit_perhitungan($pengajuan?->id, $item4->id);
                                                                         $itemArray = [];
                                                                         $itemPerhitunganEmpat = explode(',', $item);
                                                                         foreach ($itemPerhitunganEmpat as $key => $itemEmpatPerhitungan) {
@@ -201,7 +203,7 @@
                                                                               <td id="detail-item">
                                                                                 <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
                                                                                 <input class="form-control rupiah inp_{{$item4->id}}" type="@if(!$item4->is_hidden) text @else hidden @endif" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
-                                                                                  id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif value="{{ number_format($rowLevelEmpat[$keyEmpat][$valItemEmpat], 0, '.', '.') }}"/>
+                                                                                  id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif value="{{ number_format((float)$rowLevelEmpat[$keyEmpat][$valItemEmpat], 0, '.', '.') }}"/>
                                                                               </td>
                                                                             @endforeach
                                                                             @if ($valItemEmpat > 0)
@@ -237,7 +239,7 @@
                                                                                   +
                                                                               </button>
                                                                           </td>
-                                                                      </tr>                                                                  
+                                                                      </tr>
                                                                     @endif
                                                                 </tbody>
                                                             </table>
@@ -254,7 +256,7 @@
                                           @else
                                             <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                               id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                              @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $item3->id) }}" />
+                                              @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $item3->id) }}" />
                                           @endif
                                         @endforeach
                                         <!-- end form bagian level 3 -->
@@ -280,7 +282,7 @@
                                     <h5 class="card-header">{{ $item2->field }}</h5>
                                     <div class="card-body">
                                       <div class="table-responsive">
-                                        <table class="table">
+                                        <table class="table tables ">
                                           <thead>
                                             <tr>
                                               <th style="width: 40%;" scope="col">Field</th>
@@ -290,7 +292,7 @@
                                           </thead>
                                           <tbody>
                                               @php
-  
+
                                                 $lev3Hidden = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                       ->where('level', 3)
                                                       ->where('parent_id', $item2->id)
@@ -301,7 +303,7 @@
                                                       ->where('parent_id', $item2->id)
                                                       ->where('is_label_hidden', 0)
                                                       ->get();
-                                                      
+
                                                 unset($levelTigaShow);
                                                 unset($levelTigaHidden);
                                                 unset($levelTigaLabelTotal);
@@ -314,7 +316,7 @@
                                                         array_push($levelTigaLabelTotal, $value->field == 'Total' ? ' ' . str_replace('Sebelum Kredit', '', $item2->field) : '');
                                                     }
                                                 }
-      
+
                                                 if (count($lev3Show) > 0) {
                                                     foreach ($lev3Show as $key3Show => $value) {
                                                         array_push($levelTigaShow, $value);
@@ -327,12 +329,12 @@
                                                   <td>
                                                     <input type="{{ $levelTigaHidden[$key]->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$levelTigaHidden[$key]->id}}" name="inpLevelTiga[{{$levelTigaHidden[$key]->id}}]"
                                                             id="inp_{{$levelTigaHidden[$key]->id}}" data-formula="{{$levelTigaHidden[$key]->formula}}" data-detail="{{$levelTigaHidden[$key]->have_detail}}"
-                                                            @if ($levelTigaHidden[$key]->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $levelTigaHidden[$key]->id) }}"/>  
+                                                            @if ($levelTigaHidden[$key]->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $levelTigaHidden[$key]->id) }}"/>
                                                   </td>
                                                   <td>
                                                     <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                                             id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                                            @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $item3->id) }}"/>  
+                                                            @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $item3->id) }}"/>
                                                   </td>
                                                 </tr>
                                             @endforeach
@@ -364,17 +366,17 @@
                                   <div class="col-md-12">
                                     <div class="card mb-3">
                                       <h5 class="card-header">{{ $item2->field }}</h5>
-                                      <div class="card-body">
-                                        <div class="row m-0">
+                                      <div class="input-box card-body">
+                                        <div class="row m-0 grid grid-cols-2 gap-2">
                                           @foreach ($lev3 as $item3)
                                             @if (!$item3->is_hidden)
                                             <div class=" @if($item2->inline) col @elseif( !$item->is_card_show && count($lev3) > 1) col-md-6 @else col-md-12 @endif">
                                                   <div class="form-group">
-                                                      <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
-                                                      <div class="input-group">
+                                                      <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
+                                                      <div class="flex items-center input-group">
                                                         <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}} {{ str_replace(' ', '_', strtolower($item3->field)) }}" name="inpLevelTiga[{{$item3->id}}]"
                                                           id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                                          @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $item3->id) }}"/>
+                                                          @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $item3->id) }}"/>
                                                           @if ($item2->inline && $item3->add_on)
                                                               <b class="my-auto ml-4 text-lg">{{ $item3->add_on }}</b>
                                                           @endif
@@ -385,16 +387,16 @@
                                                                                                         ->where('parent_id', $item3->id)
                                                                                                         ->get();
                                                           @endphp
-                                                          <div class="input-group-prepend">
-                                                              <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                                                          <div class="absolute end-0 flex items-center ps-3.5 input-group-prepend">
+                                                              <a class="px-5 py-2 border rounded bg-theme-primary text-white btn btn-danger toggleButton" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
                                                                   aria-controls="collapseExample">
                                                                   Tampilkan
                                                                   <i class="bi bi-caret-down"></i>
                                                               </a>
                                                           </div>
-                                                          <div class="collapse mt-4" id="collapseExample">
+                                                          <div class="collapse mt-4 hidden" id="collapseExample">
                                                               <div class="table-responsive">
-                                                                  <table class="table" id="table_item" style="box-sizing: border-box">
+                                                                  <table class="tables table" id="table_item" style="box-sizing: border-box">
                                                                       <thead>
                                                                           <tr>
                                                                               @foreach ($lev4 as $item4)
@@ -429,7 +431,7 @@
                                                         @endif
                                                         @if ($item3->add_on && !$item2->inline)
                                                           <div class="input-group-append">
-                                                              <span class="input-group-text" id="basic-addon2">{{$item3->add_on}}</span>
+                                                              <span class="form-input bg-gray-100 input-group-text" id="basic-addon2">{{$item3->add_on}}</span>
                                                           </div>
                                                         @endif
                                                       </div>
@@ -439,7 +441,7 @@
                                             @else
                                               <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                                 id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                                @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $item3->id) }}"/>
+                                                @if ($item3->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $item3->id) }}"/>
                                             @endif
                                           @endforeach
                                         </div>
@@ -479,8 +481,8 @@
                                   <div class="input-group">
                                     <input type="{{ $item3NoParent->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3NoParent->id}} {{ str_replace(' ', '_', strtolower($item3NoParent->field)) }}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
                                     id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
-                                    @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()" 
-                                    value="{{ edit_perhitungan($dataUmum?->id, $item3NoParent->id) }}"
+                                    @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()"
+                                    value="{{ edit_perhitungan($pengajuan?->id, $item3NoParent->id) }}"
                                     />
                                       @if ($item3NoParent->add_on)
                                         <div class="input-group-append">
@@ -520,7 +522,7 @@
                                     <div class="input-group">
                                       <input type="{{ $item3NoParent->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3NoParent->id}} {{ str_replace(' ', '_', strtolower($item3NoParent->field)) }}"  name="inpLevelTigaParent[{{$item3NoParent->id}}]"
                                       id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
-                                      @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $item3NoParent->id) }}"/>
+                                      @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $item3NoParent->id) }}"/>
                                       @if ($item3NoParent->add_on)
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">{{$item3NoParent->add_on}}</span>
@@ -543,11 +545,11 @@
                                     <td>
                                       <input type="hidden" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
                                         id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
-                                        @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()" 
-                                        value="{{ edit_perhitungan($dataUmum?->id, $item3NoParent->id) }}"
+                                        @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()"
+                                        value="{{ edit_perhitungan($pengajuan?->id, $item3NoParent->id) }}"
                                         />
                                       <label class="font-weight-normal" id="inp_{{$item3NoParent->id}}_label">
-                                        {{ edit_perhitungan($dataUmum?->id, $item3NoParent->id) }}
+                                        {{ edit_perhitungan($pengajuan?->id, $item3NoParent->id) }}
                                         0
                                       </label>
                                     </td>
@@ -579,7 +581,7 @@
                                 <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                 <input type="{{ $item3NoParent->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3NoParent->id}} {{ str_replace(' ', '_', strtolower($item3NoParent->field)) }}" name="inp_{{$item3NoParent->id}}"
                                     id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}"
-                                    @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($dataUmum?->id, $item3NoParent->id) }}"/>
+                                    @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()" value="{{ edit_perhitungan($pengajuan?->id, $item3NoParent->id) }}"/>
                             </div>
                             <div class="info_{{ str_replace(' ', '_', strtolower($item3NoParent->field)) }}"></div>
                         </div>
@@ -591,11 +593,11 @@
             <!-- end form -->
         </div>
         <!-- button wrapper -->
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <div class="modal-footer flex justify-end">
+            <button type="button" class="btn-cancel" data-dismiss="perhitunganModalEdit">
                 Batal
             </button>
-            <button type="button" class="btn btn-danger" id="btnEditPerhitungan">
+            <button type="button" class="px-7 py-3 rounded font-semibold flex gap-3 bg-theme-primary border text-white btn btn-primary btn btn-danger" id="btnEditPerhitungan">
                 Simpan
             </button>
         </div>
@@ -604,7 +606,9 @@
 </div>
 <script>
   var selectDate = $(".select-date");
-  selectDate.select2();
+  selectDate.select2({
+    dropdownParent: $('#perhitunganModalEdit')
+  });
   $(".btn-add-2").on("click", function(e) {
       var indexInpLevelEmpatId = {{ $indexInpLevelEmpatId }};
       var indexInpLevelEmpat = {{ $indexInpLevelEmpat }};
@@ -652,7 +656,7 @@
               </td>
             `
           }
-          
+
       })
       content += `<td>
                               <button
@@ -747,7 +751,7 @@
     } else{
       $(".info_plafon_usulan").empty();
     }
-  } 
+  }
 
   function cekTenor(){
     var jangkaWaktuKredit = parseInt($(".jangka_waktu_kredit").val() != 0 ? $(".jangka_waktu_kredit").val() : 0);
@@ -778,7 +782,7 @@
     var $navsearch = $('.collapse');
     if(!$(e.target).closest($navsearch).length && $navsearch.is(':visible')) {
         $navsearch.collapse('hide')
-    }        
+    }
 })
 </script>
 <style>
