@@ -2228,11 +2228,11 @@ class NewDagulirController extends Controller
 
 
     function CetakPK($id) {
-        $count = DB::table('log_cetak')
+        $count = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
         ->count('tgl_cetak_pk');
         if ($count < 1) {
-            DB::table('log_cetak')
+            DB::table('log_cetak_kkb')
             ->where('id_pengajuan', $id)
             ->update([
                 'tgl_cetak_pk' => now()
@@ -2273,7 +2273,7 @@ class NewDagulirController extends Controller
             ->first();
 
 
-        $param['tglCetak'] = DB::table('log_cetak')
+        $param['tglCetak'] = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
         ->first();
 
@@ -2299,17 +2299,17 @@ class NewDagulirController extends Controller
     }
     public function cetakSPPk($id)
     {
-        $count = DB::table('log_cetak')
+        $count = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
             ->count('*');
         if ($count < 1) {
-            DB::table('log_cetak')
+            DB::table('log_cetak_kkb')
             ->insert([
                 'id_pengajuan' => $id,
                 'tgl_cetak_sppk' => now()
             ]);
         } else {
-            DB::table('log_cetak')
+            DB::table('log_cetak_kkb')
             ->where('id_pengajuan', $id)
                 ->update([
                     'tgl_cetak_sppk' => now()
@@ -2355,7 +2355,7 @@ class NewDagulirController extends Controller
         ->where('id', $dataUmum->id_cabang)
         ->first();
 
-        $tglCetak = DB::table('log_cetak')
+        $tglCetak = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
         ->first();
         $param['tglCetak'] = $tglCetak;
@@ -2492,7 +2492,7 @@ class NewDagulirController extends Controller
                     }
                     $filePK->move($folderPK, $filenamePK);
 
-                    DB::table('log_cetak')
+                    DB::table('log_cetak_kkb')
                     ->where('id_pengajuan', $id)
                     ->update([
                         'no_pk' => $request->get('no_pk'),
