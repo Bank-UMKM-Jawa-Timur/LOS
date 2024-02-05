@@ -30,6 +30,7 @@ use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\UploadOnedriveController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -42,11 +43,12 @@ use RealRashid\SweetAlert\Facades\Alert;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
 Route::get('/', function () {
     return redirect()->route('login');
 });
+Route::get('/upload-onedrive', [UploadOnedriveController::class, 'index'])->name('upload-onedrive.index');
+Route::post('/upload-onedrive', [UploadOnedriveController::class, 'store'])->name('upload-onedrive.store');
 
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
