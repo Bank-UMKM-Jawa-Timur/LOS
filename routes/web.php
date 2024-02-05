@@ -47,8 +47,11 @@ Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
 Route::get('/', function () {
     return redirect()->route('login');
 });
+// one drive
 Route::get('/upload-onedrive', [UploadOnedriveController::class, 'index'])->name('upload-onedrive.index');
 Route::post('/upload-onedrive', [UploadOnedriveController::class, 'store'])->name('upload-onedrive.store');
+// monitor log
+Route::get('/log',[UploadOnedriveController::class,'monitorLog'])->name('monitor.log');
 
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');

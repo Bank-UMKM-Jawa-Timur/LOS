@@ -39,20 +39,6 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         $this->loadGoogleStorageDriver();
-        $this->loadGoogleStorageDriver();
-    }
-
-    private function loadOnedriveStorageDriver() {
-        $driverName = 'onedrive';
-        $graph = new Graph();
-        $graph->setAccessToken('EwBIA8l6BAAU7p9QDpi...');
-
-        $adapter = new OneDriveAdapter($graph, 'root');
-        $filesystem = new Filesystem($adapter);
-
-        // Or to use the approot endpoint:
-        $adapter = new OneDriveAdapter($graph, 'special/approot');
-        return new FilesystemAdapter($filesystem, $adapter);
     }
 
     private function loadGoogleStorageDriver(string $driverName = 'google') {

@@ -121,7 +121,6 @@ return [
             'disks' => [
                 'local',
                 'google',
-                'onedrive',
             ],
         ],
 
