@@ -3760,6 +3760,7 @@ class PengajuanKreditController extends Controller
                     // File PK Handler
                 case 'PK':
                     $message = 'file PK.';
+                    $noPK = $request->no_pk;
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
                     $filePK = $request->pk;
                     $filenamePK = date('YmdHis') . '.' . $filePK->getClientOriginalExtension();
@@ -3770,6 +3771,11 @@ class PengajuanKreditController extends Controller
                         mkdir($folderPK, 0755, true);
                     }
                     $filePK->move($folderPK, $filenamePK);
+                    DB::table('log_cetak')
+                        ->where('id_pengajuan', $id)
+                        ->update([
+                            'no_pk' => $noPK
+                        ]);
                     DB::table('pengajuan')
                         ->where('id', $id)
                         ->update([
