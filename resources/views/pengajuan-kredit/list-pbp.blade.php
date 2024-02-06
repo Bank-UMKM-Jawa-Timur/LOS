@@ -356,7 +356,7 @@
                                                                 </li>
                                                             </a>
                                                         @endif
-                                                        <a href="javascript::void(0)" class="w-full cursor-pointer confirmPincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                        <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                             <li class="item-tb-dropdown">
                                                                 Lanjut ke Pincab
                                                             </li>
