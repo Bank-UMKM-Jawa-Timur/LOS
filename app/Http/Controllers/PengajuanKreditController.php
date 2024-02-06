@@ -2662,7 +2662,8 @@ class PengajuanKreditController extends Controller
                 $status = $dataPenyelia->average_by_pbo;
                 // return $status;
 
-                if (auth()->user()->id_cabang == 1) {
+                if ($pengajuan->tanggal_review_penyelia
+                && $pengajuan->id_pbo) {
                     if ($status != null) {
                         $userPBP = User::select('id', 'nip')
                             ->where('id_cabang', $dataPenyelia->id_cabang)
@@ -2702,6 +2703,7 @@ class PengajuanKreditController extends Controller
                         return redirect()->back()->withError('Belum di review PBO.');
                     }
                 } else {
+
                     if ($status != null) {
                         $userPincab = User::select('id', 'nip')
                             ->where('id_cabang', $dataPenyelia->id_cabang)
@@ -2728,6 +2730,7 @@ class PengajuanKreditController extends Controller
                         return redirect()->back()->withError('Belum di review PBO.');
                     }
                 }
+
             } elseif (auth()->user()->role == 'PBP') {
                 $dataPenyelia = PengajuanModel::find($id);
                 $status = $dataPenyelia->average_by_pbp;
@@ -2766,9 +2769,11 @@ class PengajuanKreditController extends Controller
             alert()->success('Berhasil','Berhasil mengganti posisi.');
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         } catch (\Exception $e) {
+            return $e;
             DB::rollBack();
             return back()->withError('Terjadi kesalahan');
         } catch (\Illuminate\Database\QueryException $e) {
+            return $e;
             DB::rollBack();
             return back()->withError('Terjadi kesalahan pada database');
         }

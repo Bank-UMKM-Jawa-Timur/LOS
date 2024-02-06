@@ -1408,7 +1408,7 @@
                                                                                         <label for="">{{ $itemTiga->nama }}</label>
                                                                                     </div>
                                                                                     <div class="field-answer">
-                                                                                        @if($item->is_rupiah)
+                                                                                        @if($itemTiga->is_rupiah)
                                                                                             <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                                         @else
                                                                                             <p> {{ str_replace('_', ' ', $itemTextTiga->opsi_text) }} {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
@@ -1760,14 +1760,14 @@
                                                                             {{-- Rupiah data empat --}}
                                                                             @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
                                                                                 <div class="field-review">
-                                                                                    <div class="field-name">
+                                                                                    <div class="field-name ">
                                                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                                                     </div>
                                                                                     <div class="field-answer">
-                                                                                        @if ($itemEmpat->is_rupiah == 1)
+                                                                                        @if($itemEmpat->is_rupiah)
                                                                                             <p>Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</p>
                                                                                         @else
-                                                                                            <p>{{ $itemTextEmpat->opsi_text }}</p>
+                                                                                            <p> {{ str_replace('_', ' ', $itemTextEmpat->opsi_text) }} {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                                         @endif
                                                                                     </div>
                                                                                 </div>

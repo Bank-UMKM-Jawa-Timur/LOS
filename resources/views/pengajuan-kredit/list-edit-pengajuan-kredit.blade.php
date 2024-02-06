@@ -339,7 +339,7 @@
                                                 @endif
                                                 @if (Auth::user()->role == 'Staf Analis Kredit' && $item->posisi == 'Selesai')
                                                     @php
-                                                        $tglCetak = DB::table('log_cetak')
+                                                        $tglCetak = DB::table('log_cetak_kkb')
                                                             ->where('id_pengajuan', $item->id)
                                                             ->first();
                                                     @endphp
@@ -649,7 +649,7 @@
         const target = $(this).data('target')
         const id = $(this).data('id')
         const url_form = "{{url('/post-file')}}/"+id
-        const url_cetak = "{{url('/dagulir/cetak-sppk')}}/"+id
+        const url_cetak = "{{url('/pengajuan-dagulir/cetak-sppk')}}/"+id
         var token = generateCsrfToken()
 
         $(`#${target} #form-sppk`).attr('action', url_form)
@@ -688,8 +688,8 @@
         const id = $(this).data('id')
         const kode_pendaftaran = $(this).data('kode_pendaftaran')
         const skema = $(this).data('skema')
-        const url_form = "{{url('/dagulir/post-file')}}/"+id
-        const url_cetak = "{{url('/dagulir/cetak-pk')}}/"+id
+        const url_form = "{{url('/pengajuan-dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/pengajuan-dagulir/cetak-pk')}}/"+id
         var token = generateCsrfToken()
 
         if (skema == 'Dagulir') {

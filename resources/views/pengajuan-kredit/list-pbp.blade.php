@@ -367,7 +367,9 @@
                                                                 Cetak
                                                             </li>
                                                         </a>
-                                                @elseif (Auth::user()->role == 'PBO' && $item->posisi == 'PBO')
+                                                @elseif (Auth::user()->role == 'PBO')
+                                                        @if ($item->posisi == 'PBO' && $item->tanggal_review_penyelia
+                                                            && $item->id_pbo)
                                                             <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}"
                                                                 class="dropdown-item w-full cursor-pointer review-pbo-pbp">
                                                                 <li class="item-tb-dropdown">
@@ -379,28 +381,20 @@
                                                                     Kembalikan ke Penyelia
                                                                 </li>
                                                             </a>
-                                                        @if ($item->id_cabang == 1)
-                                                                @if ($userPBP)
-                                                                    <a class="w-full cursor-pointer review-pbo-pbp" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
-                                                                        <li class="item-tb-dropdown">
-                                                                            Tindak Lanjut ke PBP
-                                                                        </li>
-                                                                    </a>
-                                                                @else
-                                                               <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
+                                                            @if ($userPBP)
+                                                                <a class="w-full cursor-pointer review-pbo-pbp" href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Tindak Lanjut ke PBP
+                                                                    </li>
+                                                                </a>
+                                                            @else
+                                                                <a href="javascript::void(0)" class="w-full cursor-pointer pengajuan-next-pincab" data-id="{{$item->id_pengajuan}}" data-next="pincab" data-href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">
                                                                     <li class="item-tb-dropdown">
                                                                         Lanjut ke Pincab
                                                                     </li>
                                                                 </a>
-                                                                @endif
                                                             @endif
-                                                            <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                                class="dropdown-item">
-                                                                <li class="item-tb-dropdown">
-                                                                    Cetak
-                                                                </li>
-                                                            </a>
-                                                        @else
+                                                        @endif
                                                         <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                             class="dropdown-item w-full cursor-pointer">
                                                             <li class="item-tb-dropdown">
