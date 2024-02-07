@@ -2895,6 +2895,32 @@ class PengajuanKreditController extends Controller
             $log = [];
         }
 
+        $param['userLogStaff'] = DB::table('pengajuan')
+                    ->select('users.name', 'users.email', 'users.nip')
+                    ->join('users', 'pengajuan.id_staf', 'users.id')
+                    ->where('pengajuan.id', $id)
+                    ->first();
+        $param['userLogPenyelia'] = DB::table('pengajuan')
+                    ->select('users.name', 'users.email', 'users.nip')
+                    ->join('users', 'pengajuan.id_penyelia', 'users.id')
+                    ->where('pengajuan.id', $id)
+                    ->first();
+        $param['userLogPBO'] = DB::table('pengajuan')
+                    ->select('users.name', 'users.email', 'users.nip')
+                    ->join('users', 'pengajuan.id_pbo', 'users.id')
+                    ->where('pengajuan.id', $id)
+                    ->first();
+        $param['userLogPBP'] = DB::table('pengajuan')
+                    ->select('users.name', 'users.email', 'users.nip')
+                    ->join('users', 'pengajuan.id_pbp', 'users.id')
+                    ->where('pengajuan.id', $id)
+                    ->first();
+        $param['userLogPincab'] = DB::table('pengajuan')
+                    ->select('users.name', 'users.email', 'users.nip')
+                    ->join('users', 'pengajuan.id_pincab', 'users.id')
+                    ->where('pengajuan.id', $id)
+                    ->first();
+
         $param['logPengajuan'] = $log;
         $param['rolesPemroses'] = $this->repo->getDataPemroses($dataUmum);
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
