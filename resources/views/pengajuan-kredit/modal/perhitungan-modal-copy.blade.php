@@ -40,8 +40,8 @@
                         <!-- pilih bulan -->
                         <div class="input-box col-md-6">
                           <div class="form-group mb-4">
-                            <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
-                            <select name="" style="width: 100%; height: 40px" class="select-date" id="periode" onchange="calcForm()">
+                            <label for="inputHarta" class="font-weight-semibold">Pilih Periode Bulan:</label>
+                            <select name="" style="width: 100%; height: 40px" class="form-input" id="periode" onchange="calcForm()">
                                   <option selected>--Pilih Bulan--</option>
                                   <option value="1">Januari</option>
                                   <option value="2">Februari</option>
@@ -67,7 +67,7 @@
                                     $end_year = date('Y');
                                 @endphp
                                 <label for="periode_tahun" class="font-weight-semibold">Pilih Periode Tahun :</label>
-                                <select name="periode_tahun" id="periode_tahun" style="width: 100%; height: 40px" class="select-date">
+                                <select name="periode_tahun" id="periode_tahun" style="width: 100%; height: 40px" class="form-input">
                                     <option selected>--Pilih Tahun--</option>
                                     @for ($i=0;$start_year <= $end_year;$i--)
                                       @php

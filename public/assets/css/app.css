@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.3.6 | MIT License | https://tailwindcss.com
+! tailwindcss v3.3.5 | MIT License | https://tailwindcss.com
 *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -103,10 +103,8 @@ strong {
 }
 
 /*
-1. Use the user's configured `mono` font-family by default.
-2. Use the user's configured `mono` font-feature-settings by default.
-3. Use the user's configured `mono` font-variation-settings by default.
-4. Correct the odd `em` font sizing in all browsers.
+1. Use the user's configured `mono` font family by default.
+2. Correct the odd `em` font sizing in all browsers.
 */
 
 code,
@@ -114,9 +112,7 @@ kbd,
 samp,
 pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
-  font-feature-settings: normal; /* 2 */
-  font-variation-settings: normal; /* 3 */
-  font-size: 1em; /* 4 */
+  font-size: 1em; /* 2 */
 }
 
 /*
@@ -392,13 +388,108 @@ video {
     body {
   overflow-y: hidden;
 }
+    .dropdown-account-menu {
+  position: absolute;
+  right: 1.25rem;
+  top: 3.5rem;
+  border-width: 1px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  text-align: left;
+}
+    .dropdown-account-menu .item-dropdown {
+  width: 100%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  text-align: left;
+}
+    .dropdown-account-menu .item-dropdown:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 229 229 / var(--tw-bg-opacity));
+}
+    .sidebar .active-menu {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 53 69 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+    .sidebar .menu .menu-item {
+  border-radius: 0.375rem;
+}
+    .sidebar .menu .menu-item:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+    .sidebar .dropdown-menu-link .item-dp-link {
+  width: 100%;
+  padding: 0.75rem;
+  text-align: left;
+}
+    .sidebar .dropdown-menu-link .item-dp-link:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+    .sidebar .dropdown-menu-link .item-dp-link.active-item {
+  width: 100%;
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  padding: 0.75rem;
+  text-align: left;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
     .table-responsive {
   overflow-x: auto;
 }
-    .tables th,
-    td {
+    table.tables {
+  width: 100%;
+  border-collapse: collapse;
+  border-width: 1px;
+}
+    table.tables th {
   border-top-width: 1px;
   border-bottom-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    table.tables td {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+
+    table.table-posisi {
+  width: 100%;
+  border-collapse: collapse;
+  border-width: 1px;
+}
+
+    table.table-posisi th {
+  border-width: 1px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    table.table-posisi td {
+  border-width: 1px;
   padding: 0.5rem;
   text-align: center;
   font-size: 0.875rem;
@@ -942,6 +1033,7 @@ video {
   --tw-ring-color: rgb(252 165 165 / var(--tw-ring-opacity));
 }
     select {
+  accent-color: #DC3545;
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
 }
@@ -953,6 +1045,9 @@ video {
     /* input {
         @apply focus:ring ring-blue-300;
     } */
+    /* table {
+        @apply relative;
+    } */
     .input-box > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
@@ -963,6 +1058,33 @@ video {
   letter-spacing: -0.05em;
   --tw-text-opacity: 1;
   color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    .input-grouped {
+  display: flex;
+}
+    .input-grouped .group-text {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+    .modal-info {
+  border-radius: 0.375rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(211 209 209 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(251 251 253 / var(--tw-bg-opacity));
+  padding: 1.25rem;
+}
+    .modal-info p {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
     .modal-footer {
   display: flex;
@@ -1078,6 +1200,27 @@ video {
   font-weight: 600;
   --tw-text-opacity: 1;
   color: rgb(85 85 85 / var(--tw-text-opacity));
+}
+    .highcharts text {
+  margin-left: 2rem;
+}
+    .tab-button.active-tab {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+    .tab-button.non-active-tab {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+    .tab-button {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
     .btn {
   border-radius: 0.375rem;
@@ -1594,23 +1737,14 @@ video {
 .sticky {
   position: sticky;
 }
-.inset-y-0 {
-  top: 0px;
-  bottom: 0px;
-}
-.inset-y-3 {
-  top: 0.75rem;
-  bottom: 0.75rem;
-}
-.inset-y-14 {
-  top: 3.5rem;
-  bottom: 3.5rem;
-}
 .-right-7 {
   right: -1.75rem;
 }
 .bottom-5 {
   bottom: 1.25rem;
+}
+.end-0 {
+  inset-inline-end: 0px;
 }
 .left-0 {
   left: 0px;
@@ -1641,9 +1775,6 @@ video {
 }
 .top-\[4rem\] {
   top: 4rem;
-}
-.end-0 {
-  inset-inline-end: 0px;
 }
 .z-0 {
   z-index: 0;
@@ -2071,9 +2202,6 @@ video {
 }
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.flex-row-reverse {
-  flex-direction: row-reverse;
 }
 .flex-col {
   flex-direction: column;
@@ -2528,6 +2656,12 @@ video {
 .pr-5 {
   padding-right: 1.25rem;
 }
+.ps-3 {
+  padding-inline-start: 0.75rem;
+}
+.ps-3\.5 {
+  padding-inline-start: 0.875rem;
+}
 .pt-1 {
   padding-top: 0.25rem;
 }
@@ -2545,12 +2679,6 @@ video {
 }
 .pt-8 {
   padding-top: 2rem;
-}
-.ps-3 {
-  padding-inline-start: 0.75rem;
-}
-.ps-3\.5 {
-  padding-inline-start: 0.875rem;
 }
 .text-left {
   text-align: left;

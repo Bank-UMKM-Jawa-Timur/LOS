@@ -755,6 +755,20 @@
                                                                                 alt="" width="800px">
                                                                         @endif
                                                                     @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
+                                                                        @if ($item->nama == 'Installment' || $item->nama == 'Omzet Penjualan')
+                                                                            <div class="field-review">
+                                                                                <div class="field-name">
+                                                                                    <label for="">{{ $item->nama }} (Perbulan)</label>
+                                                                                </div>
+                                                                                <div class="field-answer">
+                                                                                    @if ($item->is_rupiah == 1)
+                                                                                        <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
+                                                                                    @else
+                                                                                        <p>{{ $itemTextDua->opsi_text }}</p>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+                                                                        @else
                                                                             <div class="field-review">
                                                                                 <div class="field-name">
                                                                                     <label for="">{{ $item->nama }}</label>
@@ -775,6 +789,8 @@
                                                                                         name="komentar_penyelia[]" placeholder="Masukkan Komentar">
                                                                                 </div>
                                                                             @endif
+                                                                        @endif
+
                                                                         @endif
                                                                     @else
                                                                         @if ($item->id == 136 || $item->id == 138 || $item->id == 140 || $item->id == 143)
@@ -1980,14 +1996,26 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-1 ">
-                                            <h4 class="font-semibold text-base" for="">Penyelia Kredit</h4>
-                                            <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Penyelia Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
-                                            <div class="form-group-1">
-                                                <h4 class="font-semibold text-base" for="">Pendapat dan Usulan PBO</h4>
-                                                <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
+                                            <div class="form-group-2">
+                                                <div class="field-review">
+                                                    <div class="field-name">
+                                                        <label for="">PBO</label>
+                                                    </div>
+                                                    <div class="field-answer">
+                                                        <p>{{ $pendapatDanUsulanPBO?->komentar_pbo }}</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         @endif
                                     @elseif (Auth::user()->role == 'PBO')
@@ -2007,7 +2035,6 @@
                                                 </div>
                                             @enderror
                                         </div>
-                                        <hr>
                                         <hr>
                                         <div class="form-group-2">
                                             <div class="field-review">

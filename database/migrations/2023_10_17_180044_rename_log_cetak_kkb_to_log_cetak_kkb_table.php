@@ -14,7 +14,7 @@ class RenameLogCetakKkbToLogCetakKkbTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE log_cetak_kkb RENAME log_cetak");
+        DB::statement("ALTER TABLE log_cetak RENAME log_cetak");
         Schema::table('log_cetak', function (Blueprint $table) {
             $table->string('no_pk', 25)->nullable()->after('tgl_cetak_po');
         });
@@ -27,8 +27,8 @@ class RenameLogCetakKkbToLogCetakKkbTable extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE log_cetak RENAME log_cetak_kkb");
-        Schema::table('log_cetak_kkb', function (Blueprint $table) {
+        DB::statement("ALTER TABLE log_cetak RENAME log_cetak");
+        Schema::table('log_cetak', function (Blueprint $table) {
             $table->dropColumn('no_pk');
         });
     }

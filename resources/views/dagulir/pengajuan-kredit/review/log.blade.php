@@ -75,7 +75,7 @@
                     ->where('users.role', $itemRole)
                     ->first();
             }
-
+            var_dump($user);
 
         @endphp
         <div class="field-review">

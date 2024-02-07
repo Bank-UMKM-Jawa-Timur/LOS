@@ -2894,6 +2894,7 @@ class PengajuanKreditController extends Controller
         } else {
             $log = [];
         }
+
         $param['logPengajuan'] = $log;
         $param['rolesPemroses'] = $this->repo->getDataPemroses($dataUmum);
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
