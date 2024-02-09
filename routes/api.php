@@ -53,20 +53,20 @@ Route::prefix('kkb')->group(function(){
     });
 });
 
-Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
-    Route::middleware([APIToken::class])->group(function(){
-        Route::get('get-sum-cabang', [PengajuanAPIController::class, 'getSumPengajuan']);
-        // Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
-        Route::get('get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
-        Route::get('get-count-pengajuan', [PengajuanAPIController::class, 'getCountPengajuan']);
-        Route::get('get-cabang', [PengajuanAPIController::class, 'getAllCabangMobile']);
-        Route::get('get-sum-skema', [PengajuanAPIController::class, 'getSumSkema']);
-        Route::get('get-list-pengajuan-by-id/{id}', [PengajuanAPIController::class, 'getListPengajuanById']);
-        Route::get('get-list-pengajuan/{user_id}', [PengajuanAPIController::class, 'getListPengajuan']);
-        Route::get('get-list-pengajuan', [PengajuanAPIController::class, 'getListPengajuanByCabang']);
-        Route::get('get-ranking-cabang', [PengajuanAPIController::class, 'rangkingCabang']);
-    });
-});
+// Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
+//     Route::middleware([APIToken::class])->group(function(){
+//         Route::get('get-sum-cabang', [PengajuanAPIController::class, 'getSumPengajuan']);
+//         // Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
+//         Route::get('get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
+//         Route::get('get-count-pengajuan', [PengajuanAPIController::class, 'getCountPengajuan']);
+//         Route::get('get-cabang', [PengajuanAPIController::class, 'getAllCabangMobile']);
+//         Route::get('get-sum-skema', [PengajuanAPIController::class, 'getSumSkema']);
+//         Route::get('get-list-pengajuan-by-id/{id}', [PengajuanAPIController::class, 'getListPengajuanById']);
+//         Route::get('get-list-pengajuan/{user_id}', [PengajuanAPIController::class, 'getListPengajuan']);
+//         Route::get('get-list-pengajuan', [PengajuanAPIController::class, 'getListPengajuanByCabang']);
+//         Route::get('get-ranking-cabang', [PengajuanAPIController::class, 'rangkingCabang']);
+//     });
+// });
 Route::prefix('v1')->group(function(){
     Route::middleware([APIToken::class])->group(function(){
         Route::get('get-sum-cabang', [PengajuanAPIController::class, 'getSumPengajuan']);
