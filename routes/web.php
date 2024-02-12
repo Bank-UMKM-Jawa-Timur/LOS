@@ -26,11 +26,13 @@ use App\Http\Controllers\Dagulir\master\NewTipeController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
 use App\Http\Controllers\DashboardDetailController;
+use App\Http\Controllers\GetTokenRequestController;
 use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\UploadOnedriveController;
+use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -50,6 +52,9 @@ Route::get('/', function () {
 // one drive
 Route::get('/upload-onedrive', [UploadOnedriveController::class, 'index'])->name('upload-onedrive.index');
 Route::post('/upload-onedrive', [UploadOnedriveController::class, 'store'])->name('upload-onedrive.store');
+Route::get('/onedrive', [UploadOnedriveController::class, 'getAuthorizationToken'])->name('upload-onedrive.test');
+Route::get('callback', [UploadOnedriveController::class,'callback']);
+Route::get('respone-onedrive-get', [UploadOnedriveController::class,'fileUploadWithChunk']);
 // monitor log
 Route::get('/log',[UploadOnedriveController::class,'monitorLog'])->name('monitor.log');
 
@@ -148,6 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('user', NewUserController::class);
             Route::resource('merk', NewMerkController::class);
             Route::resource('tipe', NewTipeController::class);
+            Route::get('konfigurasi-api/login', [KonfirgurasiApi::class,'signin'])->name('api-konfigurasi.signin');
             Route::resource('konfigurasi-api', KonfirgurasiApi::class);
             Route::resource('master-item', NewItemController::class);
             Route::get('add-edit-item', [NewItemController::class, 'addEditItem'])->name('add-edit-item');

@@ -108,4 +108,10 @@ return [
 
     'password_timeout' => 10800,
 
+    'microsoft' => [
+        'client_id' => env('MICROSOFT_CLIENT_ID'),
+        'tenant_id' => env('MICROSOFT_TENANT_ID'),
+        'scopes' => env('MICROSOFT_SCOPES'),
+    ],
+
 ];

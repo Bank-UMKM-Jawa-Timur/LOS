@@ -104,6 +104,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
+        // session authsession token onedrive
+        session()->forget('accessToken');
+        session()->forget('refreshToken');
+        session()->forget('tokenExpires');
         return redirect('/');
     }
 }

@@ -19,7 +19,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+    <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 h-screen">
         <h2 class="mb-2 text-lg font-semibold text-gray-900">Log Backups Database:</h2>
         <ol class="max-w-md space-y-1 text-gray-500 list-disc list-inside">
             @foreach($logLines as $line)

@@ -40,6 +40,7 @@ class OnedriveBackupTask extends Command
     {
         $onedriveBackup = new UploadOnedriveController;
         $onedriveBackup->fileUploadWithChunk();
-        info('OneDrive Backups Running..');
+
+        $this->info('OneDrive Backups Finish...');
     }
 }

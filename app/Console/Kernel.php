@@ -18,14 +18,14 @@ class Kernel extends ConsoleKernel
         $schedule->command('pembayaran:cron')
                 ->daily()
                 ->appendOutputTo(storage_path('logs/console.log'));
-        // $schedule->command('backup:clean')->daily()->at('22:30')->appendOutputTo(storage_path('logs/laravel.log'));
-        // $schedule->command('backup:run')->daily()->at('00:00')->appendOutputTo(storage_path('logs/laravel.log'));
-        // $schedule->command('backup:clean')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
-        // $schedule->command('backup:run')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
         $schedule->command('backup:clean')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
         $schedule->command('backup:run --only-db')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
         $schedule->command('onedrive:cron')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
         $schedule->command('backup:monitor')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:clean')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:run --only-db')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('onedrive:cron')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:monitor')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
     }
 
     /**

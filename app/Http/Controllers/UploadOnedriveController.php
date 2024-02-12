@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Auth\TokenCache;
 use App\Helpers\MicrosoftGraphHelper;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Spatie\Backup\BackupDestination\BackupDestination;
 use Spatie\Backup\Tasks\Backup\BackupJobFactory;
 use File;
+use Illuminate\Support\Facades\DB;
+use Microsoft\Graph\Graph;
+use Microsoft\Graph\Model;
 
 class UploadOnedriveController extends Controller
 {
@@ -98,7 +103,47 @@ class UploadOnedriveController extends Controller
         $filenameOldest = explode('/',$oldestBackup->path())[1];
 
         // Token akses
-        $accessTokenFile = 'EwCAA8l6BAAUs5+HQn0N+h2FxWzLS31ZgQVuHsYAAdGgbIVgIdbp4yNo+ba8KeEmBWZXij3seGwSsgCC0tHPCcgVwxiq5dLbFgHLwcW3Lv0Z/l3WT0OIlPTJ7Xr92R1JMisQLA/LUThvQ8EVKn7TzY/m7NFmuEntvUvyw9OrHlvqK21S6BZZnp0ihhl4iE2hIEEU6t5ldgDKmtHqh2C4pPvu/rRIUPSpZAnEiyda6gYMvAz1uuljTLM73GmHcUTrNM9m5xbfKT9Lo4j2R8VGz9Wbf0wVjkrms4esA1wBBjHoHdMKyvPGVKFtHvuoepkV/4+uIrlr66ySlL/UBu/Oya0SjSKe0RbrhlQyFAsjgLnuviBPCTtLMSh0bE+CpSIDZgAACFNJJ7QOh+bCUAILjA+bI9cEJ7a6sguvV+4qdwcVgNaitjfj9Ih3wajs7uut1E9Av+mnbxicLz1TQX48aO1MBFYXSNLrkNyvKWWPSLcRm21bSZYCuvq6bwW4Gq45aSmyLZg6EaeW08sUxN5Rid2GsgK+suwZDD3aRQXelRbAIzpWYuShaay64WZm7mTBr2UtMb4WRb7yidg0LutDyeIfjXK5X95485M43mKNMfNLnEbSVVPL03MiSdZTTt6qVIeWBk+Q/y3zC8E1Nct8yh3bWdR17ngJKqxOwKFp2Um3Pwi8kiUFc0D23hnejxLYZPb4b/vUN8Ktz/RbnIvURdDKT9fGSSC7p+VuIcJ6qYfTS2+Ef+8JCcHFHVMAwSq2LVryLa6QMNO+vV5VfXFDSGSKTc+Or24fERbVNCjLdJXusEHttL3lx39x/rJ6B3qgUAnfZ7olCljlOKNZLccoI9tzA79IAM7v9vbzJ5wJ593hUKhWwbDpqUYi0ryum7LM8G18hIHC76S2LBskuCcqsoey0cLnoYWNPz7pS7bGe7APZnLn29ZFjeu4yDKR+H8yvgITtdq2aPU79hvi+Wi0Fn1XRqOl8aSDkIu1Kaajd/vIrpDrhVcg3KjvJItJnJ1JWehaW0t6BXS31yN+TgqTBgGjfGzxxH8xEvrxyUdZUMHN7++IzHSHuEPOqrNfKnDIN/xFcBsyKH/5viWplc9Xkf5rJlHKVeMjc9Q/4usGAsjQqujn4obKc461vdoHK2Xhos+LCChjlDeBmYzHs31+4gmR9zRfi7CKdKS0iCH6jwI=';
+        // set file token
+        $filePath = storage_path('app/token.json');
+        $json = json_decode(file_get_contents($filePath), true);
+        if (empty($json['accessToken']) || empty($json['refreshToken'] || empty($json['tokenExpires']))) {
+            return '';
+        }
+        // Check if token is expired
+        //Get current time + 5 minutes (to allow for time differences)
+        $now = time() + 300;
+        if ($json['tokenExpires'] <= $now) {
+            // Token is expired (or very close to it)
+            // so let's refresh
+            // Initialize the OAuth client
+            $api_configuration = DB::table('api_configuration')->first();
+            $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+                'clientId'                => $api_configuration ? $api_configuration->oauth_app_id : config('azure.appId'),
+                'clientSecret'            => $api_configuration ? $api_configuration->oauth_app_secret : config('azure.appSecret'),
+                'redirectUri'             => $api_configuration ? $api_configuration->url_callback : config('azure.redirectUri'),
+                'urlAuthorize'            => $api_configuration ? $api_configuration->oauth_authority.$api_configuration->oauth_authorize_endpoint : config('azure.authority').config('azure.authorizeEndpoint'),
+                'urlAccessToken'          => $api_configuration ? $api_configuration->oauth_authority.$api_configuration->oauth_token_endpoint : config('azure.authority').config('azure.tokenEndpoint'),
+                'urlResourceOwnerDetails' => '',
+                'scopes'                  => config('azure.scopes')
+            ]);
+
+            try {
+                $newToken = $oauthClient->getAccessToken('refresh_token', [
+                    'refresh_token' => $json['refreshToken']
+                ]);
+
+                // Store the new values
+                $this->updateTokens($newToken);
+
+                return $newToken->getToken();
+            }
+            catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+                return '';
+            }
+        }
+
+        // Token is still valid, just return it
+        $accessTokenFile = $json['accessToken'];
 
         // URL untuk membuat upload session di OneDrive
         $url = "https://graph.microsoft.com/v1.0/me/drive/root:/backup/$filename:/createUploadSession";
@@ -122,11 +167,7 @@ class UploadOnedriveController extends Controller
         // url create session
         // Membuat upload session di OneDrive
         $response = Http::withHeaders($headers)->post($url, $data);
-        if ($response->getStatusCode() == 201 || $response->getStatusCode() == 200) {
-            return "File uploaded successfully! ";
-        } else {
-            return "Error uploading file.".$response->json()['error']['message'];
-        }
+
         $result = $response->json();
         $graphUrl = $result['uploadUrl'];
 
@@ -174,12 +215,16 @@ class UploadOnedriveController extends Controller
         // Hapus file sebelumnya di OneDrive
         $previousFileName = $filenameOldest;
         $previousFileUrl = "https://graph.microsoft.com/v1.0/me/drive/root:/backup/$previousFileName";
-        Http::withHeaders($headers)->delete($previousFileUrl);
-
+        $responseDelete = Http::withHeaders($headers)->delete($previousFileUrl);
         // Hapus file lokal setelah berhasil diupload
-        File::delete($filepathOldest);
+        // File::delete($filepathOldest);
+        if ($response->getStatusCode() == 201 || $response->getStatusCode() == 200) {
+            return "File uploaded successfully! ";
+        } else {
+            return "Error uploading file.".$response->json()['error']['message'];
+        }
 
-        return 'File uploaded successfully!';
+        return true;
     }
 
     function fileUploadContent() {
@@ -189,12 +234,52 @@ class UploadOnedriveController extends Controller
         $filepath = storage_path('app/'.$latestBackup->path());
         $filename = explode('/',$latestBackup->path())[1];
 
-        $accessTokenFile = 'EwCAA8l6BAAUs5+HQn0N+h2FxWzLS31ZgQVuHsYAAaanm+x+zOfTxuPH5aCVAO9KjD7NXiMlst0VWCWa1Y1Hi0gKAUXTASma91X0y2kX0j1DJzCljvfPIwTOBdI/7lEaE9p9fn0+X2ds3lCRqwylZNWumBgq6oyVUAn0glFGGZyqdYAz5PXNZ769DiRWvwyMEMJrASGg1D2AjcR5vYMfKKFCI/OD6PAFwCttMKZMHqySK+nvBKFcaNrfVPsQ5v/T3KgCBjAxq6bOqg64RbAP9TrIRR3LOr9+pVqJXeGI9S3zzlVH67p188mp5jaAIfA3nJrC3dhEcuPxYwNMWuwc6QxTRB7KAwrH9wAVVL8BmLtQtcWEvaYEvRsjRilqHpsDZgAACH8pDfEueN+MUAIp6daSV40T91pJTxFq6SVUa0MHz/yAFW5f4umlyisHb1gJQA4OONDBlilLfuQs+bDFJX8/2IBL2q+mJCwO3RMjrtOs9/5qBS13F9YMxQ2b81BqYe3zotm0JfYmME53fyzjwwf2BpDBcZH/ss3XJ6OXbdkgWUJS4OSLPAWyo/07iJjm14wAYaJdC3hKquaDL5LIexyyG8ydKP8uqsoUkXCh+iefRZU3pEvRoqsjqkdMfnXVefZ7jDhqlFdfddzZUqTa7ZKJe2dUGuMe4V/ghQ1hSLcMARCQjJh2dlZYR4QLVO6cQ/vMWR3AXZYVlOWfWCsUVgG1+pvr1ZnmbsVfvkkdODnDPVpb1s1mWlNShQyGm+S7IeY3LKyZjQ2UfHYNXZa/mh5DF0PosDmDLovSxsuHSxCr9G1cw1bu9q/vc+QVz3bhZw2u+Q7tAsqCuEVJiCLD3q6VBXvLwK4ceqv9Jw55xlZDHYJUVVuR+4k1XmcHFSdWPIsDlZmkKGYlwNj69jRZTIJZTnswb+3nccoQGsn0OnkXlsZke+WGYCnyAj+u+4egPGk9Asl+ODoofbGNg0UwQFRYYRuuxC2RN3CDM6tQSELgPseyYeGIzuHjfKSU76pJFJgH5mHDEuAwxWHjzh9eG5cR8AMnE+YwxGIeSDEMt0JSzKkl8fQgdlvdoy+Bsi9P87xcy/LoII7vxanX8ELKX7H5yuEtQSpwujv052Xz43pqF8Y2RSoeo1vD0+RYwRHkG8ii/o/GT1q0vNioF7PeCq072j6iqp2gPwmdldfDjwI=';
+        // set file token
+        $filePath = storage_path('app/token.json');
+        $json = json_decode(file_get_contents($filePath), true);
+        if (empty($json['accessToken']) || empty($json['refreshToken'] || empty($json['tokenExpires']))) {
+            return '';
+        }
+        // Check if token is expired
+        //Get current time + 5 minutes (to allow for time differences)
+        $now = time() + 300;
+        if ($json['tokenExpires'] <= $now) {
+            // Token is expired (or very close to it)
+            // so let's refresh
+
+            // Initialize the OAuth client
+            $api_configuration = DB::table('api_configuration')->first();
+            $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+                'clientId'                => $api_configuration ? $api_configuration->oauth_app_id : config('azure.appId'),
+                'clientSecret'            => $api_configuration ? $api_configuration->oauth_app_secret : config('azure.appSecret'),
+                'redirectUri'             => $api_configuration ? $api_configuration->url_callback : config('azure.redirectUri'),
+                'urlAuthorize'            => $api_configuration ? $api_configuration->oauth_authority.$api_configuration->oauth_authorize_endpoint : config('azure.authority').config('azure.authorizeEndpoint'),
+                'urlAccessToken'          => $api_configuration ? $api_configuration->oauth_authority.$api_configuration->oauth_token_endpoint : config('azure.authority').config('azure.tokenEndpoint'),
+                'urlResourceOwnerDetails' => '',
+                'scopes'                  => config('azure.scopes')
+            ]);
+
+            try {
+                $newToken = $oauthClient->getAccessToken('refresh_token', [
+                    'refresh_token' => $json['refreshToken']
+                ]);
+
+                // Store the new values
+                $this->updateTokens($newToken);
+
+                return $newToken->getToken();
+            }
+            catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+                return '';
+            }
+        }
+        // Token is still valid, just return it
+        $accessTokenFile = $json['accessToken'];
 
         $client = new Client();
         $response = $client->request('PUT', "https://graph.microsoft.com/v1.0/me/drive/root:/Backups/{$filename}:/content", [
             'headers' => [
-                'Authorization' => 'Bearer '.$accessTokenFile,
+                'Authorization' => "Bearer $accessTokenFile",
                 'Content-Type'  => 'text/plain',
             ],
             'body' => file_get_contents($filepath),
@@ -207,16 +292,6 @@ class UploadOnedriveController extends Controller
         }
     }
 
-    public function store(Request $request) {
-        $helper = new MicrosoftGraphHelper;
-        $file = $request->file('file');
-        // dd($file);
-        $filename = $file->getClientOriginalName();
-        $filepath = $file->path();
-        // return file_get_contents($filepath);
-        return $helper->upload($request, $filepath, $filename);
-    }
-
     function monitorLog()  {
         $filepath = storage_path('logs/laravel.log');
         $fileContent = File::get($filepath); // Use File facade for simplicity
@@ -224,4 +299,89 @@ class UploadOnedriveController extends Controller
 
         return view('logs.index',compact('logLines'));
     }
+
+
+    function callback(Request $request) {
+            // Validate state
+            $expectedState = session('oauthState');
+            $request->session()->forget('oauthState');
+            $providedState = $request->query('state');
+
+            if (!isset($expectedState)) {
+                // If there is no expected state in the session,
+                // do nothing and redirect to the home page.
+                return redirect()->route('dagulir.master.konfigurasi-api.index');
+                }
+
+                if (!isset($providedState) || $expectedState != $providedState) {
+                return redirect()->route('dagulir.master.konfigurasi-api.index')
+                    ->with('error', 'Invalid auth state')
+                    ->with('errorDetail', 'The provided auth state did not match the expected value');
+                }
+
+                // Authorization code should be in the "code" query param
+                $authCode = $request->query('code');
+                if (isset($authCode)) {
+                // Initialize the OAuth client
+                $api_configuration = DB::table('api_configuration')->first();
+                $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+                    'clientId'                => $api_configuration ? $api_configuration->oauth_app_id : config('azure.appId'),
+                    'clientSecret'            => $api_configuration ? $api_configuration->oauth_app_secret : config('azure.appSecret'),
+                    'redirectUri'             => $api_configuration ? $api_configuration->url_callback : config('azure.redirectUri'),
+                    'urlAuthorize'            => $api_configuration ? $api_configuration->oauth_authority.$api_configuration->oauth_authorize_endpoint : config('azure.authority').config('azure.authorizeEndpoint'),
+                    'urlAccessToken'          => $api_configuration ? $api_configuration->oauth_authority.$api_configuration->oauth_token_endpoint : config('azure.authority').config('azure.tokenEndpoint'),
+                    'urlResourceOwnerDetails' => '',
+                    'scopes'                  => config('azure.scopes')
+                ]);
+
+                try {
+                    // Make the token request
+                    $accessToken = $oauthClient->getAccessToken('authorization_code', [
+                        'code' => $authCode
+                    ]);
+
+                    $graph = new Graph();
+                    $graph->setAccessToken($accessToken->getToken());
+
+                    // $user = $graph->createRequest('GET', '/me?$select=displayName,mail,mailboxSettings,userPrincipalName')
+                    // ->setReturnType(Model\User::class)
+                    // ->execute();
+                    $tokenCache = new TokenCache();
+                    $tokenCache->storeTokens($accessToken);
+                    alert()->success('Sukses','Berhasil Set Token OneDrive');
+
+                    return redirect()->route('dagulir.master.konfigurasi-api.index');
+                }
+                catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+                    alert()->error('error','Error requesting access token');
+                    return redirect()->route('dagulir.master.konfigurasi-api.index');
+                    // ->with('error', 'Error requesting access token')
+                    // ->with('errorDetail', json_encode($e->getResponseBody()));
+                }
+            }
+            alert()->error('error',$request->query('error_description'));
+            return redirect()->route('dagulir.master.konfigurasi-api.index')
+            ->with('error', $request->query('error'))
+            ->with('errorDetail', $request->query('error_description'));
+    }
+
+    public function updateTokens($accessToken) {
+        $filePath = storage_path('app/token.json');
+        $json = json_decode(file_get_contents($filePath), true);
+
+        // Memperbarui data dengan token yang baru
+        $json['accessToken'] = $accessToken->getToken();
+        $json['refreshToken'] = $accessToken->getRefreshToken();
+        $json['tokenExpires'] = $accessToken->getExpires();
+
+        // Menulis kembali data ke dalam file JSON
+        file_put_contents($filePath, json_encode($json));
+
+        session([
+            'accessToken' => $accessToken->getToken(),
+            'refreshToken' => $accessToken->getRefreshToken(),
+            'tokenExpires' => $accessToken->getExpires()
+        ]);
+    }
+
 }
