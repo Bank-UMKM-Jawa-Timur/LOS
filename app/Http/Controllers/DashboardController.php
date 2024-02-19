@@ -280,7 +280,6 @@ class DashboardController extends Controller
                         return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang .'.xlsx');
                     }
                 } else {
-                    return $seluruh_data;
                     if ($pilCabang == 'semua') {
                         return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori keseluruhan Semua Cabang' . '.xlsx');
                     } else {
