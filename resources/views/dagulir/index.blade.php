@@ -570,13 +570,13 @@
                                                                     ->first();
                                                                 @endphp
                                                                     @if ($userPBP)
-                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBP" data-target="modalKembalikan">
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="PBP" data-target="modalKembalikan">
                                                                             <li class="item-tb-dropdown open-modal">
                                                                                 Kembalikan ke PBP
                                                                             </li>
                                                                         </a>
                                                                     @elseif ($userPBO)
-                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBO" data-target="modalKembalikan">
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="PBO" data-target="modalKembalikan">
                                                                             <li class="item-tb-dropdown open-modal">
                                                                                 Kembalikan ke PBO
                                                                             </li>
@@ -1054,13 +1054,13 @@
                                                                         ->first();
                                                                     @endphp
                                                                         @if ($userPBP)
-                                                                            <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBP" data-target="modalKembalikan">
+                                                                            <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="PBP" data-target="modalKembalikan">
                                                                                 <li class="item-tb-dropdown open-modal">
                                                                                     Kembalikan ke PBP
                                                                                 </li>
                                                                             </a>
                                                                         @elseif ($userPBO)
-                                                                            <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="PBO" data-target="modalKembalikan">
+                                                                            <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="PBO" data-target="modalKembalikan">
                                                                                 <li class="item-tb-dropdown open-modal">
                                                                                     Kembalikan ke PBO
                                                                                 </li>
@@ -1068,7 +1068,7 @@
                                                                         @else
                                                                             <a href="#" class="w-full cursor-pointer kembalikan_pengajuan">
                                                                                 <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
-                                                                                    data-id="{{ $item->id }}" data-backto="Penyelia">
+                                                                                    data-id="{{ $item->pengajuan->id }}" data-backto="Penyelia">
                                                                                     Kembalikan ke Penyelia
                                                                                 </li>
                                                                             </a>
