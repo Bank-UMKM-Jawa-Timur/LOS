@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNoLoanToLogCetakKkbTable extends Migration
+class AddNoLoanBaruToLogCetakKkbTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddNoLoanToLogCetakKkbTable extends Migration
     public function up()
     {
         Schema::table('log_cetak_kkb', function (Blueprint $table) {
-            $table->string('no_loan', 100)->nullable();
+            $table->string('no_pk', 100)->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddNoLoanToLogCetakKkbTable extends Migration
     public function down()
     {
         Schema::table('log_cetak_kkb', function (Blueprint $table) {
-            $table->dropColumn('no_loan');
+            $table->string('no_pk', 100)->nullable();
         });
     }
 }
