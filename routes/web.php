@@ -14,6 +14,27 @@ use \App\Http\Controllers\TipeController;
 use \App\Http\Controllers\CetakSuratController;
 use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
+use \App\Http\Controllers\Dagulir\DagulirController;
+use App\Http\Controllers\Dagulir\master\KonfirgurasiApi;
+use App\Http\Controllers\Dagulir\master\NewCabangController;
+use App\Http\Controllers\Dagulir\master\NewDesaController;
+use App\Http\Controllers\Dagulir\master\NewItemController;
+use App\Http\Controllers\Dagulir\master\NewKabupatenController;
+use App\Http\Controllers\Dagulir\master\NewKecamatanController;
+use App\Http\Controllers\Dagulir\master\NewMerkController;
+use App\Http\Controllers\Dagulir\master\NewTipeController;
+use App\Http\Controllers\Dagulir\NewDagulirController;
+use App\Http\Controllers\Dagulir\master\NewUserController;
+use App\Http\Controllers\DashboardDetailController;
+use App\Http\Controllers\GetTokenRequestController;
+use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
+use App\Http\Controllers\KreditProgram\MasterDanaController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\UploadOnedriveController;
+use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,27 +49,176 @@ Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
 Route::get('/', function () {
     return redirect()->route('login');
 });
+// one drive
+Route::get('/upload-onedrive', [UploadOnedriveController::class, 'index'])->name('upload-onedrive.index');
+Route::post('/upload-onedrive', [UploadOnedriveController::class, 'store'])->name('upload-onedrive.store');
+Route::get('/onedrive', [UploadOnedriveController::class, 'getAuthorizationToken'])->name('upload-onedrive.test');
+Route::get('callback', [UploadOnedriveController::class,'callback']);
+Route::get('respone-onedrive-get', [UploadOnedriveController::class,'fileUploadWithChunk']);
+// monitor log
+Route::get('/log',[UploadOnedriveController::class,'monitorLog'])->name('monitor.log');
 
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
 
-
-
+Route::get('/coming-soon', function(){
+    return view('under-construction.index');
+})->name('coming-soon');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/detail-pengajuan-new/tes', function () {
+        return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
+    });
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/detail', [DashboardDetailController::class, 'index'])->name('dashboard-detail');
+    Route::get('/dashboard/detail/skema', [DashboardDetailController::class, 'index'])->name('dashboard-detail-skema');
+    Route::get('/dashboard/detail/disetujui', [DashboardDetailController::class, 'detailDisetujui'])->name('dashboard-detail-disetujui');
+    Route::get('/dashboard/detail/ditolak', [DashboardDetailController::class, 'detailDitolak'])->name('dashboard-detail-ditolak');
+    Route::get('/dashboard/detail/diproses', [DashboardDetailController::class, 'detailDiproses'])->name('dashboard-detail-diproses');
+    Route::get('/dashboard/detail/rank-cabang', [DashboardDetailController::class, 'detailRankCabang'])->name('dashboard-detail-rank-cabang');
+    Route::get('/dashboard/detail/chart-posisi', [DashboardDetailController::class, 'detailPieChartPosisi'])->name('dashboard-detail-chart-posisi');
+    Route::get('/dashboard/detail/chart-skema', [DashboardDetailController::class, 'detailPieChartSkema'])->name('dashboard-detail-chart-Skema');
+    Route::get('/dashboard/detail/chart-posisi-two', [DashboardDetailController::class, 'detailPieChartPosisiTwo'])->name('dashboard-detail-chart-posisi-two');
+    Route::get('/dashboard/detail/chart-skema-two', [DashboardDetailController::class, 'detailPieChartSkemaTwo'])->name('dashboard-detail-chart-Skema-two');
+
     Route::get('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
 
+
+    Route::prefix('pengajuan-dagulir')->name('dagulir.')->group(function () {
+        Route::get('/', [DagulirController::class, 'index'])->name('index');
+        // edit
+        Route::get('edit/{id}',[NewDagulirController::class,'edit'])->name('edit');
+        // create
+        Route::get('create',[DagulirController::class,'create'])->name('create');
+        Route::get('get-data-dagulir/{kode_pendaftaran}',[DagulirController::class,'getPengajuanDagulir'])->name('get-data-dagulir');
+        Route::post('create/store',[DagulirController::class,'store'])->name('post');
+        // Update Review
+        Route::post('review/post',[DagulirController::class,'updateReview'])->name('review-post');
+        // Review Penyelia
+        Route::get('jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('detailjawaban');
+        // Route::get('list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('draft.listDraftDagulir');
+        Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
+        // Send to pinca
+        Route::get('review-pincab-new', function() {
+            return view('dagulir.pengajuan-kredit.review-pincab-new');
+        });
+        Route::get('review-jawaban-new', function() {
+            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
+        });
+
+
+        // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
+        Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
+        // Review Pincab
+        Route::get('jawaban-pengajuan-pincab/{id}', [NewDagulirController::class, "getDetailJawabanPincab"])->name('detailjawaban_pincab');
+        Route::post('jawaban-pengajuan-pincab/update/{id}', [DagulirController::class, "updateReviewPincab"])->name('updateReviewPincab');
+        // Approval Pincab
+
+        // Route::get('acc-pincab/{id}', [DagulirController::class, "accPengajuan"])->name('acc_pincab');
+        Route::post('acc-pincab/{id}', [NewDagulirController::class, "accPengajuan"])->name('acc_pincab');
+        // Route::get('dec-pincab/update/{id}', [DagulirController::class, "decPengajuan"])->name('dec_pincab');
+        Route::get('dec-pincab/update/{id}', [NewDagulirController::class, "decPengajuan"])->name('dec_pincab');
+        // Kirim Dagulir
+        Route::post('kirim-sipde', [DagulirController::class, "storeSipde"])->name('store-sipde');
+
+        // Pengajuan
+        Route::resource('pengajuan', NewDagulirController::class);
+        // check penyelia
+        Route::post('pengajuan-kredit/penyelia-kredit', [NewDagulirController::class, "checkPenyeliaKredit"])->name('pengajuan.check.penyeliakredit');
+        Route::post('pengajuan-kredit/jawaban-pengajuan', [NewDagulirController::class, "getInsertKomentar"])->name('pengajuan.insertkomentar');
+        Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('pengajuan.detailjawaban');
+
+        // Cetak PDF
+        Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"CetakPK"])->name('pengajuan.cetak-pdf');
+
+        // Kembalikan posisi
+        Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [NewDagulirController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
+        Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
+        Route::post('post-file/{id}', [NewDagulirController::class, 'postFileDagulir'])->name('post-file-dagulir');
+        Route::get('/cetak-sppk/{id}', [NewDagulirController::class, 'cetakSPPK'])->name('cetak-sppk-dagulir');
+        Route::get('/cetak-pk/{id}', [NewDagulirController::class, 'cetakPK'])->name('cetak-pk-dagulir');
+        Route::get('cetak-surat/{id}', [NewDagulirController::class, 'cetakDagulir'])->name('cetak-surat');
+
+        Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
+            Route::resource('kabupaten', NewKabupatenController::class);
+            Route::get('get-kabupaten',[NewKecamatanController::class,'kabupaten'])->name('get.kabupaten');
+            Route::get('get-kecamatan',[NewKecamatanController::class,'kecamatan'])->name('get.kecamatan');
+            Route::resource('kecamatan', NewKecamatanController::class);
+            Route::resource('desa', NewDesaController::class);
+            Route::resource('cabang', NewCabangController::class);
+
+            Route::resource('user', NewUserController::class);
+            Route::resource('merk', NewMerkController::class);
+            Route::resource('tipe', NewTipeController::class);
+            Route::get('konfigurasi-api/login', [KonfirgurasiApi::class,'signin'])->name('api-konfigurasi.signin');
+            Route::resource('konfigurasi-api', KonfirgurasiApi::class);
+            Route::resource('master-item', NewItemController::class);
+            Route::get('add-edit-item', [NewItemController::class, 'addEditItem'])->name('add-edit-item');
+            Route::get('data-item-satu', [NewItemController::class, 'dataItemSatu'])->name('getItemSatu');
+            Route::get('data-item-tiga', [NewItemController::class, 'dataItemtiga'])->name('getItemTiga');
+            Route::get('data-item-empat', [NewItemController::class, 'dataItemEmpat'])->name('getItemEmpat');
+
+
+            Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
+            Route::post('/reset-session-post', [NewUserController::class, 'resetSession'])->name('reset-session');
+
+            Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
+            Route::post('/reset-api-session/post', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
+
+            Route::post('/reset-password/{id}', [NewUserController::class, 'resetPassword'])->name('reset-password');
+        });
+
+        Route::get('pengajuan-kredir/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
+        Route::prefix('/temp')
+            ->name('temp.')
+            ->group(function(){
+                Route::post('pengajuan-kredit/dagulir', [NewDagulirController::class, "tempDagulir"])->name('dagulir');
+                Route::post('pengajuan-kredit/tempFile', [NewDagulirController::class, "tempFile"])->name('file');
+                Route::post('pengajuan-kredit/tempFileDataUmum', [NewDagulirController::class, "tempFileDataUmum"])->name('fileDataUmum');
+                Route::post('pengajuan-kredit/tempJawaban', [NewDagulirController::class, "tempJawaban"])->name('jawaban');
+                Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
+                Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
+                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "indexTemp"])->name('list-draft-dagulir');
+                Route::post('pengajuan-kredit/deleteDraft/{id}', [NewDagulirController::class, 'deleteDraft'])->name('deleteDraft');
+            });
+
+        Route::prefix('/notification')
+            ->name('notification.')
+            ->group(function() {
+                Route::get('', [NotificationController::class, 'index'])->name('index');
+                Route::post('/hapus', [NotificationController::class, 'delete'])->name('delete');
+                Route::post('/get-detail', [NotificationController::class, 'getDetail'])->name('getDetail');
+            });
+    });
+    Route::middleware(['auth'])->group(function () {
+            // Dashboard Dana
+            Route::get('dashboard-dana',[DashboardKreditProgramController::class,'index'])->name('dana.dashboard');
+            // Master Dana
+            Route::prefix('master-dana')->group(function () {
+                // master dana modal
+                Route::get('/',[MasterDanaController::class,'index'])->name('master-dana.index');
+                Route::post('update/{id}',[MasterDanaController::class,'update'])->name('master-dana.update');
+                // master dana cabang
+                Route::get('dana-cabang',[MasterDanaController::class,'danaCabang'])->name('master-dana.cabang.index');
+                Route::post('store-cabang',[MasterDanaController::class,'storeCabang'])->name('master-dana.store-cabang');
+                Route::post('store-dana',[MasterDanaController::class,'storeDana'])->name('master-dana.store-dana');
+                // master alih dana
+                Route::get('alih-dana',[MasterDanaController::class,'alihDana'])->name('master-dana.alih-dana');
+                Route::post('alih-dana/post',[MasterDanaController::class,'alihDanaPost'])->name('master-dana.alih-dana.post');
+            });
+            // Get data dari dana cabang
+            Route::get('get-data-dari',[MasterDanaController::class,'getDari'])->name('master-dana.dari');
+            Route::get('get-data-ke',[MasterDanaController::class,'getKe'])->name('master-dana.ke');
+            Route::get('get-cabang-lawan',[MasterDanaController::class,'cabangLawan'])->name('master-dana.lawan');
+    });
+
     // check Pincab
-    Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
+    Route::post('pengajuan-kredit/pincabStatusDetailPost/{id}', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
     Route::get('pengajuan-kredit/pincabStatusDetail/{id}', [PengajuanKreditController::class, "checkPincabStatusDetail"])->name('pengajuan.check.pincab.status.detail');
-    Route::get('pengajuan-kredit/pincabStatusChangeTolak/{id}', [PengajuanKreditController::class, "checkPincabStatusChangeTolak"])->name('pengajuan.change.pincab.status.tolak');
+    Route::post('pengajuan-kredit/pincabStatusChangeTolak/{id}', [PengajuanKreditController::class, "checkPincabStatusChangeTolak"])->name('pengajuan.change.pincab.status.tolak');
     Route::get('pengajuan-kredit/pincabStatusChange/{id}', [PengajuanKreditController::class, "checkPincabStatusChange"])->name('pengajuan.change.pincab.status');
     Route::get('pengajuan-kredit/pincabStatus', [PengajuanKreditController::class, "checkPincabStatus"])->name('pengajuan.check.pincab.status');
     Route::get('pengajuan-kredit/pincab/{id}', [PengajuanKreditController::class, "checkPincab"])->name('pengajuan.check.pincab');
@@ -94,7 +264,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pengajuan-kredit/continue-draft', [PengajuanKreditController::class, 'continueDraft'])->name('pengajuan-kredit.continue');
     Route::get('lanjutkan-draft', [PengajuanKreditController::class, 'showContinueDraft'])->name('pengajuan-kredit.continue-draft');
     Route::get('user-json/{role}', [PengajuanKreditController::class, 'getUserJson'])->name('get_user_json');
-    Route::post('post-skema-kredit/{tempId}', [PengajuanKreditController::class, 'saveSkemaKreditDraft'])->name('save-skema-kredit-draft');
+        Route::post('post-skema-kredit/{tempId}', [PengajuanKreditController::class, 'saveSkemaKreditDraft'])->name('save-skema-kredit-draft');
 
     // master item
     Route::get('/master-item/addEditItem', [MasterItemController::class, 'addEditItem']);
@@ -145,6 +315,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
 
     Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [PengajuanKreditController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
+
+    // Pembayaran
+    Route::get('pembayaran',[PembayaranController::class,'index'])->name('pembayaran.index');
+    Route::post('pembayaran/upload',[PembayaranController::class,'upload'])->name('pembayaran.upload');
+    Route::post('pembayaran/upload-data',[PembayaranController::class,'upload_data'])->name('pembayaran.upload-data');
+    Route::post('pembayaran/check-data',[PembayaranController::class,'store'])->name('pembayaran.store');
+    Route::post('pembayaran/proses-data',[PembayaranController::class,'proses_data'])->name('pembayaran.proses');
+
+
 });
+Route::get('test',[PembayaranController::class,'checkPembayaran']);
 
 require __DIR__ . '/auth.php';

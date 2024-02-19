@@ -150,6 +150,16 @@
                     @enderror
                 </div>
                 <div class="form-group col-md-12">
+                    <label for="">No Telp</label>
+                    <input type="text" name="no_telp" id="no_telp" class="form-control @error('no_telp') is-invalid @enderror"
+                        placeholder="No Telp" value="{{$dataUmum->no_telp}}" required maxlength="255">
+                    @error('no_telp')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
                     <label for="">Alamat Rumah</label>
                     <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" maxlength="255"
                         id="" cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah', $dataUmum->alamat_rumah) }}</textarea>
@@ -1354,8 +1364,6 @@
                                                     value="{{ $itemTextTiga->id }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
-                                                <input type="hidden" name="id_jawaban_text[]"
-                                                    value="{{ $itemTextTiga->id }}">
 
                                                 <input type="hidden" name="id_text[]"
                                                     value="{{ $itemTextTiga->id_item }}">
@@ -3185,7 +3193,7 @@
             var inputNumber = $(form + " input[type=number]")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
-    
+
             /*$.each(inputFile, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
                     if (form == ".form-wizard[data-index='2']") {
@@ -3213,7 +3221,7 @@
                     }
                 }
             })*/
-    
+
             $.each(inputText, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id");
@@ -3232,7 +3240,7 @@
                     }
                 }
             })
-    
+
             $.each(inputNumber, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id");
@@ -3249,7 +3257,7 @@
                     }
                 }
             })
-    
+
             $.each(select, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id");
@@ -3271,7 +3279,7 @@
                     }
                 }
             })
-    
+
             $.each(textarea, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id");
@@ -3290,10 +3298,10 @@
                     }
                 }
             })
-    
+
             //console.log(nullValue);
         }
-    
+
         $(".btn-simpan").on('click', function(e) {
             if ($('#komentar_staff').val() == '') {
                 Swal.fire({
@@ -3309,7 +3317,7 @@
                     cekValueKosong(i)
                 }
                 const ijinUsaha = $("#ijin_usaha").val();
-    
+
                 // cek input files
                 var inputFiles = $('input[type=file]')
                 var fileEmpty = [];
@@ -3371,14 +3379,14 @@
                     }
                 })
                 // end cek input file
-    
+
                 if (nullValue.length > 0 || fileEmpty.length > 0) {
                     let message = "";
                     $.each(nullValue, (i, v) => {
                         var item = v;
                         if (v == 'dataLevelDua')
                             item = 'slik';
-    
+
                         if (v == 'itemByKategori')
                             item = 'jaminan tambahan';
 
@@ -3402,7 +3410,7 @@
                                 }
                             }
                         }
-    
+
                         if (v == 'undifined') {
                             for(var j = 0; j < nullValue.length; j++){
                                 while(nullValue[j] == v){
@@ -3413,7 +3421,7 @@
 
                         if (item.includes('text'))
                             item = item.replaceAll('text', '');
-    
+
                         message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
                     })
                     for (var i = 0; i < fileEmpty.length; i++) {
@@ -3437,7 +3445,7 @@
                 }
             }
         })
-    
+
         for (let i = 0; i <= parseInt(jumlahData); i++) {
             cekValueKosong(i);
         }

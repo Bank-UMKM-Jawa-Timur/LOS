@@ -141,7 +141,7 @@ class KabupatenController extends Controller
             $kabupaten->kabupaten = $request->get('kabupaten');
             $kabupaten->save();
 
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {

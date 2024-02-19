@@ -10,14 +10,22 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Exports\DataNominatif;
+use App\Repository\DashboardRepository;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
-use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
-    public function index()
+    private $repo;
+
+    public function __construct()
+    {
+        $this->repo = new DashboardRepository;
+    }
+
+    public function index(Request $request)
     {
         $param['pageTitle'] = "Analisa Kredit";
         if (Auth::user()->password_change_at == null) {
@@ -79,12 +87,61 @@ class DashboardController extends Controller
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->get();
         }
+
+        $param['dataCard'] = $this->repo->getCount($request);
+        $param['dataYear'] = $this->repo->getDataYear();
+        $param['dataPosisi'] = $this->repo->getDataPosisi($request);
+        $param['dataSkema'] = $this->repo->getDataSkema($request);
+        $param['dataRangking'] = $this->repo->getRangking($request);
+
         return view('dashboard', $param);
+    }
+
+    public static function getDataKaryawan()
+    {
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $host . '/api/v1/karyawan/' . auth()->user()->nip,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ]);
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $json = json_decode($response);
+
+        if ($json) {
+            if ($json->data)
+                $data = [
+                    'nama' => $json->data->nama_karyawan,
+                    'cabang' => $json->data->nama_cabang,
+                ];
+                return $data;
+        }
+
+        $cabang = Cabang::select('kode_cabang', 'cabang AS nama_cabang')
+                        ->where('id', Auth::user()->id_cabang)
+                        ->first();
+        $data = [
+            'nama' => Auth::user()->name,
+            'cabang' => $cabang ? $cabang->nama_cabang : 'undifined',
+        ];
+
+        return $data;
     }
 
     public static function getKaryawan()
     {
-        $host = env('HCS_HOST','https://hcs.bankumkm.id');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $host . '/api/v1/karyawan/' . auth()->user()->nip,
@@ -158,14 +215,14 @@ class DashboardController extends Controller
                                 ->select(
                                     'c.kode_cabang AS kodeC',
                                     'c.cabang',
-                                    \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
-                                    \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
-                                    \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+                                    DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
+                                    DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
+                                    DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
                                             SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
                                             SUM(IF(p.posisi = 'PBO', 1,0))+
                                             SUM(IF(p.posisi = 'PBP', 1,0))+
                                             SUM(IF(p.posisi = 'Pincab', 1,0))) AS diproses"),
-                                    \DB::raw("(SUM(IF(p.posisi = 'Selesai', 1,0))+
+                                    DB::raw("(SUM(IF(p.posisi = 'Selesai', 1,0))+
                                             SUM(IF(p.posisi = 'Ditolak', 1,0))+
                                             (
                                                 SUM(IF(p.posisi = 'Proses Input Data', 1,0))+

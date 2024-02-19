@@ -15,7 +15,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('pembayaran:cron')
+                ->daily()
+                ->appendOutputTo(storage_path('logs/console.log'));
+        $schedule->command('backup:clean')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
+        $schedule->command('backup:run --only-db')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
+        $schedule->command('onedrive:cron')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
+        $schedule->command('backup:monitor')->daily()->at('01:58')->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:clean')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:run --only-db')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('onedrive:cron')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
+        // $schedule->command('backup:monitor')->everyMinute()->appendOutputTo(storage_path('logs/laravel.log'));
     }
 
     /**

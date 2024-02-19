@@ -20,7 +20,8 @@ class PengajuanAPIController extends Controller
     }
     static function getKaryawan($nip){
         // retrieve from api
-        $host = env('HCS_HOST','https://hcs.bankumkm.id');
+        $konfiAPI = DB::table('api_configuration')->first();
+        $host = $konfiAPI->hcs_host;
         $apiURL = $host . '/api/karyawan';
 
         try {

@@ -79,7 +79,6 @@
         // Tampilkan/menyembunyikan input tanggal awal dan tanggal akhir berdasarkan pilihan select
         $('select[name="k_tanggal"]').change(function() {
             var optionKategori = $(this).val();
-            console.log("s");
 
             if (optionKategori === 'kustom') {
                 $('#tanggalAwalDiv').show();

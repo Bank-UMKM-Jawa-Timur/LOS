@@ -23,6 +23,14 @@ class ItemModel extends Model
 
     public function detailPendapatPerAspek()
     {
-        return $this->hasMany('\App\Models\DetailPendapatPerAspek', 'id_aspek');
+        return $this->hasMany(PendapatPerAspek::class, 'id_aspek');
+    }
+
+    public function childs() {
+        return $this->hasMany(ItemModel::class, 'id_parent', 'id');
+    }
+
+    public function jawabanOption() {
+        return $this->belongsTo(OptionModel::class, 'id', 'id');
     }
 }

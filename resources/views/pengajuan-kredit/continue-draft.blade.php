@@ -179,6 +179,16 @@ null => 1,
                 @enderror
             </div>
             <div class="form-group col-md-12">
+                <label for="">No Telp</label>
+                <input type="text" name="no_telp" id="no_telp" class="form-control @error('no_telp') is-invalid @enderror"
+                    placeholder="No Telp" value="{{ $duTemp?->no_telp ?? '' }}" required maxlength="255">
+                @error('no_telp')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
                 <label for="">Alamat Rumah</label>
                 <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror"
                     maxlength="255" id="" cols="30" rows="4"
@@ -791,8 +801,7 @@ is-invalid
                     @foreach ($dataJawaban as $key => $itemJawaban)
                     <option id="{{ $idLevelDua . '_' . $key }}"
                         value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}"
-                        {{ temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : ''
-                        }}>
+                        {{ temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : ''}}>
                         {{ $itemJawaban->option }}</option>
                     @endforeach
                 </select>
@@ -1287,7 +1296,7 @@ is-invalid
                     }
                 }
             }
-    
+
             if (formIndex == 4) {
                 var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
                 if (jaminanTambSel == "Tanah dan Bangunan") {
@@ -1298,7 +1307,7 @@ is-invalid
                     subtotalInput -= 2;
                 }
             }
-    
+
             if (formIndex == 7) {
                 subtotalInput -= 1;
             }
@@ -1328,7 +1337,7 @@ is-invalid
                     }
                 }
             }
-    
+
             if (formIndex == 3) {
                 var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
                 if (jaminanTambSel == "Tanah dan Bangunan") {
@@ -1339,7 +1348,7 @@ is-invalid
                     subtotalInput -= 2;
                 }
             }
-    
+
             if (formIndex == 6) {
                 subtotalInput -= 1;
             }
@@ -2722,7 +2731,7 @@ is-invalid
                                         }
                                     }
                                 }
-        
+
                                 if (inputId == "file sku") {
                                     if ((v.value == '' || v.value == null) && (filename == '' || filename == null)) {
                                         if (!fileEmpty.includes(inputId))
