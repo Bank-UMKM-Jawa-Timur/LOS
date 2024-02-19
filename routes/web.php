@@ -55,8 +55,6 @@ Route::post('/upload-onedrive', [UploadOnedriveController::class, 'store'])->nam
 Route::get('/onedrive', [UploadOnedriveController::class, 'getAuthorizationToken'])->name('upload-onedrive.test');
 Route::get('callback', [UploadOnedriveController::class,'callback']);
 Route::get('respone-onedrive-get', [UploadOnedriveController::class,'fileUploadWithChunk']);
-// monitor log
-Route::get('/log',[UploadOnedriveController::class,'monitorLog'])->name('monitor.log');
 
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
@@ -67,6 +65,9 @@ Route::get('/coming-soon', function(){
 })->name('coming-soon');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // monitor log
+    Route::get('/log',[UploadOnedriveController::class,'monitorLog'])->name('monitor.log');
+
     Route::get('/detail-pengajuan-new/tes', function () {
         return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
     });
