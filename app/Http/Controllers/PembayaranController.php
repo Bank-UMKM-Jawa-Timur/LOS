@@ -52,136 +52,142 @@ class PembayaranController extends Controller
     }
 
     function store(Request $request) {
-        // Process file_txt
-        $filename_txt = 'LHLONINC.txt';
-        // Ganti pembacaan file_txt dengan fungsi file
-        $txt_data = array_map('utf8_encode', file(storage_path('app/file/'.$filename_txt), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
-        // Process file_dic
-        $theArray = Excel::toCollection([], storage_path('app/dictionary/').'dictionary.xlsx');
-        // end process file_dic
-        //start file_nomi
-        $filename = 'nomi.xlsx';
-        $theArrayNomi = Excel::toCollection([],storage_path('app/file_nomi/').$filename);
-        // proses array
-        $fieldPositions = [];
-        $fieldPositionsNomi = [];
-        for ($i=0; $i < count($theArrayNomi[0]); $i++) {
-            if ($i > 0) {
-                array_push($fieldPositionsNomi,[
-                    'norek' => $theArrayNomi[0][$i][1],
-                    'kolek' => $theArrayNomi[0][$i][10],
-                ]);
-            }
-        }
-        // //end file_nomi
-        for ($i=0; $i < count($theArray[0]); $i++) {
-            // Sequence(HLSEQN) | No. Loan(HLLNNO) | Tanggal Pembayaran(HLDTVL) | Nominal(HLOPMT)
-            if ($i > 4) {
-                array_push($fieldPositions,[
-                    'field' => $theArray[0][$i][0],
-                    'from' => $theArray[0][$i][1],
-                    'to' => $theArray[0][$i][2],
-                ]);
-            }
-
-        }
-
-        $result = array_map(function ($val) use ($fieldPositions) {
-            $objects = [];
-            foreach ($fieldPositions as $j) {
-                $value = substr($val, $j['from']-1, $j['to']-$j['from']+1);
-                $value = trim($value);
-                $objects[$j['field']] = $value;
-                $objects['kolek'] = '';
-            }
-            return $objects;
-        }, $txt_data);
-
-        // Gunakan array_filter untuk menyaring result
-        $result = array_filter($result, function ($value) {
-            return $value['HLACKY'] == 'PYSPI' || $value['HLACKY'] == 'PDYPI' || $value['HLACKY'] == "MRYPI+";
-        });
-
-        $result_data = [];
-        foreach ($result as $value) {
-            if (array_key_exists('HLLNNO', $value)) {
-                $HLLNNO_value = $value['HLLNNO'];
-                $array1Obj = collect($fieldPositionsNomi)->firstWhere('norek', $HLLNNO_value);
-
-                $result_data[] = [
-                    'HLSEQN' => $value['HLSEQN'],
-                    'HLLNNO' => $value['HLLNNO'],
-                    'HLDTVL' => $value['HLDTVL'],
-                    'HLORMT' => $value['HLORMT'],
-                    'HLDESC' => $value['HLDESC'],
-                    'kolek' => $array1Obj && $array1Obj['kolek'] !== '-' ? $array1Obj['kolek'] : '-',
-                ];
-            }
-        }
-        $master_loan = MasterDDLoan::get()->toArray();
-        $result_data_loan = [];
-        foreach ($master_loan as $item) {
-            if (array_key_exists('no_loan', $item)) {
-                $no_loan = $item['no_loan'];
-                $array1Obj = collect($result_data)->firstWhere('HLLNNO', $no_loan);
-                $result_data_loan [] = $array1Obj;
-            }
-        }
-        foreach ($result_data_loan as $key => $value) {
-            if ($value != null) {
-                if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
-                    alert()->error('Error', 'Data is incomplete.');
-                    return redirect()->route('pembayaran.index');
-                }
-                // current master anggsuran
-                $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
-                    ->where('no_loan', $value['HLLNNO'])
-                    ->count();
-
-
-                // Insert data only if no existing records
-                if ($existing_loan === 0) {
-                    $pembayaran = new MasterDDAngsuran;
-                    $pembayaran->squence = $value['HLSEQN'];
-                    $pembayaran->no_loan = $value['HLLNNO'];
-                    $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
-                    $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
-                    $pembayaran->kolek = $value['kolek'];
-                    $pembayaran->keterangan = $value['HLDESC'];
-                    $pembayaran->save();
+        try {
+            // Process file_txt
+            $filename_txt = 'LHLONINC.txt';
+            // Ganti pembacaan file_txt dengan fungsi file
+            $txt_data = array_map('utf8_encode', file(storage_path('app/file/'.$filename_txt), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+            // Process file_dic
+            $theArray = Excel::toCollection([], storage_path('app/dictionary/').'dictionary.xlsx');
+            // end process file_dic
+            //start file_nomi
+            $filename = 'nomi.xlsx';
+            $theArrayNomi = Excel::toCollection([],storage_path('app/file_nomi/').$filename);
+            // proses array
+            $fieldPositions = [];
+            $fieldPositionsNomi = [];
+            for ($i=0; $i < count($theArrayNomi[0]); $i++) {
+                if ($i > 0) {
+                    array_push($fieldPositionsNomi,[
+                        'norek' => $theArrayNomi[0][$i][1],
+                        'kolek' => $theArrayNomi[0][$i][10],
+                    ]);
                 }
             }
+            // //end file_nomi
+            for ($i=0; $i < count($theArray[0]); $i++) {
+                // Sequence(HLSEQN) | No. Loan(HLLNNO) | Tanggal Pembayaran(HLDTVL) | Nominal(HLOPMT)
+                if ($i > 4) {
+                    array_push($fieldPositions,[
+                        'field' => $theArray[0][$i][0],
+                        'from' => $theArray[0][$i][1],
+                        'to' => $theArray[0][$i][2],
+                    ]);
+                }
 
-        }
-        $inserted_data = MasterDDAngsuran::whereDate('created_at', Carbon::now())
-                                        ->get();
-        if (count($inserted_data) <= 0) {
-            alert()->error('Error', 'Data telah diproses.');
-            return redirect()->route('pembayaran.index');
-        }
+            }
 
-        foreach ($inserted_data as $key => $value) {
-            if ($value != null) {
-                // current master anggsuran
-                $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-                $kode = $loan->kode_pendaftaran;
-                // update sipde
-                if ($value['no_loan'] == $loan->no_loan) {
-                    $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
-                    $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-                    $update->baki_debet = $total_angsuran;
-                    $update->update();
-                    $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$total_angsuran,$value['kolek']);
-                    if ($response != 200) {
-                        DB::rollBack();
-                        alert()->error('Error','Terjadi Kesalahan.');
+            $result = array_map(function ($val) use ($fieldPositions) {
+                $objects = [];
+                foreach ($fieldPositions as $j) {
+                    $value = substr($val, $j['from']-1, $j['to']-$j['from']+1);
+                    $value = trim($value);
+                    $objects[$j['field']] = $value;
+                    $objects['kolek'] = '';
+                }
+                return $objects;
+            }, $txt_data);
+
+            // Gunakan array_filter untuk menyaring result
+            $result = array_filter($result, function ($value) {
+                return $value['HLACKY'] == 'PYSPI' || $value['HLACKY'] == 'PDYPI' || $value['HLACKY'] == "MRYPI+";
+            });
+
+            $result_data = [];
+            foreach ($result as $value) {
+                if (array_key_exists('HLLNNO', $value)) {
+                    $HLLNNO_value = $value['HLLNNO'];
+                    $array1Obj = collect($fieldPositionsNomi)->firstWhere('norek', $HLLNNO_value);
+
+                    $result_data[] = [
+                        'HLSEQN' => $value['HLSEQN'],
+                        'HLLNNO' => $value['HLLNNO'],
+                        'HLDTVL' => $value['HLDTVL'],
+                        'HLORMT' => $value['HLORMT'],
+                        'HLDESC' => $value['HLDESC'],
+                        'kolek' => $array1Obj && $array1Obj['kolek'] !== '-' ? $array1Obj['kolek'] : '-',
+                    ];
+                }
+            }
+            $master_loan = MasterDDLoan::get()->toArray();
+            $result_data_loan = [];
+            foreach ($master_loan as $item) {
+                if (array_key_exists('no_loan', $item)) {
+                    $no_loan = $item['no_loan'];
+                    $array1Obj = collect($result_data)->firstWhere('HLLNNO', $no_loan);
+                    $result_data_loan [] = $array1Obj;
+                }
+            }
+            foreach ($result_data_loan as $key => $value) {
+                if ($value != null) {
+                    if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
+                        alert()->error('Error', 'Data is incomplete.');
                         return redirect()->route('pembayaran.index');
+                    }
+                    // current master anggsuran
+                    $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
+                        ->where('no_loan', $value['HLLNNO'])
+                        ->count();
+
+
+                    // Insert data only if no existing records
+                    if ($existing_loan === 0) {
+                        $pembayaran = new MasterDDAngsuran;
+                        $pembayaran->squence = $value['HLSEQN'];
+                        $pembayaran->no_loan = $value['HLLNNO'];
+                        $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
+                        $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
+                        $pembayaran->kolek = $value['kolek'];
+                        $pembayaran->keterangan = $value['HLDESC'];
+                        $pembayaran->save();
+                    }
+                }
+
+            }
+            $inserted_data = MasterDDAngsuran::whereDate('created_at', Carbon::now())
+                                            ->get();
+            if (count($inserted_data) <= 0) {
+                alert()->error('Error', 'Data telah diproses.');
+                return redirect()->route('pembayaran.index');
+            }
+
+            foreach ($inserted_data as $key => $value) {
+                if ($value != null) {
+                    // current master anggsuran
+                    $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                    $kode = $loan->kode_pendaftaran;
+                    // update sipde
+                    if ($value['no_loan'] == $loan->no_loan) {
+                        $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
+                        $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                        $update->baki_debet = $total_angsuran;
+                        $update->update();
+                        $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$total_angsuran,$value['kolek']);
+                        if ($response != 200) {
+                            DB::rollBack();
+                            alert()->error('Error','Terjadi Kesalahan.');
+                            return redirect()->route('pembayaran.index');
+                        }
                     }
                 }
             }
+            alert()->success('Sukses','Pembayaran Berhasil dilakukan');
+            return redirect()->route('pembayaran.index');
+        } catch (Exception $th) {
+            return $th;
+        } catch (QueryException $th){
+            return $th;
         }
-        alert()->success('Sukses','Pembayaran Berhasil dilakukan');
-        return redirect()->route('pembayaran.index');
     }
 
     function upload_data(Request $request) {
