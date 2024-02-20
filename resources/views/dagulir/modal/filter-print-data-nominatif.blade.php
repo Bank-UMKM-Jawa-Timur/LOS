@@ -10,7 +10,7 @@
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
-        <form action="{{ route('print_data_nominatif') }}" method="POST">
+        <form action="{{ route('print_data_nominatif') }}" method="GET">
             @csrf
             <div class="modal-body">
                 <div class="form-group-1 mb-4">

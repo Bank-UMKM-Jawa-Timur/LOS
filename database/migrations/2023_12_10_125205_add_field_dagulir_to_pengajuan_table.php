@@ -16,7 +16,7 @@ class AddFieldDagulirToPengajuanTable extends Migration
     {
         Schema::table('pengajuan', function (Blueprint $table) {
             DB::statement("ALTER TABLE pengajuan MODIFY COLUMN `skema_kredit` enum('PKPJ','KKB','Talangan Umroh','Prokesra','Kusuma','Dagulir') DEFAULT 'Prokesra'");
-            $table->unsignedBigInteger('dagulir_id')->nullable()->after('skema_limit_id');
+            $table->unsignedBigInteger('dagulir_id')->nullable();
 
             $table->foreign('dagulir_id')
                 ->references('id')

@@ -83,6 +83,43 @@
                                 {{-- <textarea name="sipde_password" class="form-textarea" placeholder="Masukkan disini">{{ $data ? $data->sipde_password : '' }}</textarea> --}}
                             </div>
                         </div>
+                        <div class="form-group-1 col-span-2 pl-0">
+                            <div>
+                                <div class="w-full p-2 border-l-8 border-theme-primary bg-gray-100">
+                                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                                        KONFIGURASI ONEDRIVE :
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-3">
+                            <div class="input-box">
+                                <label for="">URL Callback</label>
+                                <input type="text" name="url_callback" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->url_callback : 'http://localhost:8000/callback' }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="">OAUTH APP ID</label>
+                                <input type="text" name="oauth_app_id" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->oauth_app_id : 'c5ffef66-0935-4508-afbc-477acc3cf583' }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="">OAUTH APP SECRET</label>
+                                <input type="text" name="oauth_app_secret" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->oauth_app_secret : 'QkO8Q~EKdVceCpkmTUhq9tiaKHk3r~GL.LTe5b2t' }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="">OAUTH AUTHORITY</label>
+                                <input type="text" name="oauth_authority" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->oauth_authority : 'https://login.microsoftonline.com/common' }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="">OAUTH AUTHORIZE ENDPOINT</label>
+                                <input type="text" name="oauth_authorize_endpoint" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->oauth_authorize_endpoint : '/oauth2/v2.0/authorize' }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="">OAUTH TOKEN ENDPOINT</label>
+                                <input type="text" name="oauth_token_endpoint" class="form-input" placeholder="Masukkan disini" value="{{ $data ? $data->oauth_token_endpoint : '/oauth2/v2.0/token' }}">
+                            </div>
+
+
+                        </div>
                     </div>
                     <input type="hidden" name="id" value="{{ $data ? $data->id : null }}">
                     <div class="flex justify-start items-end ml-4">
@@ -93,6 +130,13 @@
                             </span>
                             <span class="ml-1 mt-1 text-sm"> {{ $data ? 'Simpan Perubahan' : 'Simpan' }} </span>
                         </button>
+                        <a href="{{ route('dagulir.master.api-konfigurasi.signin') }}"
+                            class="px-7 py-2 rounded font-semibold flex gap-3 bg-blue-600 border text-white mt-2">
+                            <span class="">
+                                <iconify-icon class="text-2xl " icon="{{$data ? 'uil:check-circle' : 'ph:plus-bold'}}"></iconify-icon>
+                            </span>
+                            <span class="ml-1 mt-1 text-sm"> {{ $data ? 'SigIn OneDrive' : 'Simpan' }} </span>
+                        </a>
                     </div>
                 </form>
             </div>

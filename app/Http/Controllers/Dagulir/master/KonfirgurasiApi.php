@@ -49,6 +49,12 @@ class KonfirgurasiApi extends Controller
                     'sipde_host' => $request->sipde_host ? $request->sipde_host : null,
                     'sipde_username' => $request->sipde_username ? $request->sipde_username : null,
                     'sipde_password' => $request->sipde_password ? $request->sipde_password : null,
+                    'url_callback' => $request->url_callback ? $request->url_callback : null,
+                    'oauth_app_id' => $request->oauth_app_id ? $request->oauth_app_id : null,
+                    'oauth_app_secret' => $request->oauth_app_secret ? $request->oauth_app_secret : null,
+                    'oauth_authority' => $request->oauth_authority ? $request->oauth_authority : null,
+                    'oauth_authorize_endpoint' => $request->oauth_authorize_endpoint ? $request->oauth_authorize_endpoint : null,
+                    'oauth_token_endpoint' => $request->oauth_token_endpoint ? $request->oauth_token_endpoint : null,
                 ]);
             } else {
                 DB::table('api_configuration')->where('id', $request->id)->update([
@@ -59,6 +65,12 @@ class KonfirgurasiApi extends Controller
                     'sipde_host' => $request->sipde_host ? $request->sipde_host : null,
                     'sipde_username' => $request->sipde_username ? $request->sipde_username : null,
                     'sipde_password' => $request->sipde_password ? $request->sipde_password : null,
+                    'url_callback' => $request->url_callback ? $request->url_callback : null,
+                    'oauth_app_id' => $request->oauth_app_id ? $request->oauth_app_id : null,
+                    'oauth_app_secret' => $request->oauth_app_secret ? $request->oauth_app_secret : null,
+                    'oauth_authority' => $request->oauth_authority ? $request->oauth_authority : null,
+                    'oauth_authorize_endpoint' => $request->oauth_authorize_endpoint ? $request->oauth_authorize_endpoint : null,
+                    'oauth_token_endpoint' => $request->oauth_token_endpoint ? $request->oauth_token_endpoint : null,
                 ]);
             }
             alert()->success('Success', 'Berhasil menyimpan perubahan.');
@@ -113,5 +125,26 @@ class KonfirgurasiApi extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    function signin() {
+        // Initialize the OAuth client
+        $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+            'clientId'                => config('azure.appId'),
+            'clientSecret'            => config('azure.appSecret'),
+            'redirectUri'             => config('azure.redirectUri'),
+            'urlAuthorize'            => config('azure.authority').config('azure.authorizeEndpoint'),
+            'urlAccessToken'          => config('azure.authority').config('azure.tokenEndpoint'),
+            'urlResourceOwnerDetails' => '',
+            'scopes'                  => config('azure.scopes')
+        ]);
+
+        $authUrl = $oauthClient->getAuthorizationUrl();
+
+        // Save client state so we can validate in callback
+        session(['oauthState' => $oauthClient->getState()]);
+
+        // Redirect to AAD signin page
+        return redirect()->away($authUrl);
     }
 }

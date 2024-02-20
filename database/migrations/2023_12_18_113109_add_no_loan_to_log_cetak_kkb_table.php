@@ -14,7 +14,7 @@ class AddNoLoanToLogCetakKkbTable extends Migration
     public function up()
     {
         Schema::table('log_cetak_kkb', function (Blueprint $table) {
-            $table->string('no_loan', 100)->nullable()->after('no_pk');
+            $table->string('no_loan', 100)->nullable();
         });
     }
 
