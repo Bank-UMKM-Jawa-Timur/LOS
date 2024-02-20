@@ -32,6 +32,7 @@ use App\Http\Controllers\KreditProgram\MasterDanaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\UploadOnedriveController;
+use App\Models\PengajuanModel;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -45,6 +46,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('test-pengajuan', function () {
+    $data = PengajuanModel::where('skema_kredit','Kusuma')->count();
+    return $data;
+});
 Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
 Route::get('/', function () {
     return redirect()->route('login');
