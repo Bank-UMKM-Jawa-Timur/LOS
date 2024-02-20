@@ -996,7 +996,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_penyelia }} Bulan</p>
+                                    <p>{{ $plafonUsulan?->jangka_waktu_usulan_penyelia }} Bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -1006,7 +1006,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_penyelia, 0, ',', '.')}}</p>
+                                    <p>Rp. {{ number_format($plafonUsulan?->plafon_usulan_penyelia, 0, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
