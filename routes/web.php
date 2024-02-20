@@ -47,7 +47,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 |
 */
 Route::get('test-pengajuan', function () {
-    $data = PengajuanModel::where('skema_kredit','Kusuma')->count();
+    $data = PengajuanModel::where('skema_kredit','')->update(['skema_kredit' => 'Kusuma']);
     return $data;
 });
 Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
