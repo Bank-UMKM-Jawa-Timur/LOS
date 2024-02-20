@@ -52,6 +52,8 @@ class PembayaranController extends Controller
     }
 
     function store(Request $request) {
+        ini_set('max_execution_time', 120);
+        DB::beginTransaction();
         try {
             // Process file_txt
             $filename_txt = 'LHLONINC.txt';
@@ -156,6 +158,7 @@ class PembayaranController extends Controller
             }
             $inserted_data = MasterDDAngsuran::whereDate('created_at', Carbon::now())
                                             ->get();
+            DB::commit();
             if (count($inserted_data) <= 0) {
                 alert()->error('Error', 'Data telah diproses.');
                 return redirect()->route('pembayaran.index');
@@ -184,8 +187,10 @@ class PembayaranController extends Controller
             alert()->success('Sukses','Pembayaran Berhasil dilakukan');
             return redirect()->route('pembayaran.index');
         } catch (Exception $th) {
+            DB::rollBack();
             return $th;
         } catch (QueryException $th){
+            DB::rollBack();
             return $th;
         }
     }
