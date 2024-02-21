@@ -325,8 +325,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Pembayaran
     Route::get('pembayaran',[PembayaranController::class,'index'])->name('pembayaran.index');
     Route::post('pembayaran/upload',[PembayaranController::class,'upload'])->name('pembayaran.upload');
-    Route::get('pembayaran/upload-data',[PembayaranController::class,'upload_data'])->name('pembayaran.upload-data');
-    Route::post('pembayaran/check-data',[PembayaranController::class,'store'])->name('pembayaran.store');
+    Route::post('pembayaran/upload-data',[PembayaranController::class,'upload_data'])->name('pembayaran.upload-data');
+    Route::get('pembayaran/check-data',[PembayaranController::class,'store'])->name('pembayaran.store');
     Route::post('pembayaran/proses-data',[PembayaranController::class,'proses_data'])->name('pembayaran.proses');
 
 
