@@ -236,7 +236,7 @@
                             <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white" id="prosesData">Proses Pembayaran</button>
                         </form>
                     @endif
-                    <form id="fileUploadForm" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" method="POST">
+                    <form id="fileUploadForm" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" method="GET">
                         @csrf
                         <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white" id="checkFile" style="display:none;">Cek Pembayaran</button>
                     </form>

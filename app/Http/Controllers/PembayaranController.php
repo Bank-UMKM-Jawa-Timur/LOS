@@ -53,8 +53,9 @@ class PembayaranController extends Controller
 
     function store(Request $request) {
         ini_set('max_execution_time', 120);
+        ini_set('memory_limit', '-1');
         DB::beginTransaction();
-        try {
+        // try {
             // Process file_txt
             $filename_txt = 'LHLONINC.txt';
             // Ganti pembacaan file_txt dengan fungsi file
@@ -186,13 +187,13 @@ class PembayaranController extends Controller
             }
             alert()->success('Sukses','Pembayaran Berhasil dilakukan');
             return redirect()->route('pembayaran.index');
-        } catch (Exception $th) {
-            DB::rollBack();
-            return $th;
-        } catch (QueryException $th){
-            DB::rollBack();
-            return $th;
-        }
+        // } catch (Exception $th) {
+        //     DB::rollBack();
+        //     return $th;
+        // } catch (QueryException $th){
+        //     DB::rollBack();
+        //     return $th;
+        // }
     }
 
     function upload_data(Request $request) {
