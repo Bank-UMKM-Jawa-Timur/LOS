@@ -122,7 +122,7 @@
                     </div>
                     <div class="mt-3">
                         <h2 id="total-idle" class="text-theme-text text-2xl font-bold tracking-tighter">
-                            Rp.0,00
+                            {{ "Rp.". number_format($total_akumulasi ,2,',','.') }}
                         </h2>
                         <p class="text-gray-500 text-sm tracking-tighter">
                             Total Akumulatif
