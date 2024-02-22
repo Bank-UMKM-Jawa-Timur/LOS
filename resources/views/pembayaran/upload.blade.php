@@ -138,6 +138,8 @@
             progressBarContainer.find('.progress-bar').html('0%');
             progressBarContainer.find('.progress-bar').removeClass('bg-success');
             // progressBarContainer.show();
+            $('#preload-data').removeClass('hidden');
+
         }
 
         function updateProgress(element, value) {
@@ -159,6 +161,7 @@
         }
         // alert message
         function successMessage(message) {
+            $('#preload-data').addClass('hidden');
             Swal.fire({
                 title: 'Sukses!',
                 text: message,

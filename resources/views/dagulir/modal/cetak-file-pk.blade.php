@@ -32,7 +32,7 @@
                         </div>
                         <div class="input-box">
                             <label for="no_pk">No PK</label>
-                            <input type="Text" name="no_pk" id="no_pk" class="form-input" required>
+                            <input type="Text" name="no_pk" id="no_pk" class="form-input" accept="application/pdf" required>
                             <span class="text-red-500 m-0 mt-2 hidden">Harus diisi.</span>
                         </div>
                     </div>

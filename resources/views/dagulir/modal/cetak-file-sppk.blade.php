@@ -22,7 +22,7 @@
                 <input type="hidden" name="tipe_file" value="SPPK">
                     <div class="form-group">
                         <label for="sppk">File SPPK</label>
-                        <input type="file" name="sppk" id="sppk" class="form-input file" required>
+                        <input type="file" name="sppk" id="sppk" class="form-input file" accept="application/pdf" required>
                         <span class="text-red-500 m-0 mt-2 hidden">Besaran file tidak boleh lebih dari 5 MB.</span>
                     </div>
                 </div>

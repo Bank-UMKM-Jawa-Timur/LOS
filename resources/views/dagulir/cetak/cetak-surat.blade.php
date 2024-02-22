@@ -926,6 +926,39 @@
             <td>{{$komentar->komentar_pincab}}</td>
         </tr>
     </table>
+    <br>
+    <div>
+        <b>{{ $dataKeuangan->nama }}</b>
+        @foreach ($dataLevelKeuangan as $item)
+            @php
+                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.status_skor', 'item.is_commentable')
+                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                    ->where('jawaban_text.id_jawaban', $item->id)
+                    ->where('jawaban_text.opsi_text','!=','tidak_ada_legalitas_usaha')
+                    ->get();
+            @endphp
+            <table>
+                <tr>
+                    @foreach ($dataDetailJawabanText as $itemTextDua)
+                        <td>{{ $item->nama }}</td>
+                        <td>:</td>
+                        <td>
+                            @php
+                                $file_parts = pathinfo(public_path('') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                            @endphp
+                            @if ($file_parts['extension'] == 'pdf')
+                                <iframe src="{{ public_path('') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
+                            @else
+                                <img src="{{ public_path('') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="450px">
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
+            </table>
+        @endforeach
+    </div>
+
 </body>
 </html>
 @if (isset($_GET['pdf']))

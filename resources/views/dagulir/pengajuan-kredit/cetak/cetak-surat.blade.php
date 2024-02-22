@@ -49,7 +49,7 @@
                 <label>Nama</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->nama }}
             </td>
         </tr>
@@ -58,7 +58,7 @@
                 <label>Alamat KTP</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->alamat_ktp }}
             </td>
         </tr>
@@ -67,7 +67,7 @@
                 <label>Alamat Domisili</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->alamat_dom }}
             </td>
         </tr>
@@ -76,7 +76,7 @@
                 <label>Alamat Usaha</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->alamat_usaha }}
             </td>
         </tr>
@@ -85,17 +85,30 @@
                 <label>NIK</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->nik }}
             </td>
         </tr>
+        @php
+        $stp = "";
+            if ($dataNasabah->status_pernikahan == 1) {
+                $stp = "Belum Menikah";
+            } else if ($dataNasabah->status_pernikahan == 2) {
+                $stp = "Menikah";
+            } else if ($dataNasabah->status_pernikahan == 3) {
+                $stp = "Duda";
+            } else if ($dataNasabah->status_pernikahan == 4) {
+                $stp = "Janda";
+            }
+
+        @endphp
         <tr>
             <td style="width: 40%" >
                 <label>Tempat, Tanggal Lahir / Status</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
-                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $dataNasabah->status }}</span>
+            <td>
+                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $stp }}</span>
             </td>
         </tr>
         <tr>
@@ -103,12 +116,19 @@
                 <label>Jenis Usaha</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
-                @if ($dataNasabah->jenis_usaha)
-                    {{array_key_exists(intval($dataNasabah->jenis_usaha), $jenis_usaha) ? $jenis_usaha[intval($dataNasabah->jenis_usaha)] : 'Tidak ditemukan'}}
-                @else
-                    Tidak ada
-                @endif
+            <td>
+                @foreach ($jenis_usaha as $key => $value)
+                    @php
+                        $isSelected = ($dataNasabah->jenis_usaha == $key) ? 'selected' : '';
+                        if ($isSelected) {
+                            $textJenisUsaha = $value;
+                            $valueJenisUsaha = $key;
+                        }
+                    @endphp
+                    @if ($isSelected)
+                        {{ $dataNasabah->jenis_usaha ? $value : 'Tidak ditemukan' }}
+                    @endif
+                @endforeach
             </td>
         </tr>
         <tr>
@@ -116,7 +136,7 @@
                 <label>Jumlah Kredit Yang Diminta</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ "Rp " . number_format($dataNasabah->nominal,2,',','.') }}
             </td>
         </tr>
@@ -125,7 +145,7 @@
                 <label>Tujuan Kredit</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->tujuan_penggunaan }}
             </td>
         </tr>
@@ -134,25 +154,25 @@
                 <label>Jaminan Yang Disediakan</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ strtoupper($dataNasabah->ket_agunan) }}
             </td>
         </tr>
         <tr>
-            <td style="width: 40%; vertical-align: top" >
+            <td>
                 <label>Hubungan Dengan Bank</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td style="padding-left: 17px; vertical-align: top">
+            <td>
                 {{ $dataNasabah->hubungan_bank }}
             </td>
         </tr>
         <tr>
-            <td style="width: 40%; vertical-align: top" >
+            <td>
                 <label>Hasil Verifikasi Karakter Umum</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td style="padding-left: 17px; vertical-align: top">
+            <td>
                 {{ $dataNasabah->hasil_verifikasi }}
             </td>
         </tr>
@@ -166,7 +186,7 @@
         </tr>
     </table>
     <table style="width: 100%">
-        @foreach ($dataAspek as $itemAspek)
+       @foreach ($dataAspek as $itemAspek)
             @if ($itemAspek->nama != 'Data Umum')
                 @php
                     // check level 2
@@ -179,7 +199,7 @@
                 </tr>
                 <tr></tr>
                 @foreach ($dataLevelDua as $item)
-                    @if ($item->opsi_jawaban == 'input text' || $item->opsi_jawaban == 'long text' || $item->opsi_jawaban == 'number' || $item->opsi_jawaban == 'persen')
+                    @if ($item->opsi_jawaban == 'input text' || $item->opsi_jawaban == 'long text' || $item->opsi_jawaban == 'number' || $item->opsi_jawaban == 'persen' || $item->opsi_jawaban == 'input text')
                         @php
                             $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$item->id)->get();
                         @endphp
@@ -191,32 +211,6 @@
                                         <td>:</td>
                                         <td>{{ (is_numeric($itemTextDua->opsi_text)) ? round($itemTextDua->opsi_text,2) : $itemTextDua->opsi_text }}</td>
                                     </tr>
-                                @else
-                                    @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
-                                        <tr>
-                                            <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan)</td>
-                                            <td>:</td>
-                                            <td>
-                                                @if (is_numeric($itemTextDua->opsi_text))
-                                                    {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
-                                                @else
-                                                    Rp 0
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @else
-                                        <tr>
-                                            <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
-                                            <td>:</td>
-                                           <td>
-                                                @if (is_numeric($itemTextDua->opsi_text))
-                                                    {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
-                                                @else
-                                                    Rp 0
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endif
                                 @endif
                             @elseif ($item->opsi_jawaban == 'persen')
                                 <tr>
@@ -224,12 +218,50 @@
                                     <td>:</td>
                                     <td>{{ $itemTextDua->opsi_text }}%</td>
                                 </tr>
+                            @elseif($item->opsi_jawaban == 'input text' && $item->is_rupiah == 1)
+                                @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
+                                    <tr>
+                                        <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan) 1</td>
+                                        <td>:</td>
+                                        <td>
+                                            @if (is_numeric($itemTextDua->opsi_text))
+                                                {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
+                                            @else
+                                                Rp 0
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endif
                             @else
                                 @if ($item->nama == 'NPWP')
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px"></td>
                                         <td></td>
                                         <td>{{$item->nama}} No. {{ $itemTextDua->opsi_text }}</td>
+                                    </tr>
+                                @elseif ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment' )
+                                    <tr>
+                                        <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan)</td>
+                                        <td>:</td>
+                                        <td>
+                                            @if (is_numeric($itemTextDua->opsi_text))
+                                                {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
+                                            @else
+                                                Rp 0
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @elseif ($item->nama == 'Kebutuhan Kredit')
+                                    <tr>
+                                        <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
+                                        <td>:</td>
+                                        <td>
+                                            @if (is_numeric($itemTextDua->opsi_text))
+                                                {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
+                                            @else
+                                                Rp 0
+                                            @endif
+                                        </td>
                                     </tr>
                                 @else
                                     <tr>
@@ -246,7 +278,7 @@
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
 
                         // check level 3
-                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
+                        $dataLevelTiga = \App\Models\ItemModel::where('level',3)->whereNotIn('nama', ['Modal (awal) Sendiri','Modal Pinjaman'])->where('id_parent',$item->id)->get();
                     @endphp
                     @if (count($dataJawaban) != 0)
                         @if ($item->nama == 'Badan Usaha')
@@ -553,7 +585,7 @@
                                                                 @if (is_numeric($itemTextEmpat->opsi_text))
                                                                     {{ "Rp " . number_format($itemTextEmpat->opsi_text,2,',','.') }}
                                                                 @else
-                                                                    Rp 0
+                                                                    0
                                                                 @endif
                                                             </td>
                                                             {{-- <td style="width: 5%; padding-top: 1px">{{ $itemTextEmpat->nama }}</td>
@@ -700,7 +732,7 @@
                                             <tr>
                                                 <td style="width: 40%; padding-left: 33px">{{ $itemTiga->nama }}</td>
                                                 <td>: </td>
-                                                <td>{{ $itemTextTiga->opsi_text }}</td>
+                                                <td>{{ $itemTiga->is_rupiah ? number_format($itemTextTiga->opsi_text, 0 , ',', '.') : $itemTextTiga->opsi_text }}</td>
                                             </tr>
                                         @endif
                                     @endforeach
@@ -820,9 +852,7 @@
                                 <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
                                 <td style="padding: 20px 0px 20px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
                             </tr>
-
-                        {{-- @endif --}}
-                    @endif
+                        @endif
                 @endforeach
             @else
                 {{-- Data Umum tidak ditampilkan --}}
@@ -896,6 +926,39 @@
             <td>{{$komentar->komentar_pincab}}</td>
         </tr>
     </table>
+    <br>
+    <div>
+        <b>{{ $dataKeuangan->nama }}</b>
+        @foreach ($dataLevelKeuangan as $item)
+            @php
+                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.status_skor', 'item.is_commentable')
+                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                    ->where('jawaban_text.id_jawaban', $item->id)
+                    ->where('jawaban_text.opsi_text','!=','tidak_ada_legalitas_usaha')
+                    ->get();
+            @endphp
+            <table>
+                <tr>
+                    @foreach ($dataDetailJawabanText as $itemTextDua)
+                        <td>{{ $item->nama }}</td>
+                        <td>:</td>
+                        <td>
+                            @php
+                                $file_parts = pathinfo(public_path('') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                            @endphp
+                            @if ($file_parts['extension'] == 'pdf')
+                                <iframe src="{{ public_path('') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
+                            @else
+                                <img src="{{ public_path('') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="450px">
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
+            </table>
+        @endforeach
+    </div>
+
 </body>
 </html>
 @if (isset($_GET['pdf']))

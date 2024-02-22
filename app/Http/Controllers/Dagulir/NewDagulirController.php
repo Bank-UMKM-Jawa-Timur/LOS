@@ -2156,8 +2156,8 @@ class NewDagulirController extends Controller
 
                         // HIT update status analisa endpoint dagulir
                         if ($nasabah->status != 2) {
-                            $filename = public_path('upload/cetak_surat/'.$pengajuan->id.'.'.'pdf');
-                            $lampiran_analisa = lampiranAnalisa($filename);
+                            // $filename = public_path('upload/cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                            $lampiran_analisa =  $this->cetakLampiranAnalisa($id);
                             $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                             if (is_array($analisa)) {
                                 // Fail block
@@ -2626,6 +2626,17 @@ class NewDagulirController extends Controller
     public function cetakDagulir($id)
     {
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+        $param['dataKeuangan'] = ItemModel::select('*')->where('level', 1)
+                                ->where('nama', '!=', 'Data Umum')
+                                ->where('nama','Aspek Keuangan')
+                                ->first();
+        $param['dataLevelKeuangan'] = ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                ->where('level', 2)
+                                ->where('opsi_jawaban','!=','option')
+                                ->where('opsi_jawaban','file')
+                                ->where('id_parent', $param['dataKeuangan']->id)
+                                ->get();
+
         $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
                         ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
                         ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
@@ -2670,6 +2681,16 @@ class NewDagulirController extends Controller
         $filepath = null;
         try {
             $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+            $param['dataKeuangan'] = ItemModel::select('*')->where('level', 1)
+                                ->where('nama', '!=', 'Data Umum')
+                                ->where('nama','Aspek Keuangan')
+                                ->first();
+            $param['dataLevelKeuangan'] = ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                ->where('level', 2)
+                                ->where('opsi_jawaban','!=','option')
+                                ->where('opsi_jawaban','file')
+                                ->where('id_parent', $param['dataKeuangan']->id)
+                                ->get();
             $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
                             ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
                             ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
@@ -2685,8 +2706,8 @@ class NewDagulirController extends Controller
 
             $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
 
-            $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
-            $filePath = public_path('upload/cetak_surat');
+            $fileName = 'Surat-Analisa-'. $dataNasabah->nama. '.pdf' ;
+            $filePath = public_path('upload/cetak_surat/'.$param['dataUmum']->id);
             if (!File::isDirectory($filePath)) {
                 File::makeDirectory($filePath, 493, true);
             }
