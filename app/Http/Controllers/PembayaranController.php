@@ -127,43 +127,48 @@ class PembayaranController extends Controller
             foreach ($master_loan as $item) {
                 if (array_key_exists('no_loan', $item)) {
                     $no_loan = $item['no_loan'];
-                    $array1Obj = collect($result_data)->firstWhere('HLLNNO', $no_loan);
+                    $array1Obj = collect($result_data)->where('HLLNNO', $no_loan);
                     $result_data_loan [] = $array1Obj;
                 }
             }
-            foreach ($result_data_loan as $key => $value) {
-                if ($value != null) {
-                    if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
-                        alert()->error('Error', 'Data is incomplete.');
-                        return redirect()->route('pembayaran.index');
-                    }
-                    // current master anggsuran
-                    $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
-                        ->where('no_loan', $value['HLLNNO'])
-                        ->count();
+            $HLSEQN = [];
+            $HLLNNO = [];
+            foreach ($result_data_loan as $item) {
+                if ($item) {
+                    foreach ($item as $key => $value) {
+                        if ($value != null) {
+                            if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
+                                alert()->error('Error', 'Data is incomplete.');
+                                return redirect()->route('pembayaran.index');
+                            }
+                            // current master anggsuran
+                            $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
+                                                            ->where('no_loan', $value['HLLNNO'])
+                                                            ->whereDate('created_at', Carbon::now())
+                                                            ->count();
 
-
-                    // Insert data only if no existing records
-                    if ($existing_loan === 0) {
-                        $pembayaran = new MasterDDAngsuran;
-                        $pembayaran->squence = $value['HLSEQN'];
-                        $pembayaran->no_loan = $value['HLLNNO'];
-                        $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
-                        $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
-                        $pembayaran->kolek = $value['kolek'];
-                        $pembayaran->keterangan = $value['HLDESC'];
-                        $pembayaran->save();
+                            // Insert data only if no existing records
+                            if ($existing_loan == 0) {
+                                array_push($HLSEQN,$value['HLSEQN']);
+                                array_push($HLSEQN,$value['HLSEQN']);
+                                $pembayaran = new MasterDDAngsuran;
+                                $pembayaran->squence = $value['HLSEQN'];
+                                $pembayaran->no_loan = $value['HLLNNO'];
+                                $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
+                                $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
+                                $pembayaran->kolek = $value['kolek'];
+                                $pembayaran->keterangan = $value['HLDESC'];
+                                $pembayaran->save();
+                            }else{
+                                continue;
+                            }
+                        }
                     }
                 }
-
             }
+
             $inserted_data = MasterDDAngsuran::whereDate('created_at', Carbon::now())
                                             ->get();
-            DB::commit();
-            if (count($inserted_data) <= 0) {
-                alert()->error('Error', 'Data telah diproses.');
-                return redirect()->route('pembayaran.index');
-            }
 
             foreach ($inserted_data as $key => $value) {
                 if ($value != null) {
@@ -173,10 +178,15 @@ class PembayaranController extends Controller
                     // update sipde
                     if ($value['no_loan'] == $loan->no_loan) {
                         $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
+                        if ($total_angsuran <= 0) {
+                            $result_total_angsuran = 0;
+                        }else{
+                            $result_total_angsuran = $total_angsuran;
+                        }
                         $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-                        $update->baki_debet = $total_angsuran;
+                        $update->baki_debet = $result_total_angsuran;
                         $update->update();
-                        $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$total_angsuran,$value['kolek']);
+                        $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$result_total_angsuran,$value['kolek']);
                         if ($response != 200) {
                             DB::rollBack();
                             alert()->error('Error','Terjadi Kesalahan.');
@@ -189,9 +199,11 @@ class PembayaranController extends Controller
             return redirect()->route('pembayaran.index');
         } catch (Exception $th) {
             DB::rollBack();
+            return $th;
             alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->route('pembayaran.index');
         } catch (QueryException $th){
+            return $th;
             DB::rollBack();
             alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->route('pembayaran.index');

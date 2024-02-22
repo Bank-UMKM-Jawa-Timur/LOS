@@ -2486,38 +2486,45 @@ class NewDagulirController extends Controller
                     // insert to dd loan
                     $repo = new MasterDanaRepository;
                     $data = $repo->getDari($pengajuan->dagulir->kode_bank_cabang);
-                    if ($pengajuan && $plafon) {
-                        if ($data->dana_idle >= $plafon->plafon_usulan_pincab) {
-                            $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
-                            $current = $dana_cabang->dana_idle - $plafon->plafon_usulan_pincab;
-                            if ($current >= 0) {
-                                $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
-                                $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
-                                $update_cabang->dana_idle = $current;
-                                $update_cabang->update();
+                    $master_loan = MasterDDLoan::where('no_loan',$request->get('no_loan'))->first();
+                    if (!isset($master_loan)) {
+                        if ($pengajuan && $plafon) {
+                            if ($data->dana_idle >= $plafon->plafon_usulan_pincab) {
+                                $dana_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                $current = $dana_cabang->dana_idle - $plafon->plafon_usulan_pincab;
+                                if ($current >= 0) {
+                                    $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
+                                    $update_cabang = DanaCabang::where('id_cabang',$pengajuan->dagulir->kode_bank_cabang)->first();
+                                    $update_cabang->dana_idle = $current;
+                                    $update_cabang->update();
 
-                                $loan = new MasterDDLoan;
-                                $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
-                                $loan->no_loan = $request->get('no_loan');
-                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
-                                $loan->plafon = $plafon->plafon_usulan_pincab;
-                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
-                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
-                                $loan->save();
-                            }else{
+                                    $loan = new MasterDDLoan;
+                                    $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
+                                    $loan->no_loan = $request->get('no_loan');
+                                    $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
+                                    $loan->plafon = $plafon->plafon_usulan_pincab;
+                                    $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
+                                    $loan->baki_debet = $plafon->plafon_usulan_pincab;
+                                    $loan->save();
+                                }else{
+                                    DB::commit();
+                                    alert()->error('Terjadi Kesalahan', 'Dana tidak cukup.');
+                                    return redirect()->back();
+                                }
+                            }
+                            else{
                                 DB::commit();
                                 alert()->error('Terjadi Kesalahan', 'Dana tidak cukup.');
                                 return redirect()->back();
                             }
-                        }
-                        else{
+                        }else{
                             DB::commit();
-                            alert()->error('Terjadi Kesalahan', 'Dana tidak cukup.');
+                            alert()->error('Terjadi Kesalahan', 'Pengajuan atau dana cabang tidak ditemukan.');
                             return redirect()->back();
                         }
                     }else{
                         DB::commit();
-                        alert()->error('Terjadi Kesalahan', 'Pengajuan atau dana cabang tidak ditemukan.');
+                        alert()->warning('Peringatan', 'No Loan telah digunakan.');
                         return redirect()->back();
                     }
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
