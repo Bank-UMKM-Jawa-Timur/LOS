@@ -32,7 +32,7 @@
                         </div>
                         <div class="input-box">
                             <label for="no_pk">No PK</label>
-                            <input type="Text" name="no_pk" id="no_pk" class="form-input" accept="application/pdf" required>
+                            <input type="Text" name="no_pk" id="no_pk" class="form-input" required>
                             <span class="text-red-500 m-0 mt-2 hidden">Harus diisi.</span>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="form-group-1">
                         <div class="input-box">
                             <label for="pk">File PK</label>
-                            <input type="file" name="pk" id="pk" class="form-input file limit-size" required>
+                            <input type="file" name="pk" id="pk" class="form-input file limit-size" accept="application/pdf" required>
                             <span class="text-red-500 m-0 mt-2 hidden">Besaran file tidak boleh lebih dari 5 MB.</span>
                         </div>
                     </div>
