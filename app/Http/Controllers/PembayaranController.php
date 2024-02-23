@@ -20,13 +20,11 @@ use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 
 class PembayaranController extends Controller
 {
-    function index() {
+    public function index() {
         return view('pembayaran.upload',['data' => null]);
     }
 
-    function upload(Request $request) {
-
-
+    public function upload(Request $request) {
         // Process file_txt
         if ($request->hasFile('file_txt')) {
             $file = $request->file('file_txt');
@@ -51,7 +49,7 @@ class PembayaranController extends Controller
 
     }
 
-    function store(Request $request) {
+    public function store(Request $request) {
         ini_set('max_execution_time', 120);
         ini_set('memory_limit', '-1');
         DB::beginTransaction();
@@ -122,95 +120,119 @@ class PembayaranController extends Controller
                     ];
                 }
             }
-            $master_loan = MasterDDLoan::get()->toArray();
-            $result_data_loan = [];
-            foreach ($master_loan as $item) {
-                if (array_key_exists('no_loan', $item)) {
-                    $no_loan = $item['no_loan'];
-                    $array1Obj = collect($result_data)->where('HLLNNO', $no_loan);
-                    $result_data_loan [] = $array1Obj;
-                }
-            }
-            $HLSEQN = [];
-            $HLLNNO = [];
-            foreach ($result_data_loan as $item) {
-                if ($item) {
-                    foreach ($item as $key => $value) {
-                        if ($value != null) {
-                            if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
-                                alert()->error('Error', 'Data is incomplete.');
-                                return redirect()->route('pembayaran.index');
-                            }
-                            // current master anggsuran
-                            $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
-                                                            ->where('no_loan', $value['HLLNNO'])
-                                                            ->whereDate('created_at', Carbon::now())
-                                                            ->count();
+            // Memperbaiki kode dengan penamaan variabel yang jelas
+            $masterLoanNumbers = MasterDDLoan::pluck('no_loan')->toArray();
 
-                            // Insert data only if no existing records
-                            if ($existing_loan == 0) {
-                                array_push($HLSEQN,$value['HLSEQN']);
-                                array_push($HLSEQN,$value['HLSEQN']);
-                                $pembayaran = new MasterDDAngsuran;
-                                $pembayaran->squence = $value['HLSEQN'];
-                                $pembayaran->no_loan = $value['HLLNNO'];
-                                $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
-                                $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
-                                $pembayaran->kolek = $value['kolek'];
-                                $pembayaran->keterangan = $value['HLDESC'];
-                                $pembayaran->save();
-                            }else{
-                                continue;
-                            }
-                        }
-                    }
-                }
-            }
+            // Memastikan $result_data memiliki data sebelum digunakan
+            if (!empty($result_data)) {
+                // Membuat koleksi dari $result_data
+                $collection = collect($result_data);
 
-            $inserted_data = MasterDDAngsuran::whereDate('created_at', Carbon::now())
-                                            ->get();
-
-            foreach ($inserted_data as $key => $value) {
-                if ($value != null) {
-                    // current master anggsuran
-                    $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-                    $kode = $loan->kode_pendaftaran;
-                    // update sipde
-                    if ($value['no_loan'] == $loan->no_loan) {
-                        $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
-                        if ($total_angsuran <= 0) {
-                            $result_total_angsuran = 0;
-                        }else{
-                            $result_total_angsuran = $total_angsuran;
-                        }
-                        $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
-                        $update->baki_debet = $result_total_angsuran;
-                        $update->update();
-                        $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$result_total_angsuran,$value['kolek']);
-                        if ($response != 200) {
-                            DB::rollBack();
-                            alert()->error('Error','Terjadi Kesalahan.');
-                            return redirect()->route('pembayaran.index');
-                        }
-                    }
-                }
+                // Menggunakan whereIn() dengan nomor pinjaman dari master_loan
+                $filtered = $collection->whereIn('HLLNNO', $masterLoanNumbers);
+                return view('pembayaran.upload',['data' => $filtered->all()]);
+            } else {
+                alert()->error('Kesalahan','Terdapat data yang tidak ditemukan.');
+                return redirect()->route('pembayaran.index');
             }
-            alert()->success('Sukses','Pembayaran Berhasil dilakukan');
             return redirect()->route('pembayaran.index');
         } catch (Exception $th) {
             DB::rollBack();
-            return $th;
             alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->route('pembayaran.index');
         } catch (QueryException $th){
-            return $th;
             DB::rollBack();
             alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->route('pembayaran.index');
         }
     }
 
-    function upload_data(Request $request) {
+    public function proses_data(Request $request) {
+        ini_set('max_execution_time', 120);
+        ini_set('memory_limit', '-1');
+        DB::beginTransaction();
+        try {
+            $HLSEQN = [];
+            $HLLNNO = [];
+            $result_data_loan = json_decode($request->get('data'),true);
+            foreach ($result_data_loan as $key => $value) {
+                if ($value != null) {
+                    if (is_null($value['HLSEQN']) || is_null($value['HLLNNO']) || is_null($value['HLDTVL']) || is_null($value['HLORMT']) || is_null($value['HLDESC'])) {
+                        alert()->error('Error', 'Data is incomplete.');
+                        return redirect()->route('pembayaran.index');
+                    }
+                    // current master anggsuran
+                    $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
+                                                    ->where('no_loan', $value['HLLNNO'])
+                                                    ->whereDate('created_at', Carbon::now())
+                                                    ->count();
+
+                    // Insert data only if no existing records
+                    if ($existing_loan == 0) {
+                        array_push($HLSEQN,$value['HLSEQN']);
+                        array_push($HLLNNO,$value['HLLNNO']);
+                        $pembayaran = new MasterDDAngsuran;
+                        $pembayaran->squence = $value['HLSEQN'];
+                        $pembayaran->no_loan = $value['HLLNNO'];
+                        $pembayaran->tanggal_pembayaran = date('Y-m-d h:i:s', strtotime($value['HLDTVL']));
+                        $pembayaran->pokok_pembayaran = (int) $value['HLORMT'] / 100;
+                        $pembayaran->kolek = $value['kolek'];
+                        $pembayaran->keterangan = $value['HLDESC'];
+                        $pembayaran->save();
+                    }else{
+                        continue;
+                    }
+                }
+            }
+            $inserted_data = MasterDDAngsuran::
+                                            whereIn('no_loan',$HLLNNO)
+                                            ->whereIn('squence',$HLSEQN)
+                                            ->whereDate('created_at', Carbon::now())
+                                            ->get();
+            if (count($inserted_data) <= 0) {
+                alert()->warning('Perhatian','sudah melakukan pembayaran');
+                return redirect()->route('pembayaran.index');
+            }else{
+                foreach ($inserted_data as $key => $value) {
+                    if ($value != null) {
+                        // current master anggsuran
+                        $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                        $kode = $loan->kode_pendaftaran;
+                        // update sipde
+                        if ($value['no_loan'] == $loan->no_loan) {
+                            $total_angsuran = $loan->baki_debet - $value['pokok_pembayaran'];
+                            if ($total_angsuran <= 0) {
+                                $result_total_angsuran = 0;
+                            }else{
+                                $result_total_angsuran = $total_angsuran;
+                            }
+                            $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                            $update->baki_debet = $result_total_angsuran;
+                            $update->update();
+                            $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$result_total_angsuran,$value['kolek']);
+                            if ($response != 200) {
+                                DB::rollBack();
+                                alert()->error('Error','Terjadi Kesalahan.');
+                                return redirect()->route('pembayaran.index');
+                            }
+                        }
+                    }
+                }
+                alert()->success('Berhasil','Berhasil menambahkan pembayaran');
+                return redirect()->route('pembayaran.index');
+            }
+        } catch (Exception $th) {
+            DB::rollBack();
+            alert()->error('Error','Terjadi Kesalahan.');
+            return redirect()->route('pembayaran.index');
+        } catch (QueryException $th){
+            DB::rollBack();
+            alert()->error('Error','Terjadi Kesalahan.');
+            return redirect()->route('pembayaran.index');
+        }
+    }
+
+    public function upload_data(Request $request) {
         // create the file receiver
         $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
 
@@ -264,7 +286,7 @@ class PembayaranController extends Controller
         ]);
     }
 
-    function kumulatif_debitur($kode, $pokok_angsuran, $kolek, $status) {
+    public function kumulatif_debitur($kode, $pokok_angsuran, $kolek, $status) {
         DB::beginTransaction();
         try {
             $token = sipde_token()['token'];

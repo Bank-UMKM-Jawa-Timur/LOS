@@ -264,16 +264,16 @@
                         @endphp
                         @foreach ($data as $key => $item)
                         @php
-                            $date = strtotime($item->tanggal_pembayaran);
+                            $date = strtotime($item['HLDTVL']);
                         @endphp
                         <tr>
                             <td>{{ $no++ }}</td>
-                            <td>{{ $item->squence }}</td>
-                            <td>{{ $item->no_loan }}</td>
+                            <td>{{ $item['HLSEQN'] }}</td>
+                            <td>{{ $item['HLLNNO'] }}</td>
                             <td>{{ date('d-m-Y',$date) }}</td>
-                            <td>{{ number_format((int)$item->pokok_pembayaran,2,",",".") }}</td>
-                            <td>{{ $item->kolek }}</td>
-                            <td>{{ $item->keterangan }}</td>
+                            <td>{{ number_format((float) $item['HLORMT'] / 100,2,",",".") }}</td>
+                            <td>{{ $item['kolek'] }}</td>
+                            <td>{{ $item['HLDESC'] }}</td>
                         </tr>
                         @endforeach
                     </tbody>

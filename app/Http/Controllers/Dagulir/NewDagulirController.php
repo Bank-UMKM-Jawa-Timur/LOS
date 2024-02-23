@@ -1590,7 +1590,7 @@ class NewDagulirController extends Controller
 
     public function  updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
         $data = sipde_token();
-        $body = $this->getStatusBody($kode_pendaftaran, $status, $lampiran_analisa, $jangka_waktu = null, $realisasi_dana);
+        $body = $this->getStatusBody($kode_pendaftaran, $status, $lampiran_analisa, $jangka_waktu, $realisasi_dana);
         if (!empty($body)) {
             $host = config('dagulir.host');
             DB::beginTransaction();
