@@ -3661,6 +3661,34 @@ class NewDagulirController extends Controller
         }
     }
 
+    // pembatalan
+    public function confirmPengajuan(Request $request) {
+        DB::beginTransaction();
+        try {
+            $pengajuan = PengajuanModel::with('dagulir')->find($request->get('id_pengajuan'));
+            $message = 'Berhasil melakukan pembatalan';
+            $status_sipde = $this->updateStatus($pengajuan->dagulir->kode_pendaftaran,7);
+            if (!is_array($status_sipde)) {
+                if ($status_sipde == 200) {
+                    DB::commit();
+                    Alert::success('success', $message);
+                    return redirect()->route('dagulir.pengajuan.index');
+                }
+                DB::commit();
+                alert()->error('Terjadi Kesalahan', $status_sipde);
+                return redirect()->route('dagulir.pengajuan.index');
+            }
+            else {
+                DB::rollBack();
+                alert()->error('Terjadi Kesalahan', $status_sipde);
+                return redirect()->route('dagulir.pengajuan.index');
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            alert()->error('Error','Terjadi Kesalahan');
+            return redirect()->route('dagulir.index');
+        }
+    }
     public function indexTemp(Request $request){
         $id_user = Auth::user()->id;
         $param['cabang'] = DB::table('cabang')

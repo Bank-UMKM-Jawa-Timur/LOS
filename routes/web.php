@@ -198,6 +198,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/hapus', [NotificationController::class, 'delete'])->name('delete');
                 Route::post('/get-detail', [NotificationController::class, 'getDetail'])->name('getDetail');
             });
+
+        // Pembatalan Pengajuan
+        Route::post('pembatalan-pengajuan',[NewDagulirController::class,'confirmPengajuan'])->name('konfirmasi-pembatalan');
+
     });
     Route::middleware(['auth'])->group(function () {
             // Dashboard Dana

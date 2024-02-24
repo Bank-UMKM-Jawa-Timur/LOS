@@ -15,6 +15,7 @@
 @include('dagulir.modal.lanjutkan-penyelia')
 @include('pengajuan-kredit.modal.confirm-pbo')
 @include('pengajuan-kredit.modal.confirm-pincab')
+@include('pengajuan-kredit.modal.confirm-dibatalkan')
 @endsection
 
 @push('script-inject')
@@ -402,33 +403,56 @@
                                                         </a>
                                                     @endif
                                                     @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
-                                                        @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
-                                                            <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full" id="download-sppk">
-                                                                <li class="item-tb-dropdown">
-                                                                    Download SPPK
-                                                                </li>
-                                                            </a>
-                                                        @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
-                                                            <a href="#" class="dropdown-item show-upload-sppk w-full" data-toggle="modal"
-                                                            data-target="uploadSPPKModal" data-id="{{ $item->pengajuan->id }}"
-                                                            data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
-                                                                <li class="item-tb-dropdown">
-                                                                    Upload File SPPK
-                                                                </li>
-                                                            </a>
-                                                        @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
-                                                            <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full" id="download-pk">
-                                                                <li class="item-tb-dropdown">
-                                                                    Download PK
-                                                                </li>
-                                                            </a>
-                                                        @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
-                                                            <a href="#" class="dropdown-item show-upload-pk w-full" data-toggle="modal" data-target="uploadPKModal"
-                                                            data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}" data-skema="{{$item->pengajuan->skema_kredit}}">
-                                                                <li class="item-tb-dropdown">
-                                                                    Realisasi Kredit
-                                                                </li>
-                                                            </a>
+                                                        @if ($item->status != 7)
+                                                            @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
+                                                                <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full" id="download-sppk">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Download SPPK
+                                                                    </li>
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Dibatalkan
+                                                                    </li>
+                                                                </a>
+                                                            @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
+                                                                <a href="#" class="dropdown-item show-upload-sppk w-full" data-toggle="modal"
+
+                                                                data-target="uploadSPPKModal" data-id="{{ $item->pengajuan->id }}"
+
+                                                                data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
+
+                                                                    <li class="item-tb-dropdown">
+
+                                                                        Upload File SPPK
+
+                                                                    </li>
+
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Dibatalkan
+                                                                    </li>
+                                                                </a>
+                                                            @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Dibatalkan
+                                                                    </li>
+                                                                </a>
+                                                            @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
+                                                                <a href="#" class="dropdown-item show-upload-pk w-full" data-toggle="modal" data-target="uploadPKModal"
+                                                                data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}" data-skema="{{$item->pengajuan->skema_kredit}}">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Realisasi Kredit
+                                                                    </li>
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Dibatalkan
+                                                                    </li>
+                                                                </a>
+                                                            @endif
                                                         @endif
                                                     @endif
                                                     @if ((Auth()->user()->role == 'Penyelia Kredit'))
@@ -1118,6 +1142,15 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+    // start konfirmasi pembatalan pengajuan
+    $('.konfirmasi-dibatalkan').on('click',function(e) {
+        e.preventDefault()
+        const target = '#confirmPembatalan';
+        let id = $(this).data('id');
+        $(`${target} #id_pengajuan`).val(id)
+        $(`${target}`).removeClass('hidden')
+    })
+    // end konfirmasi pembatalan pengajuan
      $('#download-pk').on('click',function(e) {
         // Refresh the page after a delay (adjust as needed)
         setTimeout(function() {
