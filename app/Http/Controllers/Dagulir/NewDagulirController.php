@@ -2027,8 +2027,11 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $filename =  public_path() . "/upload/cetak_surat/$id.pdf";
-                                $lampiran_analisa = lampiranAnalisa($filename);
+                                $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id);
+                                $lampiran_analisa = null;
+                                if ($cetak_lampiran_analisa['status'] == 'success') {
+                                    $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
+                                }
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
                                     // Fail block
@@ -2157,7 +2160,11 @@ class NewDagulirController extends Controller
                         // HIT update status analisa endpoint dagulir
                         if ($nasabah->status != 2) {
                             // $filename = public_path('upload/cetak_surat/'.$pengajuan->id.'.'.'pdf');
-                            $lampiran_analisa =  $this->cetakLampiranAnalisa($id);
+                            $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id);
+                            $lampiran_analisa = null;
+                            if ($cetak_lampiran_analisa['status'] == 'success') {
+                                $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
+                            }
                             $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                             if (is_array($analisa)) {
                                 // Fail block
