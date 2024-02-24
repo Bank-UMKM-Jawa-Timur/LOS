@@ -428,21 +428,21 @@ class DashboardRepository
         $idUser = auth()->user()->id;
         $skema = $request->skema ?? null;
         $tanggalAwal = $request->tAwal;
-        $tanggalAkhir = $request->tAkhir;
+        $tanggalAkhir = $request->has('tAkhir') ? $request->get('tAkhir') : date('Y-m-d');
         $cabang = $request->cbg;
         $bulan_sekarang = date('m');
 
         $data = DB::table('pengajuan')
             ->whereNull('deleted_at')
-            ->whereMonth('tanggal', $bulan_sekarang)
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);
             })
-            ->when($tanggalAwal, function($query) use ($tanggalAwal){
-                return $query->where('tanggal', '>=', $tanggalAwal);
-            })
-            ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
-                return $query->where('tanggal', '<=', $tanggalAkhir);
+            ->when($tanggalAwal, function($query) use ($tanggalAwal, $tanggalAkhir, $bulan_sekarang){
+                if ($tanggalAwal) {
+                    return $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
+                } else {
+                    return $query->whereMonth('tanggal', $bulan_sekarang);
+                }
             })
             ->when($skema, function($query) use ($skema){
                 return $query->where('skema_kredit', $skema);
@@ -558,21 +558,24 @@ class DashboardRepository
 
         $total_disetujui_perbulan = DB::table('pengajuan')
             ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
-            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            // ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->whereYear('tanggal', date('Y'))
             ->where('posisi', 'Selesai')
             ->whereNull('pengajuan.deleted_at')
             ->groupBy(DB::raw('MONTH(tanggal)'));
 
         $total_ditolak_perbulan = DB::table('pengajuan')
             ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
-            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            // ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->whereYear('tanggal', date('Y'))
             ->where('posisi', 'Ditolak')
             ->whereNull('pengajuan.deleted_at')
             ->groupBy(DB::raw('MONTH(tanggal)'));
 
         $total_diproses_perbulan = DB::table('pengajuan')
             ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
-            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            // ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->whereYear('tanggal', date('Y'))
             ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
             ->whereNull('pengajuan.deleted_at')
             ->groupBy(DB::raw('MONTH(tanggal)'));
@@ -685,11 +688,11 @@ class DashboardRepository
         $idUser = auth()->user()->id;
         $skema = $request->skema ?? null;
         $tanggalAwal = $request->tAwal ?? null;
-        $tanggalAkhir = $request->tAkhir ?? null;
+        $tanggalAkhir = $request->has('tAkhir') ? $request->get('tAkhir') : date('Y-m-d');
         $cabang = $request->cbg;
         $bulan_sekarang = date('m');
 
-        $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
+        $data = DB::table('pengajuan')
             ->whereNull('pengajuan.deleted_at')
             ->selectRaw("CAST(sum(posisi='pincab') AS UNSIGNED) as pincab,
                 CAST(sum(posisi='PBP') AS UNSIGNED) as pbp,
@@ -701,11 +704,12 @@ class DashboardRepository
                 ->when($cabang, function ($query, $cabang) {
                     return $query->where('id_cabang', $cabang);
                 })
-                ->when($tanggalAwal, function($query) use ($tanggalAwal){
-                    return $query->where('tanggal', '>=', $tanggalAwal);
-                })
-                ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
-                    return $query->where('tanggal', '<=', $tanggalAkhir);
+                ->when($tanggalAwal, function ($query) use ($tanggalAwal, $tanggalAkhir, $bulan_sekarang) {
+                    if ($tanggalAwal) {
+                        return $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
+                    } else {
+                        return $query->whereMonth('tanggal', $bulan_sekarang);
+                    }
                 })
                 ->when($skema, function($query) use ($skema){
                     return $query->where('skema_kredit', $skema);
@@ -741,20 +745,21 @@ class DashboardRepository
         $idUser = auth()->user()->id;
         $skema = $request->skema;
         $tanggalAwal = $request->tAwal;
-        $tanggalAkhir = $request->tAkhir;
+        $tanggalAkhir = $request->has('tAkhir') ? $request->get('tAkhir') : date('Y-m-d');
         $cabang = $request->cbg;
         $bulan_sekarang = date('m');
-        $data = DB::table('pengajuan')->whereMonth('tanggal', $bulan_sekarang)
+        $data = DB::table('pengajuan')
             ->whereNull('pengajuan.deleted_at')
             ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma, sum(skema_kredit='Dagulir') as Dagulir")
             ->when($cabang, function ($query, $cabang) {
                 return $query->where('id_cabang', $cabang);
             })
-            ->when($tanggalAwal, function($query) use ($tanggalAwal){
-                return $query->where('tanggal', '>=', $tanggalAwal);
-            })
-            ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
-                return $query->where('tanggal', '<=', $tanggalAkhir);
+            ->when($tanggalAwal, function ($query) use ($tanggalAwal, $tanggalAkhir, $bulan_sekarang) {
+                if ($tanggalAwal) {
+                    return $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
+                } else {
+                    return $query->whereMonth('tanggal', $bulan_sekarang);
+                }
             })
             ->when($skema, function($query) use ($skema){
                 return $query->where('skema_kredit', $skema);
@@ -790,25 +795,24 @@ class DashboardRepository
 
         $total_cabang = DB::table('cabang')->where('kode_cabang', '!=', '000')->count();
         $tanggalAwal = $request->tAwal;
-        $tanggalAkhir = $request->tAkhir;
+        $tanggalAkhir = $request->has('tAkhir') ? $request->get('tAkhir') : date('Y-m-d');
         $bulan_sekarang = date('m');
 
         $dataTertinggi = DB::table('cabang')
-            ->leftJoin('pengajuan', function ($join) use ($tanggalAwal,$tanggalAkhir) {
+            ->leftJoin('pengajuan', function ($join) use ($tanggalAwal,$tanggalAkhir, $bulan_sekarang) {
                 $join->on('cabang.id', '=', 'pengajuan.id_cabang')
-                    ->when($tanggalAwal, function($query) use ($tanggalAwal){
-                        return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
-                    })
-                    ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
-                        return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
-                    })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
-                        return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
+                    ->whereNull('pengajuan.deleted_at')
+                    ->when($tanggalAwal, function ($query) use ($tanggalAwal, $tanggalAkhir, $bulan_sekarang) {
+                        if ($tanggalAwal) {
+                            return $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
+                        } else {
+                            return $query->whereMonth('tanggal', $bulan_sekarang);
+                        }
                     });
             })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
-            // ->whereMonth('tanggal', $bulan_sekarang)
             ->orderByRaw('total DESC, cabang.kode_cabang ASC')
             ->limit(5)
             ->get();
@@ -827,7 +831,6 @@ class DashboardRepository
             })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
-            // ->where('pengajuan.posisi', 'Selesai')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
             ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
             ->limit(5)
