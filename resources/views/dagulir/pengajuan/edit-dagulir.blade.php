@@ -9,6 +9,33 @@
             Pengajuan Masuk
         </h2>
     </div>
+    @if (count($pendapat) > 0)
+        <div class="p-5 w-full space-y-5">
+            <div class="form-group-1 col-span-2">
+                <div>
+                    <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                        <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                            Alasan Pengembalian Pengajuan Dari Penyelia :
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <dl class="max-w-md text-gray-900 divide-y bg-theme-primary/5 dark:text-white dark:divide-gray-700 p-3">
+                @foreach ($pendapat as $item)
+                <div class="flex flex-col pb-3 mb-1">
+                    <div class="flex gap-3 mt-3">
+                        <div class="rounded-full w-4 h-4 border border-theme-primary bg-theme-primary"></div>
+                        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{{$item->created_at}}</dt>
+                    </div>
+                    <div class="flex gap-3 mt-3">
+                        <div class="rounded-full w-4 h-4 border border-theme-primary bg-theme-primary hidden"></div>
+                        <dd class="text-lg font-semibold ml-5">{{$item->alasan}}</dd>
+                    </div>
+                </div>
+                @endforeach
+            </dl>
+        </div>
+    @endif
     <!-- data umum -->
     <div
         class="p-5 w-full space-y-5 "
