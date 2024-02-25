@@ -396,4 +396,14 @@ class PengajuanDagulirRepository
 
         return $data;
     }
+
+    public function getAlasanPengembalian($id, $ke){
+        $data = DB::table('alasan_pengembalian_data')
+                ->join('users', 'alasan_pengembalian_data.id_user', 'users.id')
+                ->where('id_pengajuan', $id)
+                ->where('ke', $ke)
+                ->get();
+
+        return $data;
+    }
 }

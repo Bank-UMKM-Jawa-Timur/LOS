@@ -2395,7 +2395,27 @@ class PengajuanKreditController extends Controller
                 ->get();
             $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
-            // return  $countDoc;
+            $id_user = auth()->user()->id;
+            $user = DB::table('users')->where('id', $id_user)->first();
+            $role = '';
+            $ke = '';
+
+            if ($user) {
+                $role = $user->role;
+                if ($role == 'Penyelia Kredit') {
+                    $ke = 'Review Penyelia';
+                } elseif ($role == 'PBO') {
+                    $ke = 'PBO';
+                } else {
+                    $ke = 'PBP';
+                }
+                $param['role'] = $role;
+            } else {
+                $param['role'] = '';
+            }
+
+            $param['pendapat'] = $this->repo->getAlasanPengembalian($id, $ke);
+            // return  $param['pendapat'];
             return view('new-pengajuan.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');

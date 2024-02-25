@@ -1314,6 +1314,26 @@ class NewDagulirController extends Controller
             $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
             $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
+            $id_user = auth()->user()->id;
+            $user = DB::table('users')->where('id', $id_user)->first();
+            $role = '';
+            $ke = '';
+
+            if ($user) {
+                $role = $user->role;
+                if ($role == 'Penyelia Kredit') {
+                    $ke = 'Review Penyelia';
+                } elseif ($role == 'PBO') {
+                    $ke = 'PBO';
+                } else {
+                    $ke = 'PBP';
+                }
+                $param['role'] = $role;
+            } else {
+                $param['role'] = '';
+            }
+
+            $param['pendapat'] = $this->repo->getAlasanPengembalian($id, $ke);
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
             alert()->error('Terjadi Kesalahan', 'Tidak memiliki hak akses');
@@ -2812,6 +2832,7 @@ class NewDagulirController extends Controller
         $param['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
 
+        $param['pendapat'] = $this->repo->getAlasanPengembalian($id, 'Proses Input Data');
 
         return view('dagulir.pengajuan-kredit.edit', $param);
     }
@@ -3040,7 +3061,6 @@ class NewDagulirController extends Controller
                 }
             }
             if ($request->isNpwp == "0") {
-                return 'qwq';
                 $dokumenUsaha = DB::table('item')
                     ->orWhere('nama', 'LIKE', '%NPWP%')
                     ->get();
