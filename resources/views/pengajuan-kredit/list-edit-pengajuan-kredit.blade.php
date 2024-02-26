@@ -688,7 +688,7 @@
         const id = $(this).data('id')
         const kode_pendaftaran = $(this).data('kode_pendaftaran')
         const skema = $(this).data('skema')
-        const url_form = "{{url('/post-file-kkb')}}/"+id
+        const url_form = "{{url('/post-file')}}/"+id
         const url_cetak = "{{url('/pengajuan-dagulir/cetak-pk')}}/"+id
         var token = generateCsrfToken()
 

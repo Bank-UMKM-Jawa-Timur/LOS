@@ -232,7 +232,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pengajuan-kredit/pincabStatusChange/{id}', [PengajuanKreditController::class, "checkPincabStatusChange"])->name('pengajuan.change.pincab.status');
     Route::get('pengajuan-kredit/pincabStatus', [PengajuanKreditController::class, "checkPincabStatus"])->name('pengajuan.check.pincab.status');
     Route::get('pengajuan-kredit/pincab/{id}', [PengajuanKreditController::class, "checkPincab"])->name('pengajuan.check.pincab');
-    Route::post('post-file-kkb/{id}', [PengajuanKreditController::class, 'postFileKKB'])->name('post-file-kkb');
+    Route::post('post-file/{id}', [PengajuanKreditController::class, 'postFileKKB'])->name('post-file-kkb');
     // cek -sub-column option
     Route::get('pengajuan-kredit/cek-sub-column', [PengajuanKreditController::class, "checkSubColumn"])->name('cek-sub-column');
 
