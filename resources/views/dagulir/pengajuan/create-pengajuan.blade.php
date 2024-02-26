@@ -363,7 +363,7 @@
             <div class="input-box">
                 <label for="">{{ $itemSP->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
+                <input type="file" name="upload_file[{{ $itemSP->id }}]" accept="application/pdf, image/png, image/jpeg" data-id=""
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-input limit-size" id="foto_sp">
                 <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
