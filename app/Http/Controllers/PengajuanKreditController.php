@@ -2379,15 +2379,12 @@ class PengajuanKreditController extends Controller
                 ->where('nama', 'LIKE', '%NIB%')
                 ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
                 ->orWhere('nama', 'LIKE', '%NPWP%')
-                ->get('id');
-            $countDoc = 0;
-            foreach ($dokumenUsaha as $idDoc) {
-                $count = DB::table('jawaban_text')
+                ->pluck('id');
+            $countDoc = DB::table('jawaban_text')
                     ->where('id_pengajuan', $id)
-                    ->where('id_jawaban', $idDoc->id)
+                    ->whereIn('id_jawaban', $dokumenUsaha)
                     ->count();
-                $countDoc += $count;
-            }
+
             $param['countIjin'] = $countDoc;
             $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
                 ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')

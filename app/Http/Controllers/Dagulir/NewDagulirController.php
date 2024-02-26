@@ -3282,6 +3282,24 @@ class NewDagulirController extends Controller
                                                                 ->where('id_jawaban', $value)
                                                                 ->first();
                             if ($dataJawabanText) {
+                                if ($request->get('informasi')[$key] != null) {
+                                    if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
+                                        $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                                    } else {
+                                        $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                                    }
+                                    $dataJawabanText->save();
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        // Insert answer
+                        if ($value != null) {
+                            if ($request->get('informasi')[$key] != null) {
+                                $dataJawabanText = new JawabanTextModel;
+                                $dataJawabanText->id_pengajuan = $id_pengajuan;
+                                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
                                 if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
                                     $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
                                 } else {
@@ -3289,20 +3307,6 @@ class NewDagulirController extends Controller
                                 }
                                 $dataJawabanText->save();
                             }
-                        }
-                    }
-                    else {
-                        // Insert answer
-                        if ($value != null) {
-                            $dataJawabanText = new JawabanTextModel;
-                            $dataJawabanText->id_pengajuan = $id_pengajuan;
-                            $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                            if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
-                                $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
-                            } else {
-                                $dataJawabanText->opsi_text = $request->get('informasi')[$key];
-                            }
-                            $dataJawabanText->save();
                         }
                     }
                 }
