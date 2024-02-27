@@ -435,6 +435,11 @@
                                                                     </li>
                                                                 </a>
                                                             @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
+                                                                <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="w-full cursor-pointer" id="download-pk">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Download PK
+                                                                    </li>
+                                                                </a>
                                                                 <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
                                                                     <li class="item-tb-dropdown">
                                                                         Dibatalkan
@@ -909,7 +914,12 @@
                                                             @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
                                                                 <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="w-full cursor-pointer">
                                                                     <li class="item-tb-dropdown">
-                                                                        Cetak SPPK
+                                                                        Download SPPK
+                                                                    </li>
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Dibatalkan
                                                                     </li>
                                                                 </a>
                                                             @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
@@ -918,16 +928,31 @@
                                                                         Upload File SPPK
                                                                     </li>
                                                                 </a>
-                                                            @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
-                                                                <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="w-full cursor-pointer">
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
                                                                     <li class="item-tb-dropdown">
-                                                                        Cetak PK
+                                                                        Dibatalkan
+                                                                    </li>
+                                                                </a>
+                                                            @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
+                                                                <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="w-full cursor-pointer" id="download-pk">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Download PK
+                                                                    </li>
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Dibatalkan
                                                                     </li>
                                                                 </a>
                                                             @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
                                                                 <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
                                                                     <li class="item-tb-dropdown">
                                                                         Realisasi Kredit
+                                                                    </li>
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item w-full konfirmasi-dibatalkan" data-id="{{$item->pengajuan->id}}" data-toggle="modal" data-target="confirmPembatalan">
+                                                                    <li class="item-tb-dropdown">
+                                                                        Dibatalkan
                                                                     </li>
                                                                 </a>
                                                             @endif
