@@ -1,3 +1,8 @@
+@php
+    $tAwal = Request()->get('tAwal');
+    $tAkhir = Request()->get('tAkhir');
+    $cbg = Request()->get('cbg');
+@endphp
 <section class="p-5 overflow-y-auto">
     <div class="lg:flex grid grid-cols-1 justify-between w-full font-poppins">
         <div class="heading flex-auto">
@@ -49,7 +54,7 @@
                         Total Pengajuan
                     </p>
                 </div>
-                <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                <a href="{{ route('dashboard-detail') }}?tAwal={{$tAwal}}&tAkhir={{$tAkhir}}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
             </div>
         </div>
         <div class="card p-5 w-full border bg-white h-[127px] relative">
@@ -69,7 +74,7 @@
                     </p>
                 </div>
                 @if (Auth::user()->role == 'Administrator' || Auth::user()->role == 'Kredit Umum' || Auth::user()->role == 'Direksi')
-                    <a href="{{ route('dashboard-detail-disetujui') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                    <a href="{{ route('dashboard-detail-disetujui') }}?tAwal={{$tAwal}}&tAkhir={{$tAkhir}}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
                 @endif
             </div>
         </div>
@@ -87,7 +92,7 @@
                     <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
                 </div>
                 @if (Auth::user()->role == 'Administrator' || Auth::user()->role == 'Kredit Umum' || Auth::user()->role == 'Direksi')
-                    <a href="{{ route('dashboard-detail-ditolak') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                    <a href="{{ route('dashboard-detail-ditolak') }}?tAwal={{$tAwal}}&tAkhir={{$tAkhir}}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
                 @endif
             </div>
         </div>
@@ -105,7 +110,7 @@
                     <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
                 </div>
                 @if (Auth::user()->role == 'Administrator' || Auth::user()->role == 'Kredit Umum' || Auth::user()->role == 'Direksi')
-                    <a href="{{ route('dashboard-detail-diproses') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                    <a href="{{ route('dashboard-detail-diproses') }}?tAwal={{$tAwal}}&tAkhir={{$tAkhir}}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
                 @endif
             </div>
         </div>
@@ -150,7 +155,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{{route('dashboard-detail-rank-cabang')}}" class="rounded lg:relative absolute lg:right-0 right-5 flex gap-2 px-5 py-1 text-gray-500 bg-gray-50 transition-all text-sm font-semibold border hover:bg-theme-primary hover:text-white"><iconify-icon icon="solar:document-outline" class="mt-1"></iconify-icon> Detail</a>
+                <a href="{{route('dashboard-detail-rank-cabang')}}?tAwal={{$tAwal}}&tAkhir={{$tAkhir}}" class="rounded lg:relative absolute lg:right-0 right-5 flex gap-2 px-5 py-1 text-gray-500 bg-gray-50 transition-all text-sm font-semibold border hover:bg-theme-primary hover:text-white"><iconify-icon icon="solar:document-outline" class="mt-1"></iconify-icon> Detail</a>
             </div>
             <div class="body-card w-full box">
                 <div class="lg:flex grid grid-cols-1 gap-5 w-full mt-5 box-border">
@@ -208,7 +213,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="posisi-pengajuan"></div>
             </div>
-            <a href="{{ route('dashboard-detail-chart-posisi-two') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            <a href="{{ route('dashboard-detail-chart-posisi-two') }}?tAwal={{$tAwal}}&tAkhir={{$tAkhir}}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
         <div class="card p-5 w-full border bg-white relative">
             <div class="head">
@@ -219,7 +224,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="skema-kredit"></div>
             </div>
-            <a href="{{ route('dashboard-detail-chart-Skema-two') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+            <a href="{{ route('dashboard-detail-chart-Skema-two') }}?tAwal={{$tAwal}}&tAkhir={{$tAkhir}}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
     </div>
 </section>
