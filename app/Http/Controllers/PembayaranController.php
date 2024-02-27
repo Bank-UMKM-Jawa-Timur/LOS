@@ -130,8 +130,14 @@ class PembayaranController extends Controller
 
                 // Menggunakan whereIn() dengan nomor pinjaman dari master_loan
                 $filtered = $collection->whereIn('HLLNNO', $masterLoanNumbers);
+                if (count($filtered) <= 0) {
+                    DB::commit();
+                    alert()->error('Kesalahan','Data yang tidak ditemukan.');
+                    return redirect()->route('pembayaran.index');
+                }
                 return view('pembayaran.upload',['data' => $filtered->all()]);
             } else {
+                DB::commit();
                 alert()->error('Kesalahan','Terdapat data yang tidak ditemukan.');
                 return redirect()->route('pembayaran.index');
             }
@@ -184,15 +190,18 @@ class PembayaranController extends Controller
                     }
                 }
             }
+            DB::commit();
             $inserted_data = MasterDDAngsuran::
                                             whereIn('no_loan',$HLLNNO)
                                             ->whereIn('squence',$HLSEQN)
                                             ->whereDate('created_at', Carbon::now())
                                             ->get();
             if (count($inserted_data) <= 0) {
+                DB::commit();
                 alert()->warning('Perhatian','sudah melakukan pembayaran');
                 return redirect()->route('pembayaran.index');
             }else{
+                DB::commit();
                 foreach ($inserted_data as $key => $value) {
                     if ($value != null) {
                         // current master anggsuran

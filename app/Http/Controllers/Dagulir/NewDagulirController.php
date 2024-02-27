@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dagulir;
 use App\Http\Controllers\Controller;
 use App\Events\EventMonitoring;
 use App\Http\Controllers\LogPengajuanController;
+use App\Http\Controllers\PembayaranController;
 use App\Models\AlasanPengembalianData;
 use App\Models\CalonNasabah;
 use App\Models\CalonNasabahTemp;
@@ -2533,6 +2534,9 @@ class NewDagulirController extends Controller
                                     $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
                                     $loan->baki_debet = $plafon->plafon_usulan_pincab;
                                     $loan->save();
+
+                                    $kumulatif = new PembayaranController();
+                                    $kumulatif->kumulatif_debitur($pengajuan->dagulir->kode_pendaftaran,0,$plafon->plafon_usulan_pincab,1);
                                 }else{
                                     DB::commit();
                                     alert()->error('Terjadi Kesalahan', 'Dana tidak cukup.');
