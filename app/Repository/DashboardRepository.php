@@ -162,15 +162,12 @@ class DashboardRepository
         ->leftJoin('pengajuan', function ($join) use ($tanggalAwal, $tanggalAkhir) {
             $join->on('c.id', '=', 'pengajuan.id_cabang')
                 ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
-                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at')
-                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
+                    return $query->where('tanggal', '>=', $tanggalAwal)->whereNull('pengajuan.deleted_at');
                 })
                 ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
-                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at')
-                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
+                    return $query->where('tanggal', '<=', $tanggalAkhir)->whereNull('pengajuan.deleted_at');
                 })->when(empty($tanggalAwal) && empty($tanggalAkhir), function ($query) {
-                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at')
-                        ->where('pengajuan.skema_kredit', '!=', 'Dagulir');
+                    return $query->whereMonth('tanggal', now()->month)->whereNull('pengajuan.deleted_at');
                 });
         })
         ->where('c.kode_cabang', '!=', 000)
