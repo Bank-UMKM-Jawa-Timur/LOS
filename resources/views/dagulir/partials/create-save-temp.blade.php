@@ -131,8 +131,10 @@
                 console.log(res);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.status);
-                alert(thrownError);
+                // alert(xhr.status);
+                console.log(xhr.status);
+                console.log(thrownError);
+                // alert(thrownError);
             }
         });
         $(`#${id} input[type=file]`).each(function(){
