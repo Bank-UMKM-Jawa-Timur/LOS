@@ -884,7 +884,7 @@
                                     <label for="">Penyelia Kredit</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>{{ $pendapatDanUsulan->komentar_penyelia }}</p>
+                                    <p>{{ $pendapatDanUsulan?->komentar_penyelia }}</p>
                                 </div>
                             </div>
                         </div>
@@ -894,7 +894,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_penyelia }} Bulan</p>
+                                    <p>{{ $plafonUsulan?->jangka_waktu_usulan_penyelia != null ? $plafonUsulan?->jangka_waktu_usulan_penyelia.'Bulan' : '-' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -904,7 +904,12 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_penyelia, 0, ',', '.')}}</p>
+                                    <p>
+                                        @if ($plafonUsulan?->plafon_usulan_penyelia == 0 || $plafonUsulan?->plafon_usulan_penyelia == '')
+                                            -
+                                        @else
+                                            Rp. {{ number_format($plafonUsulan?->plafon_usulan_penyelia, 0, ',', '.')}}</p>
+                                        @endif
                                 </div>
                             </div>
                         </div>
