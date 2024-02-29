@@ -132,13 +132,13 @@ class PembayaranController extends Controller
                 $filtered = $collection->whereIn('HLLNNO', $masterLoanNumbers);
                 if (count($filtered) <= 0) {
                     DB::commit();
-                    alert()->error('Kesalahan','Data yang tidak ditemukan.');
+                    alert()->error('Kesalahan','Data tidak valid.');
                     return redirect()->route('pembayaran.index');
                 }
                 return view('pembayaran.upload',['data' => $filtered->all()]);
             } else {
                 DB::commit();
-                alert()->error('Kesalahan','Terdapat data yang tidak ditemukan.');
+                alert()->error('Kesalahan','Data tidak ditemukan.');
                 return redirect()->route('pembayaran.index');
             }
             return redirect()->route('pembayaran.index');
@@ -170,7 +170,7 @@ class PembayaranController extends Controller
                     // current master anggsuran
                     $existing_loan = MasterDDAngsuran::where('squence', $value['HLSEQN'])
                                                     ->where('no_loan', $value['HLLNNO'])
-                                                    ->whereDate('created_at', Carbon::now())
+                                                    ->whereDate('tanggal_pembayaran', date('Y-m-d', strtotime($value['HLDTVL'])))
                                                     ->count();
 
                     // Insert data only if no existing records
@@ -194,7 +194,7 @@ class PembayaranController extends Controller
             $inserted_data = MasterDDAngsuran::
                                             whereIn('no_loan',$HLLNNO)
                                             ->whereIn('squence',$HLSEQN)
-                                            ->whereDate('created_at', Carbon::now())
+                                            ->whereDate('tanggal_pembayaran', date('Y-m-d', strtotime($value['HLDTVL'])))
                                             ->get();
             if (count($inserted_data) <= 0) {
                 DB::commit();
@@ -206,6 +206,7 @@ class PembayaranController extends Controller
                     if ($value != null) {
                         // current master anggsuran
                         $loan = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
+                        $total_pembayaran = MasterDDAngsuran::where('no_loan',$value['no_loan'])->sum('pokok_pembayaran');
                         $kode = $loan->kode_pendaftaran;
                         // update sipde
                         if ($value['no_loan'] == $loan->no_loan) {
@@ -218,7 +219,7 @@ class PembayaranController extends Controller
                             $update = MasterDDLoan::where('no_loan',$value['no_loan'])->first();
                             $update->baki_debet = $result_total_angsuran;
                             $update->update();
-                            $response = $this->kumulatif_debitur($kode,$value['pokok_pembayaran'],$result_total_angsuran,$value['kolek']);
+                            $response = $this->kumulatif_debitur($kode,$total_pembayaran,$result_total_angsuran,$value['kolek']);
                             if ($response != 200) {
                                 DB::rollBack();
                                 alert()->error('Error','Terjadi Kesalahan.');

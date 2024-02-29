@@ -1,50 +1,9 @@
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/resumablejs@1.1.0/resumable.min.js"></script>
-    {{-- <script>
-        // $(document).ready(function () {
-        //     $('#checkFile').hide();
-        //     $('#fileUploadForm').submit(function (e) {
-        //         e.preventDefault();
-
-        //         var form = $(this);
-        //         var formData = new FormData(form[0]);
-        //         var progressBarContainer = $('#progressBarContainer');
-        //         var progressBar = $('.progress-bar');
-
-        //         progressBarContainer.show(); // Show progress bar container
-        //         progressBar.css('width', '0%'); // Reset progress bar width
-
-        //         $.ajax({
-        //             xhr: function () {
-        //                 var xhr = new window.XMLHttpRequest();
-
-        //                 xhr.upload.addEventListener("progress", function (evt) {
-        //                     if (evt.lengthComputable) {
-        //                         var percentComplete = (evt.loaded / evt.total) * 100;
-        //                         progressBar.css('width', percentComplete + '%');
-        //                         progressBar.html(percentComplete + '%');
-        //                     }
-        //                 }, false);
-
-        //                 return xhr;
-        //             },
-        //             type: form.attr('method'),
-        //             url: form.attr('action'),
-        //             data: formData,
-        //             processData: false,
-        //             contentType: false,
-        //             success: function () {
-        //                 console.log('File has uploaded');
-        //                 $('#uploadButton').hide();
-        //                 $('#checkFile').show();
-        //             }
-        //         });
-        //     });
-        // });
-    </script> --}}
     <script>
         let browseFileTxt =  $('#browseFileTxt');
         let browseFileDic =  $('#browseFileDic');
@@ -183,15 +142,19 @@
             $("#fileUploadForm").submit();
             $('#preload-data').removeClass('hidden');
         })
-
+        $('#prosesData').on('click',function() {
+            $('#preload-data').removeClass('hidden');
+        })
         // Attach the checkFileInputs function to the change event of file inputs
         // $('#browseFileTxt, #browseFileDic, #browseFileNomi').change(function () {
         //     checkFileInputs();
         // });
 
     </script>
+
 @endpush
 @section('content')
+<p id="internet-status"></p>
 <section class="p-5 overflow-y-auto mt-5">
     <div class="head space-y-5 w-full font-poppins">
         <div class="heading flex-auto">
