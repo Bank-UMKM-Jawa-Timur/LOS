@@ -4002,7 +4002,6 @@ class PengajuanKreditController extends Controller
     }
 
     public function kembalikanDataKePosisiSebelumnya(Request $request){
-        // return $request;
         DB::beginTransaction();
         try{
             $dataPengajuan = PengajuanModel::find($request->id);

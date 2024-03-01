@@ -430,7 +430,7 @@
                                                                     </li>
                                                                 </a>
                                                                 <a href="#" class="w-full cursor-pointer">
-                                                                    <li class="item-tb-dropdown kembalikan-modal" cursor-pointer data-id="{{ $item->id }}" data-backto="staf" >
+                                                                    <li class="item-tb-dropdown kembalikan-modal cursor-pointer" data-id="{{ $item->id }}" data-backto="staf" >
                                                                         Kembalikan ke Staff
                                                                     </li>
                                                                 </a>
@@ -451,7 +451,7 @@
                                                                     </li>
                                                                 </a>
                                                                 <a href="#" class="w-full cursor-pointer">
-                                                                    <li class="item-tb-dropdown kembalikan-modal" cursor-pointer data-id="{{ $item->id }}" data-backto="penyelia">
+                                                                    <li class="item-tb-dropdown kembalikan-modal cursor-pointer" data-id="{{ $item->id }}" data-backto="penyelia">
                                                                         Kembalikan ke Penyelia
                                                                     </li>
                                                                 </a>
@@ -522,9 +522,8 @@
                                                                             </li>
                                                                         </a>
                                                                     @else
-                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan">
-                                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
-                                                                                data-id="{{ $item->id }}" data-backto="Penyelia">
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Penyelia">
+                                                                            <li class="item-tb-dropdown kembalikan-modal cursor-pointer">
                                                                                 Kembalikan ke Penyelia
                                                                             </li>
                                                                         </a>
