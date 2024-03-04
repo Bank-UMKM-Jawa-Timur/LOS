@@ -3902,6 +3902,12 @@ class PengajuanKreditController extends Controller
                     // File PK Handler
                 case 'PK':
                     $message = 'file PK.';
+                    $no_pk = $request->get('no_pk');
+                    DB::table('log_cetak_kkb')
+                        ->where('id_pengajuan', $id)
+                        ->update([
+                            'no_pk' => $no_pk
+                        ]);
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
                     $filePK = $request->pk;
                     $filenamePK = date('YmdHis') . '.' . $filePK->getClientOriginalExtension();
