@@ -129,7 +129,12 @@ class PembayaranController extends Controller
                 $collection = collect($result_data);
 
                 // Menggunakan whereIn() dengan nomor pinjaman dari master_loan
-                $filtered = $collection->whereIn('HLLNNO', $masterLoanNumbers);
+                if(!empty($masterLoanNumbers)){
+                      $filtered = $collection;
+                }else{
+                    $filtered = $collection->whereIn('HLLNNO', $masterLoanNumbers);
+
+                }
                 if (count($filtered) <= 0) {
                     DB::commit();
                     alert()->error('Kesalahan','Data tidak valid.');
