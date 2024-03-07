@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Image;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt\Return_;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -543,15 +544,17 @@ class NewDagulirController extends Controller
             //untuk jawaban yg teks, number, persen, long text
             foreach ($request->id_level as $key => $value) {
                 if ($value != null) {
-                    $dataJawabanText = new JawabanTextModel;
-                    $dataJawabanText->id_pengajuan = $id_pengajuan;
-                    $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                    if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
-                        $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
-                    } else {
-                        $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    if (array_key_exists($key, $request->get('informasi'))) {
+                        $dataJawabanText = new JawabanTextModel;
+                        $dataJawabanText->id_pengajuan = $id_pengajuan;
+                        $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                        if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
+                            $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                        } else {
+                            $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                        }
+                        $dataJawabanText->save();
                     }
-                    $dataJawabanText->save();
                 }
             }
 
@@ -2848,201 +2851,204 @@ class NewDagulirController extends Controller
 
         $pengajuanModel = PengajuanModel::find($id);
         DB::beginTransaction();
-        try {
-            $find = array('Rp.', '.', ',');
-            $id_pengajuan = $pengajuanModel->id;
-            $npwp = null;
-            if ($pengajuanModel->skema_kredit == 'Dagulir') {
-                if ($request->has('dagulir_id')) {
-                    $pengajuan = PengajuanDagulir::find($request->dagulir_id);
-                }
-                else {
-                    $pengajuan = PengajuanDagulir::find($pengajuanModel->dagulir_id);
-                    $pengajuan->nama = $request->get('nama_lengkap');
-                    $pengajuan->email = $request->get('email');
-                    $pengajuan->nik = $request->get('nik_nasabah');
-                    $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
-                    $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
-                    $pengajuan->telp = $request->get('telp');
-                    $pengajuan->jenis_usaha = $request->get('jenis_usaha');
-                    $pengajuan->ket_agunan = $request->get('ket_agunan');
-                    $pengajuan->nominal = formatNumber($request->get('nominal_pengajuan'));
-                    $pengajuan->jangka_waktu = $request->get('jangka_waktu');
-                    $pengajuan->kode_bank_pusat = 1;
-                    $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
-                    $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
-                    $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
-                    $pengajuan->kec_dom = $request->get('kecamatan_domisili');
-                    $pengajuan->kotakab_dom = $request->get('kode_kotakab_domisili');
-                    $pengajuan->alamat_dom = $request->get('alamat_domisili');
-                    $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
-                    $pengajuan->alamat_ktp = $request->get('alamat_sesuai_ktp');
-                    $pengajuan->kec_usaha = $request->get('kecamatan_usaha');
-                    $pengajuan->kotakab_usaha = $request->get('kode_kotakab_usaha');
-                    $pengajuan->alamat_usaha = $request->get('alamat_usaha');
-                    $pengajuan->tipe = $request->get('tipe_pengajuan');
-                    $npwp = null;
-                    if ($request->informasi) {
-                        if (array_key_exists('79', $request->informasi)) {
-                            $npwp = str_replace(['.','-'], '', $request->informasi[79]);
-                        }
-                    } else {
-                        $npwp = null;
-                    }
-                    $pengajuan->npwp = $npwp;
-                    $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
-                    $pengajuan->tanggal = now();
-                    $pengajuan->status = 8;
-                    $pengajuan->from_apps = 'pincetar';
-                }
+        $find = array('Rp.', '.', ',');
+        $id_pengajuan = $pengajuanModel->id;
+        $npwp = null;
+        if ($pengajuanModel->skema_kredit == 'Dagulir') {
+            if ($request->has('dagulir_id')) {
+                $pengajuan = PengajuanDagulir::find($request->dagulir_id);
 
-                $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
-                $pengajuan->hubungan_bank = $request->get('hub_bank');
-                $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
-                $pengajuan->desa_ktp = $request->get('desa');
-                $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
-                $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
-                $pengajuan->user_id = Auth::user()->id;
-                $pengajuan->status_pernikahan = $request->get('status');
-                $pengajuan->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
-                $pengajuan->created_at = now();
-                $pengajuan->save();
-
-                $dagulir_id = $pengajuan->id;
-
-
-
-                $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
-                // foto nasabah
-                if ($request->has('foto_nasabah')) {
-                    // Delete current image
-                    $current = $update_pengajuan->foto_nasabah;
-                    $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
-                    if (file_exists($path_file)) {
-                        @unlink($path_file);
-                    }
-
-                    // Update new image
-                    $image = $request->file('foto_nasabah');
-                    $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                    $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
-                    if (!File::isDirectory($filePath)) {
-                        File::makeDirectory($filePath, 493, true);
-                    }
-                    $image->move($filePath, $fileNameNasabah);
-                    $update_pengajuan->foto_nasabah = $fileNameNasabah;
-
-                }
-                if ($request->has('ktp_pasangan')) {
-                    // Delete current image
-                    $current = $update_pengajuan->ktp_pasangan;
-                    $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
-                    if (file_exists($path_file)) {
-                        @unlink($path_file);
-                    }
-
-                    // Update new image
-                    $image = $request->file('ktp_pasangan');
-                    $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                    $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
-                    if (!File::isDirectory($filePath)) {
-                        File::makeDirectory($filePath, 493, true);
-                    }
-                    $image->move($filePath, $fileNamePasangan);
-                    $update_pengajuan->foto_pasangan = $fileNamePasangan;
-
-                }
-                if ($request->has('ktp_nasabah')) {
-                    // Delete current image
-                    $current = $update_pengajuan->ktp_nasabah;
-                    $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
-                    if (file_exists($path_file)) {
-                        @unlink($path_file);
-                    }
-
-                    // Update new image
-                    $image = $request->file('ktp_nasabah');
-                    $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                    $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
-                    if (!File::isDirectory($filePath)) {
-                        File::makeDirectory($filePath, 493, true);
-                    }
-                    $image->move($filePath, $fileNameKtpNasabah);
-                    $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
-
-                }
-                // ktp nasabah
-                $update_pengajuan->update();
-            } else {
-                $request->validate([
-                    'name' => 'required',
-                    'alamat_rumah' => 'required',
-                    'alamat_usaha' => 'required',
-                    'no_ktp' => 'required|max:16',
-                    'no_telp' => 'required|max:13',
-                    'kabupaten' => 'required|not_in:0',
-                    'kec' => 'required|not_in:0',
-                    'desa' => 'required|not_in:0',
-                    'tempat_lahir' => 'required',
-                    'tanggal_lahir' => 'required',
-                    'status' => 'required',
-                    'sektor_kredit' => 'required',
-                    'jenis_usaha' => 'required',
-                    'jumlah_kredit' => 'required',
-                    'tujuan_kredit' => 'required',
-                    'jaminan' => 'required',
-                    'hubungan_bank' => 'required',
-                    'hasil_verifikasi' => 'required',
-                ], [
-                    'required' => 'data harus terisi.',
-                    'not_in' => 'kolom harus dipilih.',
-                ]);
-
-                $updateData = CalonNasabah::find($request->id_nasabah);
-                $updateData->nama = $request->name;
-                $updateData->alamat_rumah = $request->alamat_rumah;
-                $updateData->alamat_usaha = $request->alamat_usaha;
-                $updateData->no_ktp = $request->no_ktp;
-                $updateData->no_telp = $request->no_telp;
-                $updateData->tempat_lahir = $request->tempat_lahir;
-                $updateData->tanggal_lahir = $request->tanggal_lahir;
-                $updateData->status = $request->status;
-                $updateData->sektor_kredit = $request->sektor_kredit;
-                $updateData->jenis_usaha = $request->jenis_usaha;
-                $updateData->jumlah_kredit = str_replace($find, "", $request->jumlah_kredit);
-                $updateData->tujuan_kredit = $request->tujuan_kredit;
-                $updateData->jaminan_kredit = $request->jaminan;
-                $updateData->hubungan_bank = $request->hubungan_bank;
-                $updateData->verifikasi_umum = $request->hasil_verifikasi;
-                $updateData->id_user = auth()->user()->id;
-                $updateData->id_pengajuan = $id;
-                $updateData->id_desa = $request->desa;
-                $updateData->id_kecamatan = $request->kec;
-                $updateData->id_kabupaten = $request->kabupaten;
-                $updateData->tenor_yang_diminta = $request->tenor_yang_diminta;
-                $updateData->save();
-
-                if ($request->skema_kredit == 'KKB') {
-                    // $dataPO = DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)->first();
-                    // return $dataPO;
-                    DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)
-                        ->update([
-                            'tahun_kendaraan' => $request->tahun,
-                            'merk' => $request->merk,
-                            'tipe' => $request->tipe_kendaraan,
-                            'warna' => $request->warna,
-                            'keterangan' => 'Pemesanan ' . $request->pemesanan,
-                            'jumlah' => $request->sejumlah,
-                            'harga' => str_replace($find, '', $request->harga)
-                        ]);
-                }
             }
+            else {
+                $pengajuan = PengajuanDagulir::find($pengajuanModel->dagulir_id);
+                $pengajuan->nama = $request->get('nama_lengkap');
+                $pengajuan->email = $request->get('email');
+                $pengajuan->nik = $request->get('nik_nasabah');
+                $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
+                $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
+                $pengajuan->telp = $request->get('telp');
+                $pengajuan->jenis_usaha = $request->get('jenis_usaha');
+                $pengajuan->ket_agunan = $request->get('ket_agunan');
+                $pengajuan->nominal = formatNumber($request->get('nominal_pengajuan'));
+                $pengajuan->jangka_waktu = $request->get('jangka_waktu');
+                $pengajuan->kode_bank_pusat = 1;
+                $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
+                $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
+                $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
+                $pengajuan->kec_dom = $request->get('kecamatan_domisili');
+                $pengajuan->kotakab_dom = $request->get('kode_kotakab_domisili');
+                $pengajuan->alamat_dom = $request->get('alamat_domisili');
+                $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
+                $pengajuan->alamat_ktp = $request->get('alamat_sesuai_ktp');
+                $pengajuan->kec_usaha = $request->get('kecamatan_usaha');
+                $pengajuan->kotakab_usaha = $request->get('kode_kotakab_usaha');
+                $pengajuan->alamat_usaha = $request->get('alamat_usaha');
+                $pengajuan->tipe = $request->get('tipe_pengajuan');
+                $npwp = null;
+                if ($request->informasi) {
+                    if (array_key_exists('79', $request->informasi)) {
+                        $npwp = str_replace(['.','-'], '', $request->informasi[79]);
+                    }
+                } else {
+                    $npwp = null;
+                }
+                $pengajuan->npwp = $npwp;
+                $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
+                $pengajuan->tanggal = now();
+                $pengajuan->status = 8;
+                $pengajuan->from_apps = 'pincetar';
+            }
+
+            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
+            $pengajuan->hubungan_bank = $request->get('hub_bank');
+            $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
+            $pengajuan->desa_ktp = $request->get('desa');
+            $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
+            $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
+            $pengajuan->user_id = Auth::user()->id;
+            $pengajuan->status_pernikahan = $request->get('status');
+            $pengajuan->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
+            $pengajuan->created_at = now();
+            $pengajuan->save();
+
+            $dagulir_id = $pengajuan->id;
+
+
+
+            $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
+            // foto nasabah
+            if ($request->has('foto_nasabah')) {
+                // Delete current image
+                $current = $update_pengajuan->foto_nasabah;
+                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                if (file_exists($path_file)) {
+                    @unlink($path_file);
+                }
+
+                // Update new image
+                $image = $request->file('foto_nasabah');
+                $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameNasabah);
+                $update_pengajuan->foto_nasabah = $fileNameNasabah;
+
+            }
+            if ($request->has('ktp_pasangan')) {
+                // Delete current image
+                $current = $update_pengajuan->ktp_pasangan;
+                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                if (file_exists($path_file)) {
+                    @unlink($path_file);
+                }
+
+                // Update new image
+                $image = $request->file('ktp_pasangan');
+                $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNamePasangan);
+                $update_pengajuan->foto_pasangan = $fileNamePasangan;
+
+            }
+            if ($request->has('ktp_nasabah')) {
+                // Delete current image
+                $current = $update_pengajuan->ktp_nasabah;
+                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                if (file_exists($path_file)) {
+                    @unlink($path_file);
+                }
+
+                // Update new image
+                $image = $request->file('ktp_nasabah');
+                $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameKtpNasabah);
+                $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
+
+            }
+            // ktp nasabah
+            $update_pengajuan->update();
+        } else {
+            $validateData = Validator::make($request->all(),[
+                'name' => 'required',
+                'alamat_rumah' => 'required',
+                'alamat_usaha' => 'required',
+                'no_ktp' => 'required',
+                'no_telp' => 'required',
+                'kabupaten' => 'required|not_in:0',
+                'kec' => 'required|not_in:0',
+                'desa' => 'required|not_in:0',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'status' => 'required',
+                'sektor_kredit' => 'required',
+                'jenis_usaha' => 'required',
+                'jumlah_kredit' => 'required',
+                'tujuan_kredit' => 'required',
+                'jaminan' => 'required',
+                'hubungan_bank' => 'required',
+                'hasil_verifikasi' => 'required',
+            ], [
+                'required' => 'data harus terisi.',
+                'not_in' => 'kolom harus dipilih.',
+            ]);
+
+            $updateData = CalonNasabah::find($request->id_nasabah);
+            $updateData->nama = $request->name;
+            $updateData->alamat_rumah = $request->alamat_rumah;
+            $updateData->alamat_usaha = $request->alamat_usaha;
+            $updateData->no_ktp = $request->no_ktp;
+            $updateData->no_telp = $request->no_telp;
+            $updateData->tempat_lahir = $request->tempat_lahir;
+            $updateData->tanggal_lahir = $request->tanggal_lahir;
+            $updateData->status = $request->status;
+            $updateData->sektor_kredit = $request->sektor_kredit;
+            $updateData->jenis_usaha = $request->jenis_usaha;
+            $updateData->jumlah_kredit = str_replace($find, "", $request->jumlah_kredit);
+            $updateData->tujuan_kredit = $request->tujuan_kredit;
+            $updateData->jaminan_kredit = $request->jaminan;
+            $updateData->hubungan_bank = $request->hubungan_bank;
+            $updateData->verifikasi_umum = $request->hasil_verifikasi;
+            $updateData->id_user = auth()->user()->id;
+            $updateData->id_pengajuan = $id;
+            $updateData->id_desa = $request->desa;
+            $updateData->id_kecamatan = $request->kec;
+            $updateData->id_kabupaten = $request->kabupaten;
+            $updateData->tenor_yang_diminta = $request->tenor_yang_diminta;
+            $updateData->save();
+
+            if ($request->skema_kredit == 'KKB') {
+                // $dataPO = DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)->first();
+                // return $dataPO;
+                DB::table('data_po')->where('id_pengajuan', $request->id_dagulir_temp)
+                    ->update([
+                        'tahun_kendaraan' => $request->tahun,
+                        'merk' => $request->merk,
+                        'tipe' => $request->tipe_kendaraan,
+                        'warna' => $request->warna,
+                        'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                        'jumlah' => $request->sejumlah,
+                        'harga' => str_replace($find, '', $request->harga)
+                    ]);
+            }
+        }
+        try {
+
             $oldAnswer = JawabanTextModel::select('jawaban_text.*')
                                         ->join('item', 'item.id', 'jawaban_text.id_jawaban')
                                         ->where('jawaban_text.id_pengajuan', $id_pengajuan)
                                         ->where('item.opsi_jawaban', '!=', 'file')
                                         ->pluck('jawaban_text.id_jawaban')
                                         ->toArray();
+
             $oldFileAnswer = JawabanTextModel::select('jawaban_text.*')
                                         ->join('item', 'item.id', 'jawaban_text.id_jawaban')
                                         ->where('jawaban_text.id_pengajuan', $id_pengajuan)
@@ -3051,6 +3057,7 @@ class NewDagulirController extends Controller
                                         ->toArray();
 
             // jawaban ijin usaha
+
             if ($request->ijin_usaha == 'tidak_ada_legalitas_usaha') {
                 $dokumenUsaha = DB::table('item')
                     ->where('nama', 'LIKE', '%NIB%')
@@ -3064,6 +3071,7 @@ class NewDagulirController extends Controller
                         ->delete();
                 }
             }
+
             if ($request->isNpwp == "0") {
                 $dokumenUsaha = DB::table('item')
                     ->orWhere('nama', 'LIKE', '%NPWP%')
@@ -3154,7 +3162,6 @@ class NewDagulirController extends Controller
             }
 
 
-
             $id_pengajuan = $pengajuanModel->id;
 
             if ($pengajuanModel->skema_kredit == 'Dagulir') {
@@ -3273,7 +3280,6 @@ class NewDagulirController extends Controller
                                     ]);
                 }
             }
-
             //untuk jawaban yg teks, number, persen, long text
             if ($request->id_level) {
                 $newAnswer = [];
@@ -3641,7 +3647,6 @@ class NewDagulirController extends Controller
                 }
             }
             $updateData->update();
-
             //save pendapat per aspek
             foreach ($request->get('id_aspek') as $key => $value) {
                 if ($request->get('pendapat_per_aspek')[$key] != '') {
@@ -3688,7 +3693,7 @@ class NewDagulirController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
+            return $e;;
             return redirect()->route('dagulir.pengajuan.index')->withError('Terjadi kesalahan.' . $e->getMessage());
         } catch (QueryException $e) {
             DB::rollBack();
