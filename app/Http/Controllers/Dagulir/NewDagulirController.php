@@ -1348,7 +1348,6 @@ class NewDagulirController extends Controller
                     $ke = 'PBP';
                 }
             }
-<<<<<<< Updated upstream
 
             $alasan = AlasanPengembalianData::where('id_pengajuan', $id)
             ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
@@ -1390,8 +1389,6 @@ class NewDagulirController extends Controller
 
             $param['dari'] = $dari;
 
-=======
->>>>>>> Stashed changes
             $param['pendapat'] = $this->repo->getAlasanPengembalian($id, $ke);
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
