@@ -911,7 +911,7 @@ class PengajuanKreditController extends Controller
             } else {
 
                 foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
-                    array_push($dataJawaban, temporary_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
+                    array_push($dataJawaban, edit_dagulir($pengajuan->dagulir_id, $i->id)?->opsi_text ?? '');
                 }
 
                 if ($pengajuan->dagulir_id)

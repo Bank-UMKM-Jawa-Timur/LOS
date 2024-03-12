@@ -308,6 +308,23 @@
                 size is 10 MB</span>
         </div>
 
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">{{ $itemCatatanSlik->nama }}</label><small class="text-red-500 font-bold">*</small>
+                <textarea
+                    name="dataLevelDua[{{ $itemCatatanSlik->id }}]"
+                    class="form-textarea"
+                    placeholder="{{ $itemCatatanSlik->nama }}"
+                    id=""
+                ></textarea>
+            </div>
+            @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+            <div class="invalid-feedback">
+                {{ $errors->first('dataLevelDua.' . $key) }}
+            </div>
+            @endif
+        </div>
+
         <div class="form-group-1 col-span-2">
             <div>
                 <div class="p-2 border-l-4 border-theme-primary bg-gray-100">

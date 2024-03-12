@@ -894,7 +894,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>{{ $plafonUsulan?->jangka_waktu_usulan_penyelia != null ? $plafonUsulan?->jangka_waktu_usulan_penyelia.'Bulan' : '-' }}</p>
+                                    <p>{{ $plafonUsulan?->jangka_waktu_usulan_penyelia != null ? $plafonUsulan?->jangka_waktu_usulan_penyelia.' Bulan' : '-' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -915,7 +915,7 @@
                         </div>
                     </div>
                     @endif
-                    @if($pendapatDanUsulan->komentar_pbo)
+                    {{-- @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
                         <div class="form-group-1">
                             <div class="field-review">
@@ -948,7 +948,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif
+                    @endif --}}
                     @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
                         <div class="form-group-1">
@@ -1093,11 +1093,27 @@
                     <div class="space-y-3">
                         <div class="form-group-1">
                             <div class="input-box">
+                                <label for="">Plafon Pengajuan Debitur</label>
+                                <input type="text" class="form-input bg-gray-200 rupiah" value="{{ number_format($dataNasabah->nominal,0,',','.') }}" name="nominal_pengajuan" id="nominal_pengajuan" readonly>
+                            </div>
+                            <div class="input-box">
                                 <label for="">Plafon Disetujui</label>
                                 <input type="text" class="form-input rupiah" name="nominal_disetujui" id="nominal_disetujui" required>
                             </div>
                         </div>
+                        <hr>
                         <div class="form-group-1">
+                            <div class="input-box">
+                                <label for="">Tenor Pengajuan Debitur (Bulan)</label>
+                                <div class="flex items-center">
+                                    <div class="flex-1">
+                                        <input type="number" class="form-input bg-gray-200" value="{{ $dataNasabah->jangka_waktu }}" name="jangka_waktu_pengajuan" id="jangka_waktu_pengajuan" readonly>
+                                    </div>
+                                    <div class="flex-shrink-0  mt-2.5rem">
+                                        <span class="form-input bg-gray-100">Bulan</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="input-box">
                                 <label for="">Tenor Disetujui (Bulan)</label>
                                 <div class="flex items-center">

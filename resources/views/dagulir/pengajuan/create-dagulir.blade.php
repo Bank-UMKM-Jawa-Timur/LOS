@@ -375,6 +375,22 @@
             <span class="text-red-500 m-0" style="display: none">Maximum upload file
                 size is 10 MB</span>
         </div>
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">{{ $itemCatatanSlik->nama }}</label><small class="text-red-500 font-bold">*</small>
+                <textarea
+                    name="catatan_slik"
+                    class="form-textarea"
+                    placeholder="{{ $itemCatatanSlik->nama }}"
+                    id=""
+                ></textarea>
+            </div>
+            @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+            <div class="invalid-feedback">
+                {{ $errors->first('dataLevelDua.' . $key) }}
+            </div>
+            @endif
+        </div>
 
         <div class="form-group-1 col-span-2">
             <div>

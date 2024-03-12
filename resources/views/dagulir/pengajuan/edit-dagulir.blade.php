@@ -332,8 +332,7 @@
                     data-id_item={{ $itemSlik->id }}>
                     <option value=""> --Pilih Data -- </option>
                     @foreach ($itemSlik->option as $itemJawaban)
-                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}" {{ temporary_select_dagulir($itemSlik->id,
-                        $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
+                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}" {{ edit_select_dagulir($itemJawaban->id,$duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
                         {{ $itemJawaban->option }}</option>
                     @endforeach
                 </select>
@@ -373,6 +372,22 @@
             </div>
             <span class="text-red-500 m-0" style="display: none">Maximum upload file
                 size is 10 MB</span>
+        </div>
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">{{ $itemCatatanSlik->nama }}</label><small class="text-red-500 font-bold">*</small>
+                <textarea
+                    name="catatan_slik"
+                    class="form-textarea"
+                    placeholder="{{ $itemCatatanSlik->nama }}"
+                    id=""
+                >{{ edit_dagulir($pengajuan->id, $itemCatatanSlik->id)?->opsi_text }}</textarea>
+            </div>
+            @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+            <div class="invalid-feedback">
+                {{ $errors->first('dataLevelDua.' . $key) }}
+            </div>
+            @endif
         </div>
         <div>
             <div class="p-2 border-l-4 border-theme-primary bg-gray-100">

@@ -219,6 +219,7 @@ class NewDagulirController extends Controller
             $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
             $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
             $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+            $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
             $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
             $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
             $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
@@ -515,8 +516,8 @@ class NewDagulirController extends Controller
                 $addData->save();
             }
             // OPSI ASPEK JAWABAN
-             // Data KKB Handler
-             if ($request->skema_kredit == 'KKB') {
+            // Data KKB Handler
+            if ($request->skema_kredit == 'KKB') {
                 DB::table('data_po')
                     ->insert([
                         'id_pengajuan' => $id_pengajuan,
@@ -529,6 +530,19 @@ class NewDagulirController extends Controller
                         'jumlah' => $request->sejumlah,
                         'harga' => str_replace($find, '', $request->harga)
                     ]);
+            }
+
+            // jawaban catatan slik
+            if ($request->has('catatan_slik')) {
+                $itemCatatanSlik = ItemModel::where('nama', 'Catatan Slik')->first();
+                JawabanTextModel::create([
+                    'id_pengajuan' => $id_pengajuan,
+                    'id_jawaban' => $itemCatatanSlik->id,
+                    'opsi_text' => $request->catatan_slik,
+                    'skor_penyelia' => null,
+                    'skor_pbp' => null,
+                    'skor' => null,
+                ]);
             }
 
             // jawaban ijin usaha
@@ -1231,6 +1245,7 @@ class NewDagulirController extends Controller
                 ->where('p.id', $id)
                 ->where('nama', 'SLIK')
                 ->first();
+            $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
             $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
             $param['itemKTPSu'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
             $param['itemKTPIs'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
@@ -1333,6 +1348,7 @@ class NewDagulirController extends Controller
                     $ke = 'PBP';
                 }
             }
+<<<<<<< Updated upstream
 
             $alasan = AlasanPengembalianData::where('id_pengajuan', $id)
             ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
@@ -1374,6 +1390,8 @@ class NewDagulirController extends Controller
 
             $param['dari'] = $dari;
 
+=======
+>>>>>>> Stashed changes
             $param['pendapat'] = $this->repo->getAlasanPengembalian($id, $ke);
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
@@ -1395,6 +1413,7 @@ class NewDagulirController extends Controller
                 ->where('nama', 'SLIK')
                 ->first();
             $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+            $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
 
             $nasabah = PengajuanModel::select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
                 ->join('pengajuan_dagulir', 'pengajuan_dagulir.id', 'pengajuan.dagulir_id')
@@ -1972,7 +1991,9 @@ class NewDagulirController extends Controller
                         }
                         else {
                             // HIT Pengajuan endpoint dagulir
-                            $storeSIPDE = $this->storeSipde($id,$plafon_acc, $tenor_acc);
+                            $nasabah_nominal = $nasabah->nominal;
+                            $nasabah_jangka_waktu = $nasabah->jangka_waktu;
+                            $storeSIPDE = $this->storeSipde($id,$nasabah_nominal, $nasabah_jangka_waktu);
                             if (is_array($storeSIPDE)) {
                                 $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
                             }
@@ -2574,9 +2595,10 @@ class NewDagulirController extends Controller
                                     $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
                                     $loan->baki_debet = $plafon->plafon_usulan_pincab;
                                     $loan->save();
-
+                                    $delay = 1500000; // 1.5 sec
                                     $kumulatif = new PembayaranController();
                                     $kumulatif->kumulatif_debitur($pengajuan->dagulir->kode_pendaftaran,0,$plafon->plafon_usulan_pincab,1);
+                                    usleep($delay);
                                 }else{
                                     DB::commit();
                                     alert()->error('Terjadi Kesalahan', 'Dana tidak cukup.');
@@ -2621,6 +2643,7 @@ class NewDagulirController extends Controller
                         'pk' => $filenamePK,
                     ]);
                     $cek_skema = PengajuanModel::find($id);
+
                     if ($cek_skema->skema_kredit != 'Dagulir') {
                         DB::commit();
                         Alert::success('success', $message);
@@ -2820,6 +2843,7 @@ class NewDagulirController extends Controller
         $param['dataKabupaten'] = Kabupaten::all();
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+        $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
         $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
         $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();

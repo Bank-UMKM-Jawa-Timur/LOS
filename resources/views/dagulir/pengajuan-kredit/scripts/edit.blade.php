@@ -513,7 +513,7 @@
                     $.each(response.item.option, function(i, valOption) {
                         console.log(response.dataSelect);
                         $('#itemByKategori').append(`
-                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                        <option value="${valOption.skor}-${valOption.id}" ${(response.detailJawabanOption.id_jawaban == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
                         </option>`);
                     });

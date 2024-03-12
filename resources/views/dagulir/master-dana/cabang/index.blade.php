@@ -115,6 +115,7 @@
                                 <th>Dana Modal</th>
                                 <th>Dana Idle</th>
                                 <th>Plafon Akumulasi</th>
+                                <th>Plafon Aktif</th>
                                 <th>Baki Debet</th>
                                 <th>Tanggal</th>
                                 @if ($status === 1)
@@ -136,6 +137,7 @@
                                         <td>{{ number_format($item->dana_modal,0, ",", ".") }}</td>
                                         <td>{{ number_format($item->dana_idle,0, ",", ".") }}</td>
                                         <td>{{ number_format($item->loan_sum_plafon,0, ",", ".") }}</td>
+                                        <td>Plafon Aktif jika baki debet nya tidak 0</td>
                                         <td>{{ number_format($item->baki_debet,0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td>

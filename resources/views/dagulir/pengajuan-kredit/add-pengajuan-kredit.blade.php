@@ -129,7 +129,7 @@ $dataIndex = match ($skema) {
                                                     <label for="">NIB</label>
                                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
-                                                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text" value="{{old('informasi[77]')}}"
+                                                    <input type="text" maxlength="13" name="informasi[77]" id="nib_text" value="{{old('informasi[77]')}}"
                                                         placeholder="Masukkan informasi" class="form-input bg-white" disabled>
 
                                                 </div>
@@ -395,7 +395,7 @@ $dataIndex = match ($skema) {
                                                                 <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                 <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input"
                                                                     >
-                                                                    <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
+                                                                    <option value="0">-- Pilih Kategori Jaminan Tambahan --</option>
                                                                     {{-- <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
                                                                     </option> --}}
                                                                     <option value="Tanah">Tanah</option>
@@ -404,7 +404,11 @@ $dataIndex = match ($skema) {
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group" id="select_kategori_jaminan_tambahan"></div>
+                                                        <div id="placeholder" class="col-span-2 font-bold text-sm text-red-400 bg-red-200 p-3 w-full hidden">Loading Data...
+                                                            <hr>
+                                                        </div>
+                                                        <div class="form-group" id="select_kategori_jaminan_tambahan">
+                                                        </div>
                                                     @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
 
                                                     @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
@@ -1894,20 +1898,133 @@ $dataIndex = match ($skema) {
 
         //get item by kategori
         let kategoriJaminan = $(this).val();
-
         let id = $("#id_dagulir_temp").val();
 
-        $.ajax({
-            type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
-            dataType: "json",
-            success: function(response) {
-                if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
-                    $("#select_kategori_jaminan_tambahan").show()
-                    $("#jaminan_tambahan").show()
-                    // add item by kategori
-                    $('#select_kategori_jaminan_tambahan').append(`
-                        <div class="input-box">
+        if (kategoriJaminan != '0' || kategoriJaminan != 0) {
+            $.ajax({
+                type: "get",
+                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
+                dataType: "json",
+                beforeSend: function() {
+                    // setting timeout
+                    $('#placeholder').removeClass('hidden')
+                },
+                success: function(response) {
+                    if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
+                        $("#select_kategori_jaminan_tambahan").show()
+                        $("#jaminan_tambahan").show()
+                        // add item by kategori
+                        $('#select_kategori_jaminan_tambahan').append(`
+                            <div class="input-box">
+                                <label for="">${response.item.nama}</label>
+                                <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                    data-id_item="${response.item.id}">
+                                    <option value=""> --Pilih Opsi -- </option>
+                                    </select>
+
+                                <div id="item${response.item.id}">
+
+                                </div>
+                            </div>
+                        `);
+                        // add opsi dari item
+                        $.each(response.item.option, function(i, valOption) {
+                            // //console.log(valOption.skor);
+                            $('#itemByKategori').append(`
+                            <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                            ${valOption.option}
+                            </option>`);
+                        });
+
+                        // add item bukti pemilikan
+                        var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
+                            "<input type='checkbox' class='checkKategori'>" : ""
+                        var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
+                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                            if (valItem.nama == 'Atas Nama') {
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group input-box aspek_jaminan_kategori">
+                                        <label>${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input">
+                                        <input type="text" maxlength="255" id="atas_nama" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                            class="form-input input" value="">
+                                    </div>
+                                `);
+                            } else {
+                                var name_lowercase = valItem.nama.toLowerCase();
+                                name_lowercase = name_lowercase.replaceAll(' ', '_')
+                                if (valItem.nama == 'Foto') {
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                        <div class="form-group input-box file-wrapper item-${valItem.id}">
+                                            <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                            <div class="input-box mb-4">
+                                                <div class="flex gap-4">
+                                                    <input type="hidden" name="id_item_file[${valItem.id}][]"
+                                                        value="${valItem.id}" id="">
+                                                    <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
+                                                        name="upload_file[${valItem.id}][]" data-id=""
+                                                        placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size only-image">
+                                                    <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                    <span class="filename" style="display: inline;"></span>
+                                                    <div class="flex gap-2 multiple-action">
+                                                        <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
+                                                            <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                                        </button>
+                                                        <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
+                                                            <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `);
+                                } else {
+                                    if (response.dataJawaban[i] != null && response.dataJawaban[
+                                            i] != "") {
+                                        if (kategoriJaminan != 'Kendaraan Bermotor') {
+                                            isCheck =
+                                                "<input type='checkbox' class='checkKategori'>"
+                                            isDisabled = ""
+                                        }
+                                        if (valItem.nama != 'BPKB No') {
+                                            isDisabled = "disabled"
+                                        }
+                                    }
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                        <div class="form-group input-box aspek_jaminan_kategori">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                                class="form-input input" ${isDisabled} value="">
+                                        </div>
+                                    `);
+                                }
+                            }
+                        });
+
+                        $(".checkKategori").click(function() {
+                            var input = $(this).closest('.form-group').find(".input")
+                            // var input_id = $(this).closest('.form-group').find("input_id").last()
+                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                            if ($(this).is(':checked')) {
+                                input.prop('disabled', false)
+                                // input_id.prop('disabled',false)
+                                // input_opsi_jawaban.prop('disabled',false)
+                            } else {
+                                input.val('')
+                                input.prop('disabled', true)
+                                // input_id.prop('disabled',true)
+                                // input_opsi_jawaban.prop('disabled',true)
+                            }
+                        })
+                    } else {
+                        var skor = 0;
+                        var opt = 0;
+                        $('#select_kategori_jaminan_tambahan').append(`
                             <label for="">${response.item.nama}</label>
                             <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
                                 data-id_item="${response.item.id}">
@@ -1917,132 +2034,31 @@ $dataIndex = match ($skema) {
                             <div id="item${response.item.id}">
 
                             </div>
-                        </div>
-                    `);
-                    // add opsi dari item
-                    $.each(response.item.option, function(i, valOption) {
-                        // //console.log(valOption.skor);
-                        $('#itemByKategori').append(`
-                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
-                        ${valOption.option}
-                        </option>`);
-                    });
-
-                    // add item bukti pemilikan
-                    var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
-                        "<input type='checkbox' class='checkKategori'>" : ""
-                    var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
-                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                        if (valItem.nama == 'Atas Nama') {
-                            $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                <div class="form-group input-box aspek_jaminan_kategori">
-                                    <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
-                                    <input type="hidden" name="opsi_jawaban[${valItem.id}]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" maxlength="255" id="atas_nama" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                        class="form-input input" value="">
-                                </div>
-                            `);
-                        } else {
-                            var name_lowercase = valItem.nama.toLowerCase();
-                            name_lowercase = name_lowercase.replaceAll(' ', '_')
-                            if (valItem.nama == 'Foto') {
-                                $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group input-box file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
-                                        <div class="input-box mb-4">
-                                            <div class="flex gap-4">
-                                                <input type="hidden" name="id_item_file[${valItem.id}][]"
-                                                    value="${valItem.id}" id="">
-                                                <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
-                                                    name="upload_file[${valItem.id}][]" data-id=""
-                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size only-image">
-                                                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                                <span class="filename" style="display: inline;"></span>
-                                                <div class="flex gap-2 multiple-action">
-                                                    <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
-                                                        <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
-                                                    </button>
-                                                    <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
-                                                        <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
-                            } else {
-                                if (response.dataJawaban[i] != null && response.dataJawaban[
-                                        i] != "") {
-                                    if (kategoriJaminan != 'Kendaraan Bermotor') {
-                                        isCheck =
-                                            "<input type='checkbox' class='checkKategori'>"
-                                        isDisabled = ""
-                                    }
-                                    if (valItem.nama != 'BPKB No') {
-                                        isDisabled = "disabled"
-                                    }
-                                }
-                                $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group input-box aspek_jaminan_kategori">
-                                        <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                            class="form-input input" ${isDisabled} value="">
-                                    </div>
-                                `);
-                            }
-                        }
-                    });
-
-                    $(".checkKategori").click(function() {
-                        var input = $(this).closest('.form-group').find(".input")
-                        // var input_id = $(this).closest('.form-group').find("input_id").last()
-                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                        if ($(this).is(':checked')) {
-                            input.prop('disabled', false)
-                            // input_id.prop('disabled',false)
-                            // input_opsi_jawaban.prop('disabled',false)
-                        } else {
-                            input.val('')
-                            input.prop('disabled', true)
-                            // input_id.prop('disabled',true)
-                            // input_opsi_jawaban.prop('disabled',true)
-                        }
-                    })
-                } else {
-                    var skor = 0;
-                    var opt = 0;
-                    $('#select_kategori_jaminan_tambahan').append(`
-                        <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
-                            data-id_item="${response.item.id}">
-                            <option value=""> --Pilih Opsi -- </option>
-                            </select>
-
-                        <div id="item${response.item.id}">
-
-                        </div>
-                    `);
-                    // add opsi dari item
-                    $.each(response.item.option, function(i, valOption) {
-                        skor = valOption.skor;
-                        opt = valOption.id;
-                        // //console.log(valOption.skor);
-                        $('#itemByKategori').append(`
-                        <option value="${valOption.skor}-${valOption.id}" selected>
-                        ${valOption.option}
-                        </option>`);
-                    });
-                    $("#itemByKategori").val(skor + '-' + opt);
-                    $("#select_kategori_jaminan_tambahan").hide()
-                    $("#jaminan_tambahan").hide()
+                        `);
+                        // add opsi dari item
+                        $.each(response.item.option, function(i, valOption) {
+                            skor = valOption.skor;
+                            opt = valOption.id;
+                            // //console.log(valOption.skor);
+                            $('#itemByKategori').append(`
+                            <option value="${valOption.skor}-${valOption.id}" selected>
+                            ${valOption.option}
+                            </option>`);
+                        });
+                        $("#itemByKategori").val(skor + '-' + opt);
+                        $("#select_kategori_jaminan_tambahan").hide()
+                        $("#jaminan_tambahan").hide()
+                        $('#placeholder').addClass('hidden')
+                    }
+                },
+                complete:function(){
+                    $('#placeholder').addClass('hidden')
                 }
-            }
-        })
+
+            })
+        } else {
+            $('#placeholder').addClass('hidden')
+        }
     });
     // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
