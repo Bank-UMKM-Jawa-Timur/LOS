@@ -1322,9 +1322,9 @@ class NewDagulirController extends Controller
             $user = DB::table('users')->where('id', $id_user)->first();
             $role = '';
             $ke = '';
+            $role = auth()->user()->role;
 
             if ($user) {
-                $role = $user->role;
                 if ($role == 'Penyelia Kredit') {
                     $ke = 'Review Penyelia';
                 } elseif ($role == 'PBO') {
@@ -1332,10 +1332,47 @@ class NewDagulirController extends Controller
                 } else {
                     $ke = 'PBP';
                 }
-                $param['role'] = $role;
-            } else {
-                $param['role'] = '';
             }
+
+            $alasan = AlasanPengembalianData::where('id_pengajuan', $id)
+            ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+            ->select('users.nip', 'users.id_cabang', 'alasan_pengembalian_data.*')
+            ->first();
+            $userPBO = \App\Models\User::select('id')
+                ->where('id_cabang', $alasan->id_cabang)
+                ->where('role', 'PBO')
+                ->whereNotNull('nip')
+                ->first();
+
+            $userPBP = \App\Models\User::select('id')
+                ->where('id_cabang', $alasan->id_cabang)
+                ->where('role', 'PBP')
+                ->whereNotNull('nip')
+                ->first();
+
+            if ($role == 'Penyelia Kredit') {
+                if ($userPBP) {
+                    $dari = "PBP";
+                } else {
+                    if ($userPBO) {
+                        $dari = "PBO";
+                    } else {
+                        $dari = "Pincab";
+                    }
+                }
+            } else if ($role == 'PBO') {
+                if ($userPBP) {
+                    $dari = "PBP";
+                } else {
+                    $dari = "Pincab";
+                }
+            } else if ($role == 'PBP') {
+                $dari = "Pincab";
+            } else {
+                $dari = '';
+            }
+
+            $param['dari'] = $dari;
 
             $param['pendapat'] = $this->repo->getAlasanPengembalian($id, $ke);
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);

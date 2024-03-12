@@ -181,7 +181,17 @@
                                     @elseif ($item->posisi == 'Ditolak')
                                        Ditolak
                                     @else
-                                        {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
+                                        @php
+                                            $alasan = DB::table('alasan_pengembalian_data')
+                                                    ->where('ke', 'Proses Input Data')
+                                                    ->where('id_pengajuan', $item->id)
+                                                    ->count();
+                                        @endphp
+                                        @if ($item->posisi == 'Proses Input Data' && $alasan > 0)
+                                            Pengembalian Data
+                                        @else
+                                            {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
+                                        @endif
                                     @endif
                                     @if ($item->posisi != 'Selesai' && $item->posisi != 'Ditolak')
                                         <p class="text-red-500">{{ $item->nama_pemroses }}</p>

@@ -83,13 +83,7 @@
                                 <div>
                                     <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
                                         <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
-                                            @if ($role = 'Penyelia Kredit')
-                                                Alasan Pengembalian Pengajuan Dari PBO / PBP / Pincab :
-                                            @elseif ($role = 'PBO')
-                                                Alasan Pengembalian Pengajuan Dari PBP / Pincab :
-                                            @elseif ($role = 'PBP')
-                                                Alasan Pengembalian Pengajuan Dari Pincab :
-                                            @endif
+                                            Alasan Pengembalian Pengajuan Dari {{$dari}} :
                                         </h2>
                                     </div>
                                 </div>
