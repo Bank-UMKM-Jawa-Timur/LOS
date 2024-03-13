@@ -1660,8 +1660,35 @@ $dataIndex = match ($skema) {
     $('#jumlah_kredit').on('change', function() {
         limitJangkaWaktu()
     })
+    $('#tanggal_lahir').on('change',function() {
+        var tanggal  = $(this).val();
+        var today = new Date();
+        var birthday = new Date(tanggal);
+        var year = 0;
+        if (today.getMonth() < birthday.getMonth()) {
+            year = 1;
+        } else if ((today.getMonth() == birthday.getMonth()) && today.getDate() < birthday.getDate()) {
+            year = 1;
+        }
+        var age = today.getFullYear() - birthday.getFullYear() - year;
+
+        if(age < 0){
+            age = 0;
+        }
+        if (age <= 17) {
+            $('.pesan-usia').html('Usia Minimal 17 Tahun');
+            $('.pesan-usia').removeClass('hidden');
+        }else if(age >= 65){
+            $('.tanggal_lahir').val('');
+            $('.pesan-usia').html('Usia Maksimal 65 saat jatuh tempo');
+            $('.pesan-usia').removeClass('hidden');
+        }else{
+            $('.pesan-usia').addClass('hidden');
+        }
+    })
 
     function limitJangkaWaktu() {
+
         var nominal = $('#jumlah_kredit').val()
         nominal = nominal != '' ? nominal.replaceAll('.','') : 0
         var limit = 100000000
@@ -1674,6 +1701,17 @@ $dataIndex = match ($skema) {
                     $('.jangka_waktu_error').html('Jangka waktu maksimal 36 bulan.')
                 }
                 else {
+                    $('.jangka_waktu_error').addClass('hidden')
+                    $('.jangka_waktu_error').html('')
+                }
+            }
+        }else if(parseInt(nominal) == 300000000){
+            var jangka_waktu = $('#jangka_waktu').val();
+            if (jangka_waktu != '') {
+                if (jangka_waktu > 60) {
+                    $('.jangka_waktu_error').removeClass('hidden')
+                    $('.jangka_waktu_error').html('Jangka waktu 60 Bulan.')
+                }else{
                     $('.jangka_waktu_error').addClass('hidden')
                     $('.jangka_waktu_error').html('')
                 }

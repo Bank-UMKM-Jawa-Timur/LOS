@@ -7,58 +7,10 @@
                 $('.no_ktp_pesan').html(``);
             }
         });
-        $('#jangka_waktu').on('change', function() {
-            limitJangkaWaktu()
-        })
-        $('#jumlah_kredit').on('change', function() {
-            limitJangkaWaktu()
-        })
 
-        $('#tanggal_lahir').on('change',function() {
-            var tanggal  = $(this).val();
-            var today = new Date();
-            var birthday = new Date(tanggal);
-            var year = 0;
-            if (today.getMonth() < birthday.getMonth()) {
-                year = 1;
-            } else if ((today.getMonth() == birthday.getMonth()) && today.getDate() < birthday.getDate()) {
-                year = 1;
-            }
-            var age = today.getFullYear() - birthday.getFullYear() - year;
 
-            if(age < 0){
-                age = 0;
-            }
-            if (age >= 17) {
-                $('#pesan-usia').addClass('hidden');
-            }else{
-                $('#pesan-usia').removeClass('hidden');
-            }
-        })
 
-        function limitJangkaWaktu() {
-            var nominal = $('#jumlah_kredit').val()
-            nominal = nominal != '' ? nominal.replaceAll('.','') : 0
-            var limit = 50000000
-            if (parseInt(nominal) > limit) {
-                var jangka_waktu = $('#jangka_waktu').val()
-                if (jangka_waktu != '') {
-                    jangka_waktu = parseInt(jangka_waktu)
-                    if (jangka_waktu <= 36) {
-                        $('.jangka_waktu_error').removeClass('hidden')
-                        $('.jangka_waktu_error').html('Jangka waktu harus lebih dari 36 bulan.')
-                    }
-                    else {
-                        $('.jangka_waktu_error').addClass('hidden')
-                        $('.jangka_waktu_error').html('')
-                    }
-                }
-            }
-            else {
-                $('.jangka_waktu_error').addClass('hidden')
-                $('.jangka_waktu_error').html('')
-            }
-        }
+
     </script>
 @endpush
 <div class="pb-10 space-y-3">
@@ -174,13 +126,13 @@
                 <label for="">Tanggal lahir</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="date"
-                    class="form-input"
+                    class="form-input tanggal_lahir"
                     placeholder="Masukkan Tanggal Lahir"
                     name="tanggal_lahir"
                     id="tanggal_lahir"
                     value="{{ old('tempat_lahir') }}"
                 />
-                <small class="text-red-400 text-base mt-2 hidden" id="pesan-usia">Usia Minimal 17 Tahun</small>
+                <small class="text-red-400 text-base mt-2 pesan-usia hidden" id="pesan-usia"></small>
             </div>
             <div class="input-box">
                 <label for="">Telp</label><small class="text-red-500 font-bold">*</small>
