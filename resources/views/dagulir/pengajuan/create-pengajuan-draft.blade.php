@@ -435,6 +435,22 @@
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
         </div>
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">{{ $itemCatatanSlik->nama }}</label><small class="text-red-500 font-bold">*</small>
+                <textarea
+                    name="catatan_slik"
+                    class="form-textarea"
+                    placeholder="{{ $itemCatatanSlik->nama }}"
+                    id=""
+                >{{ edit_dagulir($duTemp->id, $itemCatatanSlik->id)?->opsi_text }}</textarea>
+            </div>
+            @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+            <div class="invalid-feedback">
+                {{ $errors->first('dataLevelDua.' . $key) }}
+            </div>
+            @endif
+        </div>
         <div>
             <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
                 <h2 class="font-semibold text-sm tracking-tighter text-theme-text">

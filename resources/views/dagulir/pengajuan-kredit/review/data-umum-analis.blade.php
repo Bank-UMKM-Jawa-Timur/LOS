@@ -252,6 +252,23 @@
             </div>
         </div> --}}
     </div>
+    <div class="form-group-1">
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">{{ ucwords($itemCatatanSlik->nama) }}</label>
+            </div>
+            @php
+                 $dataDetailJawabanCatatan = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                        ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                        ->where('jawaban_text.id_jawaban', $itemCatatanSlik->id)
+                        ->first();
+            @endphp
+            <div class="field-answer">
+                <p>{{ $dataDetailJawabanCatatan?->opsi_text }}</p>
+            </div>
+        </div>
+    </div>
 
     {{-- Data Pengajuan --}}
     <div class="form-group-1 col-span-2 pl-0">

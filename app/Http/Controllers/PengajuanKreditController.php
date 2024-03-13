@@ -718,6 +718,8 @@ class PengajuanKreditController extends Controller
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
         $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+        $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
+
         $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
         $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
         $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
@@ -2318,6 +2320,7 @@ class PengajuanKreditController extends Controller
                 ->where('nama', 'SLIK')
                 ->first();
             $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+            $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
             $param['itemKTPSu'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
             $param['itemKTPIs'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
 
@@ -2407,23 +2410,23 @@ class PengajuanKreditController extends Controller
             } else {
                 $param['role'] = '';
             }
-
+            $dari = null;
             $alasan = AlasanPengembalianData::where('id_pengajuan', $id)
-            ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
-            ->select('users.nip', 'users.id_cabang', 'alasan_pengembalian_data.*')
-            ->first();
-            $userPBO = \App\Models\User::select('id')
-                ->where('id_cabang', $alasan->id_cabang)
-                ->where('role', 'PBO')
-                ->whereNotNull('nip')
-                ->first();
+                        ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                        ->select('users.nip', 'users.id_cabang', 'alasan_pengembalian_data.*')
+                        ->first();
+            if ($alasan) {
+                $userPBO = \App\Models\User::select('id')
+                    ->where('id_cabang', $alasan->id_cabang)
+                    ->where('role', 'PBO')
+                    ->whereNotNull('nip')
+                    ->first();
 
-            $userPBP = \App\Models\User::select('id')
-                ->where('id_cabang', $alasan->id_cabang)
-                ->where('role', 'PBP')
-                ->whereNotNull('nip')
-                ->first();
-
+                $userPBP = \App\Models\User::select('id')
+                    ->where('id_cabang', $alasan->id_cabang)
+                    ->where('role', 'PBP')
+                    ->whereNotNull('nip')
+                    ->first();
             if ($role == 'Penyelia Kredit') {
                 if ($userPBP) {
                     $dari = "PBP";
@@ -2446,7 +2449,7 @@ class PengajuanKreditController extends Controller
             } else {
                 $dari = '';
             }
-
+            }
             $param['dari'] = $dari;
 
             $param['pendapat'] = $this->repo->getAlasanPengembalian($id, $ke);
@@ -3006,6 +3009,7 @@ class PengajuanKreditController extends Controller
             ->where('nama', 'SLIK')
             ->first();
         $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+        $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
 
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
                 ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')

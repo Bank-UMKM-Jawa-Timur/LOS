@@ -1348,11 +1348,12 @@ class NewDagulirController extends Controller
                     $ke = 'PBP';
                 }
             }
-
+            $dari = null;
             $alasan = AlasanPengembalianData::where('id_pengajuan', $id)
-            ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
-            ->select('users.nip', 'users.id_cabang', 'alasan_pengembalian_data.*')
-            ->first();
+                                ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                                ->select('users.nip', 'users.id_cabang', 'alasan_pengembalian_data.*')
+                                ->first();
+
             $userPBO = \App\Models\User::select('id')
                 ->where('id_cabang', $alasan->id_cabang)
                 ->where('role', 'PBO')
@@ -1364,31 +1365,32 @@ class NewDagulirController extends Controller
                 ->where('role', 'PBP')
                 ->whereNotNull('nip')
                 ->first();
-
-            if ($role == 'Penyelia Kredit') {
-                if ($userPBP) {
-                    $dari = "PBP";
-                } else {
-                    if ($userPBO) {
-                        $dari = "PBO";
+            if ($alasan) {
+                if ($role == 'Penyelia Kredit') {
+                    if ($userPBP) {
+                        $dari = "PBP";
+                    } else {
+                        if ($userPBO) {
+                            $dari = "PBO";
+                        } else {
+                            $dari = "Pincab";
+                        }
+                    }
+                } else if ($role == 'PBO') {
+                    if ($userPBP) {
+                        $dari = "PBP";
                     } else {
                         $dari = "Pincab";
                     }
-                }
-            } else if ($role == 'PBO') {
-                if ($userPBP) {
-                    $dari = "PBP";
-                } else {
+                } else if ($role == 'PBP') {
                     $dari = "Pincab";
+                } else {
+                    $dari = '';
                 }
-            } else if ($role == 'PBP') {
-                $dari = "Pincab";
-            } else {
-                $dari = '';
+
             }
 
             $param['dari'] = $dari;
-
             $param['pendapat'] = $this->repo->getAlasanPengembalian($id, $ke);
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
@@ -3824,6 +3826,8 @@ class NewDagulirController extends Controller
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
         $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+        $param['itemCatatanSlik'] = ItemModel::where('nama', 'Catatan Slik')->first();
+
         $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
         $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
         $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();

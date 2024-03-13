@@ -29,14 +29,22 @@ class MasterDanaRepository
         foreach ($data as $key => $value) {
             $dana_modal = $value->dana_modal;
             $total_angsuran = 0;
+            $plafon_aktif = 0;
             if ($value->loan) {
                 $loan = $value->loan;
                 foreach ($loan as $l) {
+                    if ($l->baki_debet != 0) {
+                        $plafon_aktif += $l->plafon;
+                    }else{
+                        continue;
+                    }
                     $angsuran = MasterDDAngsuran::where('no_loan', $l->no_loan)->sum('pokok_pembayaran');
                     $total_angsuran += $angsuran;
                 }
             }
             $value->loan_sum_angsuran = $total_angsuran;
+
+            $value->plafon_aktif = $plafon_aktif;
 
             $bade = $value->loan_sum_plafon - $total_angsuran;
             $value->baki_debet = $bade;
