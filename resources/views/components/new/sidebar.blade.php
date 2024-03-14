@@ -53,7 +53,7 @@
                             </button>
                         </a>
                     </li> --}}
-                    <li class="toggle-dp-menu menu-item @active('master,master.*', 'active-menu')">
+                    <li class="toggle-dp-menu menu-item @active('dagulir.pengajuan.index.*', 'active-menu')">
                         <a href="#">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                      <span>
@@ -67,20 +67,11 @@
                             </button>
                         </a>
                     </li>
-                    <div class="dropdown-menu-link hidden">
-                        <ul class="space-y-1 p-2 mt-3 bg-gray-50">
-                            @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program')
-                                <li>
-                                    <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
-                                        <button class="item-dp-link">
-                                            Dashboard
-                                        </button>
-                                    </a>
-                                </li>
-                            @endif
+                    <div class="dropdown-menu-link {{Request()->routeIs('dagulir.pengajuan.index', 'dagulir.pengajuan.*') ? '' : 'hidden'}}">
+                        <ul class="space-y-1 p-2 mt-3 bg-gray-50 @active('dagulir.pengajuan.index', 'active')">
                             <li>
                                 <a href="{{route('dagulir.pengajuan.index')}}">
-                                    <button class="item-dp-link">Pengajuan</button>
+                                    <button class="item-dp-link @active('dagulir.pengajuan.*', 'active-item')">Pengajuan</button>
                                 </a>
                             </li>
                             <li>
@@ -92,10 +83,10 @@
                     </div>
                 @endif
                 @if (auth()->user()->role == 'Kredit Program')
-                    <li class="menu-item">
-                        <a href="{{ route('dana.dashboard') }}">
+                    <li class="menu-item {{Request()->routeIs('dashboard') ? 'active-menu' : ''}}">
+                        <a href="{{ route('dashboard') }}">
                             <button
-                                class="item-link @active('dana.dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                                class="item-link w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24">
@@ -107,7 +98,7 @@
                             </button>
                         </a>
                     </li>
-                    <li class="menu-item toggle-dp-menu @active('dagulir, dagulir.*', 'active-menu')">
+                    <li class="menu-item toggle-dp-menu {{Request()->routeIs('dagulir.pengajuan.index', 'dagulir.pengajuan.*', 'pembayaran.index', 'dana.dashboard') ? 'active-menu' : ''}}">
                         <a href="#">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
@@ -122,7 +113,7 @@
                             </button>
                         </a>
                     </li>
-                    <div class="dropdown-menu-link @active('dagulir,dagulir.*,dana-dashboard', '', 'hidden')">
+                    <div class="dropdown-menu-link {{Request()->routeIs('dana.dashboard', 'dagulir.pengajuan.index', 'dagulir.pengajuan.*') ? '' : 'hidden'}}">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
                                 <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
@@ -137,8 +128,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{route('dagulir.master.kecamatan.index')}}">
-                                    <button class="item-dp-link @active('dagulir.master.kecamatan.index', 'active-item')">Laporan</button>
+                                <a href="{{ route('coming-soon') }}">
+                                    <button class="item-dp-link">Laporan</button>
                                 </a>
                             </li>
                         </ul>
@@ -165,7 +156,7 @@
                             </button>
                         </a>
                     </li>
-                    <div class="dropdown-menu-link @active('master-dana,master-dana.*', 'is-active', 'hidden')">
+                    <div class="dropdown-menu-link {{Request()->routeIs('master-dana.*') ? '' : 'hidden'}}">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
                                 <a href="{{route('master-dana.index')}}" >
@@ -192,11 +183,10 @@
                     </div>
                 @endif
                 @if (auth()->user()->role == 'Administrator')
-
-                    <li class="menu-item">
+                    <li class="menu-item {{Request()->routeIs('dashboard') ? 'active-menu' : ''}}">
                         <a href="{{ route('dashboard') }}">
                             <button
-                                class="item-link @active('dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                                class="item-link w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24">
@@ -231,43 +221,43 @@
                         </a>
                     </li>
 
-                    <div class="dropdown-menu-link hidden">
+                    <div class="dropdown-menu-link {{ Request::segment(2) == 'master' ? '' : 'hidden' }}">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
                                 <a href="{{route('dagulir.master.cabang.index')}}">
-                                    <button class="item-dp-link">
+                                    <button class="item-dp-link @active('dagulir.master.cabang.*', 'active-item')">
                                         Master kantor cabang
                                     </button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.master.kabupaten.index')}}">
-                                    <button class="item-dp-link">Master Kabupaten</button>
+                                    <button class="item-dp-link @active('dagulir.master.kabupaten.*', 'active-item')">Master Kabupaten</button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.master.kecamatan.index')}}">
-                                    <button class="item-dp-link">Master Kecamatan</button>
+                                    <button class="item-dp-link @active('dagulir.master.kecamatan.*', 'active-item')">Master Kecamatan</button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.master.desa.index')}}">
-                                    <button class="item-dp-link">Master Desa</button>
+                                    <button class="item-dp-link @active('dagulir.master.desa.*', 'active-item')">Master Desa</button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.master.user.index')}}">
-                                    <button class="item-dp-link">Master User</button>
+                                    <button class="item-dp-link @active('dagulir.master.user.*', 'active-item')">Master User</button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.master.master-item.index')}}">
-                                    <button class="item-dp-link">Master Item</button>
+                                    <button class="item-dp-link @active('dagulir.master.master-item.*', 'active-item')">Master Item</button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.master.konfigurasi-api.index')}}">
-                                    <button class="item-dp-link">Konfigurasi API</button>
+                                    <button class="item-dp-link @active('dagulir.master.konfigurasi-api.*', 'active-item')">Konfigurasi API</button>
                                 </a>
                             </li>
                             {{-- <li>
@@ -282,12 +272,12 @@
                             </li> --}}
                             <li>
                                 <a href="{{route('dagulir.master.index-session')}}">
-                                    <button class="item-dp-link">Master Session</button>
+                                    <button class="item-dp-link @active('dagulir.master.index-session', 'active-item')">Master Session</button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.master.index-api-session')}}">
-                                    <button class="item-dp-link">Master API Session</button>
+                                    <button class="item-dp-link @active('dagulir.master.index-api-session', 'active-item')">Master API Session</button>
                                 </a>
                             </li>
                         </ul>
@@ -309,7 +299,7 @@
                             </button>
                         </a>
                     </li>
-                    <li class="toggle-dp-menu menu-item @active('dagulir.pengajuan', 'active-menu')">
+                    <li class="toggle-dp-menu menu-item {{Request()->routeIs('dagulir.pengajuan.index', 'dagulir.pengajuan.*', 'pembayaran.index', 'dana.dashboard') ? 'active-menu' : ''}}">
                         <a href="#">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                      <span>
@@ -323,18 +313,18 @@
                             </button>
                         </a>
                     </li>
-                    <div class="dropdown-menu-link hidden">
+                    <div class="dropdown-menu-link {{Request()->routeIs('dagulir.pengajuan.index', 'dagulir.pengajuan.*', 'pembayaran.index', 'dana.dashboard') ? '' : 'hidden'}}">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
-                                <a href="{{ auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Program' ?  route('dana.dashboard') : route('dashboard')}}">
-                                    <button class="item-dp-link">
+                                <a href="{{ route('dana.dashboard') }}">
+                                    <button class="item-dp-link @active('dana.dashboard', 'active-item')">
                                         Dashboard
                                     </button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('dagulir.pengajuan.index')}}">
-                                    <button class="item-dp-link">Pengajuan</button>
+                                    <button class="item-dp-link @active('dagulir.pengajuan.*', 'active-item')">Pengajuan</button>
                                 </a>
                             </li>
                             <li>
@@ -344,7 +334,7 @@
                             </li>
                             <li>
                                 <a href="{{ route('pembayaran.index') }}">
-                                    <button class="item-dp-link">Pembayaran</button>
+                                    <button class="item-dp-link @active('pembayaran.*', 'active-item')">Pembayaran</button>
                                 </a>
                             </li>
 
