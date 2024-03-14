@@ -53,7 +53,7 @@
                             </button>
                         </a>
                     </li> --}}
-                    <li class="toggle-dp-menu menu-item @active('dagulir.pengajuan.index.*', 'active-menu')">
+                    <li class="toggle-dp-menu menu-item @active('dagulir.pengajuan.*', 'active-menu')">
                         <a href="#">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                      <span>
