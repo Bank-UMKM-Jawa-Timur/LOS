@@ -389,7 +389,7 @@
                         ->first();
             @endphp
             <div class="field-answer">
-                <p>{{ $dataDetailJawabanCatatan?->opsi_text }}</p>
+                <p>{{ $dataDetailJawabanCatatan->opsi_text != null ? $dataDetailJawabanCatatan->opsi_text : '-'}}</p>
             </div>
         </div>
     </div>

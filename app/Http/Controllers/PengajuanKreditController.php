@@ -2427,28 +2427,28 @@ class PengajuanKreditController extends Controller
                     ->where('role', 'PBP')
                     ->whereNotNull('nip')
                     ->first();
-            if ($role == 'Penyelia Kredit') {
-                if ($userPBP) {
-                    $dari = "PBP";
-                } else {
-                    if ($userPBO) {
-                        $dari = "PBO";
+                if ($role == 'Penyelia Kredit') {
+                    if ($userPBP) {
+                        $dari = "PBP";
+                    } else {
+                        if ($userPBO) {
+                            $dari = "PBO";
+                        }
+                        else {
+                            $dari = "Pincab";
+                        }
                     }
-                    else {
+                } else if ($role == 'PBO') {
+                    if ($userPBP) {
+                        $dari = "PBP";
+                    } else {
                         $dari = "Pincab";
                     }
-                }
-            } else if ($role == 'PBO') {
-                if ($userPBP) {
-                    $dari = "PBP";
-                } else {
+                } else if($role == 'PBP'){
                     $dari = "Pincab";
+                } else {
+                    $dari = '';
                 }
-            } else if($role == 'PBP'){
-                $dari = "Pincab";
-            } else {
-                $dari = '';
-            }
             }
             $param['dari'] = $dari;
 

@@ -508,12 +508,12 @@
                                     @php
                                          $dataDetailJawabanCatatan = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
                                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
+                                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                                 ->where('jawaban_text.id_jawaban', $itemCatatanSlik->id)
                                                 ->first();
                                     @endphp
                                     <div class="field-answer">
-                                        <p>{{ $dataDetailJawabanCatatan?->opsi_text }}</p>
+                                        <p>{{ $dataDetailJawabanCatatan->opsi_text != null ? $dataDetailJawabanCatatan->opsi_text : '-'}}</p>
                                     </div>
                                 </div>
                                 {{-- Data Usaha --}}

@@ -1354,18 +1354,18 @@ class NewDagulirController extends Controller
                                 ->select('users.nip', 'users.id_cabang', 'alasan_pengembalian_data.*')
                                 ->first();
 
-            $userPBO = \App\Models\User::select('id')
-                ->where('id_cabang', $alasan->id_cabang)
-                ->where('role', 'PBO')
-                ->whereNotNull('nip')
-                ->first();
-
-            $userPBP = \App\Models\User::select('id')
-                ->where('id_cabang', $alasan->id_cabang)
-                ->where('role', 'PBP')
-                ->whereNotNull('nip')
-                ->first();
             if ($alasan) {
+                $userPBO = \App\Models\User::select('id')
+                    ->where('id_cabang', $alasan->id_cabang)
+                    ->where('role', 'PBO')
+                    ->whereNotNull('nip')
+                    ->first();
+
+                $userPBP = \App\Models\User::select('id')
+                    ->where('id_cabang', $alasan->id_cabang)
+                    ->where('role', 'PBP')
+                    ->whereNotNull('nip')
+                    ->first();
                 if ($role == 'Penyelia Kredit') {
                     if ($userPBP) {
                         $dari = "PBP";
