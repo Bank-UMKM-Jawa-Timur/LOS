@@ -206,9 +206,12 @@ $dataIndex = match ($skema) {
                                                     @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
                                                         id="docSKU_id">
-                                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
-                                                        data-id="{{ edit_text_dagulir($pengajuan->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
+                                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]"
+                                                        id="surat_keterangan_usaha_file"
+                                                        data-id="{{ edit_text_dagulir($pengajuan->id, $itemSKU->id)?->id }}"
+                                                        placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                                                         class="form-input limit-size"
+                                                        accept="image/png, image/jpg, image/jpeg, image/webp"
                                                         value="{{$file}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
