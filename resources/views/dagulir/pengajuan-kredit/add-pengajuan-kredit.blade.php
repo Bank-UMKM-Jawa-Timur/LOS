@@ -45,7 +45,7 @@ $dataIndex = match ($skema) {
     </nav>
     <div class="p-3">
         <div class="body-pages">
-            <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('dagulir.pengajuan.store') }}" id="simpan-data" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if (\Request::has('dagulir'))
                     <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
@@ -76,7 +76,6 @@ $dataIndex = match ($skema) {
                             ->where('id_parent', $value->id)
                             ->get();
                         @endphp
-
                         <div id="{{ $title_tab }}" class="is-tab-content">
                             <div class="pb-10 space-y-3">
                                 <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">{{$value->nama}}</h2>
@@ -393,11 +392,8 @@ $dataIndex = match ($skema) {
                                                         <div class="form-group ">
                                                             <div class="input-box">
                                                                 <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
-                                                                <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input"
-                                                                    >
+                                                                <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input">
                                                                     <option value="0">-- Pilih Kategori Jaminan Tambahan --</option>
-                                                                    {{-- <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
-                                                                    </option> --}}
                                                                     <option value="Tanah">Tanah</option>
                                                                     <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
                                                                     <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
@@ -570,13 +566,7 @@ $dataIndex = match ($skema) {
                                                                 </div>
                                                             @endif
                                                         @endforeach
-                                                        {{-- @foreach ($dataOptionEmpat as $itemOptionEmpat)
-                                                                @if ($itemOptionEmpat->option == '-')
-                                                                <div class="form-group-1">
-                                                                    <h5>{{ $itemTiga->nama }}</h5>
-                                                                </div>
-                                                                @endif
-                                                                @endforeach --}}
+
                                                         @if (count($dataJawabanLevelTiga) != 0)
                                                             @if ($itemTiga->nama != 'Pengikatan Jaminan Utama')
                                                                 <div
@@ -687,7 +677,6 @@ $dataIndex = match ($skema) {
                                                                 <div class="form-group">
                                                                     <div class="input-box">
                                                                         <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
-                                                                        {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                                         <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->id }}" id="">
                                                                         <input type="file" id="{{ $idLevelEmpat }}"
@@ -744,7 +733,6 @@ $dataIndex = match ($skema) {
                                                                             @endforeach
                                                                         </select>
                                                                         <div id="item{{ $itemEmpat->id }}">
-
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -778,15 +766,15 @@ $dataIndex = match ($skema) {
                                             </button>
                                         </a>
                                         <div>
-                                          <button type="button"
-                                          class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
+                                        <button type="button"
+                                        class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
                                         >
-                                          Sebelumnya
+                                        Sebelumnya
                                         </button>
                                         <button type="button"
-                                          class="px-5 next-tab py-2 border rounded bg-theme-primary text-white"
+                                        class="px-5 next-tab py-2 border rounded bg-theme-primary text-white"
                                         >
-                                          Selanjutnya
+                                        Selanjutnya
                                         </button>
                                         </div>
                                     </div>
@@ -827,7 +815,8 @@ $dataIndex = match ($skema) {
                                         >
                                           Sebelumnya
                                         </button>
-                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" type="submit">
+                                        {{-- <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" type="submit"> --}}
+                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" id="btn-simpan-data" type="button">
                                             Simpan
                                         </button>
                                     </div>
@@ -1143,13 +1132,13 @@ $dataIndex = match ($skema) {
         }else{
             $(".next-tab").addClass('hidden');
         }
+
     });
 
     $(".prev-tab").on("click", function() {
         const $activeContent = $(".is-tab-content.active");
         const $prevContent = $activeContent.prev();
         const tabId = $activeContent.attr("id")
-        var percentage = formPercentage(tabId)
         const dataTab = tabId.replaceAll('-tab', '')
         // Set percentage
         var percentage = formPercentage(tabId)
@@ -1359,7 +1348,6 @@ $dataIndex = match ($skema) {
                 if ($(this).attr('id') != undefined) {
                     var val = $(this).attr('id').toString()
                     if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi") {
-                        //console.log(val)
                         nullValue.push(val.replaceAll("_", " "))
                     }
                 }
@@ -1587,8 +1575,7 @@ $dataIndex = match ($skema) {
         var parent = $(this).closest('.input-box')
         parent.remove()
     })
-    $(".btn-simpan-data").on('click', function(e) {
-        console.log(nullValue);
+    $("#btn-simpan-data").on('click', function(e) {
         if ($('#komentar_staff').val() == '') {
             Swal.fire({
                 icon: 'error',
@@ -1646,8 +1633,10 @@ $dataIndex = match ($skema) {
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
+                nullValue = [];
                 e.preventDefault()
             } else {
+                $('#simpan-data').submit();
                 $("#preload-data").removeClass("hidden");
             }
         }
@@ -1826,7 +1815,6 @@ $dataIndex = match ($skema) {
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // //console.log(valOption.skor);
                         $('#itemByKategoriJaminanUtama').append(`
                         <option value="${valOption.skor}-${valOption.id}">
                         ${valOption.option}
@@ -1967,7 +1955,6 @@ $dataIndex = match ($skema) {
                         `);
                         // add opsi dari item
                         $.each(response.item.option, function(i, valOption) {
-                            // //console.log(valOption.skor);
                             $('#itemByKategori').append(`
                             <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                             ${valOption.option}
@@ -2077,7 +2064,6 @@ $dataIndex = match ($skema) {
                         $.each(response.item.option, function(i, valOption) {
                             skor = valOption.skor;
                             opt = valOption.id;
-                            // //console.log(valOption.skor);
                             $('#itemByKategori').append(`
                             <option value="${valOption.skor}-${valOption.id}" selected>
                             ${valOption.option}
@@ -2364,8 +2350,6 @@ $dataIndex = match ($skema) {
         let thls = isNaN(parseInt($('#thls').val().split('.').join(''))) ? 0 : parseInt($('#thls').val().split('.').join(''));
         let nilaiAsuransi = isNaN(parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''))) ? 0 : parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''));
         let kreditYangDiminta = isNaN(parseInt($('#jumlah_kredit').val().split('.').join(''))) ? 0 : parseInt($('#jumlah_kredit').val().split('.').join(''));
-
-        console.log(`${thls}-${nilaiAsuransi}-${kreditYangDiminta}`);
 
         let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta  * 100; //cek rumus nya lagi
         $('#ratio_coverage').val(ratioCoverage);
