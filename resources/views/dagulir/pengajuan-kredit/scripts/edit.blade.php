@@ -491,7 +491,6 @@
             url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id_dagulir_temp}&skema=`,
             dataType: "json",
             success: function(response) {
-                console.log(response);
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
                     $("#select_kategori_jaminan_tambahan").show()
                     $("#jaminan_tambahan").show()
@@ -546,6 +545,7 @@
 
                             // Construct the new filepath URL
                             var newFilepath = "{{asset('../upload')}}/" + itemId + "/" + itemNIBId + "/" + file;
+                            var newItemFile = '';
 
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
@@ -1328,6 +1328,17 @@
             $('#label-ktp-nasabah').html('Foto KTP Nasabah');
             $('#nik_pasangan').addClass('hidden');
             $('#ktp-pasangan').addClass('hidden');
+        }
+    })
+
+    $('#status').on('change', function(e){
+        var status = $(this).val();
+        if (status == 'menikah') {
+            $('#marry').removeClass('hidden');
+            $('#not-marry').addClass('hidden');
+        } else {
+            $('#not-marry').removeClass('hidden');
+            $('#marry').addClass('hidden');
         }
     })
 

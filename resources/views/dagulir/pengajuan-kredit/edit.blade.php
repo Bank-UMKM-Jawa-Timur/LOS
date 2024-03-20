@@ -447,6 +447,7 @@ $dataIndex = match ($skema) {
                                                 </div>
                                             @endif
 
+                                            {{-- item level 3 --}}
                                             @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                                                 @php
                                                     $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
@@ -565,7 +566,7 @@ $dataIndex = match ($skema) {
                                                                     $files = edit_text_dagulir($pengajuan->id, $itemTiga->id, $is_multiple);
                                                                 @endphp
                                                                 @if ($is_multiple)
-                                                                    @foreach ($files as $f)
+                                                                    @foreach ($files as $key => $f)
                                                                         @if ($f)
                                                                             <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                                                                                 data-title="{{$itemTiga->nama}}"
@@ -589,9 +590,11 @@ $dataIndex = match ($skema) {
                                                                                     <button type="button" class="btn-add" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
                                                                                         <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
                                                                                     </button>
-                                                                                    <button type="button" class="btn-minus hidden" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
-                                                                                        <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
-                                                                                    </button>
+                                                                                    @if ($key > 0)
+                                                                                        <button type="button" class="btn-minus" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
+                                                                                            <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                                                        </button>
+                                                                                    @endif
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -687,6 +690,7 @@ $dataIndex = match ($skema) {
                                                         @endif
                                                     @endif
 
+                                                    {{-- item level 4 --}}
                                                     @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
                                                         @php
                                                             $idLevelEmpat = str_replace(' ', '_', strtolower($itemEmpat->nama));
