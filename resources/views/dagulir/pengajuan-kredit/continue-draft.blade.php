@@ -127,7 +127,7 @@ $dataIndex = match ($skema) {
                                                             id="isNpwp"
                                                             @if ($npwp != '' || $npwp != null) checked @endif
                                                         />
-                                                        <input type="hidden" name="isNpwp" id="statusNpwp" class="form-control"
+                                                        <input type="hidden" name="isNpwp" id="statusNpwp" class="form-input"
                                                             value="{{ $npwp != null ? '1' : '0' }}">
                                                         <label
                                                             for="isNpwp"
@@ -650,6 +650,7 @@ $dataIndex = match ($skema) {
                                                             @endif
                                                         @endif
 
+                                                        {{-- item level 4 --}}
                                                         @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
                                                             @php
                                                                 $idLevelEmpat = str_replace(' ', '_', strtolower($itemEmpat->nama));
@@ -734,7 +735,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'file')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }} joioj</label>
                                                                         @php
                                                                             $file_empat = $skema != 'Dagulir' ? temporary($duTemp->id, $itemEmpat->id) : temporary_dagulir($duTemp->id, $itemEmpat->id)
                                                                         @endphp
@@ -982,7 +983,7 @@ $dataIndex = match ($skema) {
             $("#foto-ktp-istri").append(`
         <label for="">{{ $itemKTPIs->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-            <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+            <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size">
             <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
@@ -994,7 +995,7 @@ $dataIndex = match ($skema) {
             $("#foto-ktp-suami").append(`
         <label for="">{{ $itemKTPSu->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-            <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+            <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size">
             <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
@@ -1008,7 +1009,7 @@ $dataIndex = match ($skema) {
             $("#foto-ktp-nasabah").append(`
             <label for="">{{ $itemKTPNas->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-            <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
+            <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size">
             <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
@@ -1414,7 +1415,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
                                             <input type="file" name="upload_file[${valItem.id}][]" data-id=""
                                                 placeholder="Masukkan informasi ${valItem.nama}"
-                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}">
+                                                class="form-input limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}">
                                                 <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                         </div>
                                         <div class="flex gap-2 multiple-action">

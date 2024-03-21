@@ -258,6 +258,7 @@ class PengajuanKreditController extends Controller
      */
     public function index(Request $request)
     {
+        Session::put('is_dagulir', false);
         $param['pageTitle'] = "Dashboard";
         $id_cabang = Auth::user()->id_cabang;
         $param['cabang'] = DB::table('cabang')
@@ -2310,6 +2311,7 @@ class PengajuanKreditController extends Controller
     // get detail jawaban dan skor pengajuan
     public function getDetailJawaban($id)
     {
+        Session::put('is_dagulir', false);
         if (auth()->user()->role == 'Penyelia Kredit' || auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
             $param['pageTitle'] = "Dashboard";
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
@@ -2999,6 +3001,7 @@ class PengajuanKreditController extends Controller
     }
     public function checkPincabStatusDetail($id)
     {
+        Session::put('is_dagulir', false);
         $param['pageTitle'] = "Dashboard";
 
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();

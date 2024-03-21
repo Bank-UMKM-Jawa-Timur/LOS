@@ -27,8 +27,9 @@
                         </a>
                     </li>
                     <li class="menu-item">
+                        {{-- @dd(Session::get('is_dagulir')) --}}
                         <a href="{{ url('pengajuan-kredit') }}">
-                            <button class="item-link @active('pengajuan-kredit,pengajuan-kredit.*', 'active-menu')  w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
+                            <button class="item-link {{Session::has('is_dagulir' ) && Session::get('is_dagulir') == false ? 'active-menu' : ''}} w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24">
@@ -53,7 +54,7 @@
                             </button>
                         </a>
                     </li> --}}
-                    <li class="toggle-dp-menu menu-item @active('dagulir.pengajuan.*', 'active-menu')">
+                    <li class="toggle-dp-menu menu-item {{Session::has('is_dagulir' ) && Session::get('is_dagulir' ) == true ? 'active-menu' : ''}}">
                         <a href="#">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                      <span>
@@ -67,11 +68,11 @@
                             </button>
                         </a>
                     </li>
-                    <div class="dropdown-menu-link {{Request()->routeIs('dagulir.pengajuan.index', 'dagulir.pengajuan.*') ? '' : 'hidden'}}">
+                    <div class="dropdown-menu-link {{Session::has('is_dagulir' ) && Session::get('is_dagulir') == true ? '' : 'hidden'}}">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50 @active('dagulir.pengajuan.index', 'active')">
                             <li>
                                 <a href="{{route('dagulir.pengajuan.index')}}">
-                                    <button class="item-dp-link @active('dagulir.pengajuan.*', 'active-item')">Pengajuan</button>
+                                    <button class="item-dp-link {{Session::has('is_dagulir' ) && Session::get('is_dagulir') == true ? 'active-item' : ''}}">Pengajuan</button>
                                 </a>
                             </li>
                             <li>

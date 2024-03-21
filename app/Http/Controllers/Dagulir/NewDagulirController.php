@@ -1235,6 +1235,7 @@ class NewDagulirController extends Controller
     // get detail jawaban dan skor pengajuan
     public function getDetailJawaban($id)
     {
+        Session::put('is_dagulir', true);
         if (auth()->user()->role == 'Penyelia Kredit' || auth()->user()->role == 'PBO' ||
             auth()->user()->role == 'PBP' || auth()->user()->role == 'Pincab') {
             $param['pageTitle'] = "Dashboard";
@@ -1401,6 +1402,7 @@ class NewDagulirController extends Controller
 
     public function getDetailJawabanPincab($id)
     {
+        Session::put('is_dagulir', true);
         if (auth()->user()->role == 'Pincab') {
             $param['pageTitle'] = "Dashboard";
 
@@ -1868,6 +1870,7 @@ class NewDagulirController extends Controller
 
     public function index(Request $request)
     {
+        Session::put('is_dagulir', true);
         $id_cabang = Auth::user()->id_cabang;
         $id_user = Auth::user()->id;
         $param['cabang'] = DB::table('cabang')
@@ -2834,6 +2837,7 @@ class NewDagulirController extends Controller
     }
 
     public function edit($id) {
+        Session::put('is_dagulir', true);
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
 
@@ -3790,6 +3794,7 @@ class NewDagulirController extends Controller
         }
     }
     public function indexTemp(Request $request){
+        Session::put('is_dagulir', true);
         $id_user = Auth::user()->id;
         $param['cabang'] = DB::table('cabang')
             ->get();
@@ -3803,6 +3808,7 @@ class NewDagulirController extends Controller
 
     public function continueDraft($id,Request $request)
     {
+        Session::put('is_dagulir', false);
         if ($request->has('skema_kredit')) {
             $nasabah = CalonNasabahTemp::findOrFail($id);
         }else{
@@ -3816,6 +3822,7 @@ class NewDagulirController extends Controller
 
     public function showContinueDraft(Request $request)
     {
+        Session::put('is_dagulir', true);
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
 
