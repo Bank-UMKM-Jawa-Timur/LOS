@@ -342,8 +342,14 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($item->pengajuan->pk && $item->pengajuan->posisi == 'Selesai')
-                                            {{$item->pengajuan->posisi}}
+                                        @php
+                                            $alasan = DB::table('alasan_pengembalian_data')
+                                                    ->where('ke', 'Proses Input Data')
+                                                    ->where('id_pengajuan', $item->pengajuan->id)
+                                                    ->count();
+                                        @endphp
+                                        @if ($item->pengajuan->posisi == 'Proses Input Data' && $alasan > 0)
+                                            Pengembalian Data
                                         @else
                                             {{$item->pengajuan->posisi == 'Selesai' ? 'Disetujui' : $item->pengajuan->posisi}}
                                         @endif
@@ -468,7 +474,7 @@
                                                                         Review
                                                                     </li>
                                                                 </a>
-                                                                <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="Staff" data-target="modalKembalikan">
                                                                     <li class="item-tb-dropdown open-modal">
                                                                         Kembalikan ke Staff
                                                                     </li>
@@ -500,7 +506,7 @@
                                                                         Review
                                                                     </li>
                                                                 </a>
-                                                                <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="Staff" data-target="modalKembalikan">
                                                                     <li class="item-tb-dropdown open-modal">
                                                                         Kembalikan ke Staff
                                                                     </li>
@@ -611,9 +617,8 @@
                                                                             </li>
                                                                         </a>
                                                                     @else
-                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan">
-                                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
-                                                                                data-id="{{ $item->id }}" data-backto="Penyelia">
+                                                                        <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="Penyelia">
+                                                                            <li class="item-tb-dropdown kembalikan-modal cursor-pointer">
                                                                                 Kembalikan ke Penyelia
                                                                             </li>
                                                                         </a>
@@ -862,10 +867,20 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @php
+                                                $alasan = DB::table('alasan_pengembalian_data')
+                                                        ->where('ke', 'Proses Input Data')
+                                                        ->where('id_pengajuan', $item->pengajuan->id)
+                                                        ->count();
+                                            @endphp
                                             @if ($item->pengajuan->posisi == 'Proses Input Data')
-                                                Perlu ditindaklanjuti
+                                                @if ($alasan > 0)
+                                                    Pengembalian Data
+                                                @else
+                                                    Perlu ditindaklanjuti
+                                            @endif
                                             @else
-                                                {{$item->pengajuan->posisi}}
+                                                {{$item->pengajuan->posisi == 'Selesai' ? 'Disetujui' : $item->pengajuan->posisi}}
                                             @endif
                                             @if ($item->pengajuan->posisi != 'Selesai' && $item->pengajuan->posisi != 'Ditolak')
                                                 <p class="text-red-500">{{ $item->nama_pemroses }}</p>
@@ -965,7 +980,7 @@
                                                                             Review
                                                                         </li>
                                                                     </a>
-                                                                    <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                    <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="Staff" data-target="modalKembalikan">
                                                                         <li class="item-tb-dropdown open-modal">
                                                                             Kembalikan ke Staff
                                                                         </li>
@@ -997,7 +1012,7 @@
                                                                             Review
                                                                         </li>
                                                                     </a>
-                                                                    <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->id }}" data-backto="Staff" data-target="modalKembalikan">
+                                                                    <a href="#" class="w-full cursor-pointer kembalikan_pengajuan" data-id="{{ $item->pengajuan->id }}" data-backto="Staff" data-target="modalKembalikan">
                                                                         <li class="item-tb-dropdown open-modal">
                                                                             Kembalikan ke Staff
                                                                         </li>
